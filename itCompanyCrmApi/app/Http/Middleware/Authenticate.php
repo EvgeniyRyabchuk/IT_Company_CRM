@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Cookie;
 
 class Authenticate extends Middleware
 {
@@ -17,7 +18,7 @@ class Authenticate extends Middleware
     {
         if($request->is('api/*'))
         {
-            throw new HttpResponseException(response()->json(['failure_reason'=>'Fresh Access Token Required'], 401));
+            throw new HttpResponseException(response()->json(['failure_reason'=>'Fresh or Access Token Required'], 401));
         }
 
         if (! $request->expectsJson()) {

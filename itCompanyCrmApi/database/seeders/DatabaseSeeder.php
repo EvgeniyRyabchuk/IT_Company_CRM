@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Database\Factories\Creators\StaticCreator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -9,6 +10,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    use WithoutModelEvents;
     /**
      * Seed the application's database.
      *
@@ -16,21 +18,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $usersCreator = new StaticCreator(User::class);
+         $this->call([RoleSeeder::class]);
 
-         $users = \App\Models\User::factory(10)->create();
+         $adminId = Role::where('name', 'admin')->first()->id;
+         $developerId = Role::where('name', 'developer')->first()->id;
+         $manageId = Role::where('name', 'manager')->first()->id;
+         $customerId = Role::where('name', 'customer')->first()->id;
 
-         $roles = \App\Models\Role::factory()->createMany([
-             ['name' => 'customer'],
-             ['name' => 'developer'],
-             ['name' => 'manager'],
-             ['name' => 'admin']
+         $this->call([EmployeeSeeder::class], false, ['count' => 5, 'roleId' => $developerId]);
+         $this->call([CustomerSeeder::class], false, ['count' => 5, 'roleId' => $customerId]);
+
+         $users = User::all();
+
+         $this->call([PhoneSeeder::class], false, [
+             'user' => $users[0],
+             'count' => 20,
          ]);
 
-        $users[0]->roles()->attach($roles[0]->id);
-        $users[1]->roles()->attach($roles[1]->id);
-        $users[2]->roles()->attach($roles[2]->id);
-        $users[3]->roles()->attach($roles[3]->id);
+         $users = User::all();
+
 
 
 

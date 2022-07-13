@@ -24,22 +24,23 @@ class UserController extends Controller
     }
 
     public function index() {
-//        $to = User::findOrFail(1);
-//        $someData = [ 'hello' => 'hello world message '];
+        $to = User::findOrFail(1);
+        $someData = [ 'hello' => 'hello world message '];
 //
-//        Notification::send($to, new HelloNot($someData));
+        Notification::send($to, new HelloNot($someData));
 
 //
 //        Mail::to('jeka.rubchuk@yahoo.com')
 //            ->send(new HelloMail());
 
-        $user = User::findOrFail(1);
-
-        return response()->json($user->roles()->get(), 201);
+//        $user = User::findOrFail(1);
+//
+//        return response()->json($user->roles()->get(), 201);
 
     }
 
     public function show() {
+
         // check permissions
 //        $this->authorize('user_create');
 

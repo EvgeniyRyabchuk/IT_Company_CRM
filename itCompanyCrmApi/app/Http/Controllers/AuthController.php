@@ -8,9 +8,13 @@ use App\Models\RefreshToken;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Token;
 
 class AuthController extends Controller
 {
@@ -21,10 +25,12 @@ class AuthController extends Controller
     }
 
 
+    // TODO: test
+
     public function login(Request $request)
     {
-        $newDateTimeRefreshToken = Carbon::now()->addMonth(10);
-        $newDateTimeAccessToken = Carbon::now()->addMinutes(20);
+//        $newDateTimeRefreshToken = Carbon::now()->addMonth(10);
+//        $newDateTimeAccessToken = Carbon::now()->addMinutes(20);
 //        $request->validate([
 //            'email' => 'required|string|email',
 //            'password' => 'required|string',
@@ -47,13 +53,13 @@ class AuthController extends Controller
         $user->refreshTokens()->save(
             new RefreshToken([
                 'token' => $refreshToken,
-                'expired_at' => $newDateTimeRefreshToken,
+                'expired_at' => Carbon::now()->addMinutes(config('jwt.refresh_ttl')),
             ])
         );
         $user->accessTokens()->save(
             new AccessToken([
                 'token' => $token,
-                'expired_at' => $newDateTimeAccessToken,
+                'expired_at' => Carbon::now()->addMinutes(config('jwt.ttl')),
             ])
         );
 
@@ -66,14 +72,11 @@ class AuthController extends Controller
                 'refreshToken' => $refreshToken
             ]
         ])
-            ->withCookie(cookie('refresh_token', $refreshToken, 2));
+            ->withCookie(cookie('refresh_token', $refreshToken, config('jwt.refresh_ttl')));
 
     }
 
     public function register(Request $request){
-
-        $newDateTimeRefreshToken = Carbon::now()->addMonth(10);
-        $newDateTimeAccessToken = Carbon::now()->addMinutes(20);
 
 //        $request->validate([
 //            'name' => 'required|string|max:255',
@@ -96,13 +99,13 @@ class AuthController extends Controller
         $user->refreshTokens()->save(
             new RefreshToken([
                 'token' => $refreshToken,
-                'expired_at' => $newDateTimeRefreshToken,
+                'expired_at' => Carbon::now()->addMinutes(config('jwt.refresh_ttl'))
             ])
         );
         $user->accessTokens()->save(
             new AccessToken([
                 'token' => $token,
-                'expired_at' => $newDateTimeAccessToken,
+                'expired_at' => Carbon::now()->addMinutes(config('jwt.ttl')),
             ])
         );
 
@@ -115,32 +118,66 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ])
-            ->withCookie(cookie('refresh_token', $refreshToken, 2));;
+            ->withCookie(cookie('refresh_token', $refreshToken, config('jwt.refresh_ttl')));;
     }
 
     public function logout(Request $request)
     {
+        $accessToken = JWTAuth::getToken();
         $accessToken = $request->headers->get('authorization');
-//        $accessToken = $token = JWTAuth::getToken();
-;
+        $refreshToken = Cookie::get('refresh_token');
+        $dbAccessToken = AccessToken::where('token', str_replace("Bearer ", "", $accessToken))->first();
+        $dbRefreshToken = RefreshToken::where('token', $refreshToken)->first();
+        $dbAccessToken->delete();
+        $dbRefreshToken->delete();
 
-        $dbToken = AccessToken::where('token', str_replace("Bearer ", "", $accessToken))->first();
-        $dbToken->delete();
+        $cookie = \Cookie::forget('refresh_token');
 
-        Auth::logout();
+    // TODO: not work
+//        Auth::logout();
+//        \auth()->logout();
+
+
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
-        ]);
+        ])->withCookie($cookie);
     }
 
-    public function refresh()
+    public function refresh(Request $request)
     {
+
+        $refreshToken = Cookie::get('refresh_token');
+
+        if(is_null($refreshToken))
+            throw new HttpResponseException(response()->json(['failure_reason'=>'No refresh token'], 401));
+
+        $dbRefreshToken = RefreshToken::where('token', $refreshToken)->first();
+
+        if(is_null($dbRefreshToken))
+            throw new HttpResponseException(response()->json(['failure_reason'=>'Refresh token doesn\'t exist in db'], 401));
+
+        $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $dbRefreshToken->expired_at);
+        $date2 = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now()->toDateTimeString());
+
+        if($date2->gt($date1))
+            throw new HttpResponseException(response()->json(['failure_reason'=>'Refresh token is expired'], 401));
+
+
+        $accessToken = $request->headers->get('authorization');
+        $dbAccessToken = AccessToken::where('token', str_replace("Bearer ", "", $accessToken))->first();
+        $dbAccessToken->delete();
+
+        $newAccessToken = new AccessToken([
+            'token' => Auth::refresh(),
+            'expired_at' => Carbon::now()->addMinutes(config('jwt.ttl')),
+        ]);
+
         return response()->json([
             'status' => 'success',
             'user' => Auth::user(),
             'authorisation' => [
-                'token' => Auth::refresh(),
+                'token' => $newAccessToken->token,
                 'type' => 'bearer',
             ]
         ]);
