@@ -33,6 +33,17 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('refresh', 'refresh');
 });
 
+
+Route::middleware("auth:api")->group(function () {
+    Route::post('/email/verification-notification',
+        [\App\Http\Controllers\UserController::class, 'sendVerifyEmailNotification']);
+
+    Route::post('/email/verify', [\App\Http\Controllers\UserController::class, 'verifyEmail']);
+});
+
+Route::post('send-password-reset-email', [\App\Http\Controllers\UserController::class, 'sendEmailForResetPassword']);
+Route::post('password-reset/{id}/{token}', [\App\Http\Controllers\UserController::class, 'resetPassword'])->name('password.reset');
+
 Route::prefix('users')->middleware('auth:api')->group(function () {
 
     Route::get('/', [\App\Http\Controllers\UserController::class, 'show']);

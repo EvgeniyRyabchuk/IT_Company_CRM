@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('user_verifications', function (Blueprint $table) {
             $table->id();
-
+            $table->string('verification_type', 500)->default('email');
+            $table->string('token', 3000);
+            $table->dateTime('expired_at');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('user_verifications');
     }
 };

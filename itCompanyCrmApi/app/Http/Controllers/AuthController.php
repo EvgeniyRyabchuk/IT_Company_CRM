@@ -27,6 +27,9 @@ class AuthController extends Controller
 
     // TODO: test
 
+    //TODO: email verify
+    //TODO: password reset
+
     public function login(Request $request)
     {
 //        $newDateTimeRefreshToken = Carbon::now()->addMonth(10);
@@ -85,7 +88,10 @@ class AuthController extends Controller
 //        ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->input('name'),
+            'last_name' => $request->input('name'),
+            'middle_name' => $request->input('name'),
+            'full_name' => $request->input('name'),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -108,6 +114,9 @@ class AuthController extends Controller
                 'expired_at' => Carbon::now()->addMinutes(config('jwt.ttl')),
             ])
         );
+
+       //  event(new Registered($user));
+
 
         return response()->json([
             'status' => 'success',
