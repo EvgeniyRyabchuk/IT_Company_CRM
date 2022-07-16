@@ -72,4 +72,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function accessTokens() {
         return $this->hasMany(AccessToken::class);
     }
+
+    public function tags() {
+        return $this->belongsToMany(Tag::class);
+    }
 }

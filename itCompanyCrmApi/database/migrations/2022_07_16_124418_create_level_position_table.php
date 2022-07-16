@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('position_level');
+        Schema::dropIfExists('level_position');
     }
 };

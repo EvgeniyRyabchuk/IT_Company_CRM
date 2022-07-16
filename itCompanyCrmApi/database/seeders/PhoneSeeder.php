@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Phone;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,11 +14,17 @@ class PhoneSeeder extends Seeder
      *
      * @return void
      */
-    public function run($user, $count = 10)
+    public function run()
     {
-        Phone::factory()->count($count)->create()
-            ->each(function ($phone) use($user) {
-                $phone->user()->associate($user);
-        });
+        $users = User::all();
+
+        foreach ($users as $user) {
+            Phone::factory()->count(3)->create()
+                ->each(function ($phone) use($user) {
+                    $phone->user()->associate($user);
+                    $phone->save();
+                });
+        }
+
     }
 }

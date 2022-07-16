@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Level;
 use App\Models\Role;
+use App\Models\Skill;
+use App\Models\Tag;
 use App\Models\User;
 use Database\Factories\Creators\StaticCreator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -20,28 +24,51 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
          $this->call([RoleSeeder::class]);
+
+         $adminRoleId = Role::where('name', 'admin')->first()->id;
+         $developerRoleId = Role::where('name', 'developer')->first()->id;
+         $manageRoleId = Role::where('name', 'manager')->first()->id;
+         $customerRoleId = Role::where('name', 'customer')->first()->id;
+
          $this->call([LevelSeeder::class]);
+         $this->call([PositionSeeder::class]);
 
-         $levels = Level::all();
+         $this->call([EmployeeSeeder::class], false, ['count' => 10, 'roleId' => $developerRoleId]);
+         $this->call([EmployeeSeeder::class], false, ['count' => 3, 'roleId' => $manageRoleId]);
+         $this->call([CustomerSeeder::class], false, ['count' => 5, 'roleId' => $customerRoleId]);
 
-         $this->call([PositionSeeder::class], false, ['levels' => $levels]);
+         $this->call([PhoneSeeder::class]);
+         $this->call([SkillSeeder::class]);
 
-         $adminId = Role::where('name', 'admin')->first()->id;
-         $developerId = Role::where('name', 'developer')->first()->id;
-         $manageId = Role::where('name', 'manager')->first()->id;
-         $customerId = Role::where('name', 'customer')->first()->id;
+         // select only developers
+         $developers = Employee::whereHas('user.roles', function ($q) use($developerRoleId) {
+            $q->where('role_id', $developerRoleId);
+        })->get();
 
-         $this->call([EmployeeSeeder::class], false, ['count' => 5, 'roleId' => $developerId]);
-         $this->call([CustomerSeeder::class], false, ['count' => 5, 'roleId' => $customerId]);
+        $skills = Skill::all();
 
-         $users = User::all();
+        foreach ($developers as $developer) {
+            $randCount = rand(1, count($skills));
+            $randSkills = Skill::inRandomOrder()->take($randCount)->get();
+            foreach ($randSkills as $skill) {
+                $developer->skills()->attach($skill);
+            }
+        }
 
-         $this->call([PhoneSeeder::class], false, [
-             'user' => $users[0],
-             'count' => 20,
-         ]);
+        $this->call(TagSeeder::class);
 
-         $users = User::all();
+
+        $users = User::all();
+        $tags = Tag::all();
+        //TODO: tags seed for projects
+
+        foreach ($users as $user) {
+            $randCount = rand(1, count($tags));
+            $randTags = Tag::inRandomOrder()->take($randCount)->get();
+            foreach ($randTags as $tag) {
+                $users->tags()->attach($tag);
+            }
+        }
 
 
 
