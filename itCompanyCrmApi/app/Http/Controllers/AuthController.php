@@ -24,11 +24,8 @@ class AuthController extends Controller
             ['except' => ['login','register']]);
     }
 
-
     // TODO: test
-
-    //TODO: email verify
-    //TODO: password reset
+    // remember me
 
     public function login(Request $request)
     {
@@ -38,11 +35,11 @@ class AuthController extends Controller
 //            'email' => 'required|string|email',
 //            'password' => 'required|string',
 //        ]);
-        $credentials = $request->only('email', 'password');
 
+        $credentials = $request->only('email', 'password');
+        $remeberMe = $request->input('remember_me') ?? false;
 
         $token = Auth::attempt($credentials);
-        $refreshToken = Auth::guard()->refresh();
 
         if (!$token) {
             return response()->json([
@@ -52,6 +49,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        $refreshToken = Auth::guard()->refresh();
 
         $user->refreshTokens()->save(
             new RefreshToken([
@@ -86,6 +84,16 @@ class AuthController extends Controller
 //            'email' => 'required|string|email|max:255|unique:users',
 //            'password' => 'required|string|min:6',
 //        ]);
+
+        $isExistWithSuchEmail = User::where('email', $request->input('email'))->first() ?? false;
+
+        if($isExistWithSuchEmail)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User with such email already exist',
+            ], 401);
+        }
 
         $user = User::create([
             'first_name' => $request->input('name'),

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Level;
 use App\Models\Role;
 use App\Models\User;
 use Database\Factories\Creators\StaticCreator;
@@ -19,6 +20,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
          $this->call([RoleSeeder::class]);
+         $this->call([LevelSeeder::class]);
+
+         $levels = Level::all();
+
+         $this->call([PositionSeeder::class], false, ['levels' => $levels]);
 
          $adminId = Role::where('name', 'admin')->first()->id;
          $developerId = Role::where('name', 'developer')->first()->id;

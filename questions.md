@@ -7,5 +7,6 @@
 
 6. Получить все cookie на фронте 
 7. Ограничить доступ к storage 
-
-
+8. lazy load for data in responce 
+9. events 
+10. Локализация данных в таблице 

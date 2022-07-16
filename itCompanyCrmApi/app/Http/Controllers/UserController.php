@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\HelloMail;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\UserVerification;
 use App\Notifications\EmailVerificationNotification;
@@ -102,6 +103,8 @@ class UserController extends Controller
 
         $user->save();
 
+        return response()->json(['message' => 'password has been changed success'], 201);
+
     }
 
 
@@ -118,6 +121,17 @@ class UserController extends Controller
 //        $user = User::findOrFail(1);
 //
 //        return response()->json($user->roles()->get(), 201);
+
+    }
+
+
+    public function test() {
+
+        $c = User::with('phones')->first();
+
+        $customer = DB::table('customers')->with('user')->where('id', 5)->first();
+
+        dd($customer);
 
     }
 

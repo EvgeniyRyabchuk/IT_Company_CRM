@@ -61,3 +61,6 @@ Route::controller(\App\Http\Controllers\ToDoController::class)->group(function (
     Route::get("/todos", 'index')->middleware('auth:api');
 
 });
+
+
+Route::get('test', [\App\Http\Controllers\UserController::class, 'test']);

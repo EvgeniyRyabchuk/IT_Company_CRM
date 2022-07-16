@@ -21,7 +21,11 @@ class EmployeeSeeder extends Seeder
         ->each(function ($user) use ($roleId) {
             $user->roles()->attach($roleId);
             Employee::create(
-                ['user_id' => $user->id]
+                [
+                    'user_id' => $user->id,
+                    'position_id' => 1,
+                    'level_id' => 1
+                ]
             );
         });
 
