@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_files', function (Blueprint $table) {
+        Schema::create('employee_project', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
+            $table->foreignId('employee_id')->constrained('employees')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('project_role_id')->default(1)->constrained('employees')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('project_id')->constrained('projects')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('path', 4096);
-            $table->unsignedInteger('size');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_files');
+        Schema::dropIfExists('employee_project');
     }
 };

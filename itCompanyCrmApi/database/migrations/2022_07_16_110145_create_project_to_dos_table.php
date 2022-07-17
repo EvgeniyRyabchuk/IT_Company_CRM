@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('todo_status_id')->constrained('order_statuses')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('todo_type_id')->constrained('order_statuses')->onUpdate('cascade')->onDelete('cascade');
             $table->string('text', 1000);
-            $table->unsignedDecimal('color');
+            $table->string('color');
             $table->string('priority', 1)->default('A');
             $table->timestamps();
         });

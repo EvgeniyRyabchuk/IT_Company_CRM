@@ -2,12 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\_Sl\TagAttacher;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\JobApplication;
 use App\Models\Level;
+use App\Models\Project;
+use App\Models\ProjectLink;
+use App\Models\ProjectType;
 use App\Models\Role;
 use App\Models\Skill;
 use App\Models\Tag;
+use App\Models\ToDoStatus;
+use App\Models\ToDoType;
 use App\Models\User;
 use Database\Factories\Creators\StaticCreator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -35,7 +42,7 @@ class DatabaseSeeder extends Seeder
 
          $this->call([EmployeeSeeder::class], false, ['count' => 10, 'roleId' => $developerRoleId]);
          $this->call([EmployeeSeeder::class], false, ['count' => 3, 'roleId' => $manageRoleId]);
-         $this->call([CustomerSeeder::class], false, ['count' => 5, 'roleId' => $customerRoleId]);
+         $this->call([CustomerSeeder::class], false, ['count' => 10, 'roleId' => $customerRoleId]);
 
          $this->call([PhoneSeeder::class]);
          $this->call([SkillSeeder::class]);
@@ -43,7 +50,7 @@ class DatabaseSeeder extends Seeder
          // select only developers
          $developers = Employee::whereHas('user.roles', function ($q) use($developerRoleId) {
             $q->where('role_id', $developerRoleId);
-        })->get();
+         })->get();
 
         $skills = Skill::all();
 
@@ -60,18 +67,39 @@ class DatabaseSeeder extends Seeder
 
         $users = User::all();
         $tags = Tag::all();
-        //TODO: tags seed for projects
 
-        foreach ($users as $user) {
-            $randCount = rand(1, count($tags));
-            $randTags = Tag::inRandomOrder()->take($randCount)->get();
-            foreach ($randTags as $tag) {
-                $users->tags()->attach($tag);
-            }
-        }
+        TagAttacher::attachToManyRandom(User::class);
 
+        $this->call(ProjectTypeSeeder::class);
 
+        $this->call(ProjectSeeder::class, false, ['developers' => $developers]);
 
+        $this->call(ProjectHistorySeeder::class);
 
+        $this->call(ProjectRoleSeeder::class);
+
+        TagAttacher::attachToManyRandom(Project::class);
+
+        $this->call(ProjectFileSeeder::class);
+
+        $this->call(ProjectLinkSeeder::class);
+
+        $this->call(NewsSeeder::class);
+
+        $this->call(OrderStatusSeeder::class);
+
+        $this->call(OrderSeeder::class);
+
+        $this->call(ToDoStatusSeeder::class);
+
+        $this->call(ToDoTypeSeeder::class);
+
+        $this->call(ToDosSeeder::class);
+
+        $this->call(VacancySeeder::class);
+
+        $this->call(VacancyStatusesSeeder::class);
+
+        $this->call(JobApplicationsSeeder::class);
     }
 }
