@@ -24,7 +24,7 @@ class OrderStatusSeeder extends Seeder
             // Постановка целей и задач сайта; согласование требований Разработка ➡️ ➡️ технического задания (ТЗ)
             ['name' => 'Approval of Customer Requirements'],
             // Разработка ТЗ
-            ['name' => 'Development Technical Requirements'], 
+            ['name' => 'Development Technical Requirements'],
 
             ['name' => 'Processing'], // в разработке
             ['name' => 'Finished'], // завершен
