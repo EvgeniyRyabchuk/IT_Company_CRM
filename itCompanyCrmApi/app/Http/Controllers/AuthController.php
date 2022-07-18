@@ -25,7 +25,6 @@ class AuthController extends Controller
     }
 
     // TODO: test
-    // remember me
 
     public function login(Request $request)
     {
@@ -39,6 +38,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $remeberMe = $request->input('remember_me') ?? false;
 
+
         $token = Auth::attempt($credentials);
 
         if (!$token) {
@@ -49,14 +49,18 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $refreshToken = Auth::guard()->refresh();
 
-        $user->refreshTokens()->save(
-            new RefreshToken([
-                'token' => $refreshToken,
-                'expired_at' => Carbon::now()->addMinutes(config('jwt.refresh_ttl')),
-            ])
-        );
+        if($remeberMe) {
+            $refreshToken = Auth::guard()->refresh();
+            $user->refreshTokens()->save(
+                new RefreshToken([
+                    'token' => $refreshToken,
+                    'expired_at' => Carbon::now()->addMinutes(config('jwt.refresh_ttl')),
+                ])
+            );
+        }
+
+
         $user->accessTokens()->save(
             new AccessToken([
                 'token' => $token,
@@ -64,17 +68,21 @@ class AuthController extends Controller
             ])
         );
 
-        return response()->json([
+        $responce = response()->json([
             'status' => 'success',
             'user' => $user,
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
-                'refreshToken' => $refreshToken
+                'refreshToken' => $refreshToken ?? null
             ]
-        ])
-            ->withCookie(cookie('refresh_token', $refreshToken, config('jwt.refresh_ttl')));
+        ]);
 
+        if($remeberMe) {
+            $responce->withCookie(cookie('refresh_token', $refreshToken, config('jwt.refresh_ttl')));
+        }
+
+        return $responce;
     }
 
     public function register(Request $request){

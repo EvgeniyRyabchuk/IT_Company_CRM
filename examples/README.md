@@ -101,6 +101,10 @@ https://mui.com/store/previews/uko-client-admin-dashboard/
 
 https://cruip.com/mosaic/
 
+https://cruip.com/demos/mosaic/
+
+https://demo.uifort.com/carolina-react-admin-dashboard-material-ui-free-demo/DashboardDefault
+
 --- Site types 
 
 https://arto.agency/en/website-development/

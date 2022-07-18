@@ -88,6 +88,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(OrderStatusSeeder::class);
 
+        $this->call(UndoOrderCaseSeeder::class);
+
         $this->call(OrderSeeder::class);
 
         $this->call(ToDoStatusSeeder::class);
@@ -101,5 +103,8 @@ class DatabaseSeeder extends Seeder
         $this->call(VacancyStatusesSeeder::class);
 
         $this->call(JobApplicationsSeeder::class);
+
+
+
     }
 }

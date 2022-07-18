@@ -29,91 +29,12 @@ class UserController extends Controller
     //TODO: refersh/access token expired in .env
     //TODO: remember me
 
-    public function sendVerifyEmailNotification(Request $request) {
-
-        $verification = UserVerification::create([
-            'verification_type' => 'email',
-            'token' => rand(100000, 999999),
-            'expired_at' => Carbon::now()->addDays(3),
-            'user_id' => Auth::user()->id
-        ]);
-
-        Notification::send(Auth::user(), new EmailVerificationNotification($verification));
-
-        return ['message'=> 'OK.'];
-    }
-
-    public function verifyEmail(Request $request)
-    {
-        $veritication = UserVerification::where('token', $request->input('token'))->first();
-
-        if(is_null($veritication))
-            abort(403, 'is null');
-        $user = Auth::user();
-
-        abort_if(!$user, 403);
-        if($user->id != $veritication->user->id)
-            abort(403, 'no match');
-
-
-        if (!$user->hasVerifiedEmail()) {
-            $user->markEmailAsVerified();
-
-            $veritication->delete();
-//            UserVerification::destroy($veritication->id);
-
-            //TODO: read doc
-            event(new Verified($user));
-        }
-
-        return response()->json(['status' => 'success', 'data' => $veritication], 201);
-    }
-
-    public function sendEmailForResetPassword(Request $request) {
-
-        //TODO: only email if not auth
-
-        $user = Auth::user();
-        $token = Str::random(30);
-
-        $verification = DB::table('password_resets')->insert([
-            'email' => $user->email,
-            'token' => $token
-        ]);
-
-        Notification::send($user, new PasswordResetNotification($token));
-
-        return ['message'=> 'OK.'];
-    }
-
-    public function resetPassword(Request $request, $id, $token)
-    {
-        $user = User::findOrFail($id);
-
-        $token = DB::table('password_resets')
-            ->where(['token' => $token, 'email' => $user->email]);
-
-        abort_if(!$token, 403, 'token not exist');
-
-        $token->delete();
-
-        $newPasswordHash = Hash::make($request->input('password'));
-
-        $user->password = $newPasswordHash;
-
-        $user->save();
-
-        return response()->json(['message' => 'password has been changed success'], 201);
-
-    }
-
-
     public function index() {
         $to = User::findOrFail(1);
         $someData = [ 'hello' => 'hello world message '];
 //
         Notification::send($to, new HelloNot($someData));
-
+/*
 //
 //        Mail::to('jeka.rubchuk@yahoo.com')
 //            ->send(new HelloMail());
@@ -121,25 +42,19 @@ class UserController extends Controller
 //        $user = User::findOrFail(1);
 //
 //        return response()->json($user->roles()->get(), 201);
-
+*/
     }
 
 
     public function test() {
-
         $c = User::with('phones')->first();
-
         $customer = DB::table('customers')->with('user')->where('id', 5)->first();
-
         dd($customer);
-
     }
 
     public function show() {
-
         // check permissions
 //        $this->authorize('user_create');
-
         $user = Auth::user();
         $roles = $user->roles()->get();
 

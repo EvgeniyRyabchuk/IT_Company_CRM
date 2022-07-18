@@ -3,6 +3,11 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerifyEmailController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\ToDoController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,32 +40,31 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
 
 
 Route::middleware("auth:api")->group(function () {
-    Route::post('/email/verification-notification',
-        [\App\Http\Controllers\UserController::class, 'sendVerifyEmailNotification']);
-
-    Route::post('/email/verify', [\App\Http\Controllers\UserController::class, 'verifyEmail']);
+    Route::post('/email/verification-notification', [VerifyEmailController::class, 'sendVerifyEmailNotification']);
+    Route::post('/email/verify', [VerifyEmailController::class, 'verifyEmail']);
 });
 
-Route::post('send-password-reset-email', [\App\Http\Controllers\UserController::class, 'sendEmailForResetPassword']);
-Route::post('password-reset/{id}/{token}', [\App\Http\Controllers\UserController::class, 'resetPassword'])->name('password.reset');
+Route::post('send-password-reset-email', [ResetPasswordController::class, 'sendEmailForResetPassword']);
+Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
 
 Route::prefix('users')->middleware('auth:api')->group(function () {
-
-    Route::get('/', [\App\Http\Controllers\UserController::class, 'show']);
-
-//    Route::get('/{userId}', [\App\Http\Controllers\UserController::class, 'index']);
-//    Route::get('/{userId}', [\App\Http\Controllers\UserController::class, 'index']);
-//    Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
-//    Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
-//    Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
-//    Route::get('/', [\App\Http\Controllers\UserController::class, 'index']);
-
+    Route::get('/', [UserController::class, 'show']);
 });
 
-Route::controller(\App\Http\Controllers\ToDoController::class)->group(function () {
+Route::controller(ToDoController::class)->group(function () {
     Route::get("/todos", 'index')->middleware('auth:api');
-
 });
 
 
-Route::get('test', [\App\Http\Controllers\UserController::class, 'test']);
+Route::get('test', [UserController::class, 'test']);
+
+
+Route::prefix('orders')->group(function() {
+    Route::get('/', [OrderController::class, 'index']);
+    Route::post('/', [OrderController::class, 'store']);
+
+    Route::get('/{orderId}', [OrderController::class, 'show']);
+
+    Route::put('/{orderId}', [OrderController::class, 'update']);
+    Route::delete('/{orderId}', [OrderController::class, 'destroy']);
+});
