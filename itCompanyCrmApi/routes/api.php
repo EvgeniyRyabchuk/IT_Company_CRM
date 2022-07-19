@@ -8,6 +8,8 @@ use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,3 +72,25 @@ Route::prefix('orders')->group(function() {
 
     Route::post('/{orderId}/status/undo/case/{caseId}', [OrderController::class, 'addUndoCaseEntry']);
 });
+
+
+Route::prefix('projects')->group(function() {
+    Route::get('/', [ProjectController::class, 'index']);
+    Route::post('/', [ProjectController::class, 'store']);
+
+    Route::get('/{projectId}', [ProjectController::class, 'show']);
+
+    Route::put('/{projectId}', [ProjectController::class, 'update']);
+    Route::delete('/{projectId}', [ProjectController::class, 'destroy']);
+
+
+});
+
+Route::prefix('tag')->group(function () {
+    Route::post('/target/{targetId}', [TagController::class, 'attachTag']);
+    Route::delete('/target/{targetId}', [TagController::class, 'detachTag']);
+
+    Route::get('/{tagId}', [TagController::class, 'show']);
+
+});
+

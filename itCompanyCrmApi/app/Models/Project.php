@@ -16,4 +16,18 @@ class Project extends Model
     public function tags() {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function projectType() {
+        return $this->belongsTo(ProjectType::class);
+    }
+
+
+    public function order() {
+        return $this->hasOne(Order::class);
+    }
+
+    public function projectLinks() {
+        return $this->hasMany(ProjectLink::class);
+    }
+
 }
