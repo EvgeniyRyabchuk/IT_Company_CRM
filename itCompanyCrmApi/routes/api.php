@@ -67,4 +67,6 @@ Route::prefix('orders')->group(function() {
 
     Route::put('/{orderId}', [OrderController::class, 'update']);
     Route::delete('/{orderId}', [OrderController::class, 'destroy']);
+
+    Route::post('/{orderId}/status/undo/case/{caseId}', [OrderController::class, 'addUndoCaseEntry']);
 });

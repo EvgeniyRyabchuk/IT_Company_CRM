@@ -7,15 +7,38 @@ use App\Models\Order;
 use App\Models\OrderContact;
 use App\Models\OrderStatus;
 use App\Models\Project;
+use App\Models\UndoOrder;
+use App\Models\UndoOrderCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+
+    //TODO: fillter handler class
+
     public function index(Request $request) {
+        //filter: status,
+        // sort: created_at,
         $defPerPage = 5;
         $perPage = $request->get('perPage') ?? $defPerPage;
-        $orders = Order::all()->paginate($perPage);
+
+        $status = $request->get('status');
+
+        $sort  = $request->get('sort') ?? 'created_at';
+        $sortOrder  = $request->get('order') ?? 'desc';
+
+        $query = Order::query();
+        if(!is_null($status)) {
+            $stIdsArr = explode(',', $status);
+            foreach ($stIdsArr as $st) {
+                $query = $query->orWhere('order_status_id', "=", $st);
+            }
+        }
+
+        $query = $query->orderBy($sort, $sortOrder);
+
+        $orders = $query->get()->paginate($perPage);
 
         return response()->json($orders, 201);
     }
@@ -72,43 +95,74 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json(
-            ['message' =>
-                "opened create page. With does not exist customer = $customer"
-            , 201]);
+            ['message' => "opened create page. With does not exist customer = $customer", 201]);
     }
 
-    //TODO: add reason if order undo
     //TODO: create project if order status is Processing
 
     public function update(Request $request, $orderId) {
-
         $order = Order::findOrFail($orderId);
-        $status = OrderStatus::findOrFail($request->order_status["id"]);
+        $oldStatus = $order->orderStatus;
+
+        $status = OrderStatus::findOrFail($request->order_status_id);
 
         if($request->customer)
             $customer = Customer::findOrFail($request->customer["id"]);
         if($request->project)
-            $project = Project::findOrFail($request->project["id"]); 
+            $project = Project::findOrFail($request->project["id"]);
 
         //TODO: validate nested model
-        $contact = OrderContact::firstOrCreate([
-            'name' => $request->order_contact["name"],
-            'email' => $request->order_contact["email"],
-            'phone' => $request->order_contact["phone"],
-        ]);
+        if(!is_null($request->order_contact)) {
+            $contact = OrderContact::firstOrCreate([
+                'name' => $request->order_contact["name"],
+                'email' => $request->order_contact["email"],
+                'phone' => $request->order_contact["phone"],
+            ]);
+            $order->orderContact()->associate($contact);
+        }
 
         $order->orderStatus()->associate($status);
-        $order->orderContact()->associate($contact);
         $order->project()->associate($project ?? null);
         $order->customer()->associate($customer ?? null);
         $order->about = $request->about;
-
         $order->save();
+
+        // if order status already does not undo, then remove entry in undo_order table
+        if($oldStatus->name = 'Undo' && $order->orderStatus->id != $oldStatus->id) {
+            $undoOrderEntry = UndoOrder::where("order_id", $order->id)->first();
+            $undoOrderEntry->delete();
+        }
+        else if ($order->orderStatus->name == 'Undo') {
+            UndoOrder::create([
+                'order_id' => $order->id,
+                'order_undo_case_id' => null
+            ]);
+        }
 
         return response()->json(['data' => $order, 201]);
     }
 
-    public function destroy() {
+    public function addUndoCaseEntry(Request $request, $orderId, $caseId) {
+        $undoOrder = UndoOrder::where('order_id', $orderId)->first();
+
+        abort_if(!$undoOrder, 404, 'order status is not undo');
+
+        $case = UndoOrderCase::findOrFail($caseId);
+        /*
+//        $case = new UndoOrderCase();
+//        $case->type_name = $request->input('type_name');
+//        $case->reason = $request->input('reason');
+        */
+        $undoOrder->extra_reason_text = $request->input('extra_reason_text');
+        $undoOrder->orderUndoCase()->associate($case);
+        $undoOrder->save();
+
+        return response()->json("undo case added success $undoOrder", 201);
+    }
+
+    public function destroy(Request $request, $orderId) {
+
+        Order::destroy($orderId);
 
         return response()->json(['message' => 'opened destroy page', 201]);
     }

@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class UndoOrder extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'order_id',
+        'order_undo_case_id'
+    ];
+
+    public function orderUndoCase() {
+        return $this->belongsTo(UndoOrderCase::class);
+    }
 }

@@ -108,3 +108,9 @@ https://demo.uifort.com/carolina-react-admin-dashboard-material-ui-free-demo/Das
 --- Site types 
 
 https://arto.agency/en/website-development/
+
+--- Project development steps 
+
+https://impulse-design.com.ua/etapy-razrabotki-sajta.html
+
+https://vc.ru/flood/41441-etapy-sozdaniya-sayta-na-zametku-zakazchiku

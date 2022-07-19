@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\HelloMail;
 use App\Models\Customer;
+use App\Models\UndoOrder;
 use App\Models\User;
 use App\Models\UserVerification;
 use App\Notifications\EmailVerificationNotification;
@@ -47,6 +48,10 @@ class UserController extends Controller
 
 
     public function test() {
+
+        $entry = UndoOrder::find(1);
+        return response()->json([$entry], 201);
+
         $c = User::with('phones')->first();
         $customer = DB::table('customers')->with('user')->where('id', 5)->first();
         dd($customer);
