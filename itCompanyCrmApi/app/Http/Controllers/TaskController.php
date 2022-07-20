@@ -67,6 +67,8 @@ class TaskController extends Controller
         $task->project()->associate($project);
         $task->save();
 
+        //TODO: add history entry
+
         return response()->json(ProjectToDo::where('project_id', $project->id)->get(), 201);
     }
 

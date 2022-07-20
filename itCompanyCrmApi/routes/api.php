@@ -6,11 +6,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\VacancyController;
+use App\Http\Controllers\JobApplicationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,10 +55,6 @@ Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'res
 
 Route::prefix('users')->middleware('auth:api')->group(function () {
     Route::get('/', [UserController::class, 'show']);
-});
-
-Route::controller(ToDoController::class)->group(function () {
-    Route::get("/todos", 'index')->middleware('auth:api');
 });
 
 
@@ -109,3 +108,29 @@ Route::prefix('tag')->group(function () {
     Route::get('/{tagId}', [TagController::class, 'show']);
 });
 
+Route::prefix('news')->group(function () {
+    Route::get('/', [NewsController::class, 'index']);
+    Route::get('/{newsId}', [NewsController::class, 'show']);
+
+    Route::post('/', [NewsController::class, 'store']);
+    Route::put('/{newsId}', [NewsController::class, 'update']);
+    Route::delete('/{newsId}', [NewsController::class, 'destroy']);
+});
+
+Route::prefix('vacancies')->group(function () {
+    Route::get('/', [VacancyController::class, 'index']);
+    Route::get('/{vacancyId}', [VacancyController::class, 'show']);
+
+    Route::post('/', [VacancyController::class, 'store']);
+    Route::put('/{vacancyId}', [VacancyController::class, 'update']);
+    Route::delete('/{vacancyId}', [VacancyController::class, 'destroy']);
+});
+
+Route::prefix('job-applications')->group(function () {
+    Route::get('/', [JobApplicationController::class, 'index']);
+    Route::get('{jobApplicationId}', [JobApplicationController::class, 'show']);
+
+    Route::post('/', [JobApplicationController::class, 'store']);
+    Route::put('{jobApplicationId}', [JobApplicationController::class, 'update']);
+    Route::delete('{jobApplicationId}', [JobApplicationController::class, 'destroy']);
+});

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email', 320);
             $table->foreignId('vacancy_id')->constrained('vacancies')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('resume_path', 4096); 
-            $table->foreignId('vacancy_status')->constrained('vacancy_statuses')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('resume_path', 4096);
+            $table->foreignId('vacancy_status_id')->constrained('vacancy_statuses')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

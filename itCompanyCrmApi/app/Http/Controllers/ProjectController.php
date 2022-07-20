@@ -31,7 +31,6 @@ class ProjectController extends Controller
         return response()->json($project, 201);
     }
 
-    //TODO: news
     //TODO: vacanies
 
     public function store(Request $request) {
@@ -63,7 +62,6 @@ class ProjectController extends Controller
         ProjectHistoryHandler::commit($project, $employee,"created project");
 
         //TODO: files
-        //TODO: todos
 
         return response()->json($project, 201);
     }

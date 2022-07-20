@@ -27,7 +27,7 @@ class JobApplicationFactory extends Factory
             'email' => $this->faker->email,
             'vacancy_id' => $vacancy->id,
             'resume_path' => $this->faker->filePath(),
-            'vacancy_status' => $vacancyStatus->id
+            'vacancy_status_id' => $vacancyStatus->id
         ];
     }
 }

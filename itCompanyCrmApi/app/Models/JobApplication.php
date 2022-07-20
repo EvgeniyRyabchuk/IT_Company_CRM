@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class JobApplication extends Model
 {
     use HasFactory;
+
+    public function vacancy() {
+        return $this->belongsTo(Vacancy::class);
+    }
+
+    public function vacancyStatus() {
+        return $this->belongsTo(VacancyStatus::class);
+    }
 }
