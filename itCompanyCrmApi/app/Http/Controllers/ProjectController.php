@@ -31,6 +31,9 @@ class ProjectController extends Controller
         return response()->json($project, 201);
     }
 
+    //TODO: news
+    //TODO: vacanies
+
     public function store(Request $request) {
         //TODO: check project role rights
 

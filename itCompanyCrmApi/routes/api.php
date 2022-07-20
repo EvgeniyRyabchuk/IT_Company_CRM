@@ -10,6 +10,7 @@ use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,10 +87,22 @@ Route::prefix('projects')->group(function() {
         Route::post('/{memberId}', [ProjectController::class, 'addMember']);
         Route::delete('/{memberId}', [ProjectController::class, 'deleteMember']);
 
+        Route::get('{memberId}/tasks', [TaskController::class, 'getProjectTasksByMember']);
     });
+
+    Route::prefix('{projectId}/tasks')->group(function () {
+        Route::get('/', [TaskController::class, 'getProjectTasks']);
+        Route::post('/', [TaskController::class, 'addProjectTask']);
+        Route::put('{taskId}', [TaskController::class, 'update']);
+        Route::delete('{taskId}', [TaskController::class, 'deleteProjectTask']);
+    });
+
 //    Route::post('/{projectId}', [ProjectController::class, 'destroy']);
 });
 
+Route::prefix('tasks')->group(function () {
+    Route::get('/', [TaskController::class, 'index']);
+});
 Route::prefix('tag')->group(function () {
     Route::post('/target/{targetId}', [TagController::class, 'attachTag']);
     Route::delete('/target/{targetId}', [TagController::class, 'detachTag']);
