@@ -10,7 +10,9 @@ class Project extends Model
     use HasFactory;
 
     public function employees() {
-        return $this->belongsToMany(Employee::class);
+        return
+            $this->belongsToMany(Employee::class)
+            ->withPivot('project_role_id');
     }
 
     public function tags() {

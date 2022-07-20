@@ -77,20 +77,22 @@ Route::prefix('orders')->group(function() {
 Route::prefix('projects')->group(function() {
     Route::get('/', [ProjectController::class, 'index']);
     Route::post('/', [ProjectController::class, 'store']);
-
     Route::get('/{projectId}', [ProjectController::class, 'show']);
-
     Route::put('/{projectId}', [ProjectController::class, 'update']);
     Route::delete('/{projectId}', [ProjectController::class, 'destroy']);
 
+    Route::prefix('{projectId}/members')->group(function () {
+        Route::get('/', [ProjectController::class, 'getMembers']);
+        Route::post('/{memberId}', [ProjectController::class, 'addMember']);
+        Route::delete('/{memberId}', [ProjectController::class, 'deleteMember']);
 
+    });
+//    Route::post('/{projectId}', [ProjectController::class, 'destroy']);
 });
 
 Route::prefix('tag')->group(function () {
     Route::post('/target/{targetId}', [TagController::class, 'attachTag']);
     Route::delete('/target/{targetId}', [TagController::class, 'detachTag']);
-
     Route::get('/{tagId}', [TagController::class, 'show']);
-
 });
 
