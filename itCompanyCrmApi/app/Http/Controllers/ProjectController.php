@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\_Sl\DbHelper;
+use App\_SL\FileManager;
 use App\_Sl\ProjectHistoryHandler;
 use App\_Sl\ProjectRoleHandler;
 use App\_Sl\TagAttacher;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Project;
+use App\Models\ProjectFile;
 use App\Models\ProjectLink;
 use App\Models\ProjectRole;
 use App\Models\ProjectType;
@@ -16,6 +18,9 @@ use Carbon\Carbon;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 
 class ProjectController extends Controller
 {
@@ -114,9 +119,205 @@ class ProjectController extends Controller
         return response()->json($members, 201);
     }
 
-    public function uploadFile(Request $request) {
-
+    public function createDirectory(Request $request) {
+        return response()->json($request);
+        dd($request->all());
     }
+
+    public function fileUploader(Request $request, $projectId)
+    {
+        $command = $request->get('command');
+        $project = Project::findOrFail($projectId);
+
+        $path = "projects/$projectId/data";
+
+        if($command == "UploadChunk") {
+            if ($request->input('arguments')) {
+                $args = json_decode($request->input('arguments'), true, 100);
+                $pathInfo = $args["destinationPathInfo"] ?? null;
+                $meta = json_decode($args["chunkMetadata"], true, 100);
+                $name = $meta["FileName"] ?? null;
+            }
+
+            if($pathInfo) {
+                if(count($pathInfo) > 0) {
+                    foreach ($pathInfo as $info) {
+                        $path .= '/' . $info["name"];
+                    }
+                }
+            }
+        }
+        else {
+            if ($request->input('arguments')) {
+                $args = json_decode($request->input('arguments'), true, 100);
+                $pathInfo = $args["pathInfo"] ?? null;
+                $name = $args["name"] ?? null;
+            }
+
+            if($pathInfo) {
+                if(count($pathInfo) > 0) {
+                    foreach ($pathInfo as $info) {
+                        $path .= '/' . $info["name"];
+                    }
+                }
+            }
+        }
+
+
+        if($command == "UploadChunk") {
+            $result = FileManager::saveOneChunk($request, $path);
+            if($result["status"] == "Saved") {
+                $projectFile = new ProjectFile();
+                $projectFile->name = $result["meta"]["name"];
+                $projectFile->created_at = $result["meta"]["dateModified"];
+                $projectFile->hasSubDirectories = $result["meta"]["hasSubDirectories"];
+                $projectFile->isDirectory = $result["meta"]["isDirectory"];
+                $projectFile->size = $result["meta"]["size"];
+                $projectFile->path = $result["meta"]["path"];
+                $projectFile->project()->associate($project);
+                $projectFile->save();
+
+                return response()->json([
+                    "success" => true,
+                    "result" => $projectFile,
+                    "errorCode" => null,
+                    "errorText" => ""
+                ]);
+            }
+
+            return response()->json([
+                "success" => true,
+                "errorCode" => null,
+                "errorText" => ""
+            ]);
+        }
+        else {
+            switch ($command) {
+
+                case "CreateDir":
+                    FileManager::createDirectory($path);
+                    $projectFile = new ProjectFile();
+                    $projectFile->name = $name;
+                    $projectFile->created_at = Carbon::now();
+                    $projectFile->hasSubDirectories = 0;
+                    $projectFile->isDirectory = 1;
+                    $projectFile->size = 0;
+                    $projectFile->path = $path;
+                    $projectFile->project()->associate($project);
+                    $projectFile->save();
+                    return response()->json([
+                        "success" => true,
+                        "result" => null,
+                        "errorCode" => null,
+                        "errorText" => ""
+                    ]);
+            }
+        }
+    }
+
+    public function fileManager(Request $request, $projectId) {
+
+        $command = $request->get('command');
+        $project = Project::findOrFail($projectId);
+
+        $path = "projects/$projectId/data";
+
+
+
+        if($request->input('arguments')) {
+            $args =  json_decode($request->input('arguments'), true, 100);
+            $pathInfo = $args["pathInfo"] ?? null;
+            $name = $args["name"] ?? null;
+        }
+//        return response()->json($pathInfo);
+
+        if($pathInfo) {
+            if(count($pathInfo) > 0) {
+                foreach ($pathInfo as $info) {
+                    $path .= '/' . $info["name"];
+                }
+            }
+        }
+
+
+
+        switch ($command) {
+            case "GetDirContents":
+                $files = ProjectFile::where([
+                    "project_id" => $projectId,
+                    "path" => $path
+                ])->get();
+
+                return response()->json([
+                    "success" => true,
+                    "result" => $files,
+                    "errorCode" => null,
+                    "errorText" => ""
+                ]);
+
+            case "CreateDir":
+                FileManager::createDirectory($path);
+                $projectFile = new ProjectFile();
+                $projectFile->name = $name;
+                $projectFile->created_at = Carbon::now();
+                $projectFile->hasSubDirectories = 0;
+                $projectFile->isDirectory = 1;
+                $projectFile->size = 0;
+                $projectFile->path = $path;
+                $projectFile->project()->associate($project);
+                $projectFile->save();
+                return response()->json([
+                    "success" => true,
+                    "result" => null,
+                    "errorCode" => null,
+                    "errorText" => ""
+                ]);
+
+            case "SimpleUpload":
+
+//                $fileName = FileManager::getFileNameFromArgs($request);
+//                $request->file("chunk")->storeAs($path, $fileName);
+                break;
+            case "UploadChunk":
+                $result = FileManager::saveOneChunk($request, $path);
+                if($result["status"] == "Saved") {
+                    $projectFile = new ProjectFile();
+                    $projectFile->name = $result["meta"]["name"];
+                    $projectFile->created_at = $result["meta"]["dateModified"];
+                    $projectFile->hasSubDirectories = $result["meta"]["hasSubDirectories"];
+                    $projectFile->isDirectory = $result["meta"]["isDirectory"];
+                    $projectFile->size = $result["meta"]["size"];
+                    $projectFile->path = $result["meta"]["path"];
+                    $projectFile->project()->associate($project);
+                    $projectFile->save();
+
+                    return response()->json([
+                        "success" => true,
+                        "result" => $projectFile,
+                        "errorCode" => null,
+                        "errorText" => ""
+                    ]);
+                }
+            break;
+
+            default:
+                return response()->json(["message" => "command not found"], 404);
+        }
+
+        return response()->json(["message" => "OK = $command"]);
+//        dd($request->all());
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     public function update() {
 
@@ -127,6 +328,8 @@ class ProjectController extends Controller
         $project->delete();
         return response()->json('project deleted success', 201);
     }
+
+
 
 
 }

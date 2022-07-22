@@ -19,7 +19,7 @@ class ProjectFileFactory extends Factory
     {
         $project = Project::inRandomOrder()->first();
         return [
-            'title' => $this->faker->word() . '.' . $this->faker->fileExtension(),
+            'name' => $this->faker->word() . '.' . $this->faker->fileExtension(),
             'project_id' => $project->id,
             'path' => $this->faker->filePath(),
             'size' => $this->faker->numerify("#######")

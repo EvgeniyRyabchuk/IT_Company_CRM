@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
 
         TagAttacher::attachToManyRandom(Project::class);
 
-        $this->call(ProjectFileSeeder::class);
+//        $this->call(ProjectFileSeeder::class);
 
         $this->call(ProjectLinkSeeder::class);
 

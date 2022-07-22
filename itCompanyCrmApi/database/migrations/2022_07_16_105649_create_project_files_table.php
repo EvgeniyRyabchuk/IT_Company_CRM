@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('project_files', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
+            $table->string('name', 255);
+            $table->boolean('isDirectory')->default(0);
+            $table->boolean('hasSubDirectories')->default(0);
             $table->foreignId('project_id')->constrained('projects')->onUpdate('cascade')->onDelete('cascade');
             $table->string('path', 4096);
             $table->unsignedInteger('size');

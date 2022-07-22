@@ -114,3 +114,7 @@ https://arto.agency/en/website-development/
 https://impulse-design.com.ua/etapy-razrabotki-sajta.html
 
 https://vc.ru/flood/41441-etapy-sozdaniya-sayta-na-zametku-zakazchiku
+
+--- Developnent Front Examples 
+
+https://js.devexpress.com/Demos/WidgetsGallery/Demo/FileManager/Overview/React/Light/

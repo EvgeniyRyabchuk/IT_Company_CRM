@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\_SL\FileManager;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderContact;
@@ -11,6 +12,7 @@ use App\Models\UndoOrder;
 use App\Models\UndoOrderCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function GuzzleHttp\Promise\all;
 
 class OrderController extends Controller
 {
@@ -49,6 +51,7 @@ class OrderController extends Controller
     }
 
     public function store(Request $request) {
+
         $email = $request->input('email');
         // if customer with such email already exist
         $customer = Customer::whereHas('user', function ($q) use($email) {
@@ -88,9 +91,13 @@ class OrderController extends Controller
         $order->about = $request->input('about') ?? '';
         $order->save();
 
-        $extension = $request->file('extra_file')->getClientOriginalExtension();
-        $path = $request->file('extra_file')
-            ->storeAs("orders/$order->id", 'extra_file_'. time() . '.' . $extension);
+//        $extension = $request->file('extra_file')->getClientOriginalExtension();
+//        $path = $request->file('extra_file')
+//            ->storeAs("orders/$order->id", 'extra_file_'. time() . '.' . $extension);
+
+        $path = FileManager::save($request, "extra_file",
+            "extra_file_", "orders/$order->id");
+
         $order->extra_file = $path;
         $order->save();
 

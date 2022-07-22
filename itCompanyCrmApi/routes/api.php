@@ -13,6 +13,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\_ChunkFileController;
 
 
 /*
@@ -26,10 +27,11 @@ use App\Http\Controllers\JobApplicationController;
 |
 */
 
-header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, Authorization, Accept,charset,boundary,Content-Length');
-header('Access-Control-Allow-Origin: *');
-
+//header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+//header('Access-Control-Allow-Headers: Origin, X-Auth-Token, Authorization, Content-Type, X-Auth-Token, Authorization, Accept,charset,boundary,Content-Length');
+//header('Access-Control-Allow-Credentials: true');
+//
+//header('Access-Control-Allow-Origin: http://localhost:3000');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -80,6 +82,13 @@ Route::prefix('projects')->group(function() {
     Route::get('/{projectId}', [ProjectController::class, 'show']);
     Route::put('/{projectId}', [ProjectController::class, 'update']);
     Route::delete('/{projectId}', [ProjectController::class, 'destroy']);
+
+
+    Route::get("{projectId}/file-manager", [ProjectController::class, 'fileManager']);
+
+    Route::post("{projectId}/file-manager", [ProjectController::class, 'fileUploader']);
+
+//    Route::post("{projectId}/file-manager", [ProjectController::class, 'simpleUploadFile']);
 
     Route::prefix('{projectId}/members')->group(function () {
         Route::get('/', [ProjectController::class, 'getMembers']);
