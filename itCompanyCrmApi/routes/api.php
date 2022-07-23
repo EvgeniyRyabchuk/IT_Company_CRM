@@ -85,10 +85,7 @@ Route::prefix('projects')->group(function() {
 
 
     Route::get("{projectId}/file-manager", [ProjectController::class, 'fileManager']);
-
-    Route::post("{projectId}/file-manager", [ProjectController::class, 'fileUploader']);
-
-//    Route::post("{projectId}/file-manager", [ProjectController::class, 'simpleUploadFile']);
+    Route::post("{projectId}/file-manager", [ProjectController::class, 'fileManager']);
 
     Route::prefix('{projectId}/members')->group(function () {
         Route::get('/', [ProjectController::class, 'getMembers']);

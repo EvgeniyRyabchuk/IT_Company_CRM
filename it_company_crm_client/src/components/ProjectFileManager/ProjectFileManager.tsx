@@ -43,21 +43,6 @@ const ProjectFileManager = () => {
 
     const onOptionChanged = (e: any) => {
         console.log('onOptionChanged');
-        /*
-        // if(e.previousValue[0])
-        // {
-        //     // @ts-ignore
-        //     setPath(
-        // {
-        //         arguments: {
-        //             pathInfo: [
-        //                 { name: e.previousValue[0] }
-        //             ]
-        //         }
-        //     });
-        // }
-*/
-
         // console.log('path =============== ', path);
         if (e.fullName === 'itemView.mode') {
             setItemViewMode(e.value);
@@ -146,7 +131,7 @@ const ProjectFileManager = () => {
             >
 
                 <Upload
-                    chunkSize={10000}
+                    chunkSize={100000}
                     maxFileSize={1000000}
 
                 />

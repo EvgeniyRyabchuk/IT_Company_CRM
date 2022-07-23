@@ -22,16 +22,69 @@ class FileManager {
         return $chunkMeta["FileName"];
     }
 
-    public static function getCurrentPathFromArgs($request) {
-        $args = $request->input('arguments');
-        $d = json_decode($args, true, 100);
-        $chunkMeta = json_decode($d["chunkMetadata"],true, 100);
-        return $chunkMeta["FileName"];
+    public static function getLocationFromPath($path) {
+        $arr = explode('/', $path);
+        array_pop($arr);
+        return implode("/", $arr);
     }
 
-    public static function createDirectory($path) {
-        File::makeDirectory($path, 0777, true, true);
+    public static function getArgsFromRequest($request, $command, $path) {
+        if ($request->input('arguments')) {
+            if ($command == "UploadChunk") {
+                $args = json_decode($request->input('arguments'), true, 100);
+                $meta = json_decode($args["chunkMetadata"], true, 100);
+
+                return [
+                    "name" => $meta["FileName"] ?? null,
+                    "pathInfo" => $args["destinationPathInfo"] ?? []
+                ];
+            }
+            else if ($command == "Move" || $command == "Copy") {
+                $args = json_decode($request->input('arguments'), true, 100);
+                $destinationPathInfo = $args["destinationPathInfo"];
+                $sourcePathInfo = $args["sourcePathInfo"];
+
+                $destPath = $path;
+                $sourcePath = $path;
+
+                if (count($destinationPathInfo) > 0) {
+                    foreach ($destinationPathInfo as $info) {
+                        $destPath .= '/' . $info["name"];
+                    }
+                }
+
+                if (count($sourcePathInfo) > 0) {
+                    foreach ($sourcePathInfo as $info) {
+                        $sourcePath .= '/' . $info["name"];
+                    }
+                }
+
+                return [
+                    "destinationPath" => $destPath ?? null,
+                    "sourceIsDirectory" => $args["sourceIsDirectory"] ?? null,
+                    "sourcePath" => $sourcePath ?? []
+                ];
+            }
+            else {
+                $args = json_decode($request->input('arguments'), true, 100);
+                return [
+                    "name" => $args["name"] ?? null,
+                    "pathInfo" => $args["pathInfo"] ?? []
+                ];
+            }
+
+        }
     }
+
+
+
+
+    public static function createDirectory($path) {
+        $fullPath = storage_path("app/public" . "/" . $path);
+        return File::makeDirectory($fullPath, 0777, true, true);
+    }
+
+
 
     public static function save($request, $requestBinaryFileName, $fileName, $distPath) {
 
@@ -90,6 +143,7 @@ class FileManager {
         // CHECK IF FILE HAS BEEN UPLOADED
         if (!$chunks || $chunk == $chunks - 1) {
             rename("{$filePath}.part", $filePath);
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
             return [
                 "status" => "Saved",
                 'meta' => [
@@ -98,7 +152,8 @@ class FileManager {
                     "hasSubDirectories" => 0,
                     "isDirectory" => 0,
                     "size" => $fileSize,
-                    "path" => $path
+                    "path" => $path,
+                    "extension" => $ext
                 ]
             ];
 

@@ -16,6 +16,7 @@ class ProjectFileSeeder extends Seeder
      */
     public function run()
     {
+        // delete all data from porjects folder
         foreach (Project::all() as $project) {
             ProjectFile::factory()->count(10)->create()->each(function ($pf) use($project) {
                 $pf->project()->associate($project);

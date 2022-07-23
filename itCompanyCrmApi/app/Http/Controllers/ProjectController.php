@@ -18,9 +18,11 @@ use Carbon\Carbon;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use function Symfony\Component\String\b;
 
 class ProjectController extends Controller
 {
@@ -124,48 +126,31 @@ class ProjectController extends Controller
         dd($request->all());
     }
 
-    public function fileUploader(Request $request, $projectId)
+    public function fileManager(Request $request, $projectId)
     {
         $command = $request->get('command');
         $project = Project::findOrFail($projectId);
+        $location = "projects/$projectId/data";
 
-        $path = "projects/$projectId/data";
+        $requestProcessedData = FileManager::getArgsFromRequest($request, $command, $location);
+        $pathInfo = $requestProcessedData["pathInfo"] ?? null;
+        $name = $requestProcessedData["name"] ?? null;
 
-        if($command == "UploadChunk") {
-            if ($request->input('arguments')) {
-                $args = json_decode($request->input('arguments'), true, 100);
-                $pathInfo = $args["destinationPathInfo"] ?? null;
-                $meta = json_decode($args["chunkMetadata"], true, 100);
-                $name = $meta["FileName"] ?? null;
-            }
-
-            if($pathInfo) {
-                if(count($pathInfo) > 0) {
-                    foreach ($pathInfo as $info) {
-                        $path .= '/' . $info["name"];
-                    }
-                }
-            }
-        }
-        else {
-            if ($request->input('arguments')) {
-                $args = json_decode($request->input('arguments'), true, 100);
-                $pathInfo = $args["pathInfo"] ?? null;
-                $name = $args["name"] ?? null;
-            }
-
-            if($pathInfo) {
-                if(count($pathInfo) > 0) {
-                    foreach ($pathInfo as $info) {
-                        $path .= '/' . $info["name"];
-                    }
+        if($pathInfo) {
+            if (count($pathInfo) > 0) {
+                foreach ($pathInfo as $info) {
+                    $location .= '/' . $info["name"];
                 }
             }
         }
 
+//        return response()->json([
+//            "data" => $requestProcessedData,
+//        ]);
 
         if($command == "UploadChunk") {
-            $result = FileManager::saveOneChunk($request, $path);
+            $result = FileManager::saveOneChunk($request, $location);
+
             if($result["status"] == "Saved") {
                 $projectFile = new ProjectFile();
                 $projectFile->name = $result["meta"]["name"];
@@ -173,7 +158,9 @@ class ProjectController extends Controller
                 $projectFile->hasSubDirectories = $result["meta"]["hasSubDirectories"];
                 $projectFile->isDirectory = $result["meta"]["isDirectory"];
                 $projectFile->size = $result["meta"]["size"];
-                $projectFile->path = $result["meta"]["path"];
+                $projectFile->path = $result["meta"]["path"] . "/" . $result["meta"]["name"];
+                $projectFile->location = $result["meta"]["path"];
+                $projectFile->extension = $result["meta"]["extension"];
                 $projectFile->project()->associate($project);
                 $projectFile->save();
 
@@ -193,102 +180,51 @@ class ProjectController extends Controller
         }
         else {
             switch ($command) {
+                case "GetDirContents":
+                    $files = ProjectFile::where([
+                        "project_id" => $projectId,
+                        "location" => $location
+                    ])->get();
+
+                    return response()->json([
+                        "success" => true,
+                        "result" => $files,
+                        "errorCode" => null,
+                        "errorText" => ""
+                    ]);
 
                 case "CreateDir":
-                    FileManager::createDirectory($path);
+                    $isCreated = FileManager::createDirectory($location . "/" . $name);
                     $projectFile = new ProjectFile();
                     $projectFile->name = $name;
                     $projectFile->created_at = Carbon::now();
                     $projectFile->hasSubDirectories = 0;
                     $projectFile->isDirectory = 1;
                     $projectFile->size = 0;
-                    $projectFile->path = $path;
+                    $projectFile->location = $location;
+                    $projectFile->path = $location . "/" . $name;
                     $projectFile->project()->associate($project);
                     $projectFile->save();
                     return response()->json([
                         "success" => true,
-                        "result" => null,
+                        "result" => $projectFile,
                         "errorCode" => null,
-                        "errorText" => ""
+                        "errorText" => "",
+                        "more" => $isCreated
                     ]);
-            }
-        }
-    }
+                case "Rename":
+                    // in this location is old path
+                    $projectFile = ProjectFile::where([
+                        "project_id" => $projectId,
+                        "path" => $location ,
+                    ])->first();
+                    // extension saving
 
-    public function fileManager(Request $request, $projectId) {
+                    $projectFile->name = $name;
+                    $projectFile->path = $projectFile->location . "/" . $name;
 
-        $command = $request->get('command');
-        $project = Project::findOrFail($projectId);
+                    Storage::move($location, $projectFile->path);
 
-        $path = "projects/$projectId/data";
-
-
-
-        if($request->input('arguments')) {
-            $args =  json_decode($request->input('arguments'), true, 100);
-            $pathInfo = $args["pathInfo"] ?? null;
-            $name = $args["name"] ?? null;
-        }
-//        return response()->json($pathInfo);
-
-        if($pathInfo) {
-            if(count($pathInfo) > 0) {
-                foreach ($pathInfo as $info) {
-                    $path .= '/' . $info["name"];
-                }
-            }
-        }
-
-
-
-        switch ($command) {
-            case "GetDirContents":
-                $files = ProjectFile::where([
-                    "project_id" => $projectId,
-                    "path" => $path
-                ])->get();
-
-                return response()->json([
-                    "success" => true,
-                    "result" => $files,
-                    "errorCode" => null,
-                    "errorText" => ""
-                ]);
-
-            case "CreateDir":
-                FileManager::createDirectory($path);
-                $projectFile = new ProjectFile();
-                $projectFile->name = $name;
-                $projectFile->created_at = Carbon::now();
-                $projectFile->hasSubDirectories = 0;
-                $projectFile->isDirectory = 1;
-                $projectFile->size = 0;
-                $projectFile->path = $path;
-                $projectFile->project()->associate($project);
-                $projectFile->save();
-                return response()->json([
-                    "success" => true,
-                    "result" => null,
-                    "errorCode" => null,
-                    "errorText" => ""
-                ]);
-
-            case "SimpleUpload":
-
-//                $fileName = FileManager::getFileNameFromArgs($request);
-//                $request->file("chunk")->storeAs($path, $fileName);
-                break;
-            case "UploadChunk":
-                $result = FileManager::saveOneChunk($request, $path);
-                if($result["status"] == "Saved") {
-                    $projectFile = new ProjectFile();
-                    $projectFile->name = $result["meta"]["name"];
-                    $projectFile->created_at = $result["meta"]["dateModified"];
-                    $projectFile->hasSubDirectories = $result["meta"]["hasSubDirectories"];
-                    $projectFile->isDirectory = $result["meta"]["isDirectory"];
-                    $projectFile->size = $result["meta"]["size"];
-                    $projectFile->path = $result["meta"]["path"];
-                    $projectFile->project()->associate($project);
                     $projectFile->save();
 
                     return response()->json([
@@ -297,24 +233,73 @@ class ProjectController extends Controller
                         "errorCode" => null,
                         "errorText" => ""
                     ]);
-                }
-            break;
 
-            default:
-                return response()->json(["message" => "command not found"], 404);
+// $args = json_decode($request->input('arguments'), true, 100);
+                    return response()->json([
+                        "data" => $projectFile,
+                        $name,
+                        $projectId,
+                        $location,
+                        "args" => $args
+                        ]);
+
+                case "Remove":
+                    $projectFile = ProjectFile::where([
+                        "project_id" => $projectId,
+                        "path" => $location,
+                    ])->first();
+                    $projectFile->delete();
+
+                    $fullPath = storage_path('app/public' . "/" . $location);
+                    if($projectFile->isDirectory == 1)
+                        File::deleteDirectory($fullPath);
+                    else
+                        File::delete($fullPath);
+
+                    return response()->json([
+                        "success" => true,
+                        "result" => null,
+                        "errorCode" => null,
+                        "errorText" => ""
+                    ]);
+                case "Move":
+//                    $fullPath = ]);
+//                    $location = dirname( $requestProcessedData["destinationPath"]);
+
+                    $projectFile = ProjectFile::where([
+                        "project_id" => $projectId,
+                        "path" => $requestProcessedData["sourcePath"],
+                    ])->first();
+                    $projectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;
+                    $projectFile->location = $requestProcessedData["destinationPath"];
+
+//                    return response()->json([
+//                        "from" => $requestProcessedData["sourcePath"],
+//                        "to" => $requestProcessedData["destinationPath"],
+//                        "location" => $location,
+//                        "path" => $projectFile->path
+//                        ]);
+
+                    Storage::move( $requestProcessedData["sourcePath"],
+                        $requestProcessedData["destinationPath"] . "/" . $projectFile->name
+                    );
+
+                    $projectFile->save();
+
+                    return response()->json([
+                        "success" => true,
+                        "result" => $projectFile,
+                        "errorCode" => null,
+                        "errorText" => ""
+                    ]);
+
+                case "Copy":
+
+                    break;
+
+            }
         }
-
-        return response()->json(["message" => "OK = $command"]);
-//        dd($request->all());
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -328,8 +313,5 @@ class ProjectController extends Controller
         $project->delete();
         return response()->json('project deleted success', 201);
     }
-
-
-
 
 }

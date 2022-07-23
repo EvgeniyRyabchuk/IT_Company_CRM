@@ -22,6 +22,8 @@ class ProjectFileFactory extends Factory
             'name' => $this->faker->word() . '.' . $this->faker->fileExtension(),
             'project_id' => $project->id,
             'path' => $this->faker->filePath(),
+            'location' => $this->faker->filePath(),
+            "extension" => $this->faker->fileExtension(),
             'size' => $this->faker->numerify("#######")
         ];
     }
