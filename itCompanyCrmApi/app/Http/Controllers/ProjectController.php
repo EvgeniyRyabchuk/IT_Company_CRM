@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use ZipArchive;
+use ZipStream\ZipStream;
 use function Symfony\Component\String\b;
 
 class ProjectController extends Controller
@@ -128,6 +130,9 @@ class ProjectController extends Controller
 
     public function fileManager(Request $request, $projectId)
     {
+        //TODO: move nested files in directory for db
+        //TODO: rename nested paths
+
         $command = $request->get('command');
         $project = Project::findOrFail($projectId);
         $location = "projects/$projectId/data";
@@ -136,17 +141,17 @@ class ProjectController extends Controller
         $pathInfo = $requestProcessedData["pathInfo"] ?? null;
         $name = $requestProcessedData["name"] ?? null;
 
-        if($pathInfo) {
-            if (count($pathInfo) > 0) {
-                foreach ($pathInfo as $info) {
-                    $location .= '/' . $info["name"];
+        if($command != "Download") {
+            if($pathInfo) {
+                if (count($pathInfo) > 0) {
+                    foreach ($pathInfo as $info) {
+                        $location .= '/' . $info["name"];
+                    }
                 }
             }
         }
 
-//        return response()->json([
-//            "data" => $requestProcessedData,
-//        ]);
+
 
         if($command == "UploadChunk") {
             $result = FileManager::saveOneChunk($request, $location);
@@ -180,6 +185,44 @@ class ProjectController extends Controller
         }
         else {
             switch ($command) {
+                case "Download":
+                    $query = ProjectFile::query();
+                    foreach ($requestProcessedData["paths"] as $requestPath) {
+                        $query->orWhere("path", $location . "/" . $requestPath);
+                    }
+                    $projects = $query->get();
+
+
+
+                    $zipFileName = Carbon::now()->valueOf() . 'AllDocuments.zip';
+
+                    // Create ZipArchive Obj
+                    $zip = new ZipArchive;
+                    if ($zip->open(storage_path($zipFileName), ZipArchive::CREATE) === TRUE) {
+
+                        foreach ($projects as $project) {
+                            $zip->addFile(storage_path("app/public/" . $project->path), $project->name);
+                        }
+                        $zip->close();
+
+
+                    }
+
+                    $headers = array(
+                        'Content-Type' => 'application/octet-stream',
+                    );
+
+                    $filetopath=storage_path($zipFileName) ;
+
+                    // Create Download Response
+                    if(file_exists($filetopath)){
+                        return response()->
+                        download($filetopath,$zipFileName,$headers)
+                            ->deleteFileAfterSend(true);
+                    }
+
+                    return response()->json('zip not exist', 404);
+
                 case "GetDirContents":
                     $files = ProjectFile::where([
                         "project_id" => $projectId,
@@ -194,6 +237,7 @@ class ProjectController extends Controller
                     ]);
 
                 case "CreateDir":
+                    //TODO: has sub directory
                     $isCreated = FileManager::createDirectory($location . "/" . $name);
                     $projectFile = new ProjectFile();
                     $projectFile->name = $name;
@@ -218,13 +262,10 @@ class ProjectController extends Controller
                         "project_id" => $projectId,
                         "path" => $location ,
                     ])->first();
-                    // extension saving
 
                     $projectFile->name = $name;
                     $projectFile->path = $projectFile->location . "/" . $name;
-
                     Storage::move($location, $projectFile->path);
-
                     $projectFile->save();
 
                     return response()->json([
@@ -234,16 +275,8 @@ class ProjectController extends Controller
                         "errorText" => ""
                     ]);
 
-// $args = json_decode($request->input('arguments'), true, 100);
-                    return response()->json([
-                        "data" => $projectFile,
-                        $name,
-                        $projectId,
-                        $location,
-                        "args" => $args
-                        ]);
-
                 case "Remove":
+                    //TODO: delete all related files  in db
                     $projectFile = ProjectFile::where([
                         "project_id" => $projectId,
                         "path" => $location,
@@ -263,28 +296,50 @@ class ProjectController extends Controller
                         "errorText" => ""
                     ]);
                 case "Move":
-//                    $fullPath = ]);
-//                    $location = dirname( $requestProcessedData["destinationPath"]);
-
                     $projectFile = ProjectFile::where([
                         "project_id" => $projectId,
                         "path" => $requestProcessedData["sourcePath"],
                     ])->first();
+
                     $projectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;
                     $projectFile->location = $requestProcessedData["destinationPath"];
-
-//                    return response()->json([
-//                        "from" => $requestProcessedData["sourcePath"],
-//                        "to" => $requestProcessedData["destinationPath"],
-//                        "location" => $location,
-//                        "path" => $projectFile->path
-//                        ]);
 
                     Storage::move( $requestProcessedData["sourcePath"],
                         $requestProcessedData["destinationPath"] . "/" . $projectFile->name
                     );
-
                     $projectFile->save();
+                    return response()->json([
+                        "success" => true,
+                        "result" => $projectFile,
+                        "errorCode" => null,
+                        "errorText" => ""
+                    ]);
+                case "Copy":
+                    $projectFile = ProjectFile::where([
+                        "project_id" => $projectId,
+                        "path" => $requestProcessedData["sourcePath"],
+                    ])->first();
+
+                    $newProjectFile = new ProjectFile();
+                    $newProjectFile->name = "Copy_" . now() . $projectFile->name;
+                    $newProjectFile->created_at = Carbon::now();
+                    $newProjectFile->hasSubDirectories = $projectFile->hasSubDirectories;
+                    $newProjectFile->isDirectory = $projectFile->isDirectory;
+                    $newProjectFile->size = $projectFile->size;
+
+                    $newProjectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;
+                    $newProjectFile->location = $requestProcessedData["destinationPath"];
+                    $newProjectFile->extension = $projectFile->extension;
+
+                    $newProjectFile->project()->associate($project);
+
+                    $newProjectFile->save();
+
+                    Storage::copy($requestProcessedData["sourcePath"],
+                        $requestProcessedData["destinationPath"] . "/" . $projectFile->name
+                    );
+
+                    $newProjectFile->save();
 
                     return response()->json([
                         "success" => true,
@@ -293,10 +348,19 @@ class ProjectController extends Controller
                         "errorText" => ""
                     ]);
 
-                case "Copy":
+                    //                    return response()->json([
+//                        "from" => $requestProcessedData["sourcePath"],
+//                        "to" => $requestProcessedData["destinationPath"],
+//                        "location" => $location,
+//                        "path" => $projectFile->path
+//                        ]);
 
-                    break;
+                default:
 
+                    return response()->json([
+                        "data" => $requestProcessedData,
+                        "path" =>  json_decode($request->input('arguments'), true, 100)
+                    ]);
             }
         }
     }
@@ -315,3 +379,4 @@ class ProjectController extends Controller
     }
 
 }
+

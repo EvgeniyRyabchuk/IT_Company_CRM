@@ -65,8 +65,33 @@ class FileManager {
                     "sourcePath" => $sourcePath ?? []
                 ];
             }
+            else if($command == "Download") {
+                $args = json_decode($request->input('arguments'), true, 100);
+                $pathInfoList = $args["pathInfoList"];
+                $paths = [];
+                foreach ($pathInfoList as $item) {
+                    $path = "";
+                    if (count($item) > 0) {
+                        $counter = 0;
+                        foreach ($item as $info) {
+                            $counter++;
+                            $path .= $info["name"];
+                            if (count($item) > 1 && $counter != count($item)) {
+                                $path .= "/";
+                            }
+                        }
+                        $paths[] = $path;
+                    }
+                }
+
+                return [
+                    "paths" => $paths ?? null,
+                    "pathInfoList" => $pathInfoList ?? []
+                ];
+            }
             else {
                 $args = json_decode($request->input('arguments'), true, 100);
+
                 return [
                     "name" => $args["name"] ?? null,
                     "pathInfo" => $args["pathInfo"] ?? []
