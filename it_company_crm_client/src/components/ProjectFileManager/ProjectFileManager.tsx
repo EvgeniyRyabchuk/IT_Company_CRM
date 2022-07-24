@@ -5,15 +5,10 @@ import FileManager, { Permissions, ItemView, Upload } from 'devextreme-react/fil
 import RemoteFileSystemProvider from 'devextreme/file_management/remote_provider';
 import FileUploader from 'devextreme-react/file-uploader';
 
-import { fileItems } from './data.js';
-
-
 const ProjectFileManager = () => {
 
-    // const [path, setPath] = useState<any>('');
-
     const [chunks, setChunks] = useState([]);
-    const [state, setState] = useState({ chunks });
+    const [state, setState] = useState<any>({ chunks });
 
     const [itemViewMode, setItemViewMode] = useState();
 
@@ -24,12 +19,12 @@ const ProjectFileManager = () => {
             bytesTotal: e.bytesTotal,
         };
         // @ts-ignore
-        setState({ chunks: [...state.chunks, chunk] });
+        setState({ chunks: [...state.chunks, chunk], ...state});
     }
 
     const onUploadStarted = () => {
         // @ts-ignore
-        setState({ chunks: [] });
+        setState({ chunks: [], ...state });
     }
 
     const getValueInKb = (value: any) => {
@@ -48,6 +43,7 @@ const ProjectFileManager = () => {
             setItemViewMode(e.value);
         }
         console.log(e);
+        console.log(state);
     }
 
     const onDirectoryCreated = (e: any) => {
@@ -86,6 +82,7 @@ const ProjectFileManager = () => {
 
 
 
+
     return (
         <div>
             File manager
@@ -112,7 +109,6 @@ const ProjectFileManager = () => {
                 }
             </div>
 
-
             <br />
             <br />
             <br />
@@ -129,11 +125,9 @@ const ProjectFileManager = () => {
                 onFileUploaded={onFileUploaded}
                 onFileUploading={onFileUploading}
             >
-
                 <Upload
-                    chunkSize={100000}
-                    maxFileSize={1000000}
-
+                    chunkSize={1000000}
+                    maxFileSize={10000000}
                 />
 
                 <ItemView
@@ -150,6 +144,7 @@ const ProjectFileManager = () => {
                     download={true}>
                 </Permissions>
             </FileManager>
+
         </div>
     );
 };

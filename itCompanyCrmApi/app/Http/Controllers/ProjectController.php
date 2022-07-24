@@ -131,7 +131,6 @@ class ProjectController extends Controller
     public function fileManager(Request $request, $projectId)
     {
         //TODO: move nested files in directory for db
-        //TODO: rename nested paths
 
         $command = $request->get('command');
         $project = Project::findOrFail($projectId);
@@ -150,8 +149,6 @@ class ProjectController extends Controller
                 }
             }
         }
-
-
 
         if($command == "UploadChunk") {
             $result = FileManager::saveOneChunk($request, $location);
@@ -193,7 +190,6 @@ class ProjectController extends Controller
                     $projects = $query->get();
 
 
-
                     $zipFileName = Carbon::now()->valueOf() . 'AllDocuments.zip';
 
                     // Create ZipArchive Obj
@@ -201,23 +197,22 @@ class ProjectController extends Controller
                     if ($zip->open(storage_path($zipFileName), ZipArchive::CREATE) === TRUE) {
 
                         foreach ($projects as $project) {
+                            logs()->warning('zip = ' . storage_path("app/public/" . $project->path));
                             $zip->addFile(storage_path("app/public/" . $project->path), $project->name);
                         }
                         $zip->close();
-
-
                     }
 
                     $headers = array(
                         'Content-Type' => 'application/octet-stream',
                     );
 
-                    $filetopath=storage_path($zipFileName) ;
+                    $filetopath = storage_path($zipFileName);
 
                     // Create Download Response
-                    if(file_exists($filetopath)){
+                    if (file_exists($filetopath)) {
                         return response()->
-                        download($filetopath,$zipFileName,$headers)
+                        download($filetopath, $zipFileName, $headers)
                             ->deleteFileAfterSend(true);
                     }
 
@@ -238,6 +233,15 @@ class ProjectController extends Controller
 
                 case "CreateDir":
                     //TODO: has sub directory
+
+                    if(FileManager::checkIfFilesExist($location, $name)) {
+                        return response()->json([
+                            "success" => false,
+                            "errorCode" => 404,
+                            "errorText" => "Item with such name already exist"
+                        ]);
+                    }
+
                     $isCreated = FileManager::createDirectory($location . "/" . $name);
                     $projectFile = new ProjectFile();
                     $projectFile->name = $name;
@@ -260,13 +264,15 @@ class ProjectController extends Controller
                     // in this location is old path
                     $projectFile = ProjectFile::where([
                         "project_id" => $projectId,
-                        "path" => $location ,
+                        "path" => $location,
                     ])->first();
-
+                    $oldPath = $projectFile->path;
                     $projectFile->name = $name;
                     $projectFile->path = $projectFile->location . "/" . $name;
                     Storage::move($location, $projectFile->path);
                     $projectFile->save();
+                    if($projectFile->isDirectory == 1)
+                        DbHelper::changeNestedProjectFilePaths($oldPath, $projectFile->path);
 
                     return response()->json([
                         "success" => true,
@@ -276,18 +282,21 @@ class ProjectController extends Controller
                     ]);
 
                 case "Remove":
-                    //TODO: delete all related files  in db
                     $projectFile = ProjectFile::where([
                         "project_id" => $projectId,
                         "path" => $location,
                     ])->first();
-                    $projectFile->delete();
 
                     $fullPath = storage_path('app/public' . "/" . $location);
-                    if($projectFile->isDirectory == 1)
+                    if ($projectFile->isDirectory == 1) {
+                        DbHelper::removeNestedProjectFile($location);
                         File::deleteDirectory($fullPath);
-                    else
+                        $projectFile->delete();
+
+                    } else {
                         File::delete($fullPath);
+                        $projectFile->delete();
+                    }
 
                     return response()->json([
                         "success" => true,
@@ -301,6 +310,15 @@ class ProjectController extends Controller
                         "path" => $requestProcessedData["sourcePath"],
                     ])->first();
 
+                    if(FileManager::checkIfFilesExist($requestProcessedData["destinationPath"], $projectFile->name)) {
+                        return response()->json([
+                            "success" => false,
+                            "errorCode" => 404,
+                            "errorText" => "Item with such name already exist"
+                        ]);
+                    }
+
+                    $oldPath = $projectFile->path;
                     $projectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;
                     $projectFile->location = $requestProcessedData["destinationPath"];
 
@@ -308,6 +326,9 @@ class ProjectController extends Controller
                         $requestProcessedData["destinationPath"] . "/" . $projectFile->name
                     );
                     $projectFile->save();
+                    if($projectFile->isDirectory == 1)
+                        DbHelper::changeNestedProjectFilePaths($oldPath, $projectFile->path);
+
                     return response()->json([
                         "success" => true,
                         "result" => $projectFile,
@@ -320,33 +341,70 @@ class ProjectController extends Controller
                         "path" => $requestProcessedData["sourcePath"],
                     ])->first();
 
+                    if(FileManager::checkIfFilesExist($requestProcessedData["destinationPath"], $projectFile->name)) {
+                        return response()->json([
+                            "success" => false,
+                            "errorCode" => 404,
+                            "errorText" => "Item with such name already exist"
+                        ]);
+                    }
+
+                    $oldPath = $projectFile->path;
+
                     $newProjectFile = new ProjectFile();
-                    $newProjectFile->name = "Copy_" . now() . $projectFile->name;
+                    /*
+//                    $milliseconds = round(microtime(true) * 1000);
+//                    $newName =  "Copy_" . $milliseconds . $projectFile->name;
+                    */
+                    $newName =  $projectFile->name;
+                    $newProjectFile->name = $newName;
                     $newProjectFile->created_at = Carbon::now();
                     $newProjectFile->hasSubDirectories = $projectFile->hasSubDirectories;
                     $newProjectFile->isDirectory = $projectFile->isDirectory;
                     $newProjectFile->size = $projectFile->size;
 
-                    $newProjectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;
+                    $newProjectFile->path = $requestProcessedData["destinationPath"] . "/" . $newName;
                     $newProjectFile->location = $requestProcessedData["destinationPath"];
                     $newProjectFile->extension = $projectFile->extension;
 
                     $newProjectFile->project()->associate($project);
 
-                    $newProjectFile->save();
+                    logs()->warning('sourcePath = ' . $requestProcessedData["sourcePath"]);
+                    logs()->warning('destinationPath = ' . $requestProcessedData["destinationPath"]);
 
-                    Storage::copy($requestProcessedData["sourcePath"],
-                        $requestProcessedData["destinationPath"] . "/" . $projectFile->name
-                    );
+                if($newProjectFile->isDirectory == 0) {
+                    if(!Storage::copy($requestProcessedData["sourcePath"],
+                        $requestProcessedData["destinationPath"] . "/" . $newName
+                    )) {
+                        return response()->json([
+                            "success" => false,
+                            "errorCode" => 404,
+                            "errorText" => "Can't copy file item"
+                        ]);
+                    }
+                }
+                else {
+                    $basePath = storage_path('app/public/');
+                    if(!File::copyDirectory($basePath . $requestProcessedData["sourcePath"],
+                        $basePath . $requestProcessedData["destinationPath"] . "/" . $newName
+                    )) {
+                        return response()->json([
+                            "success" => false,
+                            "errorCode" => 404,
+                            "errorText" => "Can't copy folder item"
+                        ]);
+                    }
+                    DbHelper::copyNestedProjectFile($oldPath, $newProjectFile->path, $project);
+                }
 
-                    $newProjectFile->save();
+                $newProjectFile->save();
 
-                    return response()->json([
-                        "success" => true,
-                        "result" => $projectFile,
-                        "errorCode" => null,
-                        "errorText" => ""
-                    ]);
+                return response()->json([
+                    "success" => true,
+                    "result" => $projectFile,
+                    "errorCode" => null,
+                    "errorText" => ""
+                ]);
 
                     //                    return response()->json([
 //                        "from" => $requestProcessedData["sourcePath"],

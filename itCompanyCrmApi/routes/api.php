@@ -83,7 +83,7 @@ Route::prefix('projects')->group(function() {
     Route::put('/{projectId}', [ProjectController::class, 'update']);
     Route::delete('/{projectId}', [ProjectController::class, 'destroy']);
 
-
+    // Project File Manager Routing
     Route::get("{projectId}/file-manager", [ProjectController::class, 'fileManager']);
     Route::post("{projectId}/file-manager", [ProjectController::class, 'fileManager']);
 

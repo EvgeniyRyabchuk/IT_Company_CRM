@@ -21,12 +21,22 @@ class FileManager {
         $chunkMeta = json_decode($d["chunkMetadata"],true, 100);
         return $chunkMeta["FileName"];
     }
-
     public static function getLocationFromPath($path) {
         $arr = explode('/', $path);
         array_pop($arr);
         return implode("/", $arr);
     }
+
+    public static function checkIfFilesExist($location, $name) {
+        $existFileList = ProjectFile::where("location", $location)->get();
+        foreach ($existFileList as $item) {
+            if($item->name == $name) {
+               return true;
+            }
+        }
+        return false;
+    }
+
 
     public static function getArgsFromRequest($request, $command, $path) {
         if ($request->input('arguments')) {
