@@ -104,6 +104,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(JobApplicationsSeeder::class);
 
+        $this->call(EventSeeder::class);
+
 
 
     }

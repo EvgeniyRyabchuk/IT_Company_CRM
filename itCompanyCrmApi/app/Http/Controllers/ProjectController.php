@@ -36,11 +36,8 @@ class ProjectController extends Controller
 
     public function show(Request $request, $projectId) {
         $project = Project::with('tags')->findOrFail($projectId);
-
         return response()->json($project, 201);
     }
-
-    //TODO: vacanies
 
     public function store(Request $request) {
         //TODO: check project role rights
@@ -74,7 +71,6 @@ class ProjectController extends Controller
 
         return response()->json($project, 201);
     }
-
 
     public function addMember(Request $request, $projectId, $memberId) {
         $employee = Employee::findOrFail($memberId);
@@ -114,6 +110,7 @@ class ProjectController extends Controller
         return response()->json(['message' => 'member deleted successfully', 'data' => $members], 201);
     }
 
+
     public function getMembers(Request $request, $projectId) {
         $members = Project::findOrFail($projectId)->employees->each(function($e) {
             $role = ProjectRole::findOrFail($e->pivot->project_role_id);
@@ -123,15 +120,8 @@ class ProjectController extends Controller
         return response()->json($members, 201);
     }
 
-    public function createDirectory(Request $request) {
-        return response()->json($request);
-        dd($request->all());
-    }
-
     public function fileManager(Request $request, $projectId)
     {
-        //TODO: move nested files in directory for db
-
         $command = $request->get('command');
         $project = Project::findOrFail($projectId);
         $location = "projects/$projectId/data";
@@ -151,6 +141,15 @@ class ProjectController extends Controller
         }
 
         if($command == "UploadChunk") {
+
+            if(FileManager::checkIfFilesExist($location, $name)) {
+                return response()->json([
+                    "success" => false,
+                    "errorCode" => 404,
+                    "errorText" => "Item with such name already exist"
+                ]);
+            }
+
             $result = FileManager::saveOneChunk($request, $location);
 
             if($result["status"] == "Saved") {
@@ -261,7 +260,17 @@ class ProjectController extends Controller
                         "more" => $isCreated
                     ]);
                 case "Rename":
-                    // in this location is old path
+                    //TODO: check if same file name not exist
+                    if(FileManager::checkIfFilesExist(FileManager::getLocationFromPath($location), $name)) {
+                        return response()->json([
+                            "success" => false,
+                            "errorCode" => 404,
+                            "errorText" => "Item with such name already exist ==="
+                        ]);
+                    }
+
+
+                    // in this place location using as old path
                     $projectFile = ProjectFile::where([
                         "project_id" => $projectId,
                         "path" => $location,
@@ -369,9 +378,6 @@ class ProjectController extends Controller
 
                     $newProjectFile->project()->associate($project);
 
-                    logs()->warning('sourcePath = ' . $requestProcessedData["sourcePath"]);
-                    logs()->warning('destinationPath = ' . $requestProcessedData["destinationPath"]);
-
                 if($newProjectFile->isDirectory == 0) {
                     if(!Storage::copy($requestProcessedData["sourcePath"],
                         $requestProcessedData["destinationPath"] . "/" . $newName
@@ -406,25 +412,15 @@ class ProjectController extends Controller
                     "errorText" => ""
                 ]);
 
-                    //                    return response()->json([
-//                        "from" => $requestProcessedData["sourcePath"],
-//                        "to" => $requestProcessedData["destinationPath"],
-//                        "location" => $location,
-//                        "path" => $projectFile->path
-//                        ]);
-
                 default:
-
                     return response()->json([
-                        "data" => $requestProcessedData,
-                        "path" =>  json_decode($request->input('arguments'), true, 100)
+                        "success" => false,
+                        "errorCode" => 404,
+                        "errorText" => "command not found"
                     ]);
             }
         }
     }
-
-
-
 
     public function update() {
 

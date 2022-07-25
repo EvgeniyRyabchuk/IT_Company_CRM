@@ -42,6 +42,6 @@ return new class extends Migration
             $table->dropColumn('user_id');
         });
         Schema::dropIfExists('employees');
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+//        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 };

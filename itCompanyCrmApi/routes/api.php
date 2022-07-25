@@ -14,6 +14,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\_ChunkFileController;
+use App\Http\Controllers\EventController;
 
 
 /*
@@ -55,8 +56,15 @@ Route::middleware("auth:api")->group(function () {
 Route::post('send-password-reset-email', [ResetPasswordController::class, 'sendEmailForResetPassword']);
 Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
 
-Route::prefix('users')->middleware('auth:api')->group(function () {
+//Route::prefix('users')->middleware('auth:api')->group(function () {
+Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'show']);
+
+
+    Route::prefix('/{employeeId}/events')->group(function () {
+        Route::get("/", [EventController::class, "index"]);
+    });
+
 });
 
 
@@ -140,3 +148,4 @@ Route::prefix('job-applications')->group(function () {
     Route::put('{jobApplicationId}', [JobApplicationController::class, 'update']);
     Route::delete('{jobApplicationId}', [JobApplicationController::class, 'destroy']);
 });
+
