@@ -1,6 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
-import { Eventcalendar, getJson, toast, MbscCalendarEvent, MbscEventcalendarView, localeUa } from '@mobiscroll/react';
+import {
+    Eventcalendar,
+    getJson,
+    toast,
+    MbscCalendarEvent,
+    MbscEventcalendarView,
+    localeUa,
+    locale
+} from '@mobiscroll/react';
+
+
 const EventCalendar = () => {
 
     const [myEvents, setEvents] = useState<MbscCalendarEvent[]>([]);
@@ -21,7 +31,7 @@ const EventCalendar = () => {
 
     const view = useMemo<MbscEventcalendarView>(() => {
         return {
-            calendar: { type: 'month' },
+            calendar: { type: 'month', labels: true },
             agenda: { type: 'month' }
         };
     }, []);
@@ -44,6 +54,7 @@ const EventCalendar = () => {
                 data={myEvents}
                 view={view}
                 onEventClick={onEventClick}
+                locale={locale}
             />
         </div>
     );

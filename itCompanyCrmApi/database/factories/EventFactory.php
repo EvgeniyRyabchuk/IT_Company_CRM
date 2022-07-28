@@ -17,7 +17,7 @@ class EventFactory extends Factory
      */
     public function definition()
     {
-        $employee = Employee::inRandomOrder()->first();
+        $employee = Employee::findOrFail(1);
         $start = $this->faker->dateTimeBetween("now", "+90 days");
         $end = $this->faker->dateTimeBetween($start, "+90 days");
 
@@ -26,7 +26,10 @@ class EventFactory extends Factory
             "start" => $start,
             "end" => $end,
             "title" => $this->faker->sentence(3),
-            "color" => $this->faker->hexColor()
+            "description" => $this->faker->sentence(10),
+            "color" => $this->faker->hexColor(),
+            "tooltip" => $this->faker->word,
+            "allDay" => false
         ];
     }
 }

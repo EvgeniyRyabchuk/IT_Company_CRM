@@ -118,3 +118,5 @@ https://vc.ru/flood/41441-etapy-sozdaniya-sayta-na-zametku-zakazchiku
 --- Developnent Front Examples 
 
 https://js.devexpress.com/Demos/WidgetsGallery/Demo/FileManager/Overview/React/Light/
+
+https://demo.mobiscroll.com/react/eventcalendar/create-read-update-delete-CRUD#

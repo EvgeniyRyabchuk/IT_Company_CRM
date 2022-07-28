@@ -31,11 +31,13 @@ return new class extends Migration
             $table->dateTime("start");
             $table->dateTime("end");
             $table->string("title", 500);
-            $table->string("color", 45);
+            $table->string("description", 500)->nullable();
+            $table->string("color", 45)->default("#000000");
             $table->boolean("allDay")->default(false);
             $table->string("tooltip", 300)->nullable();
             $table->boolean("isPublic")->default(false);
 
+            $table->string("status", 100)->default("busy");
 
             $table->timestamps();
         });

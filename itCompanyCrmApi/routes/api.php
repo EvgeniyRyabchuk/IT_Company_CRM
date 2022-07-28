@@ -63,6 +63,10 @@ Route::prefix('users')->group(function () {
 
     Route::prefix('/{employeeId}/events')->group(function () {
         Route::get("/", [EventController::class, "index"]);
+        Route::post("/", [EventController::class, "store"]);
+        Route::put("/{eventId}", [EventController::class, "update"]);
+        Route::delete("/{eventId}", [EventController::class, "destroy"]);
+
     });
 
 });
