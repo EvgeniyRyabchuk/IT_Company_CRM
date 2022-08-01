@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('to_do_types', function (Blueprint $table) {
+        Schema::create('kanban_card_kanban_priority', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('kanban_card_id')->constrained('kanban_cards')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('kanban_priority_id')->constrained('kanban_priorities')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('to_do_types');
+        Schema::dropIfExists('kanban_card_kanban_priority');
     }
 };

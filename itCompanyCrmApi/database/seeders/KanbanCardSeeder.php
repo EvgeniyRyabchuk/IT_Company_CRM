@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\ToDoType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ToDoTypeSeeder extends Seeder
+class KanbanCardSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +14,6 @@ class ToDoTypeSeeder extends Seeder
      */
     public function run()
     {
-        ToDoType::create(['name' => 'create features']);
-        ToDoType::create(['name' => 'fix bag']);
+        //
     }
 }

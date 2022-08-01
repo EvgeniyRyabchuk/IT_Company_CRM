@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('project_to_dos', function (Blueprint $table) {
+        Schema::create('kanban_lanes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('employee_id')->constrained('employees')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('todo_status_id')->constrained('order_statuses')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('todo_type_id')->constrained('order_statuses')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('text', 1000);
+
+            $table->date('label');
+            $table->string('title', 300);
             $table->string('color');
-            $table->string('priority', 1)->default('A');
             $table->timestamps();
         });
     }
@@ -33,6 +32,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_to_dos');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        Schema::dropIfExists('kanban_lanes');
     }
 };

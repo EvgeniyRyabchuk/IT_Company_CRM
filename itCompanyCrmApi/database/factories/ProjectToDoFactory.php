@@ -9,7 +9,7 @@ use App\Models\ToDoType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProjectToDo>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\KanbanLane>
  */
 class ProjectToDoFactory extends Factory
 {

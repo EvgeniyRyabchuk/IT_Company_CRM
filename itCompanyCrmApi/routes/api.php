@@ -85,6 +85,9 @@ Route::prefix('orders')->group(function() {
     Route::delete('/{orderId}', [OrderController::class, 'destroy']);
 
     Route::post('/{orderId}/status/undo/case/{caseId}', [OrderController::class, 'addUndoCaseEntry']);
+
+    Route::post('/{orderId}/create-customer-account', [OrderController::class, 'createCustomerAccount']);
+
 });
 
 
@@ -104,14 +107,26 @@ Route::prefix('projects')->group(function() {
         Route::post('/{memberId}', [ProjectController::class, 'addMember']);
         Route::delete('/{memberId}', [ProjectController::class, 'deleteMember']);
 
-        Route::get('{memberId}/tasks', [TaskController::class, 'getProjectTasksByMember']);
+        Route::get('{memberId}/lanes', [TaskController::class, 'getKanbanLanesByMember']);
     });
 
-    Route::prefix('{projectId}/tasks')->group(function () {
-        Route::get('/', [TaskController::class, 'getProjectTasks']);
-        Route::post('/', [TaskController::class, 'addProjectTask']);
-        Route::put('{taskId}', [TaskController::class, 'update']);
-        Route::delete('{taskId}', [TaskController::class, 'deleteProjectTask']);
+    Route::prefix('{projectId}/lanes')->group(function () {
+
+        Route::get('/', [TaskController::class, 'getKanbanLanes']);
+
+        Route::post('/', [TaskController::class, 'addKanbanLane']);
+
+        Route::put('{laneId}', [TaskController::class, 'updateKanbanLane']);
+        Route::delete('{laneId}', [TaskController::class, 'deleteKanbanLane']);
+
+        Route::prefix('{laneId}/cards')->group(function() {
+            Route::get('/', [TaskController::class, 'getKanbanCardsByLaneId']);
+            Route::post('/', [TaskController::class, 'addKanbanCard']);
+
+            Route::put('{cardId}', [TaskController::class, 'updateKanbanCard']);
+            Route::delete('{cardId}', [TaskController::class, 'deleteKanbanCard']);
+
+        });
     });
 
 //    Route::post('/{projectId}', [ProjectController::class, 'destroy']);

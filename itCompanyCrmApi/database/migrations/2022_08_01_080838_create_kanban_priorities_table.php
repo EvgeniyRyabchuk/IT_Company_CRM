@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('to_do_statuses', function (Blueprint $table) {
+        Schema::create('kanban_priorities', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 300);
+            $table->string('title', 3);
             $table->timestamps();
         });
     }
@@ -27,6 +27,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('to_do_statuses');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        Schema::dropIfExists('kanban_priorities');
     }
 };

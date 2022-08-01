@@ -32,7 +32,7 @@ class Project extends Model
         return $this->hasMany(ProjectLink::class);
     }
 
-    public function projectTodos() {
-        return $this->hasMany(ProjectToDo::class);
+    public function lanes() {
+        return $this->hasMany(KanbanLane::class);
     }
 }

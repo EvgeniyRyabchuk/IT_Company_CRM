@@ -8,10 +8,17 @@ use App\Models\Order;
 use App\Models\OrderContact;
 use App\Models\OrderStatus;
 use App\Models\Project;
+use App\Models\Role;
 use App\Models\UndoOrder;
 use App\Models\UndoOrderCase;
+use App\Models\User;
+use App\Notifications\AccountCreatedNotification;
+use App\Notifications\PasswordResetNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 use function GuzzleHttp\Promise\all;
 
 class OrderController extends Controller
@@ -51,7 +58,7 @@ class OrderController extends Controller
     }
 
     public function store(Request $request) {
-
+//TODO: check if customer already registered
         $email = $request->input('email');
         // if customer with such email already exist
         $customer = Customer::whereHas('user', function ($q) use($email) {
@@ -119,6 +126,7 @@ class OrderController extends Controller
             $project = Project::findOrFail($request->project["id"]);
 
         //TODO: validate nested model
+
         if(!is_null($request->order_contact)) {
             $contact = OrderContact::firstOrCreate([
                 'name' => $request->order_contact["name"],
@@ -146,6 +154,9 @@ class OrderController extends Controller
             ]);
         }
 
+//        switch ($order->orderStatus) {
+//            case ""
+//        }
         return response()->json(['data' => $order, 201]);
     }
 
@@ -168,9 +179,30 @@ class OrderController extends Controller
     }
 
     public function destroy(Request $request, $orderId) {
-
         Order::destroy($orderId);
-
         return response()->json(['message' => 'opened destroy page', 201]);
     }
+
+    public function createCustomerAccount($orderId) {
+        $order = Order::with("orderContact")->findOrFail($orderId);
+
+        $pwd = Str::random(10);
+
+        $user = User::create([
+            'first_name' => $order->orderContact->name,
+            'last_name' => "",
+            'middle_name' => "",
+            'full_name' => $order->orderContact->name,
+            'email' =>$order->orderContact->email,
+            'password' => Hash::make($pwd)
+        ]);
+        $user->roles()->attach(Role::where('name', 'customer')->first()->id);
+        $user->save();
+
+        Notification::send($user, new AccountCreatedNotification($user, $pwd));
+
+        return response()->json(['data' => $order, 201]);
+    }
+
+
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectToDo extends Model
+class KanbanLane extends Model
 {
     use HasFactory;
 
@@ -18,14 +18,10 @@ class ProjectToDo extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function todoStatus()
-    {
-        return $this->belongsTo(ToDoStatus::class);
+    public function cards() {
+        return $this->hasMany(KanbanCard::class, 'lane_id', 'id');
     }
 
-    public function todoType()
-    {
-        return $this->belongsTo(ToDoType::class);
-    }
+
 
 }

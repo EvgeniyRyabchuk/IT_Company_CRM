@@ -18,16 +18,21 @@ class OrderStatusSeeder extends Seeder
     public function run()
     {
         $models = [
-            ['name' => 'Pending'], // в ожидании
-            ['name' => 'Undo'], // отменен (с указанием причины)
+            // в ожидании
+            ['name' => 'Pending'],
+            // отменен (с указанием причины)
+            ['name' => 'Undo'],
 
-            // Постановка целей и задач сайта; согласование требований Разработка ➡️ ➡️ технического задания (ТЗ)
+            // Постановка целей и задач сайта; согласование требований Разработка ➡️️ технического задания (ТЗ)
             ['name' => 'Approval of Customer Requirements'],
             // Разработка ТЗ
             ['name' => 'Development Technical Requirements'],
-
-            ['name' => 'Processing'], // в разработке
-            ['name' => 'Finished'], // завершен
+            // Ожидание поплаты
+            ['name' => 'Waiting for payment'],
+            // в разработке
+            ['name' => 'Processing'],
+            // завершен
+            ['name' => 'Finished'],
         ];
 
         OrderStatus::insert($models);

@@ -6,6 +6,8 @@ use App\_Sl\TagAttacher;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\JobApplication;
+use App\Models\KanbanLane;
+use App\Models\KanbanPriority;
 use App\Models\Level;
 use App\Models\Project;
 use App\Models\ProjectLink;
@@ -13,8 +15,6 @@ use App\Models\ProjectType;
 use App\Models\Role;
 use App\Models\Skill;
 use App\Models\Tag;
-use App\Models\ToDoStatus;
-use App\Models\ToDoType;
 use App\Models\User;
 use Database\Factories\Creators\StaticCreator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -92,11 +92,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(OrderSeeder::class);
 
-        $this->call(ToDoStatusSeeder::class);
-
-        $this->call(ToDoTypeSeeder::class);
-
-        $this->call(ToDosSeeder::class);
 
         $this->call(VacancySeeder::class);
 
@@ -105,6 +100,11 @@ class DatabaseSeeder extends Seeder
         $this->call(JobApplicationsSeeder::class);
 
         $this->call(EventSeeder::class);
+
+        $this->call(KanbanPrioritySeeder::class);
+
+        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
+
 
 
 

@@ -7,6 +7,7 @@ import EventCalendar from "./components/EventCalendar/EventCalendar";
 import LargeEventCalendar from "./components/LargeEventCalendar/LargeEventCalendar";
 
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
+import Kanban from "./components/Kanban/Kanban";
 function App() {
 
 
@@ -17,9 +18,10 @@ function App() {
         {/*<ProjectFileManager />*/}
 
         {/*<EventCalendar />*/}
-dsfgdf
-        <LargeEventCalendar />
 
+        {/*<LargeEventCalendar />*/}
+
+        <Kanban />
     </div>
   );
 }
