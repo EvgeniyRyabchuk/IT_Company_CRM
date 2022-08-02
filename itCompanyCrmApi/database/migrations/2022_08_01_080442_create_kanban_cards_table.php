@@ -18,10 +18,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('lane_id')->constrained('kanban_lanes')->onUpdate('cascade')->onDelete('cascade');
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->unsignedSmallInteger('index');
             $table->string('label');
-            $table->string('cardColor', 10);
+            $table->string('cardColor', 10)->default("#ffffff");
 
 
             $table->timestamps();

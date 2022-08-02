@@ -43,6 +43,7 @@ class TaskController extends Controller
             with('employee', 'cards')
             ->where('project_id', $projectId)
             ->where('employee_id', $employee->id)
+            ->orderBy('index', 'asc')
             ->get();
 
         $lanes->each(function ($todo) {
@@ -63,6 +64,8 @@ class TaskController extends Controller
         $lane->title = $request->input('title');
         $lane->label = Carbon::now();
         $lane->color = $request->input('color') ?? 'ffffff';
+        $lane->index = KanbanLane::where('project_id', $projectId)
+            ->where('employee_id', $employeeId)->count();
 
         $lane->employee()->associate($employee);
         $lane->project()->associate($project);
@@ -87,27 +90,46 @@ class TaskController extends Controller
         //TODO: check if task owner is current auth user
         $project = Project::findOrFail($projectId);
         $lane = KanbanLane::findOrFail($laneId);
-        $lane->title = $request->input('title');
-        $lane->label = $request->input('label');
-        $lane->color = $request->input('color');
+        $lane->title = $request->input('title') ?? $lane->title;
+        $lane->label = $request->input('label') ?? $lane->label;
+        $lane->color = $request->input('color') ?? $lane->color;
+        $lane->index = $request->input('index') ?? $lane->index;
         $lane->save();
 
-        return response()->json(KanbanLane::where('project_id', $project->id)->get(), 201);
+        return response()->json($lane, 201);
+    }
+
+    public function swapKanbanLanes(Request $request, $projectId) {
+
+        $project = Project::findOrFail($projectId);
+
+        $lanes = $request->input("lanes");
+
+        foreach ($lanes as $requestLane) {
+            $lane = KanbanLane::findOrFail($requestLane["id"]);
+            $lane->title = $requestLane["title"] ?? $lane->title;
+            $lane->label = $requestLane["label"] ?? $lane->label;
+            $lane->color = $requestLane["color"] ?? $lane->color;
+            $lane->index = $requestLane["index"] ?? $lane->index;
+            $lane->save();
+        }
+
+        return response()->json(["message" => 'swapped success'], 201);
     }
 
     public function deleteKanbanLane(Request $request, $projectId, $laneId) {
-        $task = KanbanLane::where([
+        $lane = KanbanLane::where([
             'project_id' => $projectId,
             'id' => $laneId
         ])->first();
 
-        if(!$task) {
+        if(!$lane) {
             return response()->json(['message' => 'task not found'], 404);
         }
 
-        $task->delete();
+        $lane->delete();
 
-        return response()->json(KanbanLane::where('project_id', $projectId)->get(),
+        return response()->json(["message" => 'lane deleted success'],
             201);
     }
 
@@ -122,11 +144,13 @@ class TaskController extends Controller
         $card = new KanbanCard();
         $card->lane()->associate($lane);
         $card->title = $request->input('title');
-        $card->description = $request->input('description');
+        $card->description = $request->input('description') ?? '';
         $card->label = Carbon::now();
-        $card->cardColor =  $request->input('cardColor');
-        $card->index =  $request->input('index');
+        $card->cardColor = $request->input('cardColor') ?? '#ffffff';
+
+        $card->index =  $request->input('index') ?? 0;
         $card->save();
+
         $tags = $request->input('tags');
         if(isset($tags) && count($tags) > 0) {
             $card->tags()->detach();
@@ -141,8 +165,8 @@ class TaskController extends Controller
             }
         }
         $card->save();
-
-        return response()->json(KanbanCard::with('tags')->get(), 201);
+//
+        return response()->json($card, 201);
     }
 
     public function updateKanbanCard(Request $request, $projectId, $laneId, $cardId) {
@@ -155,7 +179,7 @@ class TaskController extends Controller
         $card->description = $request->input('description');
         $card->label = Carbon::now();
         $card->cardColor =  $request->input('cardColor');
-        $card->index =  $request->input('index');
+        $card->index = $request->input('index');
         $card->save();
         $tags = $request->input('tags');
 
@@ -172,7 +196,8 @@ class TaskController extends Controller
             }
         }
         $card->save();
-        return response()->json(KanbanCard::with('tags')->get(), 201);
+
+        return response()->json($card, 201);
     }
 
 
@@ -186,7 +211,11 @@ class TaskController extends Controller
 
         $card->delete();
 
-        return response()->json(KanbanCard::with('tags')->get(),201);
+        $cards = KanbanCard::with('tags')
+            ->where("lane_id", $laneId)
+            ->get();
+
+        return response()->json($cards,201);
     }
 
 

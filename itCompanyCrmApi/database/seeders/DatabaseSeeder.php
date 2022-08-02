@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(KanbanPrioritySeeder::class);
 
-        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
+//        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
 
 
 
