@@ -40,7 +40,9 @@ class TaskController extends Controller
         $employee = Employee::findOrFail($memberId);
 
         $lanes = KanbanLane::
-            with('employee', 'cards')
+            with(['employee', 'cards' => function($c) {
+                $c->orderBy('index', 'asc');
+            }])
             ->where('project_id', $projectId)
             ->where('employee_id', $employee->id)
             ->orderBy('index', 'asc')
@@ -76,9 +78,12 @@ class TaskController extends Controller
 //            $q->where('role_id', $developerRoleId);
 //        })->first();
         $lanes = KanbanLane::
-        with('employee', 'cards')
+        with(['employee', 'cards' => function($c) {
+            $c->orderBy('index', 'asc');
+        }])
             ->where('project_id', $projectId)
             ->where('employee_id', $employee->id)
+            ->orderBy('index', 'asc')
             ->get();
 
         return response()->json(['lanes' => $lanes], 201);
@@ -107,9 +112,6 @@ class TaskController extends Controller
 
         foreach ($lanes as $requestLane) {
             $lane = KanbanLane::findOrFail($requestLane["id"]);
-            $lane->title = $requestLane["title"] ?? $lane->title;
-            $lane->label = $requestLane["label"] ?? $lane->label;
-            $lane->color = $requestLane["color"] ?? $lane->color;
             $lane->index = $requestLane["index"] ?? $lane->index;
             $lane->save();
         }
@@ -134,9 +136,6 @@ class TaskController extends Controller
     }
 
 
-
-
-
     public function addKanbanCard(Request $request, $projectId, $laneId) {
 
         $lane = KanbanLane::findOrFail($laneId);
@@ -148,7 +147,7 @@ class TaskController extends Controller
         $card->label = Carbon::now();
         $card->cardColor = $request->input('cardColor') ?? '#ffffff';
 
-        $card->index =  $request->input('index') ?? 0;
+        $card->index = KanbanCard::where('lane_id', $lane->id)->count();
         $card->save();
 
         $tags = $request->input('tags');
@@ -165,23 +164,26 @@ class TaskController extends Controller
             }
         }
         $card->save();
-//
         return response()->json($card, 201);
     }
 
+
+
     public function updateKanbanCard(Request $request, $projectId, $laneId, $cardId) {
+        $index = $request->input('index');
 
         $lane = KanbanLane::findOrFail($laneId);
         $card = KanbanCard::findOrFail($cardId);
+        $cards = KanbanCard::where("lane_id", $laneId)->orderBy('index', "asc")->get();
+        $oldIndex = $card->index;
 
         $card->lane()->associate($lane);
-        $card->title = $request->input('title');
-        $card->description = $request->input('description');
-        $card->label = Carbon::now();
-        $card->cardColor =  $request->input('cardColor');
-        $card->index = $request->input('index');
+        $card->title = $request->input('card.title');
+        $card->description = $request->input('card.description') ?? '';
+        $card->cardColor = $request->input('card.cardColor');
+        $card->index = $index;
+        $tags = $request->input('card.tags');
         $card->save();
-        $tags = $request->input('tags');
 
         if(isset($tags) && count($tags) > 0) {
             $card->tags()->detach();
@@ -195,9 +197,72 @@ class TaskController extends Controller
                 $card->tags()->attach($t);
             }
         }
-        $card->save();
 
-        return response()->json($card, 201);
+        $lane = KanbanLane::findOrFail($laneId);
+
+        $counter = 0;
+        foreach ($cards as $laneCard) {
+            if($laneCard->id != $cardId) {
+                if($laneCard->index == $index) {
+                    if($oldIndex < $index && $laneCard->index > 0)
+                        $laneCard->index = $laneCard->index - 1;
+                    else
+                        $laneCard->index = $laneCard->index + 1;
+                }
+                else {
+                    if($laneCard->index > $index) {
+                        $laneCard->index = $laneCard->index + 1;
+                    }
+                    else if($laneCard->index < $index && $laneCard->index > 0) {
+                        $laneCard->index = $laneCard->index - 1;
+                    }
+                }
+
+
+                $laneCard->save();
+            }
+
+            logs()->warning("laneCard = $laneCard->title | counter = $counter | index = $index");
+
+        }
+
+        $cards = KanbanCard::where("lane_id", $laneId)->orderBy('index', "asc")->get();
+        return response()->json($cards, 201);
+    }
+
+    public function swapKanbanCards(Request $request, $projectId, $laneId, $cardId) {
+        $employee = Employee::findOrFail(11);
+        $requestFromLane = $request->input('fromLane');
+        $fromLane = KanbanLane::findOrFail($requestFromLane["id"]);
+        $requestFromCards = $requestFromLane["cards"];
+
+        foreach ($requestFromCards as $requestFromCard) {
+            $card = KanbanCard::findOrFail($requestFromCard["id"]);
+            $card->index = $requestFromCard["index"];
+            $fromLane->cards()->save($card);
+        }
+        $fromLane->save();
+
+        $requestToLane = $request->input('toLane');
+        $toLane = KanbanLane::findOrFail($requestToLane["id"]);
+        $requestToCards = $requestToLane["cards"];
+
+        foreach ($requestToCards as $requestToCard) {
+            $card = KanbanCard::findOrFail($requestToCard["id"]);
+            $card->index = $requestToCard["index"];
+            $toLane->cards()->save($card);
+        }
+        $toLane->save();
+
+        $lanes = KanbanLane::
+        with(['employee', 'cards' => function($c) {
+            $c->orderBy('index', 'asc');
+        }])
+            ->where('project_id', $projectId)
+            ->where('employee_id', $employee->id)
+            ->orderBy('index', 'asc')
+            ->get();
+        return response()->json([$fromLane->cards, $toLane->cards], 201);
     }
 
 
@@ -213,7 +278,9 @@ class TaskController extends Controller
 
         $cards = KanbanCard::with('tags')
             ->where("lane_id", $laneId)
+            ->orderBy('index', 'asc')
             ->get();
+
 
         return response()->json($cards,201);
     }

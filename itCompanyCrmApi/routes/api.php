@@ -131,6 +131,7 @@ Route::prefix('projects')->group(function() {
             Route::put('{cardId}', [TaskController::class, 'updateKanbanCard']);
             Route::delete('{cardId}', [TaskController::class, 'deleteKanbanCard']);
 
+            Route::put('{cardId}/swap', [TaskController::class, 'swapKanbanCards']);
         });
     });
 

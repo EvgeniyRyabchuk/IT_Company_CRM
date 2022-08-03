@@ -128,6 +128,7 @@ const Kanban = () => {
     const [kanbanData, setKanbanData] = useState<any>(data);
     const [isDataChangeHandled, setIsDataChangeHandled] = useState(false);
 
+    console.log(kanbanData)
     const lineIdsToString = useCallback((data: any) => {
         for (let lane of data.lanes) {
             lane.id = lane.id.toString();
@@ -153,9 +154,10 @@ const Kanban = () => {
                 method: "POST",
                 body: JSON.stringify(data)
             });
-        const body = await res.json();
-        lineIdsToString(body);
-        setKanbanData({ lanes: [...body.lanes]});
+        // const body = await res.json();
+        // lineIdsToString(body);
+        // setKanbanData({ lanes: [...body.lanes]});
+        getLanesByMember();
     }
 
     const deleteLane = async (data: any) => {
@@ -184,27 +186,25 @@ const Kanban = () => {
     const moveLane = async (data: any) => {
         const { removedIndex, addedIndex, payload } = data;
 
-        const lanes = kanbanData.lanes;
-        const temp = lanes[removedIndex];
-        lanes[removedIndex] = lanes[addedIndex];
-        lanes[addedIndex] = temp;
+        const temp = kanbanData.lanes[removedIndex];
+        // delete old item
+        kanbanData.lanes.splice(removedIndex, 1);
+        // insert new item
+        kanbanData.lanes.splice(addedIndex, 0, temp);
 
-        lanes.forEach( (currentValue: any, index: number)=> {
-            currentValue.index = index;
-        });
+        kanbanData.lanes.forEach((value: any, index: number) => {
+            value.index = index
+        })
 
         const res = await fetch(`http://127.0.0.1:8000/api/projects/1/lanes/swap`,
             { headers: {
                     "Content-Type": 'application/json'
                 },
                 method: "PUT",
-                body: JSON.stringify({ lanes })
-            });
+                body: JSON.stringify({ lanes: kanbanData.lanes })
+        });
 
-        setKanbanData({ lanes: [ ...lanes]});
-
-        // const resCard = await res.json();
-
+        setKanbanData({ lanes: [ ...kanbanData.lanes]});
     }
 
     const addCard = async (data: any) => {
@@ -217,20 +217,19 @@ const Kanban = () => {
             });
         const card = await res.json();
 
-        const lane = kanbanData.lanes.filter((kd:any) => kd.id === data.laneId)[0];
-        lane.cards = [ ...lane.cards, card];
-        lineIdsToString({lanes: [lane]});
+        getLanesByMember();
+
+        // const lane = kanbanData.lanes.filter((kd:any) => kd.id === data.laneId)[0];
+        // lane.cards = [ ...lane.cards, card];
+        // lineIdsToString({lanes: [lane]});
+        //
+        //
+        // setKanbanData({ lanes: [
+        //     ...kanbanData.lanes
+        // ]});
 
 
-        setKanbanData({ lanes: [
-            ...kanbanData.lanes
-        ]});
-        console.log({ lanes: [
-            ...kanbanData.lanes
-        ]})
     }
-
-
 
     const deleteCard = async (data: any) => {
         const { cardId, laneId } = data;
@@ -239,14 +238,12 @@ const Kanban = () => {
             `http://127.0.0.1:8000/api/projects/1/lanes/${laneId}/cards/${cardId}`,
             { method: "DELETE" });
         const cards = await res.json();
-        const lane = kanbanData.filter((kd:any) => kd.id === laneId)[0];
+        const lane = kanbanData.lanes.filter((kd:any) => kd.id === laneId)[0];
         lane.cards = cards;
-        lineIdsToString([lane]);
 
         setKanbanData({ lanes: [
                 ...kanbanData.lanes,
-                    lane,
-            ]});
+        ]});
     }
 
     const moveCard = async (data: any) => {
@@ -255,27 +252,40 @@ const Kanban = () => {
         const fromLane = kanbanData.lanes.filter((kd: any) => kd.id === fromLaneId)[0];
         const toLane = kanbanData.lanes.filter((kd: any) => kd.id === toLaneId)[0];
 
-        const card = fromLane.cards.filter((c: any) => c.id === cardId)[0];
+        const card = fromLane.cards.filter((c: any) => c.id == cardId)[0];
 
-        const res = await fetch(`http://127.0.0.1:8000/api/projects/1/lanes/${toLaneId}/cards/${cardId}`,
+        const temp = toLane.cards[index];
+
+        // delete old item
+        fromLane.cards.splice(card.index, 1);
+        // insert new item
+        toLane.cards.splice(index, 0, card);
+
+        fromLane.cards.forEach((value: any, index: number) => {
+            value.index = index
+        });
+        toLane.cards.forEach((value: any, index: number) => {
+            value.index = index
+        });
+
+        console.log(toLane.cards);
+
+        const res = await fetch(`http://127.0.0.1:8000/api/projects/1/lanes/${toLaneId}/cards/${card.id}/swap`,
             { headers: {
                     "Content-Type": 'application/json'
                 },
                 method: "PUT",
-                body: JSON.stringify(card)
+                body: JSON.stringify({
+                    fromLane,
+                    toLane
+                })
             });
 
-        const resCard = await res.json();
 
-        fromLane.cards = fromLane.cards.filter(((fl: any) => fl.id !== card.id));
+        setKanbanData({ lanes: [
+            ...kanbanData.lanes,
+        ]});
 
-        // lane.cards = [ ...lane.cards, card];
-        // lineIdsToString([lane]);
-        //
-        // setKanbanData({ lanes: [
-        //         ...kanbanData.lanes,
-        //         lane
-        //     ]});
     }
 
     useEffect(() => {
@@ -327,19 +337,16 @@ const Kanban = () => {
         deleteLane({ laneId });
 
     }
-
     const onLaneUpdate = (laneId: any, data: any) => {
         console.log("onLaneUpdate")
         console.log(laneId, data);
         updateLane({laneId, data});
 
     }
-
     const handleLaneDragEnd = (removedIndex: any, addedIndex: any, payload: any) => {
         console.log("handleLaneDragEnd")
         console.log(removedIndex, addedIndex, payload);
         moveLane({removedIndex, addedIndex, payload});
-
     }
 
 
