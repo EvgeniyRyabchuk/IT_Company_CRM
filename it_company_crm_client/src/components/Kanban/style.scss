@@ -1,0 +1,46 @@
+
+.react-trello-board {
+    overflow-y: auto !important;
+    height: 900px !important;
+    position: relative;
+}
+.react-trello-board > div {
+    padding-top: 100px;
+}
+.react-trello-board > .smooth-dnd-container {
+    position: absolute;
+    left: 10px;
+    top: -100px;
+    z-index: 99;
+    border: 2px dashed white;
+
+
+
+}
+
+// lane
+.kCcqNR {
+    overflow: auto !important;
+    max-height: 60vh !important;
+}
+
+// add card
+.sc-idiyUo {
+    padding: 5px 10px !important;
+    top: -50px !important;
+    left: 0px !important;
+    position: absolute !important;
+    color: white !important;
+    border: 1px dashed white;
+}
+
+// tag
+
+.hlMmhO {
+    padding: 7px 7px !important;
+}
+
+.kanban-wrapper {
+    height: 900px;
+    padding: 50px 10px;
+}

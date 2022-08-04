@@ -1,12 +1,12 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useId, useMemo, useState} from 'react';
 
 
 // @ts-ignore
 import Board from 'react-trello';
-import _, {forEach} from "lodash";
-import './style.css';
-
-import da from "@mobiscroll/react/dist/src/i18n/da";
+import './style.scss';
+import useQueryParams from "../../hooks/useQueryParams";
+import fa from "@mobiscroll/react/dist/src/i18n/fa";
+import defaultSortData from "./defaultSortData";
 
 const Kanban = () => {
     const data = useMemo(() => {
@@ -125,10 +125,34 @@ const Kanban = () => {
             ]
         }
     }, []);
+
     const [kanbanData, setKanbanData] = useState<any>(data);
     const [isDataChangeHandled, setIsDataChangeHandled] = useState(false);
 
-    console.log(kanbanData)
+    const [sort, setSort] = useState({ key: 'sort', value: ''} );
+    const [order, setOrder] = useState({ key: 'order', value: ''} );
+
+
+    const sortData = useMemo(() => {
+        if(sort.value) {
+            return defaultSortData.map(e => {
+                if(e.value === sort.value && e.order === order.value)
+                    e.selected = true;
+                else
+                    e.selected = false;
+                return e;
+            });
+        }
+        //TODO: push query params to url
+        // https://stackoverflow.com/questions/40161516/how-do-you-programmatically-update-query-params-in-react-router
+        return defaultSortData
+
+    }, [sort, order]);
+
+    const { queryParamString } = useQueryParams([sort, order]);
+
+    console.log(queryParamString);
+
     const lineIdsToString = useCallback((data: any) => {
         for (let lane of data.lanes) {
             lane.id = lane.id.toString();
@@ -139,12 +163,13 @@ const Kanban = () => {
     }, []);
 
     const getLanesByMember = async () => {
-        const response = await fetch("http://127.0.0.1:8000/api/projects/1/members/11/lanes");
+        const response = await fetch(`http://127.0.0.1:8000/api/projects/5/members/1/lanes${queryParamString}`);
         const body = await response.json();
         lineIdsToString(body);
-
         setKanbanData({ lanes: [...body.lanes]});
     }
+
+    // http requests
 
     const addLane = async (data: any) => {
         const res = await fetch(`http://127.0.0.1:8000/api/projects/1/lanes`,
@@ -290,10 +315,11 @@ const Kanban = () => {
 
     useEffect(() => {
         getLanesByMember();
-    }, [])
+    }, [queryParamString])
 
     // card or line text update commit
 
+    // handlers
     const onDataChange = (newData: any) => {
         // console.log("data change");
         // console.log(newData);
@@ -350,10 +376,37 @@ const Kanban = () => {
     }
 
 
+    const onSort = (e: any) => {
+        const payload = e.target.value.split('&');
+        const sortValue = payload[0] ?? 'default';
+        const orderValue =  payload[1] ?? 'asc';
+        setSort({ ...sort, value: sortValue})
+        setOrder({ ...order, value: orderValue});
+    }
+
+    const selectSortDefVal = () :string => {
+        const def = sortData.filter(e => e.selected === true)[0] ?? sortData[0];
+        console.log(def.value + "&" + def.order)
+        return def.value + "&" + def.order;
+    }
 
     // style={{width: '1000px', height: "800px", overflow: "auto", overflowX: "auto"}}
     return (
         <div className={'kanban-wrapper'}>
+            <select
+                onChange={onSort}
+                value={selectSortDefVal()}
+            >
+                { sortData.map(e =>
+                    <option
+                        key={e.id}
+                        value={e.value + "&" + e.order}
+                    >
+                        {e.name} ({e.order})
+                    </option>
+                )}
+
+            </select>
             <Board
                 data={kanbanData}
 

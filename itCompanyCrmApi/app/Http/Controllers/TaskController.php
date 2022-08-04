@@ -38,16 +38,22 @@ class TaskController extends Controller
     public function getKanbanLanesByMember(Request $request, $projectId, $memberId) {
 
         $employee = Employee::findOrFail($memberId);
+        $sort = $request->input('sort') ?? 'index';
+        $order = $request->input('order') ?? 'asc';
 
-        $lanes = KanbanLane::
-            with(['employee', 'cards' => function($c) {
-                $c->orderBy('index', 'asc');
-            }])
+
+        $query = KanbanLane::
+            with(['employee',
+                'cards' => function($c) use($sort, $order) {
+                    $c->orderBy($sort, $order);
+                },
+                'cards.tags'
+            ])
             ->where('project_id', $projectId)
             ->where('employee_id', $employee->id)
-            ->orderBy('index', 'asc')
-            ->get();
+            ->orderBy('index', 'asc');
 
+        $lanes = $query->get();
         $lanes->each(function ($todo) {
             $todo->setHidden(['project_id']);
         });

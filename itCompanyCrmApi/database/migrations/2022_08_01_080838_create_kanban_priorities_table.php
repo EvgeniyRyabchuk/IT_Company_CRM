@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('kanban_priorities', function (Blueprint $table) {
             $table->id();
             $table->string('title', 3);
+            $table->string('bgcolor')->default("#76b5c5");
+            $table->string('color')->default("white");
             $table->timestamps();
         });
     }

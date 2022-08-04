@@ -22,9 +22,10 @@ return new class extends Migration
             $table->unsignedSmallInteger('index');
             $table->string('label');
             $table->string('cardColor', 10)->default("#ffffff");
-
+            $table->string('priority', 1)->default("A");
 
             $table->timestamps();
+
         });
     }
 

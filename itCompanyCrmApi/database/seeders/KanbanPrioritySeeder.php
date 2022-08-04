@@ -16,11 +16,11 @@ class KanbanPrioritySeeder extends Seeder
     public function run()
     {
         $models = [
-            ['title' => "A"],
-            ['title' => "B"],
-            ['title' => "C"],
-            ['title' => "D"],
-            ['title' => "E"],
+            ['title' => "A", "bgcolor" => '#FF461F'],
+            ['title' => "B", "bgcolor" => '#FFC33F'],
+            ['title' => "C", "bgcolor" => '#93FD50'],
+            ['title' => "D", "bgcolor" => '#50C1FD'],
+            ['title' => "E", "bgcolor" => '#5948FF'],
         ];
 
         KanbanPriority::insert($models);

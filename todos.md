@@ -4,13 +4,10 @@
 --- Todos on front 
 
 Date 
-sort: date, priority, index 
 Color style 
-Tags 
+Add tags and Link to user if cliked on card 
 Drap-n-drop style 
-Link to user if cliked on card 
-
-
+Font family change 
 
 
 --- Project statuses 
