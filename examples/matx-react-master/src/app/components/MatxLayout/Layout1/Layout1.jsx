@@ -87,6 +87,7 @@ const Layout1 = () => {
 
   return (
     <Layout1Root className={layoutClasses}>
+
       {showSidenav && sidenavMode !== 'close' && (
         <SidenavTheme>
           <Layout1Sidenav />
@@ -94,6 +95,7 @@ const Layout1 = () => {
       )}
 
       <LayoutContainer width={sidenavWidth} secondarySidebar={secondarySidebar}>
+
         {layout1Settings.topbar.show && layout1Settings.topbar.fixed && (
           <ThemeProvider theme={topbarTheme}>
             <Layout1Topbar fixed={true} className="elevation-z8" />

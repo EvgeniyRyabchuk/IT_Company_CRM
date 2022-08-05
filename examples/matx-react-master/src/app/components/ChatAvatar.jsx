@@ -20,6 +20,7 @@ const StatusCircle = styled('div')(({ theme, status }) => ({
 const ChatAvatar = ({ src, status }) => {
   return (
     <Box position="relative">
+      paskldfjgsdf;lkgsjgsd;klflsjdfg
       <StyledAvatar src={src} />
       <StatusCircle status={status} />
     </Box>
