@@ -22,7 +22,7 @@
 
 
 
---- Mail Host 
+# Mail Host 
 
 {
             "Effect": "Deny",
@@ -55,7 +55,12 @@ https://www.sendinblue.com/blog/mailgun-alternatives/
 
 https://mailtrap.io/pricing/
 
---- Payment 
+# Online help (chat)
+
+https://www.tidio.com/panel/conversations/880e3946d83e4417a604cb1e6d575a15
+
+
+# Payment 
 
 https://laravel.com/docs/9.x/billing
 
@@ -66,26 +71,12 @@ https://appdividend.com/2022/03/01/laravel-stripe-payment-gateway-integration/
 https://stripe.com/docs/stripe-js/react#setup
 
 
--- Kanban 
-
-https://www.google.com/search?q=react+kanban+board&rlz=1C1IXYC_ruUA964UA964&oq=react+kanban+&aqs=chrome.1.69i57j0i512l9.4374j0j7&sourceid=chrome&ie=UTF-8
-
--- jira api 
-
-
---- DB 
-
-[Phone](https://petrenco.com/mysql.php?txt=168)
-
-Как разделить номера 
-
-
-Есть две роли киент и рабочий. У них есть общее поля(имя,почта), но больше различий (у работника - рарплата, у пользователя - отзывы и тд.). Стоит ли вынослить их в отдельные таблицы, а общее хранить в таблице users. И их вообще разделить полностью? Или как? 
 
 
 
 
---- examples 
+
+# Frontend examples  
 
 https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/landing/
 
@@ -105,18 +96,20 @@ https://cruip.com/demos/mosaic/
 
 https://demo.uifort.com/carolina-react-admin-dashboard-material-ui-free-demo/DashboardDefault
 
---- Site types 
-
-https://arto.agency/en/website-development/
-
---- Project development steps 
-
-https://impulse-design.com.ua/etapy-razrabotki-sajta.html
-
-https://vc.ru/flood/41441-etapy-sozdaniya-sayta-na-zametku-zakazchiku
-
---- Developnent Front Examples 
+# Developnent Front Examples 
 
 https://js.devexpress.com/Demos/WidgetsGallery/Demo/FileManager/Overview/React/Light/
 
 https://demo.mobiscroll.com/react/eventcalendar/create-read-update-delete-CRUD#
+
+
+# Site types 
+
+https://arto.agency/en/website-development/
+
+# Project development steps 
+
+https://impulse-design.com.ua/etapy-razrabotki-sajta.html 
+
+https://vc.ru/flood/41441-etapy-sozdaniya-sayta-na-zametku-zakazchiku
+

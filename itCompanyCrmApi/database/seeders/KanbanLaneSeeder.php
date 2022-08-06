@@ -28,6 +28,9 @@ class KanbanLaneSeeder extends Seeder
 
                 $titles = ['Backlog', 'To do', 'Doing', 'In Review', 'Done'];
                 $index = 0;
+
+                $colors = [];
+
                 $laneCounter = 0;
                 foreach ($titles as $title) {
                     $kanbanLane = new KanbanLane();

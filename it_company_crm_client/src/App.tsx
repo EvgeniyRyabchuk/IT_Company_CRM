@@ -8,62 +8,20 @@ import LargeEventCalendar from "./components/LargeEventCalendar/LargeEventCalend
 
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 import Kanban from "./components/Kanban/Kanban";
+import {Button} from "@mui/material";
 function App() {
-
-    //
-    // const [i, setI] = useState({ lanes: [
-    //         {
-    //             id: "lane1",
-    //             name: "123",
-    //             cards: [
-    //                 {
-    //                     id: "card1"
-    //                 },
-    //                 {
-    //                     id: "card2"
-    //                 }
-    //             ]
-    //         },
-    //         {
-    //             id: "lane2",
-    //             name: "123",
-    //             cards: [
-    //                 {
-    //                     id: "card1"
-    //                 },
-    //                 {
-    //                     id: "card2"
-    //                 }
-    //             ]
-    //         }
-    //     ]});
-    //
-    // useEffect(() => {
-    //     const lane = i.lanes.filter((kd:any) => kd.id === "lane1")[0];
-    //     lane.name = "qwerty";
-    //
-    //     setI({
-    //             lanes: [
-    //                 ...i.lanes,
-    //                 lane
-    //             ]
-    //     });
-    //
-    // }, []);
-
-    // console.log(i);
-
 
   return (
     <div className="App">
 
+        {/*<Button variant="contained">Contained</Button>*/}
         {/*<ProjectFileManager />*/}
 
-        {/*<EventCalendar />*/}
+        <EventCalendar />
 
-        {/*<LargeEventCalendar />*/}
+        <LargeEventCalendar />
 
-        <Kanban />
+        {/*<Kanban />*/}
     </div>
   );
 }

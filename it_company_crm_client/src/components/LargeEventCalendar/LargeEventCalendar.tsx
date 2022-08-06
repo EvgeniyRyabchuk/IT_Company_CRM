@@ -119,7 +119,8 @@ const LargeEventCalendar: React.FC = () => {
     ], [tempColor]);
 
     const saveEvent = React.useCallback<any>(async () => {
-        console.log(popupEventDate);
+        console.log(tempEvent);
+        // console.log(popupEventDate);
         const start = new Date(popupEventDate[0]);
         start.setDate(start.getDate() + 1);
         const newEvent = {
@@ -146,7 +147,8 @@ const LargeEventCalendar: React.FC = () => {
                     body: JSON.stringify(newEvent)
                 });
             const event = res.json();
-
+            // newEvent.start.setDate(newEvent.end.getDate() + 1);
+            // newEvent.start.setDate(newEvent.start.getDate() - 1);
             newEventList.splice(index, 1, newEvent);
             setMyEvents(newEventList);
             // here you can update the event in your storage as well
@@ -258,6 +260,38 @@ const LargeEventCalendar: React.FC = () => {
         setOpen(true);
     }, [loadPopupForm]);
 
+    const onEventDragStart = React.useCallback<any>((args: any) => {
+
+        console.log(args);
+
+        // setTempEvent({ ...args.event });
+        // setEdit(true);
+        console.log("onEventDragStart");
+    }, []);
+
+    const onEventDragEnd = React.useCallback<any>(async (args: any) => {
+
+        const { event: newEvent } = args;
+
+        const index = myEvents.findIndex(x => {
+            console.log(x.id + "=" + newEvent.id); return x.id === newEvent.id} );
+        console.log(index)
+
+        const newEventList = [...myEvents];
+        const res = await fetch(`http://127.0.0.1:8000/api/users/1/events/${newEvent.id}`,
+            { headers: {
+                    "Content-Type": 'application/json'
+                },
+                method: "PUT",
+                body: JSON.stringify(newEvent)
+            });
+
+        const json = res.json();
+        newEventList.splice(index, 1, newEvent);
+        setMyEvents(newEventList);
+
+        console.log("onEventDragStart");
+    }, [isEdit, myEvents]);
     const onEventCreated = React.useCallback<any>((args: any) => {
         setEdit(false);
         setTempEvent(args.event)
@@ -272,9 +306,8 @@ const LargeEventCalendar: React.FC = () => {
         deleteEvent(args.event)
     }, [deleteEvent]);
 
-    const onEventUpdated = React.useCallback<any>((args: any) => {
-        // here you can update the event in your storage as well, after drag & drop or resize
-        // ...
+    const onEventUpdated = React.useCallback<any>( async (args: any) => {
+
     }, []);
 
     // datepicker options
@@ -291,7 +324,7 @@ const LargeEventCalendar: React.FC = () => {
         }
     }, [popupEventAllDay]);
 
-    console.log("render")
+    console.log(myEvents);
 
     // popup options
     const headerText = React.useMemo<string>(() => isEdit ? 'Edit event' : 'New Event', [isEdit]);
@@ -365,6 +398,8 @@ const LargeEventCalendar: React.FC = () => {
             onEventCreated={onEventCreated}
             onEventDeleted={onEventDeleted}
             onEventUpdated={onEventUpdated}
+            onEventDragStart={onEventDragStart}
+            onEventDragEnd={onEventDragEnd}
         />
         <Popup
             display="bottom"

@@ -3,6 +3,10 @@
     overflow-y: auto !important;
     height: 900px !important;
     position: relative;
+    font-family: Roboto, Helvetica, Arial, sans-serif !important;
+}
+textarea {
+    font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 .react-trello-board > div {
     padding-top: 100px;

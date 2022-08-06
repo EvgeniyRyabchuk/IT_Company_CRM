@@ -115,7 +115,7 @@ class FileManager {
 
 
     public static function createDirectory($path) {
-        $fullPath = storage_path("app/public" . "/" . $path);
+        $fullPath = storage_path("app/private" . "/" . $path);
         return File::makeDirectory($fullPath, 0777, true, true);
     }
 
@@ -148,7 +148,7 @@ class FileManager {
         $chunk = $chunkMeta["Index"];
         $chunks = $chunkMeta["TotalCount"];
 
-        $filePath = storage_path("app/public/$path");
+        $filePath = storage_path("app/private/$path");
 
         // create directory if not exist
         if (!file_exists($filePath)) {
@@ -211,7 +211,7 @@ class FileManager {
         $chunk = $chunkMeta["Index"];
         $chunks = $chunkMeta["TotalCount"];
 
-        $filePath = storage_path("app/public/$path");
+        $filePath = storage_path("app/private/$path");
 
         // create directory if not exist
         if (!file_exists($filePath)) {

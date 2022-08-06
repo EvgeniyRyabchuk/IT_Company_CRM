@@ -122,6 +122,7 @@ class ProjectController extends Controller
 
     public function fileManager(Request $request, $projectId)
     {
+
         $command = $request->get('command');
         $project = Project::findOrFail($projectId);
         $location = "projects/$projectId/data";
@@ -196,8 +197,8 @@ class ProjectController extends Controller
                     if ($zip->open(storage_path($zipFileName), ZipArchive::CREATE) === TRUE) {
 
                         foreach ($projects as $project) {
-                            logs()->warning('zip = ' . storage_path("app/public/" . $project->path));
-                            $zip->addFile(storage_path("app/public/" . $project->path), $project->name);
+                            logs()->warning('zip = ' . storage_path("app/private/" . $project->path));
+                            $zip->addFile(storage_path("app/private/" . $project->path), $project->name);
                         }
                         $zip->close();
                     }
@@ -278,7 +279,7 @@ class ProjectController extends Controller
                     $oldPath = $projectFile->path;
                     $projectFile->name = $name;
                     $projectFile->path = $projectFile->location . "/" . $name;
-                    Storage::move($location, $projectFile->path);
+                    Storage::disk('private')->move($location, $projectFile->path);
                     $projectFile->save();
                     if($projectFile->isDirectory == 1)
                         DbHelper::changeNestedProjectFilePaths($oldPath, $projectFile->path);
@@ -296,7 +297,7 @@ class ProjectController extends Controller
                         "path" => $location,
                     ])->first();
 
-                    $fullPath = storage_path('app/public' . "/" . $location);
+                    $fullPath = storage_path('app/private' . "/" . $location);
                     if ($projectFile->isDirectory == 1) {
                         DbHelper::removeNestedProjectFile($location);
                         File::deleteDirectory($fullPath);
@@ -331,7 +332,7 @@ class ProjectController extends Controller
                     $projectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;
                     $projectFile->location = $requestProcessedData["destinationPath"];
 
-                    Storage::move( $requestProcessedData["sourcePath"],
+                    Storage::disk('private')->move( $requestProcessedData["sourcePath"],
                         $requestProcessedData["destinationPath"] . "/" . $projectFile->name
                     );
                     $projectFile->save();
@@ -365,7 +366,7 @@ class ProjectController extends Controller
 //                    $milliseconds = round(microtime(true) * 1000);
 //                    $newName =  "Copy_" . $milliseconds . $projectFile->name;
                     */
-                    $newName =  $projectFile->name;
+                    $newName = $projectFile->name;
                     $newProjectFile->name = $newName;
                     $newProjectFile->created_at = Carbon::now();
                     $newProjectFile->hasSubDirectories = $projectFile->hasSubDirectories;
@@ -379,7 +380,8 @@ class ProjectController extends Controller
                     $newProjectFile->project()->associate($project);
 
                 if($newProjectFile->isDirectory == 0) {
-                    if(!Storage::copy($requestProcessedData["sourcePath"],
+
+                    if(!Storage::disk('private')->copy($requestProcessedData["sourcePath"],
                         $requestProcessedData["destinationPath"] . "/" . $newName
                     )) {
                         return response()->json([
@@ -390,7 +392,7 @@ class ProjectController extends Controller
                     }
                 }
                 else {
-                    $basePath = storage_path('app/public/');
+                    $basePath = storage_path('app/private/');
                     if(!File::copyDirectory($basePath . $requestProcessedData["sourcePath"],
                         $basePath . $requestProcessedData["destinationPath"] . "/" . $newName
                     )) {

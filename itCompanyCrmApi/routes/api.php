@@ -15,6 +15,7 @@ use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\_ChunkFileController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\StorageController;
 
 
 /*
@@ -34,10 +35,15 @@ use App\Http\Controllers\EventController;
 //
 //header('Access-Control-Allow-Origin: http://localhost:3000');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
+// public storage route
+Route::get('storage/{path}', [StorageController::class, 'show'])
+    ->where('path', '.*');
+
+// private storage route
+Route::get('storage/private/{path}', [StorageController::class, 'showPrivate'])
+    ->where('path', '.*');
+//    ->middleware('auth:api');
 
 
 Route::controller(AuthController::class)->prefix('auth')->group(function () {

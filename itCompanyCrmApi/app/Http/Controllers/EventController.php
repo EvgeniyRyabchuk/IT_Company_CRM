@@ -50,7 +50,7 @@ class EventController extends Controller
         $event->start = Carbon::parse($request->input('start'));
         $event->end =Carbon::parse($request->input('end') ?? $event->start);
 
-        $event->color = $request->input('color');
+        $event->color = $request->input('color') ?? "#000000";
 
         $event->allDay = filter_var($request->input('allDay'), FILTER_VALIDATE_BOOLEAN);
         $event->isPublic = filter_var($request->input('isPublic'), FILTER_VALIDATE_BOOLEAN);
