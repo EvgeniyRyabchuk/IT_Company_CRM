@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="description" content="Materialize is a modern responsive CSS framework based on Material Design by Google. ">
+    <title>Laravel Localization - Materialize</title>
+    <!-- Favicons-->
+    <link rel="apple-touch-icon-precomposed" href="images/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="images/favicon/mstile-144x144.png">
+    <link rel="icon" href="images/favicon/favicon-32x32.png" sizes="32x32">
+    <!--  Android 5 Chrome Color-->
+    <meta name="theme-color" content="#EE6E73">
+    <!-- CSS-->
+    <link href="css/prism.css" rel="stylesheet">
+    <link href="css/ghpages-materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- if !isDemo-->
+    <!--   script.-->
+    <!--     window.liveSettings = {-->
+    <!--       api_key: "a0b49b34b93844c38eaee15690d86413",-->
+    <!--       picker: "bottom-right",-->
+    <!--       detectlang: true,-->
+    <!--       dynamic: true,-->
+    <!--       autocollect: true-->
+    <!--     };-->
+    <!--   script(src='//cdn.transifex.com/live.js')-->
+  </head>
+  <body>
+    <header>
+      <nav class="top-nav">
+        <div class="container">
+          <div class="nav-wrapper">
+            <div class="row">
+              <div class="col s12 m10 offset-m1">
+                <h1 class="header">Laravel Localization</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="container"><a href="#" data-target="nav-mobile" class="top-nav sidenav-trigger full hide-on-large-only"><i class="material-icons">menu</i></a></div>
+      <ul id="nav-mobile" class="sidenav sidenav-fixed">
+        <li class="logo"><a id="logo-container" href="/" class="brand-logo">
+            <object id="front-page-logo" type="image/svg+xml" data="res/materialize.svg">Your browser does not support SVG</object></a></li>
+        <li class="search">
+          <div class="search-wrapper">
+            <input id="search" placeholder="Search"><i class="material-icons">search</i>
+            <div class="search-results"></div>
+          </div>
+        </li>
+        <li class="bold"><a href="index.html" class="waves-effect waves-red">Home</a></li>
+        <li class="bold"><a href="about.html" class="waves-effect waves-red">About</a></li>
+        <li class="bold"><a href="getting-started.html" class="waves-effect waves-red">Getting Started</a></li>
+        <li class="bold"><a href="customization.html" class="waves-effect waves-red">Customization</a></li>
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li class="bold"><a class="collapsible-header waves-effect waves-red">CSS</a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="color.html">Color</a></li>
+                  <li><a href="grid.html">Grid</a></li>
+                  <li><a href="helpers.html">Helpers</a></li>
+                  <li><a href="media-css.html">Media</a></li>
+                  <li><a href="pulse.html">Pulse</a></li>
+                  <li><a href="sass.html">Sass</a></li>
+                  <li><a href="shadow.html">Shadow</a></li>
+                  <li><a href="table.html">Table</a></li>
+                  <li><a href="css-transitions.html">Transitions</a></li>
+                  <li><a href="typography.html">Typography</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="bold"><a class="collapsible-header waves-effect waves-red">Components</a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="badges.html">Badges</a></li>
+                  <li><a href="buttons.html">Buttons</a></li>
+                  <li><a href="breadcrumbs.html">Breadcrumbs</a></li>
+                  <li><a href="cards.html">Cards</a></li>
+                  <li><a href="collections.html">Collections</a></li>
+                  <li><a href="floating-action-button.html">Floating Action Button</a></li>
+                  <li><a href="footer.html">Footer</a></li>
+                  <li><a href="icons.html">Icons</a></li>
+                  <li><a href="navbar.html">Navbar</a></li>
+                  <li><a href="pagination.html">Pagination</a></li>
+                  <li><a href="preloader.html">Preloader</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="bold"><a class="collapsible-header waves-effect waves-red">JavaScript</a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="auto-init.html">Auto Init</a></li>
+                  <li><a href="carousel.html">Carousel</a></li>
+                  <li><a href="collapsible.html">Collapsible</a></li>
+                  <li><a href="dropdown.html">Dropdown</a></li>
+                  <li><a href="feature-discovery.html">FeatureDiscovery</a></li>
+                  <li><a href="media.html">Media</a></li>
+                  <li><a href="modals.html">Modals</a></li>
+                  <li><a href="parallax.html">Parallax</a></li>
+                  <li><a href="pushpin.html">Pushpin</a></li>
+                  <li><a href="scrollspy.html">Scrollspy</a></li>
+                  <li><a href="sidenav.html">Sidenav</a></li>
+                  <li><a href="tabs.html">Tabs</a></li>
+                  <li><a href="toasts.html">Toasts</a></li>
+                  <li><a href="tooltips.html">Tooltips</a></li>
+                  <li><a href="waves.html">Waves</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="bold"><a class="collapsible-header waves-effect waves-red">Forms</a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="autocomplete.html">Autocomplete</a></li>
+                  <li><a href="checkboxes.html">Checkboxes</a></li>
+                  <li><a href="chips.html">Chips</a></li>
+                  <li><a href="pickers.html">Pickers</a></li>
+                  <li><a href="radio-buttons.html">Radio Buttons</a></li>
+                  <li><a href="range.html">Range</a></li>
+                  <li><a href="select.html">Select</a></li>
+                  <li><a href="switches.html">Switches</a></li>
+                  <li><a href="text-inputs.html">Text Inputs</a></li>
+                </ul>
+              </div>
+              <li class="bold active"><a class="collapsible-header waves-effect waves-red">Laravel Documentation</a>
+                <div class="collapsible-body">
+                  <ul>
+                    <li><a href="laravel-integration.html">Laravel Integration</a></li>
+                    <li><a href="laravel-passport.html">Laravel Passport</a></li>
+                    <li><a href="laravel-sanctum.html">Laravel Sanctum</a></li>
+                    <li class="active"><a href="laravel-localization.html">Laravel Localization</a></li>
+                    <li><a href="laravel-acl.html">Laravel ACL</a></li>
+                    <li><a href="laravel-homestead.html">Laravel Homestead</a></li>
+                    <li><a href="laravel-sail-docker.html">Laravel Sail & Docker</a></li>
+                    <li><a href="laravel-migration.html">Laravel Migration</a></li>
+                  </ul>
+                </div>
+              </li>
+            </li>
+          </ul>
+        </li>
+        <li class="bold"><a href="apps.html" class="waves-effect waves-red">Applications</a></li>
+        <li class="bold"><a href="mobile.html" class="waves-effect waves-red">Mobile</a></li>
+        <li class="bold"><a href="credits.html" class="waves-effect waves-red">Credits</a></li>
+        <li class="bold"><a href="https://pixinvent.ticksy.com" target="_blank" class="waves-effect waves-red">Support</a></li>
+      </ul>
+    </header>
+    <main><div class="container">
+  <div class="row">
+    <div class="col s12 m8 offset-m1 xl9 offset-xl1">
+      <div class="introduction scrollspy" id="introduction">
+        <h4 class="header">Localization</h4>
+        <strong>Introduction</strong>
+        <p>Laravel's <a href="https://laravel.com/docs/6.x/localization" target="_blank">localization</a> features
+          provide a convenient way to retrieve strings in various languages, allowing
+          you to easily support multiple languages within your application. Language strings are stored in files within
+          the <strong>resources/lang</strong> directory. Within this directory there should be a subdirectory for each
+          language supported by the application:</p>
+        <pre class="language-treeview">
+  <code class="language-treeview">
+    resources/
+    ├── lang/
+    |   ├── en/
+    |   |   ├── locale.php
+    |   ├── de/
+    |   |   ├── locale.php </code>
+        </pre>
+        <p class="mt-2">All language files return an array of keyed strings. For example:</p>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;?php
+
+    return [
+        "Dashboard" => "Instrumententafel",
+        "Analytics" => "Analytics",
+    ];</code>
+      </pre>
+        <strong class="mt-2">Configuring The Locale</strong>
+        <p>The default language for your application is stored in the <strong>config/app.php</strong> configuration
+          file.
+          You may modify this value to suit the needs of your application. You may also change the active language at
+          runtime using the <strong>setLocale</strong> method on the <strong>App</strong> facade:</p>
+        <pre class="language-php">
+  <code class="language-php">
+    Route::get('welcome/{locale}', function ($locale) {
+      App::setLocale($locale);
+  
+      //
+  });</code>
+      </pre>
+        <p class="mt-2">You may configure a <strong> "fallback language"</strong>, which will be used when the active
+          language does not contain a given translation string. Like the default language, the fallback language is also
+          configured in the <strong>config/app.php</strong> configuration file:</p>
+        <pre class="language-php">
+  <code class="language-php">
+    'fallback_locale' => 'en',</code>
+      </pre>
+        <strong class="mt-2">Defining Translation Strings</strong>
+        <p>Typically, translation strings are stored in files within the <strong>resources/lang</strong> directory.
+          Within
+          this directory
+          there should be a subdirectory for each language supported by the application:</p>
+
+        <strong class="mt-2">Retrieving Translation Strings</strong>
+        <p>You may retrieve lines from language files using the <strong> __</strong> helper function. The
+          <strong>__</strong> method accepts the file and key of the translation string as its first argument. For
+          example,
+          let's retrieve the welcome translation string from the <strong>resources/lang/en/locale.php</strong> language
+          file:
+        </p>
+        <pre class="language-php">
+  <code class="language-php">
+    echo __('locale.welcome');</code>
+    </pre>
+        <p class="mt-2">If you are using the Blade templating engine, you may use the {{ }} syntax to echo the
+          translation
+          string or use the <strong>@lang</strong> directive:</p>
+        <pre class="language-php">
+  <code class="language-php">
+    {{ __('messages.welcome') }}
+
+    @lang('messages.welcome')</code>
+      </pre>
+        <p>Now all set to work localization in simple project.</p>
+      </div>
+      <!-- Localization in materialize Laravel -->
+      <div class="locale-materialize scrollspy" id="localization-materialize">
+        <h4 class="header">Localization in Materialize Laravel</h4>
+        <p>In Materialize laravel, We provide a dropdown to switch language you can find it in the navbar. How does it
+          work? When we select a language from dropdown-menu we call a Route which calls a controller's function which
+          then put
+          selected language in session. We have created a middleware that sets the localization value from the session
+          variable. We set the session's lifetime 30min in the .env file. It sounds a little messy. Let's find out how
+          to
+          do it.</p>
+        <p>We have to create a Controller to check selected language is available or not in our template and then save
+          it
+          to session variable. Run below command. </p>
+        <pre class="language-php">
+  <code class="language-php">
+    php artisan make:controller LanguageController</code>
+        </pre>
+        <p class="mt-2">Use the below code in <strong>LanguageController</strong> file in
+          <Strong>App/Http/Controllers.</Strong></p>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;?php
+
+      namespace App\Http\Controllers;
+
+      use App\Http\Controllers\Controller;
+      use Illuminate\Http\Request;
+
+      class LanguageController extends Controller
+      {
+          //
+          public function swap($locale){
+              // available language in template array
+              $availLocale=['en'=>'en', 'fr'=>'fr','de'=>'de','pt'=>'pt'];
+              // check for existing language
+              if(array_key_exists($locale,$availLocale)){
+                  session()->put('locale',$locale);
+              }
+              return redirect()->back();
+          }
+    }</code>
+        </pre>
+        <p class="mt-2">
+          We have to define Route for language switching in <strong>routes/web.php</strong> file.
+        </p>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;?php
+      use App\Http\Controllers\LanguageController;
+    // locale Route
+    Route::get('lang/{locale}',[LanguageController::class,'swap']);</code>
+        </pre>
+        <p class="mt-2">Now we need a middleware to set <strong>app()->setLocale()</strong> variable gloabaly. Run below
+          cammand to create a middleware.</p>
+        <pre class="language-php">
+  <code class="language-php">
+    php artisan make:middleware LocaleMiddleware</code>
+          </pre>
+        <p class="mt-2">You can find this middleware in <strong>App\Http\Middleware</strong></p>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;?php
+
+      namespace App\Http\Middleware;
+
+      use Closure;
+
+      class LocaleMiddleware
+      {
+          /**
+          * Handle an incoming request.
+          *
+          * @param  \Illuminate\Http\Request  $request
+          * @param  \Closure  $next
+          * @return mixed
+          */
+          public function handle($request, Closure $next)
+          {  
+              // available language in template array
+              $availLocale=['en'=>'en', 'fr'=>'fr','de'=>'de','pt'=>'pt'];
+
+              // Locale is enabled and allowed to be change
+              if(session()->has('locale') && array_key_exists(session()->get('locale'),$availLocale)){
+                  // Set the Laravel locale
+                  app()->setLocale(session()->get('locale'));
+              }
+              return $next($request);
+          }
+    }</code>
+        </pre>
+        <p class="mt-2">You must have to mention middleware in the <strong>App\Http\kernel.php</strong> file. Use the
+          <strong>\App\Http\Middleware\LocaleMiddleware::class,</strong> line in kernel.php file.</p>
+        <pre class="language-php">
+  <code class="language-php">
+    protected $middlewareGroups = [
+    'web' => [
+    
+        \App\Http\Middleware\LocaleMiddleware::class,
+    ],
+
+    'api' => [
+        'throttle:60,1',
+        'bindings',
+    ],
+];</code>
+        </pre>
+        <p class="mt-2">
+          Now we have to set the view. We provide language switch dropdown in <strong>navabar.blade.php</strong>.
+        </p>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false"&gt;
+          &lt;i class="flag-icon flag-icon-us"&gt;&lt;/i&gt;
+          &lt;span class="selected-language"&gt;English&lt;/span&gt;
+        &lt;/a&gt;
+        &lt;div class="dropdown-menu" aria-labelledby="dropdown-flag"&gt;
+          &lt;a class="dropdown-item" href="{{url('lang/en')}}" data-language="en"&gt;
+            &lt;i class="flag-icon flag-icon-us"&gt;&lt;/i&gt;English
+          &lt;/a&gt;
+          &lt;a class="dropdown-item" href="{{url('lang/fr')}}" data-language="fr"&gt;
+            &lt;i class="flag-icon flag-icon-fr"&gt;&lt;/i&gt;French
+          &lt;/a&gt;
+          &lt;a class="dropdown-item" href="{{url('lang/de')}}" data-language="de"&gt;
+            &lt;i class="flag-icon flag-icon-de"&gt;&lt;/i&gt;German
+          &lt;/a&gt;
+          &lt;a class="dropdown-item" href="{{url('lang/pt')}}" data-language="pt"&gt;
+            &lt;i class="flag-icon flag-icon-pt"&gt;&lt;/i&gt;Portuguese
+          &lt;/a&gt;
+        &lt;/div&gt;</code>
+        </pre>
+        <p class="mt-2">We need to retrieve lines from language files using the <strong>__</strong> helper function. The
+          <strong>__</strong> method accepts the file and key of the translation string as its first argument.
+          We are using the Blade templating engine, We use the <strong>{{ }}</strong> syntax to echo the translation
+          string or use the <strong>@lang</strong> directive:
+        </p>
+        <strong class="mt-2">Resources/views/panels</strong>
+        <p>sidebar.blade.php</p>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;div class="main-menu-content"&gt;
+      &lt;ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation"&gt;
+        {{-- Foreach menu item starts --}}
+        @if(isset($menuData[0]))
+        @foreach($menuData[0]->menu as $menu)
+        @if(isset($menu->navheader))
+        <li class="navigation-header">
+          <span>{{ $menu->navheader }}</span>
+        </li>
+        @else
+        {{-- Add Custom Class with nav-item --}}
+        @php
+        $custom_classes = "";
+        if(isset($menu->classlist)) {
+        $custom_classes = $menu->classlist;
+        }
+        $translation = "";
+        if(isset($menu->i18n)){
+        $translation = $menu->i18n;
+        }
+        @endphp
+        &lt;li class="nav-item {{ (request()->is($menu->url)) ? 'active' : '' }} {{ $custom_classes }}"&gt;
+          &lt;a href="{{ $menu-&gt;url }}"&gt;
+            &lt;i class="{{ $menu-&gt;icon }}"&gt;&lt;/i&gt;
+            &lt;span class="menu-title" data-i18n="{{ $translation }}"&gt;{{ __('locale.'.$menu-&gt;name) }}&lt;/span&gt;
+            @if (isset($menu-&gt;badge))
+            &lt;?php $badgeClasses = "badge badge-pill badge-primary float-right" ?&gt;
+            &lt;span
+              class="{{ isset($menu-&gt;badgeClass) ? $menu-&gt;badgeClass.' test' : $badgeClasses.' notTest' }} "&gt;{{$menu-&gt;badge}}&lt;/span&gt;
+            @endif
+          &lt;/a&gt;
+          @if(isset($menu-&gt;submenu))
+          @include('panels/submenu', ['menu' =&gt; $menu-&gt;submenu])
+          @endif
+        &lt;/li&gt;
+        @endif
+        @endforeach
+        @endif
+        {{-- Foreach menu item ends --}}
+      &lt;/ul&gt;
+    &lt;S/div&gt;
+&lt;/div&gt;</code>
+        </pre>
+        <p class="mt-2">submenu.blade.php</p>
+        <pre class="language-php">
+  <code class="language-php">
+    {{-- For submenu --}}
+      &lt;ul class="menu-content"&gt;
+          @if(isset($menu))
+          @foreach($menu as $submenu)
+          &lt;?php
+                  $submenuTranslation = "";
+                  if(isset($menu-&gt;i18n)){
+                      $submenuTranslation = $menu-&gt;i18n;
+                  }
+              ?&gt;
+          &lt;li class="{{ (request()-&gt;is($submenu-&gt;url)) ? 'active' : '' }}"&gt;
+              &lt;a href="{{ $submenu-&gt;url }}"&gt;
+                  &lt;i class="{{ isset($submenu-&gt;icon) ? $submenu-&gt;icon : "" }}"&gt;&lt;/i&gt;
+                  &lt;span class="menu-title" data-i18n="{{ $submenuTranslation }}"&gt;{{ __('locale.'.$submenu-&gt;name) }}&lt;/span&gt;
+              &lt;/a&gt;
+              @if (isset($submenu-&gt;submenu))
+              @include('panels/submenu', ['menu' =&gt; $submenu-&gt;submenu])
+              @endif
+          &lt;/li&gt;
+          @endforeach
+          @endif
+      &lt;/ul&gt;</code>
+        </pre>
+        <P class="mt-2">HorizontalMenu.blade.php</P>
+        <pre class="language-php">
+  <code class="language-php">
+        &lt;!-- Horizontal menu content--&gt;
+    &lt;div class="navbar-container main-menu-content" data-menu="menu-container"&gt;
+      &lt;ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation"&gt;
+        {{-- Foreach menu item starts --}}
+        @if(isset($menuData[1]))
+        @foreach($menuData[1]-&gt;menu as $menu)
+        @php
+        $custom_classes = "";
+        if(isset($menu-&gt;classlist)) {
+        $custom_classes = $menu-&gt;classlist;
+        }
+        $translation = "";
+        if(isset($menu-&gt;i18n)){
+        $translation = $menu-&gt;i18n;
+        }
+        @endphp
+        &lt;li class="dropdown nav-item {{ (request()-&gt;is($menu-&gt;url)) ? 'active' : '' }} {{ $custom_classes }}"
+          data-menu="dropdown"&gt;
+          &lt;a href="{{ $menu-&gt;url }}" class="dropdown-toggle nav-link" data-toggle="dropdown"&gt;
+            &lt;i class="{{ $menu-&gt;icon }}"&gt;&lt;/i&gt;
+            &lt;span data-i18n="{{ $translation }}"&gt;{{ __('locale.'.$menu-&gt;name) }}&lt;/span&gt;
+          &lt;/a&gt;
+          @if(isset($menu-&gt;submenu))
+          @include('panels/horizontalSubmenu', ['menu' =&gt; $menu-&gt;submenu])
+          @endif
+        &lt;/li&gt;
+        @endforeach
+        @endif
+        {{-- Foreach menu item ends --}}
+      &lt;/ul&gt;
+    &lt;/div&gt;</code>
+        </pre>
+        <p class="mt-2">horizontalSubmenu.blade.php</p>
+        <pre class="language-php">
+  <code class="language-php">
+    {{-- For Horizontal submenu --}}
+      &lt;ul class="dropdown-menu"&gt;
+        @if(isset($menu))
+        @foreach($menu as $submenu)
+        &lt;?php
+      $custom_classes = "";
+      if(isset($submenu-&gt;classlist)) {
+          $custom_classes = $submenu-&gt;classlist;
+      }
+      $submenuTranslation = "";
+      if(isset($menu-&gt;i18n)){
+          $submenuTranslation = $menu-&gt;i18n;
+      }
+        ?&gt;
+        &lt;li
+          class="{{ (request()-&gt;is($submenu-&gt;url)) ? 'active' : '' }} {{ (isset($submenu-&gt;submenu)) ? "dropdown dropdown-submenu" : '' }} {{ $custom_classes }}"&gt;
+          &lt;a href="{{ $submenu-&gt;url }}" class="dropdown-item {{ (isset($submenu-&gt;submenu)) ? "dropdown-toggle" : '' }}"
+            {{ (isset($submenu-&gt;submenu)) ? 'data-toggle=dropdown' : '' }}&gt;
+            &lt;i class="{{ isset($submenu-&gt;icon) ? $submenu-&gt;icon : "" }}"&gt;&lt;/i&gt;
+            &lt;span data-i18n="{{ $submenuTranslation }}"&gt;{{ __('locale.'.$submenu-&gt;name) }}&lt;/span&gt;
+          &lt;/a&gt;
+          @if (isset($submenu-&gt;submenu))
+          @include('panels/horizontalSubmenu', ['menu' =&gt; $submenu-&gt;submenu])
+          @endif
+        &lt;/li&gt;
+        @endforeach
+        @endif
+      &lt;/ul&gt;</code>
+        </pre>
+      </div>
+      <!-- How to add new language? -->
+      <div class="locale-add scrollspy" id="how-to-add">
+        <h4 class="header">How to add new language?</h4>
+        <p><strong>Step 1:</strong> To add a new language in whole template first we need to create a locale.php file in
+          <strong>resources/lang/</strong> which return an array with key and value pair.
+        </p>
+        <strong>resources/lang/de/locale.php</strong>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;?php
+
+    return [
+        "Dashboard" => "Instrumententafel",
+        "Analytics" => "Analytics",
+        "eCommerce" => "eCommerce",
+        "Apps" => "Anwendungen",
+        "UI Elements" => "UI Elemente",
+        "Forms & Tables" => "Formulare und Tabellen",
+        "Pages" => "Seiten",
+        "Charts & Maps" => "Karten & Landkarten",
+        "Others" => "Andere",
+        "Email" => "Email",</code>
+      </pre>
+        <p class="mt-2"><strong>Step 2:</strong> Now we need to mention our new language in controller and middleware
+          which we already created.</p>
+        <strong>App/Http/Controllers/LanguageController.php</strong>
+        <pre class="language-php">
+  <code class="language-php">
+  // available language in template array
+  $availLocale=['en'=>'en', 'fr'=>'fr','de'=>'de','pt'=>'pt']; //mention your new language as key and value pair.</code>
+      </pre>
+        <strong>App/Http/Middleware/LocaleMiddleware.php</strong>
+        <pre class="language-php">
+  <code class="language-php">
+    // available language in template array
+    $availLocale=['en'=>'en', 'fr'=>'fr','de'=>'de','pt'=>'pt']; //mention your new language as key and value pair.</code>
+      </pre>
+        <p class="mt-2"><strong>Step 3:</strong> If you want to set your new language as default language using
+          configuration variable then you'll need to do below changes.</p>
+        <p><strong>App/Helpers/helpers.php</strong></p>
+        <p>Add your new language in allOption array as key and value pair.</p>
+        <pre class="language-php">
+  <code class="language-php">
+    // All options available in the template
+    $allOptions = [
+        'defaultLanguage'=>array('en'=>'en','fr'=>'fr','de'=>'de','pt'=>'pt'),
+    ]; </code>
+      </pre>
+        <p class="mt-2"><strong>Step 4:</strong> Now you can set your new language as default of whole Template.</p>
+        <strong>config/custom.php</strong>
+        <pre class="language-php">
+  <code class="language-php">
+    &lt;?php
+      return [
+          'custom' => [
+              'defaultLanguage'=>'en',    //en(default)/de/pt/fr here are four optional language provided in theme
+          ], </code>
+      </pre>
+        <p>Your new language is successfully added, Now it's ready to use.</p>
+      </div>
+      <!-- How to remove existing language? -->
+      <div class="locale-remove scrollspy" id="how-to-remove">
+        <h4 class="header">How to remove existing language?</h4>
+        <p><strong>Step 1:</strong> To remove a existing language in whole template first we need to delete language
+          folder from <strong>resources/lang/</strong>.
+        </p>
+
+        <pre class="language-treeview">
+<code class="language-treeview">
+  resources/
+  ├── lang/
+  |   ├── en/
+  |   |   ├── locale.php
+  |   ├── de/
+  |   |   ├── locale.php
+</code>
+      </pre>
+        <p class="mt-2"><strong>Step 2:</strong> Now we need to delete existing language in controller and middleware
+          which is already created.
+        </p>
+        <strong>App/Http/Controllers/LanguageController.php</strong>
+        <p>Remove your existing language from the availLocale array.</p>
+        <pre class="language-php">
+  <code class="language-php">
+    // available language in template array
+  $availLocale=['en'=>'en', 'fr'=>'fr','de'=>'de','pt'=>'pt']; </code>
+      </pre>
+        <strong>App/Http/Middleware/LocaleMiddleware.php</strong>
+        <p>Remove your existing language from the availLocale array.</p>
+        <pre class="language-php">
+  <code class="language-php">
+    // available language in template array
+    $availLocale=['en'=>'en', 'fr'=>'fr','de'=>'de','pt'=>'pt']; </code>
+      </pre>
+        <p class="mt-2"><strong>Step 3:</strong> You also need to remove this language from helper.php file.</p>
+        <strong>App/Helpers/helpers.php</strong>
+        <p>remove language from the allOption array.</p>
+        <pre class="language-php">
+  <code class="language-php">
+    // All options available in the template
+    $allOptions = [
+        'defaultLanguage'=>array('en'=>'en','fr'=>'fr','de'=>'de','pt'=>'pt'),
+    ];</code>
+      </pre>
+        <p>Now existing language has been removed from whole template.</p>
+      </div>
+    </div>
+    <div class="col hide-on-small-only m3 xl2">
+      <div class="toc-wrapper pinned" style="top: 0px;">
+        <div style="height: 1px;">
+          <ul class="table-of-contents">
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#localization-materialize">Localization in Materialize Laravel</a></li>
+            <li><a href="#how-to-add">How to add new language?</a></li>
+            <li><a href="#how-to-remove">How to remove existing language?</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    </main><footer class="page-footer docs-footer">
+  <div class="container">
+    <div class="row" style="margin-bottom: 0;">
+      <div class="col s12 m10 offset-m1">
+        <div class="footer-copyright">
+          <p class="grey-text text-darken-1">
+            ©
+            <script type="text/javascript">document.write(new Date().getFullYear());</script> <a href="https://pixinvent.com/materialize-material-design-admin-template/landing/"
+              target="_blank">Materialize - Material Design Admin Template</a>, All rights reserved.
+          </p>
+          <p class="grey-text text-darken-1 right">
+            Design & developed by<a href="https://pixinvent.com/" target="_blank"> PIXINVENT</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>;
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>if (!window.jQuery) { document.write('<script src="bin/jquery-3.2.1.min.js"><\/script>'); }
+    </script>
+    <script src="docs/js/jquery.timeago.min.js"></script>
+    <script src="docs/js/prism.js"></script>
+    <script src="docs/js/lunr.min.js"></script>
+    <script src="docs/js/search.js"></script>
+    <script src="bin/materialize.js"></script>
+    <script src="docs/js/init.js"></script>
+    <!-- Twitter Button -->
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+    <!-- Google Plus Button-->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!--  Google Analytics  -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-56218128-1', 'auto');
+    ga('require', 'displayfeatures');
+    ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

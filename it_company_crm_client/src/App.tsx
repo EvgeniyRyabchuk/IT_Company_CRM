@@ -9,17 +9,24 @@ import LargeEventCalendar from "./components/LargeEventCalendar/LargeEventCalend
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 import Kanban from "./components/Kanban/Kanban";
 import {Button} from "@mui/material";
+import CharMessage from "./components/Chat/ChatMain/CharMessage";
+import Chat from "./components/Chat/Chat";
 function App() {
 
   return (
     <div className="App">
-
+        <Chat />
+        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
+        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
+        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
+        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
+        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
         {/*<Button variant="contained">Contained</Button>*/}
         {/*<ProjectFileManager />*/}
 
-        <EventCalendar />
+        {/*<EventCalendar />*/}
 
-        <LargeEventCalendar />
+        {/*<LargeEventCalendar />*/}
 
         {/*<Kanban />*/}
     </div>

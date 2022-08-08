@@ -16,6 +16,7 @@ use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\_ChunkFileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\StorageController;
+use App\Http\Controllers\ChatController;
 
 
 /*
@@ -65,6 +66,19 @@ Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'res
 //Route::prefix('users')->middleware('auth:api')->group(function () {
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'show']);
+
+    Route::prefix('{userId}/chats')->group(function ($e) {
+        Route::get('/', [ChatController::class, 'showChats']);
+        Route::get('/{chatId}', [ChatController::class, 'showMessagesByChat']);
+        Route::put('/{chatId}', [ChatController::class, 'showChats']);
+        Route::delete('/{chatId}', [ChatController::class, 'deleteChat']);
+
+        Route::prefix('{chatId}/messages')->group(function () {
+            Route::post('/', [ChatController::class, 'addMessage']);
+            Route::put('/', [ChatController::class, 'updateMessage']);
+            Route::delete('/', [ChatController::class, 'deleteMessage']);
+        });
+    });
 
 
     Route::prefix('/{employeeId}/events')->group(function () {

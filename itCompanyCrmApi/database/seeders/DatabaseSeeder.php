@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
          $this->call([LevelSeeder::class]);
          $this->call([PositionSeeder::class]);
 
+
          $this->call([EmployeeSeeder::class], false, ['count' => 10, 'roleId' => $developerRoleId]);
          $this->call([EmployeeSeeder::class], false, ['count' => 3, 'roleId' => $manageRoleId]);
          $this->call([CustomerSeeder::class], false, ['count' => 10, 'roleId' => $customerRoleId]);
@@ -103,10 +104,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call(KanbanPrioritySeeder::class);
 
-        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
+//        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
 
-
-
+        $users = User::all();
+        $this->call(ChatMessageSeeder::class, false, compact('users'));
 
     }
 }

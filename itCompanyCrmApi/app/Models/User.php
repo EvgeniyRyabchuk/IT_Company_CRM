@@ -76,4 +76,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function tags() {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function chats() {
+        return $this->belongsToMany(Chat::class);
+    }
 }

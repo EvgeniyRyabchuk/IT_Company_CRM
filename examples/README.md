@@ -96,6 +96,9 @@ https://cruip.com/demos/mosaic/
 
 https://demo.uifort.com/carolina-react-admin-dashboard-material-ui-free-demo/DashboardDefault
 
+https://pixinvent.com/materialize-material-design-admin-template/html/ltr/vertical-modern-menu-template/app-contacts.html
+
+
 # Developnent Front Examples 
 
 https://js.devexpress.com/Demos/WidgetsGallery/Demo/FileManager/Overview/React/Light/
