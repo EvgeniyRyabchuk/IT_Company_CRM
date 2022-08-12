@@ -1,7 +1,7 @@
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.light.css';
 import React, {useEffect, useState} from 'react';
-import './App.css';
+import './assets/components/Global/App.css';
 import ProjectFileManager from "./components/ProjectFileManager/ProjectFileManager";
 import EventCalendar from "./components/EventCalendar/EventCalendar";
 import LargeEventCalendar from "./components/LargeEventCalendar/LargeEventCalendar";
@@ -16,11 +16,11 @@ function App() {
   return (
     <div className="App">
         <Chat />
-        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
-        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
-        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
-        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
-        <div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>
+        {/*<div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>*/}
+        {/*<div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>*/}
+        {/*<div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>*/}
+        {/*<div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>*/}
+        {/*<div className='chat' style={{display: 'flex', padding: '50px', height: '300px'}}></div>*/}
         {/*<Button variant="contained">Contained</Button>*/}
         {/*<ProjectFileManager />*/}
 

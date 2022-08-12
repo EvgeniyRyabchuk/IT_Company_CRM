@@ -19,9 +19,9 @@ return new class extends Migration
 
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
-            $table->boolean('isPenned')->default(0);
             $table->string('type')->default('user_to_user');
-            $table->foreignId('with_user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->boolean('isPenned')->default(false);
+            $table->dateTime('last_message_at');
             $table->timestamps();
         });
     }

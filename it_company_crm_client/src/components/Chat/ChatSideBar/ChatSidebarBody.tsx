@@ -2,13 +2,43 @@ import React from 'react';
 
 import ChatSidebarDirectList from "./ChatDirect/ChatSidebarDirectList";
 
-const ChatSidebarBody = () => {
+const ChatSidebarBody = ({
+            chats,
+            onSearchInputChange,
+            onChatChange,
+            currentChat
+} : any) => {
+
+    //TODO: change
+    const userId = 1;
+
+    const filteredChatByRole = (roleNames: any[]) : any => {
+        return chats.filter((chat: any) => {
+            const withUser = chat.users.filter((e: any) => e.id !== userId)[0];
+            const withUserRoles = withUser.roles;
+            let isCustomer = false;
+            for (let role of withUserRoles) {
+                if(roleNames.includes(role.name))
+                    isCustomer = true;
+            }
+            return isCustomer;
+        })
+    }
+
+
+
     return (
         <div className='vc vu'>
 
             <form className="y">
                 <label htmlFor="msg-search" className="d">Search</label>
-                <input id="msg-search" className="s ou me xq" type="search" placeholder="Search…" />
+                <input
+                    id="msg-search"
+                    className="s ou me xq"
+                    type="search"
+                    placeholder="Search…"
+                    onInput={onSearchInputChange}
+                />
                     <button className="g w j kk" type="submit" aria-label="Search">
                         <svg className="oo sl ub du gq kj ml-3 mr-2" viewBox="0 0 16 16"
                              xmlns="http://www.w3.org/2000/svg">
@@ -20,8 +50,23 @@ const ChatSidebarBody = () => {
                     </button>
             </form>
 
-            <ChatSidebarDirectList title='Chat with Customers' open={true}/>
-            <ChatSidebarDirectList title='Chat with Employees' open={true}/>
+            {/* Chat with only customer */}
+            <ChatSidebarDirectList
+                currentChat={currentChat}
+                chats={filteredChatByRole(['customer'])}
+                title='Chat with Customers'
+                open={true}
+                onChatChange={onChatChange}
+            />
+            {/* Chat with only employee */}
+            <ChatSidebarDirectList
+                currentChat={currentChat}
+                chats={filteredChatByRole(['developer', 'manager', 'admin'])}
+                title='Chat with Employees'
+                open={true}
+                onChatChange={onChatChange}
+
+            />
 
             <div className="io">
                 <div className="go gh gq gv ro">Channels</div>

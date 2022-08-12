@@ -1,5 +1,17 @@
 
+.chat-selected {
+    /*border: 1px solid black;*/
+    background-color: #bbe7ff;
+}
 
+.add-user-to-chat-btn {
+
+}
+
+.add-user-to-chat-btn:hover {
+    color: #6C6EE7;
+    /*background-color: #334155;*/
+}
 
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback);
 

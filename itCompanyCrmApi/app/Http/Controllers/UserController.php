@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\HelloMail;
+use App\Models\Chat;
 use App\Models\Customer;
 use App\Models\UndoOrder;
 use App\Models\User;
@@ -13,6 +14,7 @@ use App\Notifications\PasswordResetNotification;
 use Carbon\Carbon;
 use Faker\Core\Number;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use function Sodium\add;
 
 class UserController extends Controller
 {
@@ -29,7 +32,7 @@ class UserController extends Controller
 
     //TODO: refersh/access token expired in .env
     //TODO: remember me
-
+/*
     public function index() {
         $to = User::findOrFail(1);
         $someData = [ 'hello' => 'hello world message '];
@@ -44,8 +47,48 @@ class UserController extends Controller
 //
 //        return response()->json($user->roles()->get(), 201);
 */
-    }
 
+    public function index(Request $request) {
+
+        $nonExistChatWithUserId =
+            $request->input('non-existent-chat-with-user-id');
+
+        // get users with whom there is no chat
+
+
+        if($nonExistChatWithUserId !== null) {
+            $users = new Collection();
+            foreach (User::all() as $user) {
+                if ($user->id != $nonExistChatWithUserId) {
+                    $isChatExist = false;
+                    foreach ($user->chats as $chat) {
+                        foreach ($chat->users as $user) {
+                            if ($user->id == $nonExistChatWithUserId) {
+                                $isChatExist = true;
+                            }
+                        }
+                    }
+                    if($isChatExist == false) {
+                        $users->add($user);
+                    }
+                }
+
+            }
+
+//            $users = User::with('chats.users')->where('id', '!=', $nonExistChatWithUserId)
+//                ->whereHas('chats', function ($q) use($nonExistChatWithUserId) {
+//                    $q->whereHas('users', function ($qq) use($nonExistChatWithUserId) {
+//                        $qq->where('users.id', '!=', $nonExistChatWithUserId);
+//                    });
+//                })->get();
+//            dd($users);
+        }
+        else {
+            $users = User::all();
+        }
+
+        return response()->json($users);
+    }
 
     public function test() {
 

@@ -65,19 +65,20 @@ Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'res
 
 //Route::prefix('users')->middleware('auth:api')->group(function () {
 Route::prefix('users')->group(function () {
-    Route::get('/', [UserController::class, 'show']);
+    Route::get('/', [UserController::class, 'index']);
 
     Route::prefix('{userId}/chats')->group(function ($e) {
         Route::get('/', [ChatController::class, 'showChats']);
-        Route::get('/{chatId}', [ChatController::class, 'showMessagesByChat']);
-        Route::put('/{chatId}', [ChatController::class, 'showChats']);
+        Route::post('/', [ChatController::class, 'createChat']);
         Route::delete('/{chatId}', [ChatController::class, 'deleteChat']);
 
-        Route::prefix('{chatId}/messages')->group(function () {
-            Route::post('/', [ChatController::class, 'addMessage']);
-            Route::put('/', [ChatController::class, 'updateMessage']);
-            Route::delete('/', [ChatController::class, 'deleteMessage']);
-        });
+        Route::put('/{chatId}/seen', [ChatController::class, 'allMessageSeen']);
+
+        Route::get('/{chatId}/messages', [ChatController::class, 'showMessagesByChat']);
+
+        Route::post('/messages', [ChatController::class, 'sendMessage']);
+        Route::put('{chatId}/messages/{messageId}', [ChatController::class, 'updateMessage']);
+        Route::delete('{chatId}/messages/{messageId}', [ChatController::class, 'deleteMessage']);
     });
 
 

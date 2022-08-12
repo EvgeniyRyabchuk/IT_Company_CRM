@@ -2,8 +2,11 @@ import React from 'react';
 
 import userlog1 from '../../../assets/images/chat/user-32-01.jpg';
 import userlog2 from '../../../assets/images/chat/user-32-07.jpg';
+import {apiUrl} from "../ChatSideBar/ChatDirect/ChatSidebarDirectItem";
 
-const ChatHeader = () => {
+const ChatHeader = ({currentChat} : any) => {
+
+    console.log(currentChat);
 
     return (
 
@@ -20,12 +23,12 @@ const ChatHeader = () => {
                 </button>
 
                 <div className="flex fp rd">
-                    <a className="block" href="#0">
-                        <img className="rounded-full cr cc st" src={userlog1} width="32" height="32" alt="User 01" />
-                    </a>
-                    <a className="block" href="#0">
-                        <img className="rounded-full cr cc st" src={userlog2} width="32" height="32" alt="User 04" />
-                    </a>
+                    {currentChat && currentChat.users && currentChat.users.map((e: any) =>
+                        <a className="block" href="#0">
+                            <img className="rounded-full cr cc st" src={apiUrl + "storage/" +  e.avatar} width="32" height="32" alt="User 01" />
+                        </a>
+                    )}
+
                 </div>
             </div>
 

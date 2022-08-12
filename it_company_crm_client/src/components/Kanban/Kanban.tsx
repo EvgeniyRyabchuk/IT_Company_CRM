@@ -6,7 +6,7 @@ import Board from 'react-trello';
 import './style.scss';
 import useQueryParams from "../../hooks/useQueryParams";
 import defaultSortData from "./defaultSortData";
-import KanbanCardEditModal from "../modals/KanbanCardEditModal";
+import KanbanCardEditModal from "../modals/KanbanCardEditModal/KanbanCardEditModal";
 
 const Kanban = () => {
 

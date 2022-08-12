@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('from_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId("to_id")->nullable()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('content_id')->constrained('chat_message_contents')->onUpdate('cascade')->onDelete('cascade');
-            $table->boolean("isSeen");
+            $table->boolean("isSeen")->default(0);
             $table->timestamps();
         });
     }

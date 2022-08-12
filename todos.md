@@ -13,9 +13,10 @@ Scrollbar fix
 --- Client FeedBack
 
 Instagram messages revice h
-Online Consultant
-Online Chat 
-Online Call  Виртуальная АТС сервис
+
+Online Chat:  
+- send message from customer to manager 
+- scrolling 
 
 
 

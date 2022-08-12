@@ -1,7 +1,42 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {userId} from "../Chat";
 
-const ChatInput = () => {
+const ChatInput = ({currentChat, onSended} : any) => {
+
+    const [inputContent, setInputContent] = useState<string>('');
+
+    const send = async (content: string) => {
+        const toUserId = currentChat.users.filter((e: any) => e.id != userId)[0].id;
+
+        const data = await fetch(`http://127.0.0.1:8000/api/users/${userId}/chats/messages`,
+            { headers: {
+                    "Content-Type": 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    toUserId,
+                    chat_id: currentChat.id,
+                    message: inputContent
+                })
+            });
+        return await data.json();
+    }
+
+    const onSend = async () => {
+        const newMessage = await send(inputContent);
+        onSended(newMessage);
+        setInputContent('');
+
+    }
+
+    const handleKeyPress = (event: any) => {
+        if(event.key === 'Enter') {
+            onSend();
+        }
+    }
+
     return (
+
         <div className="b te chat-input">
             <div className="flex items-center fe bg-white co border-slate-200 vs jj tei sa">
 
@@ -13,12 +48,20 @@ const ChatInput = () => {
                     </svg>
                 </button>
 
-                <form className="uw flex">
+                <form className="uw flex" onSubmit={(e: any) => e.preventDefault() }>
                     <div className="uw ra">
                         <label htmlFor="message-input" className="d">Type a message</label>
-                        <input id="message-input" className="s ou hi cp ki xq" type="text" placeholder="Aa" />
+                        <input
+                            id="message-input"
+                            className="s ou hi cp ki xq"
+                            type="text"
+                            placeholder="Aa"
+                            onChange={(e: any) => setInputContent(e.target.value)}
+                            value={inputContent}
+                            onKeyPress={handleKeyPress}
+                        />
                     </div>
-                    <button type="submit" className="btn ho xi ye lm">Send -&gt;</button>
+                    <button type="button" className="btn ho xi ye lm" onClick={onSend}>Send -&gt;</button>
                 </form>
             </div>
         </div>
