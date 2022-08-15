@@ -9,7 +9,7 @@ import {
     localeUa,
     locale
 } from '@mobiscroll/react';
-
+import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 
 const EventCalendar = () => {
 

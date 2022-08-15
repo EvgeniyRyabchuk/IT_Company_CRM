@@ -16,7 +16,7 @@ Instagram messages revice h
 
 Online Chat:  
 - send message from customer to manager 
-- scrolling 
+- infinity scrolling and change chat large loading 
 
 
 

@@ -13,12 +13,22 @@ class ChatController extends Controller
 {
     public function showChats(Request $request, $userId) {
         $user = User::findOrFail($userId);
-        $chats = Chat::with('users.roles',
-            'messages.content', 'messages.fromUser', 'messages.toUser')
+        $chats = Chat::with('users.roles')
             ->whereIn('id', $user->chats->pluck('id')->toArray())
             ->orderBy('last_message_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($chat) use($user) {
+//                $chat->setRelation('messages', $chat->messages->take(10));
+                $chat->messagePage = 1;
+                $chat->newCount = ChatMessage::where('chat_id', $chat->id)
+                ->where('to_id', $user->id)
+                ->where('isSeen', 0)
+                ->count();
+                $chat->totalMessages = ChatMessage::where('chat_id', $chat->id)->count();
+                return $chat;
+            });
 
+//   'messages.content', 'messages.fromUser', 'messages.toUser'
         return response()->json($chats, 201);
     }
 
@@ -36,9 +46,6 @@ class ChatController extends Controller
             ->with("content", "toUser", "fromUser")
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
-
-
         return response()->json($messages, 201);
     }
 
@@ -61,12 +68,9 @@ class ChatController extends Controller
     }
 
 
-    public function sendMessage(Request $request, $userId) {
-
+    public function sendMessage(Request $request, $userId, $chatId) {
         $fromUser = User::findOrFail($userId);
         $toUser = User::findOrFail($request->input('toUserId'));
-
-        $chatId = $request->input('chat_id');
 
         if(is_null($chatId)) {
             $chat = new Chat();

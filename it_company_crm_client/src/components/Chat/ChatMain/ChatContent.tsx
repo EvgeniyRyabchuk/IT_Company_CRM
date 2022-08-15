@@ -1,25 +1,20 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import ChatMessage from "./CharMessage";
-import {useFetching} from "../../../hooks/useFetching";
-import {useObserver} from "../../../hooks/useObserver";
-import {userId} from "../Chat";
-import {getPageCount} from "../../../utils/pages";
+import {useTypeSelector} from "../../../hooks/useTypedSelector";
+import {Chat} from "../../../types/chat";
+import {useAction} from "../../../hooks/useAction";
 
-const ChatContent = ({
-        currentChat,
-        setCurrentChat,
-        lastElement,
-        isMessagesLoading
-    }: any) => {
+const ChatContent = ({ lastElement }: any) => {
 
+    const { setCurrentChatId } = useAction();
+    const { currentChat } = useTypeSelector(state => state.chat)
     const [messages, setMessages] = useState<any>([]);
-
     const wrapper = useRef<any>();
     const contentDiv = useRef<null | HTMLDivElement>(null);
 
     const scrollToBottom = () => {
         console.log('scroll')
-        wrapper.current?.scrollTo(0, 9999);
+        // wrapper.current?.scrollTo(0, 9999);
     }
 
     useEffect(() => {
@@ -28,9 +23,6 @@ const ChatContent = ({
             && currentChat.messages.length < 11)
             scrollToBottom();
     }, [currentChat])
-
-
-
 
     return (
         <div
@@ -42,7 +34,7 @@ const ChatContent = ({
                 style={{
                     height: 20,
                     background: 'red',
-                    display: currentChat && currentChat.messages ? 'block' : "none"
+                    display: currentChat ? 'block' : "none"
                 }}>
 
             </div>

@@ -14,7 +14,9 @@ import {
 
 import {modalStyle, Span, UserMenu} from "../../../assets/components/Modals";
 import {apiUrl} from "../../Chat/ChatSideBar/ChatDirect/ChatSidebarDirectItem";
-import {userId} from "../../Chat/Chat";
+import {userId} from "../../Chat/ChatComponent";
+import {useAction} from "../../../hooks/useAction";
+import {ChatService} from "../../../services/ChatService";
 
 type AddUserChatModal = {
     open: any;
@@ -31,17 +33,18 @@ type User = {
 
 const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserChatModal) => {
 
-    const [userIndentity, setUserIndentity] = useState<any>('');
+    const { createChat } = useAction();
+
+    const [userIndentity, setUserIndentity] = useState<string>('');
     const [users, setUsers] = useState<readonly User[]>([]);
     const [selecteOption, setSelectedOption] = useState<User|null>(null);
 
-    const loading = open && users.length === 0;
+    // const loading = open && users.length === 0;
+    const loading = open;
 
-    const getUsersWithNonExistChat = async () => {
-        // const search = userIndentity.length !== 0 ? `?search=${userIndentity}` : '';
-        const data = await fetch(`${apiUrl}users?non-existent-chat-with-user-id=${userId}`);
-        return await data.json();
-
+    const getUsers = async () : Promise<User[]> => {
+        const responce = await ChatService.getUsersWithNonExistChat(userId);
+        return responce.data;
     }
 
     useEffect(() => {
@@ -52,7 +55,7 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserChatModal) =>
         }
 
         (async () => {
-            const usersResponse =await getUsersWithNonExistChat(); // For demo purposes.
+            const usersResponse = await getUsers();
 
             if (active) {
                 setUsers([...usersResponse]);
@@ -72,20 +75,11 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserChatModal) =>
         setSelectedOption({...value});
     }
 
-    const createChat = async () => {
+    const create = async () => {
         if(selecteOption != null) {
-            console.log('on change', selecteOption);
-
-            const data = await fetch(`http://127.0.0.1:8000/api/users/${userId}/chats`,
-                { headers: {
-                        "Content-Type": 'application/json'
-                    },
-                    method: "POST",
-                    body: JSON.stringify({ toUserId: selecteOption.id })
-                });
-            const resChat = await data.json();
-
-            onSave(resChat);
+            const toUserId = selecteOption.id;
+            createChat(userId, toUserId);
+            onSave();
         }
     }
 
@@ -107,23 +101,12 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserChatModal) =>
                         {/*<div>{`inputValue: '${inputValue}'`}</div>*/}
 
                         <Autocomplete
-                            // value={value}
-                            // onChange={(event: any, newValue: string | null) => {
-                            //     setValue(newValue);
-                            // }}
-
-                            // value={value}
-                            // onChange={(event: any, newValue: any) => {
-                            //     setValue(newValue);
-                            // }}
 
                             onInputChange={(event, newInputValue) => {
                                 setUserIndentity(newInputValue);
                                 console.log('on input change', newInputValue)
                             }}
-
                             onChange={onChange}
-
                             id="country-select-demo"
                             sx={{ width: 300 }}
                             options={users}
@@ -160,7 +143,7 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserChatModal) =>
                                     Disagree
                                 </Button>
 
-                                <Button onClick={createChat} color="primary" autoFocus>
+                                <Button onClick={create} color="primary" autoFocus>
                                     Agree
                                 </Button>
                             </Box>

@@ -7,17 +7,18 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import {useTypeSelector} from "../../../../hooks/useTypedSelector";
 
 
 type ChatSidebarDirectListPropsType = {
     title: string;
     open?: boolean;
     chats: any[];
-    onChatChange: () => void;
     currentChat: any;
 }
 
-const ChatSidebarDirectList = ({title, open, chats, onChatChange, currentChat}: ChatSidebarDirectListPropsType) => {
+const ChatSidebarDirectList = ({chats, title, open}: ChatSidebarDirectListPropsType) => {
+
     return (
         <Accordion defaultExpanded={open ?? false}>
             <AccordionSummary
@@ -32,7 +33,7 @@ const ChatSidebarDirectList = ({title, open, chats, onChatChange, currentChat}: 
                     <div className="go gh gq gv ro">{title}</div>
                     <ul className="rh">
                         { chats.map((e: any)=>
-                            <ChatSidebarDirectItem currentChat={currentChat} onChatChange={onChatChange} key={e.id} chat={e}  />
+                            <ChatSidebarDirectItem key={e.id} chat={e}  />
                         )}
                     </ul>
                 </div>

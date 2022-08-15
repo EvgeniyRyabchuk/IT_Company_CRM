@@ -2,13 +2,12 @@ import React from 'react';
 // user-40-12.jpg
 import userIcon from '../../../assets/images/chat/user-40-12.jpg';
 import {apiUrl} from "../ChatSideBar/ChatDirect/ChatSidebarDirectItem";
-import {userId} from "../Chat";
+import {userId} from "../ChatComponent";
 import moment from "moment";
+import {ChatMessage} from "../../../types/chat";
 
 
-type CharMessageProbs = {
-    message: any;
-}
+type CharMessageProbs = { message: ChatMessage; }
 
 const CharMessage = ({message} : CharMessageProbs) => {
 

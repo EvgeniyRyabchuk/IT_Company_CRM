@@ -14,7 +14,7 @@ import {
     MbscEventcalendarView,
     localeUa, localeRu
 } from '@mobiscroll/react';
-
+import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 import './style.css';
 
 import React, {useEffect} from "react";

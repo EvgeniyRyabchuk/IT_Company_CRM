@@ -1,21 +1,36 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import ChatSidebarDirectList from "./ChatDirect/ChatSidebarDirectList";
+import {useTypeSelector} from "../../../hooks/useTypedSelector";
+import {useAction} from "../../../hooks/useAction";
+import {Chat} from "../../../types/chat";
+import {userId} from "../ChatComponent";
 
-const ChatSidebarBody = ({
-            chats,
-            onSearchInputChange,
-            onChatChange,
-            currentChat
-} : any) => {
+const ChatSidebarBody = () => {
+    const {
+        currentChat,
+        chats,
+        search
+    } = useTypeSelector(state => state.chat);
 
-    //TODO: change
-    const userId = 1;
+    const { setChatSearchString } = useAction();
 
-    const filteredChatByRole = (roleNames: any[]) : any => {
-        return chats.filter((chat: any) => {
+    const filteredChats = useMemo(() => {
+        return chats.filter((chat: Chat) => {
+            if(!search || search === '') return true;
+            const withUser = chat.users.filter((e: any) => e.id !== userId)[0];
+            return withUser.full_name.toLowerCase()
+                .includes(search.toLowerCase());
+        });
+    }, [search, chats]);
+
+    console.log(filteredChats);
+
+    const filteredChatByRole = (roleNames: string[]) : any => {
+        return filteredChats.filter((chat: any) => {
             const withUser = chat.users.filter((e: any) => e.id !== userId)[0];
             const withUserRoles = withUser.roles;
+
             let isCustomer = false;
             for (let role of withUserRoles) {
                 if(roleNames.includes(role.name))
@@ -24,8 +39,6 @@ const ChatSidebarBody = ({
             return isCustomer;
         })
     }
-
-
 
     return (
         <div className='vc vu'>
@@ -37,7 +50,7 @@ const ChatSidebarBody = ({
                     className="s ou me xq"
                     type="search"
                     placeholder="Search…"
-                    onInput={onSearchInputChange}
+                    onInput={(e: any) => setChatSearchString(e.target.value)}
                 />
                     <button className="g w j kk" type="submit" aria-label="Search">
                         <svg className="oo sl ub du gq kj ml-3 mr-2" viewBox="0 0 16 16"
@@ -56,7 +69,6 @@ const ChatSidebarBody = ({
                 chats={filteredChatByRole(['customer'])}
                 title='Chat with Customers'
                 open={true}
-                onChatChange={onChatChange}
             />
             {/* Chat with only employee */}
             <ChatSidebarDirectList
@@ -64,7 +76,6 @@ const ChatSidebarBody = ({
                 chats={filteredChatByRole(['developer', 'manager', 'admin'])}
                 title='Chat with Employees'
                 open={true}
-                onChatChange={onChatChange}
 
             />
 

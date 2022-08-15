@@ -3,10 +3,10 @@ import React from 'react';
 import userlog1 from '../../../assets/images/chat/user-32-01.jpg';
 import userlog2 from '../../../assets/images/chat/user-32-07.jpg';
 import {apiUrl} from "../ChatSideBar/ChatDirect/ChatSidebarDirectItem";
+import {useTypeSelector} from "../../../hooks/useTypedSelector";
 
-const ChatHeader = ({currentChat} : any) => {
-
-    console.log(currentChat);
+const ChatHeader = () => {
+    const { currentChat } = useTypeSelector(state => state.chat)
 
     return (
 

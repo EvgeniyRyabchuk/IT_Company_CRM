@@ -1,10 +1,16 @@
 import React, {useMemo} from 'react';
-
-import userIcon from '../../../../assets/images/chat/user-32-01.jpg'
+import {useAction} from "../../../../hooks/useAction";
+import {useTypeSelector} from "../../../../hooks/useTypedSelector";
+import {DEFAULT_LIMIT, DEFAULT_PAGE} from "../../../../store/reducers/chatReducer";
 
 export const apiUrl = `http://127.0.0.1:8000/api/`;
 
-const ChatSidebarDirectItem = ({chat, onChatChange, currentChat}: any) => {
+const ChatSidebarDirectItem = ({chat}: any) => {
+
+    const { setCurrentChatId } = useAction();
+    const { currentChat } = useTypeSelector(state => state.chat)
+
+    const { fetchMessageByChat } = useAction();
 
     //TODO: change
     const userId = 1;
@@ -13,26 +19,47 @@ const ChatSidebarDirectItem = ({chat, onChatChange, currentChat}: any) => {
     }, [chat]);
 
     const imageUrl = useMemo(() => `${apiUrl}storage/${withUser.avatar}`,[chat, currentChat]);
-    const newCount = useMemo(() => chat.messages.filter((message: any) => message.isSeen == false && message.from_user.id !== userId).length,[chat, currentChat]);
+    // const newCount = useMemo(() => chat.messages.filter((message: any) => message.isSeen == false && message.from_user.id !== userId).length,[chat, currentChat]);
 
-
+    const onChatChange = () => {
+        console.log('checkout chat')
+        const newCurrentChat = { ...chat }
+        setCurrentChatId(newCurrentChat.id);
+        if(!newCurrentChat.messages || newCurrentChat.messages.length === 0) {
+            fetchMessageByChat(
+                userId,
+                newCurrentChat.id,
+                DEFAULT_LIMIT,
+                DEFAULT_PAGE,
+                true
+            );
+        }
+    }
 
     return (
         <li className={currentChat && currentChat.id === chat.id ? 'nv chat-selected' : 'nv'}>
             <button
-                className={newCount > 0 ? "flex items-center fe ou dx rounded hl" : "flex items-center fe ou dx rounded"}
-                onClick={() => onChatChange({...chat}, newCount)}
+                className={chat.newCount > 0 ? "flex items-center fe ou dx rounded hl" : "flex items-center fe ou dx rounded"}
+                onClick={onChatChange}
             >
                 <div className="flex items-center ld">
-                    <img className="os sf rounded-full mr-2" src={imageUrl} width="32" height="32" alt="User 01" />
+                    <img className="os sf rounded-full mr-2"
+                         src={imageUrl}
+                         width="32"
+                         height="32"
+                         alt="User 01" />
                         <div className="ld">
-                            <span className="text-sm gp text-slate-800">{withUser.full_name}</span>
+                            <span className="text-sm gp text-slate-800">
+                                {withUser.full_name}
+                            </span>
                         </div>
                 </div>
                 {
-                    newCount > 0 ?
+                    chat.newCount > 0 ?
                         <div className="flex items-center nq">
-                            <div className="go inline-flex gp pi ye rounded-full gn gw vi">{newCount}</div>
+                            <div className="go inline-flex gp pi ye rounded-full gn gw vi">
+                                {chat.newCount}
+                            </div>
                         </div>
                         :
                         <div className="flex items-center nq">

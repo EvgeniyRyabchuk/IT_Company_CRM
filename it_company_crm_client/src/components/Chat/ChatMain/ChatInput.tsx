@@ -1,32 +1,41 @@
 import React, {useState} from 'react';
-import {userId} from "../Chat";
+import {userId} from "../ChatComponent";
+import {useTypeSelector} from "../../../hooks/useTypedSelector";
+import {useAction} from "../../../hooks/useAction";
 
-const ChatInput = ({currentChat, onSended} : any) => {
+const ChatInput = () => {
 
+    const { currentChat } = useTypeSelector(state => state.chat)
+    const { sendMessage } = useAction();
     const [inputContent, setInputContent] = useState<string>('');
 
-    const send = async (content: string) => {
-        const toUserId = currentChat.users.filter((e: any) => e.id != userId)[0].id;
-
-        const data = await fetch(`http://127.0.0.1:8000/api/users/${userId}/chats/messages`,
-            { headers: {
-                    "Content-Type": 'application/json'
-                },
-                method: "POST",
-                body: JSON.stringify({
-                    toUserId,
-                    chat_id: currentChat.id,
-                    message: inputContent
-                })
-            });
-        return await data.json();
+    const onSend = () => {
+        if(currentChat && inputContent.length > 0) {
+            const withUser = currentChat.users.filter((e: any) => e.id !== userId)[0];
+            sendMessage(userId, withUser.id, currentChat.id, inputContent);
+            setInputContent('');
+        }
     }
 
-    const onSend = async () => {
-        const newMessage = await send(inputContent);
-        onSended(newMessage);
-        setInputContent('');
 
+
+    const send = async (content: string) => {
+        if(currentChat) {
+            const toUserId = currentChat.users.filter((e: any) => e.id != userId)[0].id;
+
+            const data = await fetch(`http://127.0.0.1:8000/api/users/${userId}/chats/messages`,
+                { headers: {
+                        "Content-Type": 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify({
+                        toUserId,
+                        chat_id: currentChat.id,
+                        message: inputContent
+                    })
+                });
+            return await data.json();
+        }
     }
 
     const handleKeyPress = (event: any) => {
@@ -61,7 +70,12 @@ const ChatInput = ({currentChat, onSended} : any) => {
                             onKeyPress={handleKeyPress}
                         />
                     </div>
-                    <button type="button" className="btn ho xi ye lm" onClick={onSend}>Send -&gt;</button>
+                    <button
+                        type="button"
+                        className="btn ho xi ye lm"
+                        onClick={onSend}
+                    >
+                        Send -&gt;</button>
                 </form>
             </div>
         </div>

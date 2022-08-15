@@ -80,9 +80,6 @@ const ProjectFileManager = () => {
         }
     }
 
-
-
-
     return (
         <div>
             File manager

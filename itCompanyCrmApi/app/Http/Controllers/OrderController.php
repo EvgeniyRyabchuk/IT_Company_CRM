@@ -46,9 +46,7 @@ class OrderController extends Controller
         }
 
         $query = $query->orderBy($sort, $sortOrder);
-
         $orders = $query->get()->paginate($perPage);
-
         return response()->json($orders, 201);
     }
 
