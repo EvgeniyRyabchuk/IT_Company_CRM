@@ -131,16 +131,10 @@ Route::prefix('projects')->group(function() {
     });
 
     Route::prefix('{projectId}/lanes')->group(function () {
-
         Route::get('/', [TaskController::class, 'getKanbanLanes']);
-
         Route::post('/', [TaskController::class, 'addKanbanLane']);
-
         Route::put('/swap', [TaskController::class, 'swapKanbanLanes']);
-
         Route::put('{laneId}', [TaskController::class, 'updateKanbanLane']);
-
-
 
         Route::delete('{laneId}', [TaskController::class, 'deleteKanbanLane']);
 

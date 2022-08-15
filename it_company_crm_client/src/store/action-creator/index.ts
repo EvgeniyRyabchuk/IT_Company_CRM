@@ -1,11 +1,10 @@
 import * as UserActionCreators from './user'
-import * as TodoActionCreators from './todo'
 import * as ChatActionCreators from './chat'
+import * as KanbanActionCreators from './kanban'
 
 
 export default {
-    ...TodoActionCreators, 
     ...UserActionCreators,
-    ...ChatActionCreators
-
+    ...ChatActionCreators,
+    ...KanbanActionCreators
 }

@@ -29,7 +29,13 @@ use function Symfony\Component\String\b;
 class ProjectController extends Controller
 {
     public function index() {
-        $projects = Project::all();
+        $projects = Project::with(
+            'projectType',
+            'order',
+            'projectLinks',
+            'lanes'
+        )->get();
+
         return response()->json($projects, 201);
 
     }

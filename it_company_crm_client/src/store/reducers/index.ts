@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
-import { todoReducer } from "./todoReducer";
 import { userReducer } from "./userReducer";
 import {chatReducer} from "./chatReducer";
+import {kanbanReducer} from "./kanbanReducer";
 
 export const rootReducer = combineReducers({
     user: userReducer,
-    todo: todoReducer,
     chat: chatReducer,
+    kanban: kanbanReducer
 })
 
 // что бы useSelector был типизированным 

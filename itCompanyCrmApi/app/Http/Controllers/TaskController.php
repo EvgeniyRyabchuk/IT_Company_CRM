@@ -18,8 +18,8 @@ class TaskController extends Controller
 {
 
     public function index() {
-        $todos = KanbanLane::with('cards')->get();
-        return response()->json($todos, 201);
+        $lanes = KanbanLane::with('cards')->get();
+        return response()->json($lanes, 201);
     }
 
     public function getKanbanLanes(Request $request, $projectId) {
@@ -28,11 +28,11 @@ class TaskController extends Controller
         $project = Project::with('lanes.employee',)
             ->findOrFail($projectId);
 
-        $project->lanes->each(function ($todo) {
-            $todo->setHidden(['project_id']);
-        });
+//        $project->lanes->each(function ($todo) {
+//            $todo->setHidden(['project_id']);
+//        });
 
-        return response()->json($project, 201);
+        return response()->json($project->lanes, 201);
     }
 
     public function getKanbanLanesByMember(Request $request, $projectId, $memberId) {
@@ -58,7 +58,7 @@ class TaskController extends Controller
             $todo->setHidden(['project_id']);
         });
 
-        return response()->json(['lanes' => $lanes], 201);
+        return response()->json($lanes, 201);
     }
 
     public function addKanbanLane(Request $request, $projectId) {
@@ -86,13 +86,13 @@ class TaskController extends Controller
         $lanes = KanbanLane::
         with(['employee', 'cards' => function($c) {
             $c->orderBy('index', 'asc');
-        }])
+        },   'cards.tags'])
             ->where('project_id', $projectId)
             ->where('employee_id', $employee->id)
             ->orderBy('index', 'asc')
             ->get();
 
-        return response()->json(['lanes' => $lanes], 201);
+        return response()->json($lanes, 201);
     }
 
 
