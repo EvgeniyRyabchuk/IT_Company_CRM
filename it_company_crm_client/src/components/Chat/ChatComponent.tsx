@@ -1,15 +1,12 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import '../../assets/components/Chat/index.css';
 import ChatMain from "./ChatMain/ChatMain";
 import ChatSidebar from "./ChatSideBar/ChatSidebar";
 import AddUserChatModal from "../modals/AddUserChatModal/AddUserChatModal";
 import {useObserver} from "../../hooks/useObserver";
-import {Chat} from "../../types/chat";
 import {useTypeSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
-
-import {DEFAULT_LIMIT, DEFAULT_PAGE} from "../../store/reducers/chatReducer";
 
 export const userId = 1;
 

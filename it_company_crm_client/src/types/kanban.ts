@@ -75,8 +75,9 @@ export enum KanbanActionTypes {
     SET_SORT = 'SET_SORT',
     SET_ORDER = 'SET_ORDER',
 
-    SET_CARDS = 'SET_CARDS'
+    SET_CARDS = 'SET_CARDS',
 
+    SET_LANES = 'SET_LANES'
 }
 
 interface FetchKanbanLaneByMemberAction {
@@ -115,15 +116,15 @@ interface AddKanbanCardAction {
 }
 interface DeleteKanbanCardAction {
     type: KanbanActionTypes.DELETE_CARD
-    payload: any;
+    payload: { cardId: number, laneId: number };
 }
 interface UpdateKanbanCardAction {
     type: KanbanActionTypes.UPDATE_CARD
-    payload: any;
+    payload: { updatedCard: KanbanCard, laneId: number };
 }
 interface MoveKanbanCardAction {
     type: KanbanActionTypes.MOVE_CARD
-    payload: any;
+    payload: { fromLane: KanbanLane, toLane: KanbanLane };
 }
 interface KanbanSetErrorAction {
     type: KanbanActionTypes.SET_ERROR
@@ -143,6 +144,11 @@ interface KanbanSetCardsAction {
     payload: { laneId: number, cards: KanbanCard[] };
 }
 
+interface KanbanSetLanesAction {
+    type: KanbanActionTypes.SET_LANES;
+    payload: KanbanLane[];
+}
+
 export type KanbanAction =
     FetchKanbanLaneByMemberAction |
     FetchKanbanLaneByMemberSuccessAction |
@@ -150,5 +156,6 @@ export type KanbanAction =
     AddKanbanLaneAction | DeleteKanbanLaneAction | UpdateKanbanLaneAction | MoveKanbanLaneAction |
     AddKanbanCardAction | DeleteKanbanCardAction | UpdateKanbanCardAction | MoveKanbanCardAction |
     KanbanSetErrorAction |
-    KanbanSetSortAction | KanbanSetOrderAction | KanbanSetCardsAction
+    KanbanSetSortAction | KanbanSetOrderAction | KanbanSetCardsAction |
+    KanbanSetLanesAction
 

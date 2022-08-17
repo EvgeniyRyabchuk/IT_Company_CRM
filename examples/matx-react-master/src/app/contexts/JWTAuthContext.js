@@ -88,6 +88,7 @@ export const AuthProvider = ({ children }) => {
             email,
             password,
         })
+        console.log(response.data);
         const { accessToken, user } = response.data
 
         setSession(accessToken)
@@ -133,6 +134,9 @@ export const AuthProvider = ({ children }) => {
                     setSession(accessToken)
                     const response = await axios.get('/api/auth/profile')
                     const { user } = response.data
+
+
+                    console.log(response.data)
 
                     dispatch({
                         type: 'INIT',

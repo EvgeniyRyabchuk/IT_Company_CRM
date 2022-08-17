@@ -10,6 +10,8 @@ import KanbanCardEditModal from "../modals/KanbanCardEditModal/KanbanCardEditMod
 import {useAction} from "../../hooks/useAction";
 import {userId} from "../Chat/ChatComponent";
 import {useTypeSelector} from "../../hooks/useTypedSelector";
+import {KanbanService} from "../../services/KanbanService";
+import {KanbanCard} from "../../types/kanban";
 
 const Kanban = () => {
 
@@ -17,12 +19,15 @@ const Kanban = () => {
         getLanesByMember,
         addLane,
         deleteLane,
-        updateLane
-
-
-
-
+        updateLane,
+        moveLane,
+        deleteCard,
+        moveCard,
+        updateCard,
+        setSort,
+        setOrder
     } = useAction();
+
     const {
         lanes,
         sort,
@@ -31,13 +36,9 @@ const Kanban = () => {
     } = useTypeSelector(state => state.kanban);
 
     const projectId = 2;
-
-    const data = useMemo(() => {
-        return { lanes: [] }
-    }, []);
+    const data = { lanes: [] };
 
     const [isDataChangeHandled, setIsDataChangeHandled] = useState(false);
-
     const sortedData = useMemo(() => {
         if(sort.value) {
             return defaultSortData.map(e => {
@@ -59,84 +60,39 @@ const Kanban = () => {
 
     console.log(lanes);
 
-    const moveLane = async (data: any) => {
-        const { removedIndex, addedIndex, payload } = data;
-
-        const temp = lanes[removedIndex];
-        // delete old item
-        lanes.splice(removedIndex, 1);
-        // insert new item
-        lanes.splice(addedIndex, 0, temp);
-
-        lanes.forEach((value: any, index: number) => {
-            value.index = index
-        })
-
-        const res = await fetch(`http://127.0.0.1:8000/api/projects/${projectId}/lanes/swap`,
-            { headers: {
-                    "Content-Type": 'application/json'
-                },
-                method: "PUT",
-                body: JSON.stringify({ lanes: lanes })
-        });
-
-        /// setKanbanData({ lanes: [ ...kanbanData.lanes]});
-    }
-
-    const addCard = async (data: any) => {
-        const res = await fetch(`http://127.0.0.1:8000/api/projects/${projectId}/lanes/${data.laneId}/cards`,
-            { headers: {
-                    "Content-Type": 'application/json'
-                },
-                method: "POST",
-                body: JSON.stringify(data.card)
-            });
-        const card = await res.json();
-
+    useEffect(() => {
         getLanesByMember(projectId, userId, queryParamString);
-
-        // const lane = kanbanData.lanes.filter((kd:any) => kd.id === data.laneId)[0];
-        // lane.cards = [ ...lane.cards, card];
-        // lineIdsToString({lanes: [lane]});
-        //
-        //
-        // setKanbanData({ lanes: [
-        //     ...kanbanData.lanes
-        // ]});
+    }, [queryParamString])
 
 
+    const onCardAdd = async (card: any, laneId: any) => {
+        console.log("onCardAdd");
+        console.log(card)
+        console.log(laneId);
+        console.log("========== onCardAdd");
+
+        await KanbanService.addCard(projectId, laneId, card);
+        getLanesByMember(projectId, userId, queryParamString);
     }
 
-    const deleteCard = async (data: any) => {
-        const { cardId, laneId } = data;
-
-        const res = await fetch(
-            `http://127.0.0.1:8000/api/projects/${projectId}/lanes/${laneId}/cards/${cardId}`,
-            { method: "DELETE" });
-        const cards = await res.json();
-        const lane = lanes.filter((kd:any) => kd.id === laneId)[0];
-        lane.cards = cards;
-
-       /// setKanbanData({ lanes: [
-          ///      ...lanes,
-        ///]});
+    const onCardDelete = (cardId: any, laneId: any) => {
+        console.log("onCardDelete")
+        console.log(cardId, laneId);
+        deleteCard(projectId, laneId, cardId);
     }
+    const onCardMoveAcrossLanes = (fromLaneId: any, toLaneId: any, cardId: any, index: any) => {
+        console.log("onCardMoveAcrossLanes")
+        console.log(fromLaneId, toLaneId, cardId, index);
 
-    const moveCard = async (data: any) => {
-
-        if(sort.value != 'index' && order.value != 'asc')
+        if(sort.value != 'index')
             return;
-
-        console.log(sort.value, order.value);
-
-        const { fromLaneId, toLaneId, cardId, index } = data;
+        if(order.value != 'asc')
+            return;
 
         const fromLane = lanes.filter((kd: any) => kd.id === fromLaneId)[0];
         const toLane = lanes.filter((kd: any) => kd.id === toLaneId)[0];
 
         const card = fromLane.cards.filter((c: any) => c.id == cardId)[0];
-
-        console.log(fromLaneId, toLaneId, cardId, index, fromLane, '========================')
 
         const temp = toLane.cards[index];
 
@@ -152,77 +108,7 @@ const Kanban = () => {
             value.index = index
         });
 
-        console.log(toLane.cards);
-
-        const res = await fetch(`http://127.0.0.1:8000/api/projects/${projectId}/lanes/${toLaneId}/cards/${card.id}/swap`,
-            { headers: {
-                    "Content-Type": 'application/json'
-                },
-                method: "PUT",
-                body: JSON.stringify({
-                    fromLane,
-                    toLane
-                })
-            });
-
-
-        ///setKanbanData({ lanes: [
-          ///  ...kanbanData.lanes,
-        ///]});
-
-    }
-
-    const updateCard = async (data: any) => {
-        const { card, laneId } = data;
-        const res = await fetch(`http://127.0.0.1:8000/api/projects/${projectId}/lanes/${laneId}/cards/${card.id}`,
-            { headers: {
-                    "Content-Type": 'application/json'
-                },
-                method: "PUT",
-                body: JSON.stringify(card)
-            });
-        const resCard = await res.json();
-        return resCard;
-    }
-
-    useEffect(() => {
-        getLanesByMember(projectId, userId, queryParamString);
-    }, [queryParamString])
-
-    // card or line text update commit
-
-    // handlers
-    // const onDataChange = (newData: any) => {
-    //     // console.log("data change");
-    //     // console.log(newData);
-    //     // console.log(kanbanData);
-    //     //
-    //     // if(!_.isEqual(newData, kanbanData)) {
-    //     //     console.log("d");
-
-    //     // }
-    // }
-
-    const onCardAdd = (card: any, laneId: any) => {
-        console.log("onCardAdd");
-        console.log(card)
-        console.log(laneId);
-        console.log("========== onCardAdd");
-
-        addCard({card, laneId});
-
-    }
-
-    const onCardDelete = (cardId: any, laneId: any) => {
-        console.log("onCardDelete")
-        console.log(cardId, laneId);
-
-        deleteCard({cardId, laneId});
-    }
-    const onCardMoveAcrossLanes = (fromLaneId: any, toLaneId: any, cardId: any, index: any) => {
-        console.log("onCardMoveAcrossLanes")
-        console.log(fromLaneId, toLaneId, cardId, index);
-        moveCard({ fromLaneId, toLaneId, cardId, index });
+        moveCard(projectId, toLaneId, cardId, { fromLane, toLane })
     }
 
     const onLaneAdd = (params: any) => {
@@ -246,7 +132,18 @@ const Kanban = () => {
     const handleLaneDragEnd = (removedIndex: any, addedIndex: any, payload: any) => {
         console.log("handleLaneDragEnd")
         console.log(removedIndex, addedIndex, payload);
-        moveLane({removedIndex, addedIndex, payload});
+
+        const temp = lanes[removedIndex];
+        // delete old item
+        lanes.splice(removedIndex, 1);
+        // insert new item
+        lanes.splice(addedIndex, 0, temp);
+
+        lanes.forEach((value: any, index: number) => {
+            value.index = index
+        })
+
+        moveLane(projectId, { lanes: lanes});
     }
 
 
@@ -254,6 +151,9 @@ const Kanban = () => {
         const payload = e.target.value.split('&');
         const sortValue = payload[0] ?? 'default';
         const orderValue =  payload[1] ?? 'asc';
+
+        setSort({ ...sort, value: sortValue});
+        setOrder({ ...order, value: orderValue});
         ///setSort({ ...sort, value: sortValue})
         ///setOrder({ ...order, value: orderValue});
     }
@@ -263,15 +163,15 @@ const Kanban = () => {
     }
 
     const [open, setOpen] = useState(false);
-    const [card, setCard] = useState();
+    const [card, setCard] = useState<KanbanCard>();
 
     const onCardClick = (cardId: any, metadata: any, laneId: any) => {
         console.log('===============Click===============')
         console.log(cardId, metadata, laneId);
         const lane = lanes.filter((kd: any) => kd.id === laneId)[0];
         const card = lane.cards.filter((c: any) => c.id == cardId)[0];
+        setCard({...card});
         setOpen(true);
-        ///setCard({...card, laneId});
     }
 
     const onModalClose = () => {
@@ -287,14 +187,12 @@ const Kanban = () => {
         card.description = newCard.description;
         card.priority = newCard.priority;
 
-        const addedCard = await updateCard({card, laneId: newCard.laneId});
-        card.tags = addedCard.tags;
-
-        ///setKanbanData({ lanes: [...kanbanData.lanes]});
+        updateCard(projectId, lane.id, card);
+        // getLanesByMember(projectId, userId, queryParamString);
         setOpen(false);
     }
-    /*    https://colorhunt.co/palette/1c3879607eaaeae3d2f9f5eb*/
 
+    /*    https://colorhunt.co/palette/1c3879607eaaeae3d2f9f5eb*/
 
     return (
         <div className={'kanban-wrapper'}>

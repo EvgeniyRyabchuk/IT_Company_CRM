@@ -4,24 +4,48 @@ import React from 'react';
 import './assets/components/Global/App.css';
 import {Provider} from "react-redux";
 import {store} from "./store";
-import Kanban from "./components/Kanban/Kanban";
+import JwtLogin from "./pages/sessions/JwtLogin";
+import MatxTheme from "./components/MatxTheme/MatxTheme";
+import JwtRegister from "./pages/sessions/JwtRegister";
+import ForgotPassword from "./pages/sessions/ForgotPassword";
+import NotFound from "./pages/sessions/NotFound";
+import {SettingsProvider} from "./contexts/SettingsContext";
+import {useRoutes} from "react-router-dom";
+import routes from "./routing/routes";
+import {AuthProvider} from "./contexts/JWTAuthContext";
 
 function App() {
-
+    const content = useRoutes(routes);
+    console.log('route: ', content);
   return (
       <Provider store={store}>
-        <div className="App">
+          <SettingsProvider>
+              <MatxTheme>
+                <div className="App">
 
-            {/*<ChatComponent />*/}
+                    <AuthProvider>{content}</AuthProvider>
 
-            {/*<ProjectFileManager />*/}
+                    {/*<ChatComponent />*/}
 
-            {/*<EventCalendar />*/}
+                    {/*<ProjectFileManager />*/}
 
-            {/*<LargeEventCalendar />*/}
+                    {/*<EventCalendar />*/}
 
-            <Kanban />
-        </div>
+                    {/*<LargeEventCalendar />*/}
+
+                    {/*<Kanban />*/}
+
+                    {/*<JwtLogin />*/}
+
+                    {/*<JwtRegister />*/}
+
+                    {/*<ForgotPassword />*/}
+
+                    {/*<NotFound />*/}
+
+                </div>
+              </MatxTheme>
+          </SettingsProvider>
       </Provider>
   );
 }

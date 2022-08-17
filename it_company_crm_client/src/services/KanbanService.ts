@@ -21,7 +21,7 @@ export class KanbanService {
         return $api.put<any>(`projects/${projectId}/lanes/${laneId}`, { ...data });
     }
 
-    static async moveLane(projectId: number, laneId: number, data: any)
+    static async moveLane(projectId: number, data: any)
         : Promise<AxiosResponse<any>> {
         return $api.put<any>(`projects/${projectId}/lanes/swap`, { ...data });
     }
@@ -34,7 +34,7 @@ export class KanbanService {
 
 
 
-    static async addCard(projectId: number, memberId: number, laneId: number, card: KanbanCard)
+    static async addCard(projectId: number, laneId: number, card: KanbanCard)
         : Promise<AxiosResponse<KanbanCard>> {
         return $api.post<KanbanCard>(`projects/${projectId}/lanes/${laneId}/cards`, {
             ...card
@@ -42,8 +42,8 @@ export class KanbanService {
     }
 
     static async updateCard(projectId: number, laneId: number, card: KanbanCard)
-        : Promise<AxiosResponse<KanbanLane[]>> {
-        return $api.put<KanbanLane[]>(`projects/${projectId}/lanes/${laneId}/cards/${card.id}`, {
+        : Promise<AxiosResponse<KanbanCard>> {
+        return $api.put<KanbanCard>(`projects/${projectId}/lanes/${laneId}/cards/${card.id}`, {
             ...card
         });
     }
@@ -57,7 +57,7 @@ export class KanbanService {
 
     static async deleteCard(projectId: number, laneId: number, cardId: number)
         : Promise<AxiosResponse<KanbanLane[]>> {
-        return $api.delete<KanbanLane[]>(`projects/${projectId}/lanes/${laneId}/cards/${cardId}}`);
+        return $api.delete<KanbanLane[]>(`projects/${projectId}/lanes/${laneId}/cards/${cardId}`);
     }
 
 

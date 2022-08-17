@@ -35,7 +35,7 @@ export const deleteLane = (projectId: number, laneId: number) => {
         try {
             console.log('delete')
             const responce = await KanbanService.deleteLane(projectId, laneId);
-            dispatch({type: KanbanActionTypes.DELETE_CARD, payload: laneId});
+            dispatch({type: KanbanActionTypes.DELETE_LANE, payload: laneId});
         }
         catch(err: any) {
             dispatch({type: KanbanActionTypes.SET_ERROR,
@@ -43,6 +43,8 @@ export const deleteLane = (projectId: number, laneId: number) => {
         }
     }
 }
+
+
 
 export const updateLane = (projectId: number, laneId: number, data: any) => {
     return async (dispatch: Dispatch<KanbanAction>) => {
@@ -57,12 +59,25 @@ export const updateLane = (projectId: number, laneId: number, data: any) => {
     }
 }
 
-/*
-export const moveLane = (userId: number, toUserId: number) => {
+
+export const moveLane = (projectId: number, data: any) => {
     return async (dispatch: Dispatch<KanbanAction>) => {
         try {
-            const responce = await KanbanService.addLane(userId, toUserId);
-            dispatch({type: KanbanActionTypes.ADD_LANE, payload: responce.data});
+            const responce = await KanbanService.moveLane(projectId, data);
+            dispatch({type: KanbanActionTypes.SET_LANES, payload: data.lanes});
+        }
+        catch(err: any) {
+            dispatch({type: KanbanActionTypes.SET_ERROR,
+                payload: 'Произошла ошибка: ' + err.message});
+        }
+    }
+}
+
+export const deleteCard = (projectId: number, laneId: number, cardId: number) => {
+    return async (dispatch: Dispatch<KanbanAction>) => {
+        try {
+            const responce = await KanbanService.deleteCard(projectId, laneId, cardId);
+            dispatch({type: KanbanActionTypes.DELETE_CARD, payload: {cardId, laneId}});
         }
         catch(err: any) {
             dispatch({type: KanbanActionTypes.SET_ERROR,
@@ -73,11 +88,10 @@ export const moveLane = (userId: number, toUserId: number) => {
 
 
 
-export const addCard = (userId: number, toUserId: number) => {
+export const moveCard = (projectId: number, toLaneId: number, cardId: number, data: any) => {
     return async (dispatch: Dispatch<KanbanAction>) => {
         try {
-            const responce = await KanbanService.addLane(userId, toUserId);
-            dispatch({type: KanbanActionTypes.ADD_LANE, payload: responce.data});
+            const responce = await KanbanService.moveCard(projectId, toLaneId, cardId, data);
         }
         catch(err: any) {
             dispatch({type: KanbanActionTypes.SET_ERROR,
@@ -86,11 +100,16 @@ export const addCard = (userId: number, toUserId: number) => {
     }
 }
 
-export const deleteCard = (userId: number, toUserId: number) => {
+
+export const updateCard = (projectId: number, laneId: number, card: KanbanCard) => {
     return async (dispatch: Dispatch<KanbanAction>) => {
         try {
-            const responce = await KanbanService.addLane(userId, toUserId);
-            dispatch({type: KanbanActionTypes.ADD_LANE, payload: responce.data});
+            const responce = await KanbanService.updateCard(projectId, laneId, card);
+            dispatch({type: KanbanActionTypes.UPDATE_CARD, payload: {
+                updatedCard: responce.data,
+                laneId
+            }});
+
         }
         catch(err: any) {
             dispatch({type: KanbanActionTypes.SET_ERROR,
@@ -99,33 +118,7 @@ export const deleteCard = (userId: number, toUserId: number) => {
     }
 }
 
-export const moveCard = (userId: number, toUserId: number) => {
-    return async (dispatch: Dispatch<KanbanAction>) => {
-        try {
-            const responce = await KanbanService.addLane(userId, toUserId);
-            dispatch({type: KanbanActionTypes.ADD_LANE, payload: responce.data});
-        }
-        catch(err: any) {
-            dispatch({type: KanbanActionTypes.SET_ERROR,
-                payload: 'Произошла ошибка: ' + err.message});
-        }
-    }
-}
 
-export const moveCupdateCardard = (userId: number, toUserId: number) => {
-    return async (dispatch: Dispatch<KanbanAction>) => {
-        try {
-            const responce = await KanbanService.addLane(userId, toUserId);
-            dispatch({type: KanbanActionTypes.ADD_LANE, payload: responce.data});
-        }
-        catch(err: any) {
-            dispatch({type: KanbanActionTypes.SET_ERROR,
-                payload: 'Произошла ошибка: ' + err.message});
-        }
-    }
-}
-
-*/
 
 export const setSort = (sort: QueryStringVar) => {
     return { type: KanbanActionTypes.SET_SORT, payload: sort};

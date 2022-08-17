@@ -1,5 +1,4 @@
-import {KanbanAction, KanbanActionTypes, KanbanLane, KanbanState} from "../../types/kanban";
-import {useCallback} from "react";
+import {KanbanAction, KanbanActionTypes, KanbanCard, KanbanLane, KanbanState} from "../../types/kanban";
 
 
 const initialState: KanbanState = {
@@ -11,7 +10,7 @@ const initialState: KanbanState = {
 
 }
 
-const formatLineIdsToStringAndStyledCard = (data: any) => {
+const formatLaneIdsToStringAndStyledCard = (data: any) => {
     for (let lane of data.lanes) {
         lane.id = lane.id.toString();
         for (let card of lane.cards) {
@@ -26,13 +25,14 @@ const formatLineIdsToStringAndStyledCard = (data: any) => {
 }
 
 
+
 export const kanbanReducer = (state = initialState, action: KanbanAction) : KanbanState  => {
     switch(action.type) {
         case KanbanActionTypes.FETCH_LANES_BY_MEMBER:
             return {...state, loading: true}
         case KanbanActionTypes.FETCH_LANES_BY_MEMBER_SUCCESS:
             const newLanes = [...action.payload];
-            formatLineIdsToStringAndStyledCard({lanes: newLanes})
+            formatLaneIdsToStringAndStyledCard({lanes: newLanes})
             return {...state, loading: false, lanes: newLanes}
         case KanbanActionTypes.FETCH_LANES_BY_MEMBER_ERROR:
             return {...state, loading: false, error: action.payload}
@@ -56,18 +56,61 @@ export const kanbanReducer = (state = initialState, action: KanbanAction) : Kanb
             return { ...state, lanes: [...state.lanes] }
         }
 
-        case KanbanActionTypes.MOVE_LANE:
-            return { ...state, }
+        // case KanbanActionTypes.ADD_CARD: {
+        //     const {laneId, card} = action.payload;
+        //
+        //     const newLane = state.lanes.filter((e: KanbanLane) => e.id === laneId)[0];
+        //     newLane.cards = [...newLane.cards, card];
+        //
+        //     const index = state.lanes.findIndex((e: KanbanLane) => e.id === newLane.id);
+        //     state.lanes.splice(index, 1, newLane);
+        //
+        //     const newLanes = [...state.lanes];
+        //     formatLaneIdsToStringAndStyledCard({lanes: newLanes})
+        //
+        //     return {...state, lanes: newLanes}
+        // }
 
-        case KanbanActionTypes.ADD_CARD:
-            return { ...state, }
+        case KanbanActionTypes.DELETE_CARD: {
+            const { cardId, laneId } = action.payload;
+            const newLane = state.lanes.filter((kd: any) => kd.id === laneId)[0];
+            newLane.cards = newLane.cards.filter((e: KanbanCard) => e.id !== cardId);
 
-        case KanbanActionTypes.DELETE_CARD:
-            return { ...state, }
+            const index = state.lanes.findIndex((e: KanbanLane) => e.id === newLane.id);
+            state.lanes.splice(index, 1, newLane);
 
-        case KanbanActionTypes.UPDATE_CARD:
-            return { ...state, }
+            return {...state, lanes: [ ...state.lanes ]}
+        }
+        case KanbanActionTypes.UPDATE_CARD: {
+            const {laneId, updatedCard} = action.payload;
 
+            const newLane = state.lanes.filter((e: KanbanLane) => e.id === laneId)[0];
+            newLane.cards = newLane.cards.map((e: KanbanCard) => {
+                    if(e.id == updatedCard.id) {
+                        console.log('finded', updatedCard.tags)
+                        const newCard = {
+                            ...e,
+                            title: updatedCard.title,
+                            description: updatedCard.description,
+                            priority: updatedCard.priority,
+                            tags: [...updatedCard.tags]
+                        };
+                        return newCard;
+                    }
+                    else
+                        return e;
+                }
+            )
+
+            console.log(newLane, '==============================')
+
+            const index = state.lanes.findIndex((e: KanbanLane) => e.id === newLane.id);
+            state.lanes.splice(index, 1, newLane);
+
+            formatLaneIdsToStringAndStyledCard({lanes: [...state.lanes]})
+
+            return {...state, lanes: [...state.lanes]}
+        }
         case KanbanActionTypes.MOVE_CARD:
             return { ...state, }
 
@@ -79,6 +122,9 @@ export const kanbanReducer = (state = initialState, action: KanbanAction) : Kanb
 
         case KanbanActionTypes.SET_ORDER:
             return { ...state, order: action.payload}
+
+        case KanbanActionTypes.SET_LANES:
+            return { ...state, lanes: [ ...action.payload]}
 
         default:
             return state;

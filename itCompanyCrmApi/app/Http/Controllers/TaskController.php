@@ -177,7 +177,9 @@ class TaskController extends Controller
             $card->priority = $t->title;
         }
         $card->save();
-        return response()->json($card, 201);
+        return response()->json(
+            KanbanCard::with('tags')->findOrFail($card->id),
+            201);
     }
 
 
