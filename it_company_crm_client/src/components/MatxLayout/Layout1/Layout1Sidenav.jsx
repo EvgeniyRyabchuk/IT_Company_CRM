@@ -1,5 +1,5 @@
-import { Hidden, Switch } from '@mui/material';
-import { Box, styled, useTheme } from '@mui/system';
+import {Box, Hidden, Switch} from '@mui/material';
+
 import { themeShadows } from '../../MatxTheme/themeColors';
 import useSettings from '../../../hooks/useSettings';
 import { sidenavCompactWidth, sideNavWidth } from '../../../utils/constant';
@@ -7,6 +7,8 @@ import { convertHexToRGB } from '../../../utils/utils';
 import React from 'react';
 import Brand from '../../Brand';
 import Sidenav from '../../Sidenav';
+import styled from "@emotion/styled";
+import {useTheme} from "@emotion/react";
 
 const SidebarNavRoot = styled(Box)(({ theme, width, primaryBg, bgImgURL }) => ({
   position: 'fixed',
@@ -73,26 +75,27 @@ const Layout1Sidenav = () => {
     });
   };
 
+
   const handleSidenavToggle = () => {
     updateSidebarMode({ mode: mode === 'compact' ? 'full' : 'compact' });
   };
 
   return (
-    <SidebarNavRoot bgImgURL={bgImgURL} primaryBg={primaryRGB} width={getSidenavWidth()}>
-      <NavListBox>
-        <Brand>
-          <Hidden smDown>
-            <Switch
-              onChange={handleSidenavToggle}
-              checked={leftSidebar.mode !== 'full'}
-              color="secondary"
-              size="small"
-            />
-          </Hidden>
-        </Brand>
-        <Sidenav />
-      </NavListBox>
-    </SidebarNavRoot>
+      <SidebarNavRoot bgImgURL={bgImgURL} primaryBg={primaryRGB} width={getSidenavWidth()}>
+        <NavListBox>
+          <Brand>
+            <Hidden smDown>
+              <Switch
+                  onChange={handleSidenavToggle}
+                  checked={leftSidebar.mode !== 'full'}
+                  color="secondary"
+                  size="small"
+              />
+            </Hidden>
+          </Brand>
+          <Sidenav />
+        </NavListBox>
+      </SidebarNavRoot>
   );
 };
 

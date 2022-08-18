@@ -2,34 +2,37 @@ import React, { createContext, useEffect, useReducer } from 'react'
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
 import MatxLoading from '../components/MatxLoading'
+import {JWTAuthContextInitialState, LoginRequest, RegisterRequest} from "../types/auth";
+import AuthService from "../services/AuthService";
 
-const initialState = {
+const initialState : JWTAuthContextInitialState = {
     isAuthenticated: false,
     isInitialised: false,
     user: null,
 }
 
-const isValidToken = (accessToken) => {
+const isValidToken = (accessToken: string) : any => {
     if (!accessToken) {
         return false
     }
 
     const decodedToken = jwtDecode(accessToken)
     const currentTime = Date.now() / 1000
+    // @ts-ignore
     return decodedToken.exp > currentTime
 }
 
-const setSession = (accessToken) => {
+const setSession = (accessToken: string | null) => {
     if (accessToken) {
-        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('token', accessToken)
         axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
     } else {
-        localStorage.removeItem('accessToken')
+        localStorage.removeItem('token')
         delete axios.defaults.headers.common.Authorization
     }
 }
 
-const reducer = (state, action) => {
+const reducer = (state: JWTAuthContextInitialState, action: any) => {
     switch (action.type) {
         case 'INIT': {
             const { isAuthenticated, user } = action.payload
@@ -47,7 +50,7 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 isAuthenticated: true,
-                user,
+                user: {...user},
             }
         }
         case 'LOGOUT': {
@@ -75,20 +78,19 @@ const reducer = (state, action) => {
 const AuthContext = createContext({
     ...initialState,
     method: 'JWT',
-    login: () => Promise.resolve(),
+    login: (args: LoginRequest) => Promise.resolve(),
     logout: () => { },
-    register: () => Promise.resolve(),
+    register: (args: RegisterRequest) => Promise.resolve(),
 })
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children } : any) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const login = async (email, password) => {
-        const response = await axios.post('http://127.0.0.1:8000/api/auth/login', {
-            email,
-            password,
-        })
-        const { authorisation, user } = response.data
+    const login = async (args: LoginRequest) => {
+
+        const { data } = await AuthService.login(args);
+
+        const { authorisation, user } = data;
 
         // set access token
         setSession(authorisation.token)
@@ -101,16 +103,12 @@ export const AuthProvider = ({ children }) => {
         })
     }
 
-    const register = async (email, username, password) => {
-        const response = await axios.post('/api/auth/register', {
-            email,
-            username,
-            password,
-        })
+    const register = async (args : RegisterRequest) => {
+        const response = await AuthService.register(args);
 
-        const { accessToken, user } = response.data
+        const { authorisation, user } = response.data;
 
-        setSession(accessToken)
+        setSession(authorisation.token)
 
         dispatch({
             type: 'REGISTER',
@@ -120,7 +118,8 @@ export const AuthProvider = ({ children }) => {
         })
     }
 
-    const logout = () => {
+    const logout = async () => {
+        await AuthService.logout();
         setSession(null)
         dispatch({ type: 'LOGOUT' })
     }
@@ -128,20 +127,21 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         ; (async () => {
             try {
-                const accessToken = window.localStorage.getItem('accessToken')
+                const accessToken = window.localStorage.getItem('token')
 
                 if (accessToken && isValidToken(accessToken)) {
                     setSession(accessToken)
-                    // const response = await axios.get('/api/auth/profile')
-                    // const { user } = response.data
 
-                    const user = {
-                        avatar: "/assets/images/face-6.jpg",
-                        email: "jason@ui-lib.com",
-                        id: 1,
-                        name: "Jason Alexander",
-                        role: "SA"
-                    }
+                    const response = await AuthService.profile();
+                    const user = response.data;
+
+                    // const user = {
+                    //     avatar: "/assets/images/face-6.jpg",
+                    //     email: "jason@ui-lib.com",
+                    //     id: 1,
+                    //     name: "Jason Alexander",
+                    //     role: "SA"
+                    // }
 
                     dispatch({
                         type: 'INIT',
@@ -173,7 +173,7 @@ export const AuthProvider = ({ children }) => {
     }, [])
 
     if (!state.isInitialised) {
-        return <MatxLoading />
+        return <MatxLoading />;
     }
 
     return (

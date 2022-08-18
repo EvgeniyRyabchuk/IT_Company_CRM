@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {Dispatch} from "react";
-import {EcommerceAction, EcommerceActionTypes} from "../../types/matx/ecommerce";
+import {EcommerceAction, EcommerceActionTypes} from "../../../types/matx/ecommerce";
 
 
 export const getProductList = () => (dispatch: Dispatch<EcommerceAction>) => {

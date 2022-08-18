@@ -51,6 +51,8 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('register', 'register');
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
+
+    Route::get('profile', 'getProfile');
 });
 
 
@@ -65,6 +67,8 @@ Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'res
 //Route::prefix('users')->middleware('auth:api')->group(function () {
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::get('/{userId}', [UserController::class, 'show']);
+
 
     Route::prefix('{userId}/chats')->group(function ($e) {
         Route::get('/', [ChatController::class, 'showChats']);

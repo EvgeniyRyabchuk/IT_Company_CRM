@@ -35,9 +35,9 @@ const JWTRegister = styled(JustifyBox)(() => ({
 
 // inital login credentials
 const initialValues = {
-  email: '',
-  password: '',
-  username: '',
+  email: 'newAcsdfcount@gmail.com',
+  password: '1234556789',
+  username: 'NewAccount',
   remember: true,
 };
 
@@ -59,7 +59,8 @@ const JwtRegister = () => {
     setLoading(true);
 
     try {
-      register(values.email, values.username, values.password);
+      const args = { email: values.email, password: values.password, username: values.username};
+      register(args);
       navigate('/');
       setLoading(false);
     } catch (e) {

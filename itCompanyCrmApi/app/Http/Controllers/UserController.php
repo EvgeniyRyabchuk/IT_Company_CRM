@@ -100,15 +100,13 @@ class UserController extends Controller
         dd($customer);
     }
 
-    public function show() {
-        // check permissions
-//        $this->authorize('user_create');
-        $user = Auth::user();
-        $roles = $user->roles()->get();
-
-        return response()->json(["message' => 'opened show page.
-        User = $user->id has roles $roles", 201]);
+    public function show(Request $request, $userId) {
+        $user = User::findOrFail($userId);
+        return response()->json($user);
     }
+
+
+
 
     public function create() {
 

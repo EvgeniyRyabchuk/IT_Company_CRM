@@ -12,7 +12,8 @@ import SidenavTheme from '../../MatxTheme/SidenavTheme/SidenavTheme';
 import SecondarySidebar from '../../SecondarySidebar/SecondarySidebar';
 import Layout1Sidenav from './Layout1Sidenav';
 import Layout1Topbar from './Layout1Topbar';
-console.log('layout 1');
+
+
 
 const Layout1Root = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -90,7 +91,7 @@ const Layout1 = () => {
 
   return (
     <Layout1Root className={layoutClasses}>
-      LAYOUT 123
+
       {showSidenav && sidenavMode !== 'close' && (
         <SidenavTheme>
           <Layout1Sidenav />

@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { Span } from '../../../assets/typography/Typography';
 import NotificationBar from '../../NotificationBar/NotificationBar';
 import ShoppingCart from '../../ShoppingCart';
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -130,10 +131,10 @@ const Layout1Topbar = () => {
               <UserMenu>
                 <Hidden xsDown>
                   <Span>
-                    Hi <strong>{user.name}</strong>
+                    Hi <strong>{user.full_name}</strong>
                   </Span>
                 </Hidden>
-                <Avatar src={user.avatar} sx={{ cursor: 'pointer' }} />
+                <Avatar src={`${API_URL_WITH_PUBLIC_STORAGE}/${user.avatar}`} sx={{ cursor: 'pointer' }} />
               </UserMenu>
             }
           >

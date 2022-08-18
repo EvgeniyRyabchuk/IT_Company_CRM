@@ -3,7 +3,7 @@ import { lazy } from 'react';
 
 const NotFound = Loadable(lazy(() => import('../sessions/NotFound')));
 const ForgotPassword = Loadable(lazy(() => import('../sessions/ForgotPassword')));
-const JwtLogin = Loadable(lazy(() => import('../sessions/JwtLogin')));
+const JwtLogin = Loadable(lazy(() => import('./JwtLogin')));
 const JwtRegister = Loadable(lazy(() => import('../sessions/JwtRegister')));
 
 const sessionRoutes = [

@@ -2,9 +2,9 @@ import { combineReducers } from "redux";
 import { userReducer } from "./userReducer";
 import {chatReducer} from "./chatReducer";
 import {kanbanReducer} from "./kanbanReducer";
-import NotificationReducer from "./NotificationReducer";
-import NavigationReducer from "./NavigationReducer";
-import EcommerceReducer from "./EcommerceReducer";
+import NotificationReducer from "./matx/NotificationReducer";
+import NavigationReducer from "./matx/NavigationReducer";
+import EcommerceReducer from "./matx/EcommerceReducer";
 
 export const rootReducer = combineReducers({
     user: userReducer,

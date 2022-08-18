@@ -38,9 +38,9 @@ const JWTRoot = styled(JustifyBox)(() => ({
 
 // inital login credentials
 const initialValues = {
-  email: 'jason@ui-lib.com',
-  password: 'dummyPass',
-  remember: true,
+  email: 'jeka.rubchuk@gmail.com',
+  password: '123',
+  remember: false,
 };
 
 // form field validation schema
@@ -62,8 +62,10 @@ const JwtLogin = () => {
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      await login(values.email, values.password);
+      const args = { email: values.email, password: values.password,  remeber_me: values.remember};
+      await login(args);
       navigate('/');
+      setLoading(false);
     } catch (e) {
       setLoading(false);
     }

@@ -1,7 +1,8 @@
 
 
 import {Dispatch} from "react";
-export const SET_USER_NAVIGATION = 'SET_USER_NAVIGATION';
+import {NavigationAction, NavigationActionTypes} from "../../../types/matx/navigations";
+
 
 const getfilteredNavigations = (navList = [], role: any) => {
   return navList.reduce((array: any, nav: any) => {
@@ -22,13 +23,13 @@ const getfilteredNavigations = (navList = [], role: any) => {
 };
 
 export function getNavigationByUser() {
-  return (dispatch: Dispatch<any>, getState: any) => {
+  return (dispatch: Dispatch<NavigationAction>, getState: any) => {
     let { user, navigations = [] } = getState();
 
     let filteredNavigations = getfilteredNavigations(navigations, user.role);
 
     dispatch({
-      type: SET_USER_NAVIGATION,
+      type: NavigationActionTypes.SET_USER_NAVIGATION,
       payload: [...filteredNavigations],
     });
   };

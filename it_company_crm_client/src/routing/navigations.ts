@@ -1,4 +1,4 @@
-import {NavigationRoute} from "../types/navigations";
+import {NavigationRoute} from "../types/matx/navigations";
 
 export const navigations : NavigationRoute[]  = [
   { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },

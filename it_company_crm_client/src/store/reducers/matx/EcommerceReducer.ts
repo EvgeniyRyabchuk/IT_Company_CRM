@@ -1,4 +1,4 @@
-import {EcommerceAction, EcommerceActionTypes, EcommerceState} from "../../types/matx/ecommerce";
+import {EcommerceAction, EcommerceActionTypes, EcommerceState} from "../../../types/matx/ecommerce";
 
 
 const initialState : EcommerceState = {

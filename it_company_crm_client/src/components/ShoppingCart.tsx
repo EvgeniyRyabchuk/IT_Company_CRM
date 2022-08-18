@@ -136,7 +136,7 @@ function ShoppingCart({ container } : any) {
           <Icon sx={{ color: textColor }}>shopping_cart</Icon>
         </Badge>
       </IconButton>
-      =
+
       <ThemeProvider theme={settings.themes[settings.activeTheme as keyof typeof settings.themes]}>
         <Drawer
           container={container}

@@ -21,6 +21,7 @@ const AuthGuard = ({ children }) => {
   } = useAuth();
   const { pathname } = useLocation();
 
+
   //   const routes = flat(AllPages);
 
   //   const hasPermission = userHasPermission(pathname, user, routes);

@@ -6,17 +6,25 @@ import NotFound from '../pages/sessions/NotFound';
 import sessionRoutes from '../pages/sessions/SessionRoutes';
 import { Navigate } from 'react-router-dom';
 import MatxLayout from '../components/MatxLayout/MatxLayout';
+import RoleGuard from "../auth/RoleGuard";
+
+const getChildRoutesWithRoleContext = () => {
+  const children = [ ...dashboardRoutes, ...chartsRoute, ...materialRoutes ];
+  children.map((e) => {
+    return e.element = (<RoleGuard allowRoles={e.allowForRole}>{e.element}</RoleGuard>)
+  })
+  console.log('children', children);
+  return children;
+}
 
 const routes = [
   {
     element: (
       <AuthGuard>
-        123
         <MatxLayout />
-
       </AuthGuard>
     ),
-    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes],
+    children: getChildRoutesWithRoleContext(),
   },
   ...sessionRoutes,
   { path: '/', element: <Navigate to="dashboard/default" /> },

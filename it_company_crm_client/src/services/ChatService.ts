@@ -1,5 +1,5 @@
 import $api from "../http";
-import {AuthResponse} from "../types/auth";
+import {AuthorizedResponse} from "../types/auth";
 import {AxiosResponse} from "axios";
 import {Chat} from "../types/chat";
 import {User} from "../types/user";
@@ -30,8 +30,8 @@ export class ChatService {
     return $api.get<any>(`/users/${userId}/chats/${chatId}/messages${query}`);
     }
 
-    static async markMsgAsSeen(userId: number, chatId: number): Promise<AxiosResponse<AuthResponse>> {
-        return $api.put<AuthResponse>(`/users/${userId}/chats/${chatId}/seen`);
+    static async markMsgAsSeen(userId: number, chatId: number): Promise<AxiosResponse<AuthorizedResponse>> {
+        return $api.put<AuthorizedResponse>(`/users/${userId}/chats/${chatId}/seen`);
     }
 
     static async deleteChat(userId: number, chatId: number): Promise<AxiosResponse<any>> {

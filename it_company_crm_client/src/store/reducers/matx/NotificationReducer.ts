@@ -1,5 +1,5 @@
 
-import {NotificationAction, NotificationActionTypes} from "../../types/matx/notification";
+import {NotificationAction, NotificationActionTypes} from "../../../types/matx/notification";
 
 const initialState : any = [];
 

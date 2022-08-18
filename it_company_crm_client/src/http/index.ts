@@ -1,7 +1,12 @@
 import axios from "axios";
 
-export const API_URL = process.env.REACT_APP_API_URL;
+export const API_URL_DEBUG = process.env.REACT_APP_API_URL_DEBUG;
 export const API_URL_PROD = process.env.REACT_APP_API_URL_PROD;
+
+export const API_URL = API_URL_DEBUG;
+
+export const API_URL_WITH_PUBLIC_STORAGE = `${API_URL}/storage`;
+
 
 
 const $api = axios.create({
@@ -10,6 +15,7 @@ const $api = axios.create({
 });
 
 $api.interceptors.request.use((config) => {
+    console.log(API_URL)
     if(config && config.headers) {
         config.withCredentials = true;
         config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;

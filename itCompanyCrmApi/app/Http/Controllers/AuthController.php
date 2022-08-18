@@ -24,7 +24,18 @@ class AuthController extends Controller
             ['except' => ['login','register']]);
     }
 
-    // TODO: test
+    public function getProfile(Request $request) {
+        // check permissions
+//        $this->authorize('user_create');
+        $userId = Auth::user()->id;
+        $user = User::with('roles')->findOrFail($userId);
+
+        return response()->json($user);
+
+//        return response()->json(["message' => 'opened show page.
+//        User = $user->id has roles $roles", 201]);
+    }
+
 
     public function login(Request $request)
     {
@@ -48,7 +59,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
+        $user = User::with('roles')->findOrFail(Auth::user()->id);
 
         if($remeberMe) {
             $refreshToken = Auth::guard()->refresh();
@@ -79,7 +90,7 @@ class AuthController extends Controller
         ]);
 
         if($remeberMe) {
-            $responce->withCookie(cookie('refresh_token', $refreshToken, config('jwt.refresh_ttl')));
+            $responce->withCookie(cookie('refreshToken', $refreshToken, config('jwt.refresh_ttl')));
         }
 
         return $responce;
@@ -143,20 +154,23 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ])
-            ->withCookie(cookie('refresh_token', $refreshToken, config('jwt.refresh_ttl')));;
+            ->withCookie(cookie('refreshToken', $refreshToken, config('jwt.refresh_ttl')));;
     }
 
     public function logout(Request $request)
     {
         $accessToken = JWTAuth::getToken();
         $accessToken = $request->headers->get('authorization');
-        $refreshToken = Cookie::get('refresh_token');
+        $refreshToken = Cookie::get('refreshToken');
+
         $dbAccessToken = AccessToken::where('token', str_replace("Bearer ", "", $accessToken))->first();
         $dbRefreshToken = RefreshToken::where('token', $refreshToken)->first();
-        $dbAccessToken->delete();
-        $dbRefreshToken->delete();
 
-        $cookie = \Cookie::forget('refresh_token');
+        $dbAccessToken->delete();
+        if(!is_null($dbRefreshToken))
+            $dbRefreshToken->delete();
+
+        $cookie = \Cookie::forget('refreshToken');
 
     // TODO: not work
 //        Auth::logout();
@@ -172,7 +186,7 @@ class AuthController extends Controller
     public function refresh(Request $request)
     {
 
-        $refreshToken = Cookie::get('refresh_token');
+        $refreshToken = Cookie::get('refreshToken');
 
         if(is_null($refreshToken))
             throw new HttpResponseException(response()->json(['failure_reason'=>'No refresh token'], 401));
