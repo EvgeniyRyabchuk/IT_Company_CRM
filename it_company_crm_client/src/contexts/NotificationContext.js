@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react'
 import axios from 'axios'
+import PersonalNotificationService from "../services/PersonalNotificationService";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -38,60 +39,58 @@ const NotificationContext = createContext({
 export const NotificationProvider = ({ settings, children }) => {
     const [state, dispatch] = useReducer(reducer, [])
 
-    const deleteNotification = async (notificationID) => {
+    const deleteNotification = async (userId, notificationId) => {
         try {
-            const res = await axios.post('/api/notification/delete', {
-                id: notificationID,
-            })
+            const response = await PersonalNotificationService.delete(userId, notificationId);
+
             dispatch({
                 type: 'DELETE_NOTIFICATION',
-                payload: res.data,
+                payload: response.data,
             })
         } catch (e) {
             console.error(e)
         }
     }
 
-    const clearNotifications = async () => {
+    const clearNotifications = async (userId) => {
         try {
-            const res = await axios.post('/api/notification/delete-all')
+            const response = await PersonalNotificationService.deleteAll(userId);
             dispatch({
                 type: 'CLEAR_NOTIFICATIONS',
-                payload: res.data,
+                payload: response.data,
             })
         } catch (e) {
             console.error(e)
         }
     }
 
-    const getNotifications = async () => {
+    const getNotifications = async (userId) => {
         try {
-            const res = await axios.get('/api/notification')
+            // const res = await axios.get('/api/notification')
+            const response = await PersonalNotificationService.getNotifications(userId);
             dispatch({
                 type: 'LOAD_NOTIFICATIONS',
-                payload: res.data,
+                payload: response.data,
             })
         } catch (e) {
             console.error(e)
         }
     }
-    const createNotification = async (notification) => {
-        try {
-            const res = await axios.post('/api/notification/add', {
-                notification,
-            })
-            dispatch({
-                type: 'CREATE_NOTIFICATION',
-                payload: res.data,
-            })
-        } catch (e) {
-            console.error(e)
-        }
-    }
+    // const createNotification = async (notification) => {
+    //     try {
+    //         const res = await axios.post('/api/notification/add', {
+    //             notification,
+    //         })
+    //         dispatch({
+    //             type: 'CREATE_NOTIFICATION',
+    //             payload: res.data,
+    //         })
+    //     } catch (e) {
+    //         console.error(e)
+    //     }
+    // }
 
-    useEffect(() => {
-        getNotifications()
-    }, [])
+
 
     return (
         <NotificationContext.Provider
@@ -100,7 +99,7 @@ export const NotificationProvider = ({ settings, children }) => {
                 deleteNotification,
                 clearNotifications,
                 getNotifications,
-                createNotification,
+                // createNotification,
             }}
         >
             {children}

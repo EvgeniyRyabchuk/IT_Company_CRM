@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 
 use App\Models\AccessToken;
+use App\Models\PersonalNotification;
+use App\Models\PersonalNotificationType;
 use App\Models\RefreshToken;
 use App\Models\Role;
 use App\Models\User;
@@ -21,7 +23,7 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api',
-            ['except' => ['login','register']]);
+            ['except' => ['login','register', 'refresh']]);
     }
 
     public function getProfile(Request $request) {
@@ -47,7 +49,7 @@ class AuthController extends Controller
 //        ]);
 
         $credentials = $request->only('email', 'password');
-        $remeberMe = $request->input('remember_me') ?? false;
+        $rememberMe = $request->input('rememberMe') ?? false;
 
 
         $token = Auth::attempt($credentials);
@@ -61,7 +63,7 @@ class AuthController extends Controller
 
         $user = User::with('roles')->findOrFail(Auth::user()->id);
 
-        if($remeberMe) {
+        if($rememberMe) {
             $refreshToken = Auth::guard()->refresh();
             $user->refreshTokens()->save(
                 new RefreshToken([
@@ -89,7 +91,7 @@ class AuthController extends Controller
             ]
         ]);
 
-        if($remeberMe) {
+        if($rememberMe) {
             $responce->withCookie(cookie('refreshToken', $refreshToken, config('jwt.refresh_ttl')));
         }
 
@@ -143,6 +145,25 @@ class AuthController extends Controller
         );
 
        //  event(new Registered($user));
+
+        $payloadForMessageNot = [
+            'type' => PersonalNotificationType::where('name', 'chat')->first(),
+            'user' => $user,
+            'heading' => 'Message',
+            'title' => 'New message from Devid',
+            'subtitle' => 'Hello, Any progress'
+        ];
+
+        $payloadForVerifyEmailNot = [
+            'type' => PersonalNotificationType::where('name', 'notifications')->first(),
+            'user' => $user,
+            'heading' => 'Secure',
+            'title' => 'Confirm email',
+            'subtitle' => 'Please go to setting to confirm your email'
+        ];
+
+        PersonalNotificationController::store($payloadForMessageNot);
+        PersonalNotificationController::store($payloadForVerifyEmailNot);
 
 
         return response()->json([
@@ -204,6 +225,7 @@ class AuthController extends Controller
 
 
         $accessToken = $request->headers->get('authorization');
+        
         $dbAccessToken = AccessToken::where('token', str_replace("Bearer ", "", $accessToken))->first();
         $dbAccessToken->delete();
 

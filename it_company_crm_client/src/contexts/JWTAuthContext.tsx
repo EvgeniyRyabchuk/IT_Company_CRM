@@ -69,6 +69,15 @@ const reducer = (state: JWTAuthContextInitialState, action: any) => {
                 user,
             }
         }
+        case 'EMAIL_VERIFY':
+        {
+            const { user } = action.payload
+
+            return {
+                ...state,
+                user,
+            }
+        }
         default: {
             return { ...state }
         }
@@ -124,12 +133,14 @@ export const AuthProvider = ({ children } : any) => {
         dispatch({ type: 'LOGOUT' })
     }
 
+
+
     useEffect(() => {
         ; (async () => {
             try {
                 const accessToken = window.localStorage.getItem('token')
 
-                if (accessToken && isValidToken(accessToken)) {
+                if (accessToken) {
                     setSession(accessToken)
 
                     const response = await AuthService.profile();

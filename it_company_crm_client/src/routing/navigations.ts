@@ -9,7 +9,11 @@ export const navigations : NavigationRoute[]  = [
     children: [
       { name: 'Sign in', iconText: 'SI', path: '/session/signin' },
       { name: 'Sign up', iconText: 'SU', path: '/session/signup' },
+
       { name: 'Forgot Password', iconText: 'FP', path: '/session/forgot-password' },
+      { name: 'EmailSentSuccessfully', iconText: 'SS', path: '/session/forgot-password/sent' },
+      { name: 'PasswordReset', iconText: 'PR', path: '/session/password-reset/:id/:token' },
+
       { name: 'Error', iconText: '404', path: '/session/404' },
     ],
   },
@@ -46,4 +50,28 @@ export const navigations : NavigationRoute[]  = [
     type: 'extLink',
     path: 'http://demos.ui-lib.com/matx-react-doc/',
   },
+
+  {
+    name: 'Users',
+    icon: 'dashboard',
+    children: [
+      { name: 'Employees', path: '/employee', iconText: 'E' },
+      { name: 'Customers', path: '/customers', iconText: 'C' },
+    ]
+
+  },
+
+  { name: 'Orders', path: '/orders', icon: 'dashboard' },
+
+  { name: 'Projects', path: '/projects', icon: 'dashboard' },
+
+  { name: 'Vacancies', path: '/projects', icon: 'dashboard' },
+
+  { name: 'Statistic', path: '/projects', icon: 'dashboard' },
+
+  { name: 'Event Calendar', path: '/events', icon: 'event' },
+
+  { name: 'Chat', path: '/chats', icon: 'chat' },
+
+  { name: 'News', path: '/news', icon: 'chat' }
 ];

@@ -10,14 +10,14 @@ export interface JWTAuthContextInitialState {
 export interface LoginRequest {
     email: string,
     password: string;
-    remeber_me: boolean;
+    remember_me: boolean;
 }
 
 export interface RegisterRequest {
     email: string,
     username: string
     password: string;
-    remeber_me: boolean;
+    remember_me: boolean;
 }
 
 export interface AuthorizedResponse {

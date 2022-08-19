@@ -9,6 +9,7 @@ use App\Models\JobApplication;
 use App\Models\KanbanLane;
 use App\Models\KanbanPriority;
 use App\Models\Level;
+use App\Models\PersonalNotification;
 use App\Models\Project;
 use App\Models\ProjectLink;
 use App\Models\ProjectType;
@@ -102,12 +103,13 @@ class DatabaseSeeder extends Seeder
 
         $this->call(EventSeeder::class);
 
-        $this->call(KanbanPrioritySeeder::class);
+        /// $this->call(KanbanPrioritySeeder::class);
 
 //        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
 
         $users = User::all();
-        $this->call(ChatMessageSeeder::class, false, compact('users'));
+        /// $this->call(ChatMessageSeeder::class, false, compact('users'));
 
+        $this->call(PersonalNotificationSeeder::class);
     }
 }

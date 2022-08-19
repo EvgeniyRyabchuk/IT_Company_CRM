@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {Dispatch} from "react";
-import {ChatAction} from "../../../types/chat";
 import {NotificationAction, NotificationActionTypes} from "../../../types/matx/notification";
 
 

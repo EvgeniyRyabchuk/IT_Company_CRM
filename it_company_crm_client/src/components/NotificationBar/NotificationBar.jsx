@@ -2,7 +2,7 @@ import { Badge, Button, Card, Drawer, Icon, IconButton, ThemeProvider } from '@m
 import { Box, styled, useTheme } from '@mui/system';
 
 
-import React, { Fragment } from 'react';
+import React, {Fragment, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { themeShadows } from '../MatxTheme/themeColors';
 import {sideNavWidth, topBarHeight} from "../../utils/constant";
@@ -10,6 +10,7 @@ import useSettings from "../../hooks/useSettings";
 import useNotification from '../../hooks/useNotification';
 import {getTimeDifference} from "../../utils/utils";
 import {Paragraph, Small} from "../../assets/typography/Typography";
+import useAuth from "../../hooks/useAuth";
 
 const Notification = styled('div')(() => ({
   padding: '16px',
@@ -75,7 +76,9 @@ const NotificationBar = ({ container }) => {
   const theme = useTheme();
   const secondary = theme.palette.text.secondary;
   const [panelOpen, setPanelOpen] = React.useState(false);
-  const { deleteNotification, clearNotifications, notifications } = useNotification();
+  const { deleteNotification, clearNotifications, notifications, getNotifications } = useNotification();
+
+  const { isAuthenticated, user } = useAuth();
 
   const handleDrawerToggle = () => {
     setPanelOpen(!panelOpen);
@@ -83,6 +86,11 @@ const NotificationBar = ({ container }) => {
 
   const { palette } = useTheme();
   const textColor = palette.text.primary;
+
+  useEffect(() => {
+    if(isAuthenticated)
+      getNotifications(user.id);
+  }, [])
 
   return (
     <Fragment>
@@ -115,20 +123,20 @@ const NotificationBar = ({ container }) => {
                 <DeleteButton
                   size="small"
                   className="deleteButton"
-                  onClick={() => deleteNotification(notification.id)}
+                  onClick={() => deleteNotification(user.id, notification.id)}
                 >
                   <Icon className="icon">clear</Icon>
                 </DeleteButton>
                 <Link
                   to={`/${notification.path}`}
-                  onClick={handleDrawerToggle}
+                  // onClick={handleDrawerToggle}
                   style={{ textDecoration: 'none' }}
                 >
                   <Card sx={{ mx: 2, mb: 3 }} elevation={3}>
                     <CardLeftContent>
                       <Box display="flex">
-                        <Icon className="icon" color={notification.icon.color}>
-                          {notification.icon.name}
+                        <Icon className="icon" color={notification.type.color}>
+                          {notification.type.name}
                         </Icon>
                         <Heading>{notification.heading}</Heading>
                       </Box>
@@ -147,7 +155,7 @@ const NotificationBar = ({ container }) => {
             ))}
             {!!notifications?.length && (
               <Box sx={{ color: secondary }}>
-                <Button onClick={clearNotifications}>Clear Notifications</Button>
+                <Button onClick={() => clearNotifications(user.id)}>Clear Notifications</Button>
               </Box>
             )}
           </Box>

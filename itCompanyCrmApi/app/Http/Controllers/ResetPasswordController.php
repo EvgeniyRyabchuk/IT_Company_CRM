@@ -25,7 +25,7 @@ class ResetPasswordController extends Controller
         else {
             $email = $request->input('email');
             abort_if(!$email, 404, 'email is empty');
-            $user = User::where('email',)->first();
+            $user = User::where('email', $email)->first();
             abort_if(!$user, 404, 'user with such email does not exist');
         }
 

@@ -1,7 +1,7 @@
 
-import {NotificationAction, NotificationActionTypes} from "../../../types/matx/notification";
+import {NotificationAction, NotificationActionTypes, PersonalNotification} from "../../../types/matx/notification";
 
-const initialState : any = [];
+const initialState : PersonalNotification[] = [];
 
 const NotificationReducer = function (state = initialState, action: NotificationAction) {
   switch (action.type) {

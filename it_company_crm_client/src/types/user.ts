@@ -12,6 +12,7 @@ export interface User {
     roles: Role[];
     created_at: string;
     updated_at: string;
+    email_verified_at: string;
 }
 
 export interface Skill {

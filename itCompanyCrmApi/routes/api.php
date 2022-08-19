@@ -17,6 +17,7 @@ use App\Http\Controllers\_ChunkFileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PersonalNotificationController;
 
 
 /*
@@ -68,6 +69,16 @@ Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'res
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('/{userId}', [UserController::class, 'show']);
+
+    Route::prefix('{userId}/notifications')
+        ->controller(PersonalNotificationController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('user.notifications');
+            Route::post('/', 'store');
+            Route::delete('/all', 'destroyAll');
+
+            Route::delete('/{notificationId}', 'destroy');
+    });
 
 
     Route::prefix('{userId}/chats')->group(function ($e) {

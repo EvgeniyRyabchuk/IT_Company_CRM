@@ -45,11 +45,14 @@ $api.interceptors.response.use((config) => {
         try {
             const response = await fetch(`${API_URL}/auth/refresh`, {
                     credentials: "include",
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
                 }
             );
             const data = await response.json();
-            localStorage.setItem('token', data.accessToken);
+            localStorage.setItem('token', data.authorisation.token);
             return $api.request(originalRequest);
         } catch (e) {
             if (error.response.status == 401) {

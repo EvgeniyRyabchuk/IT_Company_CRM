@@ -2,6 +2,7 @@ import { Box, Button, Card, Grid, styled, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import forgotPasswordLogo from '../../assets/images/matx/illustrations/dreamer.svg';
+import AuthService from "../../services/AuthService";
 
 const FlexBox = styled(Box)(() => ({
   display: 'flex',
@@ -29,10 +30,14 @@ const ForgotPasswordRoot = styled(JustifyBox)(() => ({
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@example.com');
+  const [email, setEmail] = useState('jeka.rubchuk@gmail.com');
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
     console.log(email);
+
+    const response = await AuthService.sendPasswordReset(email);
+    navigate('/session/forgot-password/sent');
   };
 
   return (
