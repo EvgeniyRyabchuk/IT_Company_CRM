@@ -93,7 +93,9 @@ const Layout1Sidenav = () => {
               />
             </Hidden>
           </Brand>
+
           <Sidenav />
+
         </NavListBox>
       </SidebarNavRoot>
   );

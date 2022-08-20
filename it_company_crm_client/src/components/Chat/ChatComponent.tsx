@@ -70,7 +70,7 @@ const ChatComponent = () => {
     const [userModalOpen, setUserModalOpen] = useState(false);
 
     return (
-        <div className='chat' style={{display: 'flex', padding: '50px'}}>
+        <div className='chat' style={{display: 'flex', padding: '20px'}}>
 
             <AddUserChatModal
                 open={userModalOpen}

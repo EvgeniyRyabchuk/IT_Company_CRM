@@ -55,7 +55,7 @@ export const navigations : NavigationRoute[]  = [
     name: 'Users',
     icon: 'dashboard',
     children: [
-      { name: 'Employees', path: '/employee', iconText: 'E' },
+      { name: 'Employees', path: '/employees', iconText: 'E' },
       { name: 'Customers', path: '/customers', iconText: 'C' },
     ]
 
@@ -65,13 +65,21 @@ export const navigations : NavigationRoute[]  = [
 
   { name: 'Projects', path: '/projects', icon: 'dashboard' },
 
-  { name: 'Vacancies', path: '/projects', icon: 'dashboard' },
+  { name: 'Vacancies', path: '/vacancies', icon: 'dashboard' },
 
-  { name: 'Statistic', path: '/projects', icon: 'dashboard' },
+  { name: 'Statistic', path: '/statistic', icon: 'dashboard' },
 
   { name: 'Event Calendar', path: '/events', icon: 'event' },
 
   { name: 'Chat', path: '/chats', icon: 'chat' },
 
-  { name: 'News', path: '/news', icon: 'chat' }
+  { name: 'News', path: '/news', icon: 'chat' },
+
+  {
+    name: 'Tidio',
+    icon: 'chat_bubble_outline',
+    type: 'extLink',
+    path: 'https://www.tidio.com/panel',
+  },
+
 ];

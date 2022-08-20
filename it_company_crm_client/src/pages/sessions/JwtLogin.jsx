@@ -40,7 +40,7 @@ const JWTRoot = styled(JustifyBox)(() => ({
 const initialValues = {
   email: 'jeka.rubchuk@gmail.com',
   password: '123',
-  remember: false,
+  remember: true,
 };
 
 // form field validation schema

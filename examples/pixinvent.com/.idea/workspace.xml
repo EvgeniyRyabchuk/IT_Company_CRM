@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bb73941d-1cb4-44d7-8096-bc1c348a50ce" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/assets/components/breadcrumb/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/chat/Chat.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/chat/ChatRoutes.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/eventCalendar/EventCalendarPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/eventCalendar/EventCalendarRoutes.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/projects/ProjectPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/projects/ProjectsListPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/projects/ProjectsRoutes.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../itCompanyCrmApi/app/Http/Controllers/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../itCompanyCrmApi/app/Http/Controllers/AuthController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../itCompanyCrmApi/app/Models/AccessToken.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../itCompanyCrmApi/app/Models/AccessToken.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../itCompanyCrmApi/app/Models/RefreshToken.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../itCompanyCrmApi/app/Models/RefreshToken.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../itCompanyCrmApi/database/seeders/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/../../itCompanyCrmApi/database/seeders/DatabaseSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Brand.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Brand.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Chat/ChatComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Chat/ChatComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Footer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/MatxLayout/Layout1/Layout1Sidenav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/MatxLayout/Layout1/Layout1Sidenav.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/MatxLogo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/icons/MatxLogo.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/MatxVerticalNav/MatxVerticalNav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/MatxVerticalNav/MatxVerticalNav.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/ProjectFileManager/ProjectFileManager.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/ProjectFileManager/ProjectFileManager.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Sidenav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/Sidenav.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/components/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/components/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/sessions/JwtLogin.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/pages/sessions/JwtLogin.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/routing/navigations.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/routing/navigations.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../it_company_crm_client/src/routing/routes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../it_company_crm_client/src/routing/routes.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../requirements.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../requirements.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../todos.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../todos.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="2DcYnsUKiWaSiYslP9wrlVQVPLu" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bb73941d-1cb4-44d7-8096-bc1c348a50ce" name="Changes" comment="" />
+      <created>1661000010131</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1661000010131</updated>
+      <workItem from="1661000011525" duration="8000" />
+    </task>
+    <servers />
+  </component>
+</project>

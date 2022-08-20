@@ -9,7 +9,7 @@ export { MatxLayouts } from './MatxLayout/index';
 export { default as MatxLayout } from './MatxLayout/MatxLayout';
 // export { default as MatxListItem1 } from './MatxListItem1';
 export { default as MatxLoading } from './MatxLoading';
-export { default as MatxLogo } from './MatxLogo';
+export { default as MatxLogo } from './icons/MatxLogo';
 export { default as MatxMenu } from './MatxMenu';
 export { default as MatxProgressBar } from './MatxProgressBar';
 export { default as MatxSearchBox } from './MatxSearchBox';

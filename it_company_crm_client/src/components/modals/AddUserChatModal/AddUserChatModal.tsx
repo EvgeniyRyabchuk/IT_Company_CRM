@@ -39,7 +39,7 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserChatModal) =>
     const [users, setUsers] = useState<readonly User[]>([]);
     const [selecteOption, setSelectedOption] = useState<User|null>(null);
 
-    // const loading = open && users.length === 0;
+    // const loading = open && employees.length === 0;
     const loading = open;
 
     const getUsers = async () : Promise<User[]> => {

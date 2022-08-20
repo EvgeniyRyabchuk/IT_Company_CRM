@@ -1,12 +1,11 @@
 import { Box, ButtonBase, Icon, styled } from '@mui/material';
-
+import useSettings from "../../hooks/useSettings";
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-
+import {Paragraph, Span} from "../../assets/typography/Typography";
 import MatxVerticalNavExpansionPanel from './MatxVerticalNavExpansionPanel';
-import {Paragraph} from "../../assets/typography/Typography";
-import {Span} from "../../assets/components/Modals";
-import useSettings from "../../hooks/useSettings";
+
+
 
 const ListLabel = styled(Paragraph)(({ theme, mode }) => ({
   fontSize: '12px',
@@ -17,7 +16,12 @@ const ListLabel = styled(Paragraph)(({ theme, mode }) => ({
   display: mode === 'compact' && 'none',
   color: theme.palette.text.secondary,
 }));
+const StyledText = styled(Span)(({ mode }) => ({
+  fontSize: '0.875rem',
+  paddingLeft: '0.8rem',
+  display: mode === 'compact' && 'none',
 
+}));
 const ExtAndIntCommon = {
   display: 'flex',
   overflow: 'hidden',
@@ -55,11 +59,7 @@ const InternalLink = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledText = styled(Span)(({ mode }) => ({
-  fontSize: '0.875rem',
-  paddingLeft: '0.8rem',
-  display: mode === 'compact' && 'none',
-}));
+
 
 const BulletIcon = styled('div')(({ theme }) => ({
   padding: '2px',
@@ -80,7 +80,10 @@ const MatxVerticalNav = ({ items }) => {
   const { settings } = useSettings();
   const { mode } = settings.layout1Settings.leftSidebar;
 
+
+
   const renderLevels = (data) => {
+
     return data.map((item, index) => {
       if (item.type === 'label')
         return (

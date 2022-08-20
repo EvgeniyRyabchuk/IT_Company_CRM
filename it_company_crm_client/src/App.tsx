@@ -4,15 +4,12 @@ import React from 'react';
 import './assets/components/Global/App.css';
 import {Provider} from "react-redux";
 import {store} from "./store";
-import JwtLogin from "./pages/sessions/JwtLogin";
 import MatxTheme from "./components/MatxTheme/MatxTheme";
-import JwtRegister from "./pages/sessions/JwtRegister";
-import ForgotPassword from "./pages/sessions/ForgotPassword";
-import NotFound from "./pages/sessions/NotFound";
 import {SettingsProvider} from "./contexts/SettingsContext";
 import {useRoutes} from "react-router-dom";
 import routes from "./routing/routes";
 import {AuthProvider} from "./contexts/JWTAuthContext";
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 function App() {
     const content = useRoutes(routes);

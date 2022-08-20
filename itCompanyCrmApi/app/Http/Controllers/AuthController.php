@@ -49,7 +49,7 @@ class AuthController extends Controller
 //        ]);
 
         $credentials = $request->only('email', 'password');
-        $rememberMe = $request->input('rememberMe') ?? false;
+        $rememberMe = $request->input('remember_me') ?? false;
 
 
         $token = Auth::attempt($credentials);
@@ -180,7 +180,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $accessToken = JWTAuth::getToken();
+//        $accessToken = JWTAuth::getToken();
         $accessToken = $request->headers->get('authorization');
         $refreshToken = Cookie::get('refreshToken');
 
@@ -189,7 +189,7 @@ class AuthController extends Controller
 
         $dbAccessToken->delete();
         if(!is_null($dbRefreshToken))
-            $dbRefreshToken->delete();
+            $dbRefreshToken->delete(); 
 
         $cookie = \Cookie::forget('refreshToken');
 
@@ -225,14 +225,16 @@ class AuthController extends Controller
 
 
         $accessToken = $request->headers->get('authorization');
-        
+
         $dbAccessToken = AccessToken::where('token', str_replace("Bearer ", "", $accessToken))->first();
         $dbAccessToken->delete();
 
-        $newAccessToken = new AccessToken([
+        $newAccessToken = AccessToken::create([
+            'user_id' => $dbRefreshToken->user->id,
             'token' => Auth::refresh(),
             'expired_at' => Carbon::now()->addMinutes(config('jwt.ttl')),
         ]);
+        $newAccessToken->save();
 
         return response()->json([
             'status' => 'success',

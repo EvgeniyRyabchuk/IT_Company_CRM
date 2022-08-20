@@ -1,7 +1,8 @@
 import { Box, styled } from '@mui/material';
-import MatxLogo from './MatxLogo';
+import MatxLogo from './icons/MatxLogo';
 import useSettings from '../hooks/useSettings';
 import { Span } from '../assets/typography/Typography';
+import Icon from '../assets/images/icon_800_800.png';
 
 const BrandRoot = styled(Box)(() => ({
   display: 'flex',
@@ -24,9 +25,10 @@ const Brand = ({ children }) => {
   return (
     <BrandRoot>
       <Box display="flex" alignItems="center">
-        <MatxLogo />
+        {/*<MatxLogo />*/}
+        <img src={Icon} alt="logo" width={24} height={24}/>
         <StyledSpan mode={mode} className="sidenavHoverShow">
-          Matx
+          Crm for IT
         </StyledSpan>
       </Box>
 

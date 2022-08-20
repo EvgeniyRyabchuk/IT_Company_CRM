@@ -103,9 +103,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(EventSeeder::class);
 
-        /// $this->call(KanbanPrioritySeeder::class);
+        $this->call(KanbanPrioritySeeder::class);
 
-//        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
+        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
 
         $users = User::all();
         /// $this->call(ChatMessageSeeder::class, false, compact('users'));

@@ -9,7 +9,7 @@ class AccessToken extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['token', 'expired_at'];
+    protected $fillable = ['token', 'expired_at', 'user_id'];
 
     public function user() {
         return $this->belongsTo(User::class);

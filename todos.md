@@ -3,16 +3,13 @@
 
 --- Todos on front 
 
-Delete api request 
-Optimization 
 Scrollbar fix 
 
+Add hirizontal scrollbar
 
 --- Project statuses 
 
 --- Client FeedBack
-
-Instagram messages revice h
 
 Online Chat:  
 - send message from customer to manager 
@@ -20,8 +17,9 @@ Online Chat:
 
 
 
-
-
+Tidio handle 
+Layout fix 
+Refact stylying 
 
 
 
