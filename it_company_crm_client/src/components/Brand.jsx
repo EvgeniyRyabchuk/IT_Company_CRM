@@ -26,7 +26,7 @@ const Brand = ({ children }) => {
     <BrandRoot>
       <Box display="flex" alignItems="center">
         {/*<MatxLogo />*/}
-        <img src={Icon} alt="logo" width={24} height={24}/>
+        <img src={Icon} alt="logo" width={40} height={40}/>
         <StyledSpan mode={mode} className="sidenavHoverShow">
           Crm for IT
         </StyledSpan>

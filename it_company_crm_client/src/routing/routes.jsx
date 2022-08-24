@@ -1,5 +1,5 @@
 import AuthGuard from '../auth/AuthGuard';
-import chartsRoute from '../pages/charts/ChartsRoute';
+
 import dashboardRoutes from '../pages/dashboard/DashboardRoutes';
 import materialRoutes from '../pages/material-kit/MaterialRoutes';
 import NotFound from '../pages/sessions/NotFound';
@@ -11,10 +11,11 @@ import chatRoutes from "../pages/chat/ChatRoutes";
 import projectRoutes from "../pages/projects/ProjectsRoutes";
 import eventCalendarRoutes from "../pages/eventCalendar/EventCalendarRoutes";
 import employeeRoutes from "../pages/employees/employeeRoutes";
+import statisticRoute from "../pages/statistic/StatisticRoute";
 
 const children = [
   ...dashboardRoutes,
-  ...chartsRoute,
+  ...statisticRoute,
   ...materialRoutes,
   ...chatRoutes,
   ...projectRoutes,

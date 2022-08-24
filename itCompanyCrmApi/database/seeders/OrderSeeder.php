@@ -36,7 +36,7 @@ class OrderSeeder extends Seeder
         });
 
         for ($i = 0; $i < 10; $i++) {
-            $status = OrderStatus::inRandomOrder()->first();
+            $status = OrderStatus::where('name', 'Finished')->first();
 
             Order::create([
                 'project_id' => $projects[$i]->id,

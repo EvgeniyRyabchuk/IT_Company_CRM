@@ -39,11 +39,7 @@ export const navigations : NavigationRoute[]  = [
       { name: 'Table', path: '/material/table', iconText: 'T' },
     ],
   },
-  {
-    name: 'Charts',
-    icon: 'trending_up',
-    children: [{ name: 'Echarts', path: '/charts/echarts', iconText: 'E' }],
-  },
+
   {
     name: 'Documentation',
     icon: 'launch',
@@ -53,7 +49,7 @@ export const navigations : NavigationRoute[]  = [
 
   {
     name: 'Users',
-    icon: 'dashboard',
+    icon: 'person_outline',
     children: [
       { name: 'Employees', path: '/employees', iconText: 'E' },
       { name: 'Customers', path: '/customers', iconText: 'C' },
@@ -61,19 +57,19 @@ export const navigations : NavigationRoute[]  = [
 
   },
 
-  { name: 'Orders', path: '/orders', icon: 'dashboard' },
+  { name: 'Orders', path: '/orders', icon: 'folder' },
 
-  { name: 'Projects', path: '/projects', icon: 'dashboard' },
+  { name: 'Projects', path: '/projects', icon: 'devices' },
 
-  { name: 'Vacancies', path: '/vacancies', icon: 'dashboard' },
+  { name: 'Vacancies', path: '/vacancies', icon: 'border_color' },
 
-  { name: 'Statistic', path: '/statistic', icon: 'dashboard' },
+  { name: 'Statistic', path: '/statistic', icon: 'equalizer' },
 
   { name: 'Event Calendar', path: '/events', icon: 'event' },
 
   { name: 'Chat', path: '/chats', icon: 'chat' },
 
-  { name: 'News', path: '/news', icon: 'chat' },
+  { name: 'News', path: '/news', icon: 'reorder' },
 
   {
     name: 'Tidio',

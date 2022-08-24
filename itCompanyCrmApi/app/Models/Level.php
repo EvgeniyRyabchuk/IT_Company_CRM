@@ -9,6 +9,8 @@ class Level extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public function positions() {
         return $this->belongsToMany(Position::class);
     }

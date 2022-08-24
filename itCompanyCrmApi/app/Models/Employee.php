@@ -21,4 +21,13 @@ class Employee extends Model
     public function projects() {
         return $this->belongsToMany(Project::class);
     }
+
+    public function position() {
+        return $this->belongsTo(Position::class);
+    }
+
+    public function level() {
+        return $this->belongsTo(Level::class);
+    }
+
 }

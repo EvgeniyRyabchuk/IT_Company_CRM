@@ -68,12 +68,12 @@ button {
     text-transform: none
 }
 
-[type=submit],
-button {
-    -webkit-appearance: button;
-    background-color: transparent;
-    background-image: none
-}
+/*[type=submit],*/
+/*button {*/
+/*    -webkit-appearance: button;*/
+/*    background-color: transparent;*/
+/*    background-image: none*/
+/*}*/
 
 :-moz-focusring {
     outline: auto

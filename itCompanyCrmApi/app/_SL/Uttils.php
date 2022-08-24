@@ -11,7 +11,7 @@ class Uttils
     public static function getNotificationPath(PersonalNotificationType $notPype, $userId) {
         switch ($notPype->name) {
             case 'chat':
-                return "users/{$userId}/chats";
+                return "chats";
             case 'notifications':
                 return "notifications";
             default:

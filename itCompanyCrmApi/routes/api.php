@@ -18,6 +18,8 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PersonalNotificationController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\CustomerController;
 
 
 /*
@@ -67,8 +69,19 @@ Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'res
 
 //Route::prefix('users')->middleware('auth:api')->group(function () {
 Route::prefix('users')->group(function () {
+
+    Route::prefix('employees')->group(function() {
+        Route::get('/', [EmployeeController::class, 'index']);
+        Route::post('/', [EmployeeController::class, 'store']);
+        Route::put('/{employeeId}', [EmployeeController::class, 'update']);
+        Route::delete('/{employeeId}', [EmployeeController::class, 'destroy']);
+
+    });
+
+
     Route::get('/', [UserController::class, 'index']);
     Route::get('/{userId}', [UserController::class, 'show']);
+
 
     Route::prefix('{userId}/notifications')
         ->controller(PersonalNotificationController::class)

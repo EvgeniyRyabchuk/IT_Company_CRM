@@ -40,6 +40,9 @@ export interface Employee {
     level: Level;
     position: Position;
     skills: Skill[];
+
+    project_count: number;
+    finished_project_count: number;
 }
 export interface Customer {
     id: number;

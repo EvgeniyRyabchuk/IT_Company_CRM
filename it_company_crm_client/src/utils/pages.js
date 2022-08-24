@@ -13,3 +13,13 @@ export const getPagesArray = (totalPages) =>
     }
     return result;
 }
+
+export const getQueryString = (params) => {
+    let keyValue = [];
+    for (let param of params) {
+        if(param.value)
+            keyValue.push(param.key + "=" + param.value);
+    }
+    const str = keyValue.join('&');
+    return str ? `?${str}` : '';
+}

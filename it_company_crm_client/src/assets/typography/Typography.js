@@ -86,7 +86,7 @@ export const H4 = ({ children, className, ellipsis, textTransform, ...props }) =
   );
 };
 
-export const H5 = ({ children, className, ellipsis, textTransform, ...props }) => {
+export const H5 = ({ children, className = null, ellipsis = null, textTransform = null, ...props }) => {
   return (
     <StyledBox
       textTransformStyle={textTransform}

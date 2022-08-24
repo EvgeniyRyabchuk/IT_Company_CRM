@@ -24,7 +24,7 @@ const AppEchart = () => {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: 'Charts', path: '/charts' }, { name: 'Echarts' }]} />
+        <Breadcrumb routeSegments={[{ name: 'Statistic', path: '/statistic' } ]} />
       </Box>
 
       <SimpleCard title="Doughnut Chart">
