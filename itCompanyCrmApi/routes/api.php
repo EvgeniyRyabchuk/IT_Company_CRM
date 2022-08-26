@@ -76,6 +76,9 @@ Route::prefix('users')->group(function () {
         Route::put('/{employeeId}', [EmployeeController::class, 'update']);
         Route::delete('/{employeeId}', [EmployeeController::class, 'destroy']);
 
+        Route::get('positions', [EmployeeController::class, 'getPositions']);
+        Route::get('positions/{positionId}/levels', [EmployeeController::class, 'getLevels']);
+        Route::get('skills', [EmployeeController::class, 'getSkills']);
     });
 
 

@@ -147,7 +147,7 @@ export const Paragraph = ({ children, className, ellipsis, textTransform, ...pro
   );
 };
 
-export const Small = ({ children, className, ellipsis, textTransform, ...props }) => {
+export const Small = ({ children, className = null, ellipsis = null, textTransform = null, ...props }) => {
   return (
     <StyledBox
       textTransformStyle={textTransform}
@@ -183,7 +183,7 @@ export const Span = ({ children, className, ellipsis, textTransform, ...props })
   );
 };
 
-export const Tiny = ({ children, className, ellipsis, textTransform, ...props }) => {
+export const Tiny = ({ children, className = null, ellipsis = null, textTransform = null, ...props }) => {
   return (
     <StyledBox
       textTransformStyle={textTransform}

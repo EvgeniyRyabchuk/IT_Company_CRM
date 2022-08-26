@@ -19,7 +19,7 @@ const ChatSidebarBody = () => {
         return chats.filter((chat: Chat) => {
             if(!search || search === '') return true;
             const withUser = chat.users.filter((e: any) => e.id !== userId)[0];
-            return withUser.full_name.toLowerCase()
+            return withUser?.full_name?.toLowerCase()
                 .includes(search.toLowerCase());
         });
     }, [search, chats]);

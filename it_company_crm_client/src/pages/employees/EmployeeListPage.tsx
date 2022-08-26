@@ -11,6 +11,7 @@ import moment from "moment";
 
 import type {ColumnFiltersState, PaginationState, SortingState,} from '@tanstack/react-table';
 import {getQueryString} from "../../utils/pages";
+import CreateEditEmployeeModal from "../../components/modals/CreateEditEmployeeModal/CreateEditEmployeeModal";
 
 
 const EmployeeListPage = () => {
@@ -32,6 +33,27 @@ const EmployeeListPage = () => {
 
     const [rowCount, setRowCount] = useState(0);
 
+    const [createEditModalState, setCreateEditModalState] = useState({
+            isOpen: false,
+            mode: 'create',
+    });
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee>();
+
+    const handleCreateEditRow = async (values: Employee, mode: string) => {
+        console.log('submit', values);
+        if(mode === 'create') {
+            const { data } = await EmployeeService.createEmployee(values);
+            setEmployees([...employees, data]);
+        }
+        else {
+            const { data } = await EmployeeService.updateEmployee(values);
+            // update employee list
+            const newEmployees = employees.map((e: Employee) => e.id === data.id ? data : e);
+            setEmployees(newEmployees);
+        }
+
+
+    };
 
 
     useEffect(() => {
@@ -180,9 +202,6 @@ const EmployeeListPage = () => {
                 positionActionsColumn='last'
                 positionExpandColumn='last'
 
-
-
-
                 manualFiltering
                 manualPagination
                 manualSorting
@@ -250,7 +269,7 @@ const EmployeeListPage = () => {
 
                     </Box>
                 )}
-                renderRowActionMenuItems={({ closeMenu }) => [
+                renderRowActionMenuItems={({ closeMenu, row }) => [
                     <MenuItem
                         key={0}
                         onClick={() => {
@@ -280,6 +299,9 @@ const EmployeeListPage = () => {
                     <MenuItem
                         key={2}
                         onClick={() => {
+                            console.log('selected employee', row.original);
+                            setSelectedEmployee({ ...row.original });
+                            setCreateEditModalState({ isOpen: true, mode: 'update'})
                             closeMenu();
                         }}
                         sx={{ m: 0 }}
@@ -302,7 +324,7 @@ const EmployeeListPage = () => {
                         Delete
                     </MenuItem>,
                     <MenuItem
-                        key={3}
+                        key={4}
                         onClick={() => {
                             closeMenu();
                         }}
@@ -325,9 +347,17 @@ const EmployeeListPage = () => {
                     };
 
                     return (
+
                         <Box
                             sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
                         >
+                            <Button
+                                color="secondary"
+                                onClick={() => setCreateEditModalState({ isOpen: true, mode: 'create'})}
+                                variant="contained"
+                            >
+                                Create New Employee Account
+                            </Button>
                             <Button
                                 color="primary"
                                 //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
@@ -368,11 +398,21 @@ const EmployeeListPage = () => {
                             >
                                 Export Selected Rows
                             </Button>
+
                         </Box>
+
                     );
                 }}
 
 
+            />
+
+            <CreateEditEmployeeModal
+                onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
+                onSubmit={handleCreateEditRow}
+                open={createEditModalState.isOpen}
+                mode={createEditModalState.mode}
+                employee={selectedEmployee}
             />
 
         </Container>

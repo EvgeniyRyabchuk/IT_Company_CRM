@@ -22,7 +22,6 @@ class EmployeeController extends Controller
         $search = $request->input('search') ?? '';
 
 
-
         if(is_array($filters) && count($filters) > 0)
             $filters = json_decode($filters, true, 3);
         else
@@ -90,15 +89,15 @@ class EmployeeController extends Controller
         if($mode === 'update')
             $employeeId =  $request->input('id');
 
-        $firstName = $request->input('user.first_name');
-        $lastName = $request->input('user.last_name');
-        $middleName = $request->input('user.middle_name') ?? null;
-        $email = $request->input('user.first_name');
+        $firstName = $request->input('first_name');
+        $lastName = $request->input('last_name');
+        $middleName = $request->input('middle_name') ?? null;
+        $email = $request->input('email');
 
         $positionId = $request->input('position_id');
         $levelId = $request->input('level_id');
 
-        $skills = $request->input('skills');
+        $skills = explode(',', $request->input('skills'));
 
         $position = Position::findOrFail($positionId);
 
@@ -113,6 +112,7 @@ class EmployeeController extends Controller
         if($mode === 'create') {
             $user = new User();
             $employee = new Employee();
+            $user->password = Str::random(10);
         } else {
             $employee = Employee::findOrFail($employeeId);
             $user = $employee->user;
@@ -123,10 +123,12 @@ class EmployeeController extends Controller
         $user->middle_name = $middleName;
         $user->full_name = "$lastName $firstName $middleName";
         $user->email = $email;
-        $user->password = Str::random(10);
+
         //TODO: send email with credentials
         $user->save();
         //TODO avatar
+
+        //TODO: social links
 
 
         $employee->user()->associate($user);
@@ -147,6 +149,7 @@ class EmployeeController extends Controller
 
         $employee =  $this->saveEmployee($request, 'create');
         $addedEmployee = Employee::with('user', 'position', 'level', 'skills')
+            ->withCount(['projects as project_count'])
             ->findOrFail($employee->id);
         return response()->json($addedEmployee);
     }
@@ -154,6 +157,7 @@ class EmployeeController extends Controller
     public function update(Request $request, $employeeId) {
         $employee = $this->saveEmployee($request, 'update');
         $addedEmployee = Employee::with('user', 'position', 'level', 'skills')
+            ->withCount(['projects as project_count'])
             ->findOrFail($employee->id);
         return response()->json($addedEmployee);
     }
@@ -167,4 +171,21 @@ class EmployeeController extends Controller
 
         return response()->json(['message' => 'employee was destroyed'], 201);
     }
+
+    public function getPositions(Request $request) {
+        $positions = Position::all();
+        return response()->json($positions);
+    }
+
+    public function getLevels(Request $request, $positionId) {
+        $position = Position::findOrFail($positionId);
+        return response()->json($position->levels);
+    }
+
+    public function getSkills(Request $request) {
+        $skills = Skill::all();
+        return response()->json($skills);
+    }
+
+    //TODO: csv, print
 }

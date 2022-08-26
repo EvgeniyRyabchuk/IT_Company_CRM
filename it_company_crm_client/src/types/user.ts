@@ -16,22 +16,28 @@ export interface User {
 }
 
 export interface Skill {
+    id?: number;
     name: string;
 }
 export interface Role {
+    id: number;
     name: string;
 }
 export interface Phone {
+    id: number;
     code_1: string;
     code_2: string;
     number: string;
     phone_number: string;
 }
 export interface Level {
+    id: number;
     name: string;
 }
 export interface Position {
+    id: number;
     name: string;
+
 }
 
 export interface Employee {
