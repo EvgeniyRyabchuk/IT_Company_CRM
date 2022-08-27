@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('password');
 
             $table->string('avatar', 4096)
-                ->default('static/images/users/avatars/80x80/user-32-01.jpg');
+                ->default('static/images/users/avatars/80x80/default-avatar.png');
 
 
             $table->rememberToken();

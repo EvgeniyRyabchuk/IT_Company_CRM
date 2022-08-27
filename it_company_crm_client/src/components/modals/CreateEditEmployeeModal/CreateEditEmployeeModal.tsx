@@ -2,7 +2,7 @@
 import React, {FC, useEffect, useMemo, useRef, useState} from "react";
 import {Employee, Level, Position, Skill} from "../../../types/user";
 import {
-    Autocomplete,
+    Autocomplete, Avatar,
     Button,
     Card,
     Dialog,
@@ -12,16 +12,20 @@ import {
     Grid,
     IconButton,
     Switch,
-    TextField
+    TextField, Typography
 } from "@mui/material";
 import {Box, styled} from "@mui/system";
 
 import {Formik, FormikProps, FormikValues} from 'formik';
 import * as Yup from "yup";
-import {PhotoCamera} from "@mui/icons-material";
+import {Delete, PhotoCamera, Upload} from "@mui/icons-material";
 import {Small, Tiny} from "../../../assets/typography/FormTypography";
 import {EmployeeService} from "../../../services/EmployeeService";
-
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
+import {defaultUserAvatar} from "../../../utils/constant";
+// @ts-ignore
+import AvatarImageCropper from "react-avatar-image-cropper";
+import { downloadResponseFile } from '../../../utils/axiosUtills';
 // styled components
 const ButtonWrapper = styled(Box)(({ theme }) => ({
     width: 100,
@@ -30,7 +34,9 @@ const ButtonWrapper = styled(Box)(({ theme }) => ({
     borderRadius: "50%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: theme.palette.secondary
+    backgroundColor: theme.palette.secondary,
+    position: 'absolute',
+    marginTop: '20px'
 
 }));
 
@@ -74,6 +80,13 @@ export const CreateEditEmployeeModal: FC<{
     employee?: Employee
 }> = ({ open, onClose, onSubmit, mode, employee }) => {
 
+
+    const formik = useRef<FormikProps<FormikValues>>(null);
+
+    const [positions, setPositions] = useState<Position[]>([]);
+    const [levels, setLevels] = useState<Level[]>([]);
+    const [skills, setSkills] = useState<Skill[]>([]);
+
     const defInitialValues = useMemo(() => {
         return {
             id: null,
@@ -83,9 +96,11 @@ export const CreateEditEmployeeModal: FC<{
             email: 'evgeniy@gmail.com',
             position_id: null,
             level_id: null,
-            skills: ''
+            skills: '',
+            avatar: ''
         }
     }, [])
+
 
     const initialValues = useMemo<{
         id?: number | null;
@@ -93,11 +108,11 @@ export const CreateEditEmployeeModal: FC<{
         last_name: string,
         middle_name: string,
         email: string,
-
         position_id: number | null,
         level_id: number | null,
-
-        skills: string
+        skills: string,
+        avatar: string,
+        newAvatar?: any
     }>(() => {
         if(mode === 'update' && employee) {
             return {
@@ -109,6 +124,7 @@ export const CreateEditEmployeeModal: FC<{
                 position_id: employee.position.id,
                 level_id: employee.level.id,
                 skills: employee.skills.map((e: Skill) => e.name).join(','),
+                avatar: employee.user.avatar
             };
         }
         else if(mode === 'create') {
@@ -117,16 +133,14 @@ export const CreateEditEmployeeModal: FC<{
         return defInitialValues;
     }, [open]);
 
-    const formik = useRef<FormikProps<FormikValues>>(null);
-
-    const [positions, setPositions] = useState<Position[]>([]);
-    const [levels, setLevels] = useState<Level[]>([]);
-    const [skills, setSkills] = useState<Skill[]>([]);
+    const [image, _setImage] = useState<any>(null);
+    const inputFileRef = useRef<any>(null);
 
     const handleFormSubmit = (values: any) => {
         if(mode === 'update' && employee) values.id = employee.id
         onSubmit(values, mode);
         onClose();
+        console.log(values);
     };
 
     const getLevels = async (values: any) => {
@@ -150,8 +164,41 @@ export const CreateEditEmployeeModal: FC<{
             }
             getPositions();
             getSkills();
+            if(employee && mode === 'update') {
+                setImage(`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`);
+            }
+        }
+        else {
+            if(image) setImage(null);
         }
     }, [open])
+
+
+    const cleanup = () => {
+        URL.revokeObjectURL(image);
+        // inputFileRef.current.value = null;
+    };
+    // crop image
+    const setImage = (newImage: any) => {
+        if (image) {
+            cleanup();
+        }
+        _setImage(newImage);
+    };
+    const handleImageOnChange = (file: any, formikSetter: any) => {
+        // const newImage = event.target?.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            setImage(url);
+            formikSetter('newAvatar', file);
+        }
+    };
+    const cleanImage = (event: any) => {
+        if (image) {
+            event.preventDefault();
+            setImage(null);
+        }
+    };
 
 
     return (
@@ -189,23 +236,70 @@ export const CreateEditEmployeeModal: FC<{
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     alignItems: "center",
+                                                    position: 'relative'
                                                 }}
                                             >
-                                                <ButtonWrapper>
-                                                    <UploadButton>
-                                                        <label htmlFor="upload-btn">
-                                                            <input
-                                                                accept="image/*"
-                                                                id="upload-btn"
-                                                                type="file"
-                                                                style={{ display: "none" }}
-                                                            />
-                                                            <IconButton component="span">
-                                                                <PhotoCamera sx={{ fontSize: 26, color: "gray" }} />
-                                                            </IconButton>
-                                                        </label>
-                                                    </UploadButton>
-                                                </ButtonWrapper>
+
+                                                <Avatar
+                                                    alt={employee?.user.first_name}
+                                                    src={image ?? defaultUserAvatar}
+                                                    sx={{width: 150, height: 150}}
+                                                />
+                                                <div style={{
+                                                    width: '150px',
+                                                    height: '150px',
+                                                    position: 'absolute',
+
+                                                }}>
+                                                    <AvatarImageCropper
+                                                        apply={(e: any) => handleImageOnChange(e, setFieldValue)}
+                                                        icon={ <IconButton component="span">
+                                                            <PhotoCamera sx={{ fontSize: 30,    color: "white" }} />
+                                                        </IconButton>}
+                                                    />
+                                                </div>
+
+                                                {/*<ButtonWrapper>*/}
+                                                {/*    <UploadButton>*/}
+                                                {/*        <label htmlFor="upload-btn">*/}
+                                                {/*            <input*/}
+                                                {/*                id='upload-btn'*/}
+                                                {/*                accept="image/*"*/}
+                                                {/*                type="file"*/}
+                                                {/*                style={{ display: "none" }}*/}
+                                                {/*                ref={inputFileRef}*/}
+                                                {/*                name='newAvatar'*/}
+                                                {/*                onChange={(e: any) =>*/}
+                                                {/*                    handleImageOnChange(e, setFieldValue)}*/}
+                                                {/*            />*/}
+                                                {/*         */}
+                                                {/*            <IconButton component="span">*/}
+                                                {/*                <PhotoCamera sx={{ fontSize: 30, color: "white" }} />*/}
+                                                {/*            </IconButton>*/}
+                                                {/*        </label>*/}
+                                                {/*    </UploadButton>*/}
+                                                {/*</ButtonWrapper>*/}
+
+
+
+                                                {image || employee?.user.avatar ?
+                                                    <label>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            component="span"
+                                                            onClick={cleanImage}
+                                                        >
+                                                            <Delete style={{marginRight: 2}}/>
+                                                            Delete
+                                                        </Button>
+                                                    </label> : ''
+                                                }
+
+                                                <Typography variant="caption" display="block" gutterBottom>
+                                                    Para obter os melhores resultados, use uma imagem de pelo menos 128 x
+                                                    128 pixels no formato .jpg
+                                                </Typography>
 
                                                 <Small
                                                     marginTop={2}
@@ -323,17 +417,14 @@ export const CreateEditEmployeeModal: FC<{
                                                     <Grid item sm={6} xs={12}>
                                                         <div style={{display: 'flex'}}>
                                                             <Autocomplete
-                                                                defaultValue={
-                                                                    mode === 'update' && open && employee ?
-                                                                      employee.position : null
-                                                                }
+                                                                defaultValue={mode === 'update' && employee ? employee.position : null}
                                                                 size="small"
                                                                 getOptionLabel={(option: Position) => option.name}
                                                                 disablePortal
                                                                 id="combo-box-positions"
                                                                 options={positions}
                                                                 sx={{ width: 300, mx: 1 }}
-                                                                includeInputInList
+
                                                                 renderInput={
                                                                     (params) =>
                                                                         <TextField
@@ -365,10 +456,7 @@ export const CreateEditEmployeeModal: FC<{
                                                             />
 
                                                             <Autocomplete
-                                                                defaultValue={
-                                                                    mode === 'update' && open && employee ?
-                                                                        employee.level : null
-                                                                }
+                                                                defaultValue={mode === 'update' && employee ? employee.level : null}
                                                                 size="small"
                                                                 getOptionLabel={(option: Level) => option.name}
                                                                 disablePortal
@@ -414,7 +502,7 @@ export const CreateEditEmployeeModal: FC<{
                                                             options={skills}
                                                             sx={{ width: 300 }}
                                                             defaultValue={
-                                                                mode === 'update' && open && employee
+                                                                mode === 'update' && employee
                                                                 ? employee.skills : []
                                                             }
                                                             renderInput={
@@ -427,7 +515,6 @@ export const CreateEditEmployeeModal: FC<{
                                                                         label="Skills"
                                                                         name="skills"
                                                                         variant="outlined"
-
                                                                     />
                                                             }
                                                             renderOption={(props, option: Skill) => (
@@ -435,17 +522,18 @@ export const CreateEditEmployeeModal: FC<{
                                                                     {option.name} ({option.id})
                                                                 </Box>
                                                             )}
+
                                                             onChange={(event: any, values: any) => {
                                                                 const names = values.map((e: Skill) => e.name);
                                                                 console.log('skills on change ', names.join(','))
                                                                 setFieldValue("skills", names.join(','));
                                                             }}
                                                             onKeyDown={(e) => {
-                                                                console.log(e.key);
-                                                                if(e.key === ' ') {
-                                                                    console.log('space')
-                                                                    setSkills([...skills, { name: 'new tag'} ])
-                                                                }
+                                                                // console.log(e.key);
+                                                                // if(e.key === ' ') {
+                                                                    // console.log('space')
+                                                                    // setSkills([...skills, { name: 'new tag'} ])
+                                                                // }
                                                             }}
                                                         />
 

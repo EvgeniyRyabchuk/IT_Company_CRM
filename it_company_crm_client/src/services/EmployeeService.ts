@@ -12,15 +12,20 @@ export class EmployeeService {
     }
 
     static async createEmployee(employee: Employee): Promise<AxiosResponse<Employee>> {
-        return $api.post<Employee>(`/users/employees`, { ...employee });
+        return $api.post<Employee>(`/users/employees`, { ...employee }, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+        });
     }
 
     static async updateEmployee(employee: Employee): Promise<AxiosResponse<Employee>> {
-        return $api.put<Employee>(`/users/employees/${employee.id}`, { ...employee });
+        return $api.post<Employee>(`/users/employees/${employee.id}?_method=PUT`,
+        { ...employee }, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+        });
     }
 
-    static async deleteEmployee(employee: Employee): Promise<AxiosResponse<Employee>> {
-        return $api.post<Employee>(`/users/employees`, { ...employee });
+    static async deleteEmployee(employeeId: number): Promise<AxiosResponse<Employee>> {
+        return $api.delete<Employee>(`/users/employees/${employeeId}`);
     }
 
     static async getPositions():
@@ -37,4 +42,15 @@ export class EmployeeService {
     static async getSkills(): Promise<AxiosResponse<Skill[]>> {
         return $api.get<Skill[]>(`/users/employees/skills`);
     }
+
+    static async export(ids?: any[]): Promise<AxiosResponse<any>> {
+        const param = ids ? `?${JSON.stringify(ids)}` : '';
+        return $api.get<any>(`/excel/employees`+param, {
+            headers: {
+                responseType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+        });
+    }
+
+
 }

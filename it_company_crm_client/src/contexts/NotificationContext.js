@@ -66,7 +66,7 @@ export const NotificationProvider = ({ settings, children }) => {
 
     const getNotifications = async (userId) => {
         try {
-            // const res = await axios.get('/api/notification')
+            // const res = await axiosUtills.js.get('/api/notification')
             const response = await PersonalNotificationService.getNotifications(userId);
             dispatch({
                 type: 'LOAD_NOTIFICATIONS',
@@ -78,7 +78,7 @@ export const NotificationProvider = ({ settings, children }) => {
     }
     // const createNotification = async (notification) => {
     //     try {
-    //         const res = await axios.post('/api/notification/add', {
+    //         const res = await axiosUtills.js.post('/api/notification/add', {
     //             notification,
     //         })
     //         dispatch({

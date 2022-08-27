@@ -6,17 +6,19 @@ import {Box, Button, ListItemIcon, MenuItem, Typography} from '@mui/material';
 import {AccountCircle, Delete, Edit, FileDownload, GroupAdd, Send} from '@mui/icons-material';
 import {Employee, Skill} from "../../types/user";
 import {EmployeeService} from "../../services/EmployeeService";
-import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
+import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import moment from "moment";
 
 import type {ColumnFiltersState, PaginationState, SortingState,} from '@tanstack/react-table';
 import {getQueryString} from "../../utils/pages";
 import CreateEditEmployeeModal from "../../components/modals/CreateEditEmployeeModal/CreateEditEmployeeModal";
-
-
+import { RowSelectionState } from '@tanstack/react-table';
+import {downloadResponseFile} from "../../utils/axiosUtills";
 const EmployeeListPage = () => {
 
     const [employees, setEmployees] = useState<Employee[]>([]);
+
+    const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +45,7 @@ const EmployeeListPage = () => {
         console.log('submit', values);
         if(mode === 'create') {
             const { data } = await EmployeeService.createEmployee(values);
-            setEmployees([...employees, data]);
+            fetchEmployees();
         }
         else {
             const { data } = await EmployeeService.updateEmployee(values);
@@ -51,39 +53,34 @@ const EmployeeListPage = () => {
             const newEmployees = employees.map((e: Employee) => e.id === data.id ? data : e);
             setEmployees(newEmployees);
         }
-
-
     };
 
+    const fetchEmployees = async () => {
+        try {
+            // hooks that returns query string for url
+            const queryParamString = getQueryString([
+                {key: 'perPage', value: pagination.pageSize},
+                {key: 'filters', value: JSON.stringify(columnFilters ?? [])},
+                {key: 'search', value: globalFilter ?? ''},
+                {key: 'sort', value: JSON.stringify(sorting ?? [])},
+                {key: 'page', value: pagination.pageIndex + 1}
+            ])
+
+            const { data } = await EmployeeService.getEmployees(queryParamString);
+
+            setEmployees(data.data);
+            setRowCount(data.total);
+        } catch (error) {
+            setIsError(true);
+            console.error(error);
+            return;
+        }
+        setIsError(false);
+        setIsLoading(false);
+        setIsRefetching(false);
+    };
 
     useEffect(() => {
-        const fetchEmployees = async () => {
-            try {
-
-
-                // hooks that returns query string for url
-                const queryParamString = getQueryString([
-                    {key: 'perPage', value: pagination.pageSize},
-                    {key: 'filters', value: JSON.stringify(columnFilters ?? [])},
-                    {key: 'search', value: globalFilter ?? ''},
-                    {key: 'sort', value: JSON.stringify(sorting ?? [])},
-                    {key: 'page', value: pagination.pageIndex + 1}
-                ])
-
-                const { data } = await EmployeeService.getEmployees(queryParamString);
-
-                setEmployees(data.data);
-                setRowCount(data.total);
-            } catch (error) {
-                setIsError(true);
-                console.error(error);
-                return;
-            }
-            setIsError(false);
-            setIsLoading(false);
-            setIsRefetching(false);
-        };
-
         fetchEmployees();
     }, [ columnFilters,
         globalFilter,
@@ -198,6 +195,10 @@ const EmployeeListPage = () => {
 
                 enableRowActions
                 enableRowSelection
+
+                getRowId={(row: any) => row.id} //give each row a more useful id
+                onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+
                 positionToolbarAlertBanner="bottom"
                 positionActionsColumn='last'
                 positionExpandColumn='last'
@@ -227,7 +228,10 @@ const EmployeeListPage = () => {
                     showAlertBanner: isError,
                     showProgressBars: isRefetching,
                     sorting,
+                    rowSelection
                 }}
+
+
 
                 renderDetailPanel={({ row }) => (
                     <Box
@@ -313,7 +317,11 @@ const EmployeeListPage = () => {
                     </MenuItem>,
                     <MenuItem
                         key={3}
-                        onClick={() => {
+                        onClick={async () => {
+                            const employeeIndex = employees.findIndex(e => e.id === row.original.id);
+                            await EmployeeService.deleteEmployee(row.original.id);
+                            employees.splice(employeeIndex, 1);
+                            setEmployees([...employees]);
                             closeMenu();
                         }}
                         sx={{ m: 0 }}
@@ -337,14 +345,30 @@ const EmployeeListPage = () => {
                     </MenuItem>,
                 ]}
                 renderTopToolbarCustomActions={({ table }) => {
-                    // @ts-ignore
-                    const handleExportRows = (rows: MRT_Row<Employee>[]) => {
-                        // csvExporter.generateCsv(rows.map((row) => row.original));
-                    };
 
-                    const handleExportData = () => {
-                        // csvExporter.generateCsv(data);
+                    const handleAllExportRows = async () => {
+                        const ids = Object.keys(rowSelection);
+                        // const param = ids ? `?${JSON.stringify(ids)}` : '';
+                        // eslint-disable-next-line no-restricted-globals
+                        location.href = `${API_URL}/excel/employees`;
+
                     };
+                    const handleExportSelectedRows = async () => {
+                        const ids = Object.keys(rowSelection);
+                        console.log(Object.keys(rowSelection));
+                        const param = ids ? `?ids=${JSON.stringify(ids)}` : '';
+
+                        console.log( `${API_URL}/excel/employees${param}`);
+                        // eslint-disable-next-line no-restricted-globals
+                        location.href = `${API_URL}/excel/employees${param}`;
+                    };
+                    // @ts-ignore
+                    const handleExportPageRows = async (rows: MRT_Row<Employee>[]) => {
+                        const ids = rows.map(e => e.id);
+                        const param = ids ? `?ids=${JSON.stringify(ids)}` : '';
+                        // eslint-disable-next-line no-restricted-globals
+                        location.href = `${API_URL}/excel/employees${param}`;
+                    }
 
                     return (
 
@@ -358,45 +382,33 @@ const EmployeeListPage = () => {
                             >
                                 Create New Employee Account
                             </Button>
+
                             <Button
                                 color="primary"
-                                //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                                onClick={handleExportData}
+                                onClick={handleAllExportRows}
                                 startIcon={<FileDownload />}
                                 variant="contained"
                             >
                                 Export All Data
                             </Button>
+
                             <Button
-                                disabled={table.getPrePaginationRowModel().rows.length === 0}
-                                //export all rows, including from the next page, (still respects filtering and sorting)
-                                onClick={() =>
-                                    handleExportRows(table.getPrePaginationRowModel().rows)
-                                }
+                                disabled={table.getRowModel().rows.length === 0}
+                                onClick={handleExportSelectedRows}
                                 startIcon={<FileDownload />}
                                 variant="contained"
                             >
-                                Export All Rows
+                                Export Selected rows
                             </Button>
+
+
                             <Button
                                 disabled={table.getRowModel().rows.length === 0}
-                                //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                                onClick={() => handleExportRows(table.getRowModel().rows)}
+                                onClick={() => handleExportPageRows(table.getRowModel().rows)}
                                 startIcon={<FileDownload />}
                                 variant="contained"
                             >
                                 Export Page Rows
-                            </Button>
-                            <Button
-                                disabled={
-                                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-                                }
-                                //only export selected rows
-                                onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
-                                startIcon={<FileDownload />}
-                                variant="contained"
-                            >
-                                Export Selected Rows
                             </Button>
 
                         </Box>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EmployeeExport;
 use App\Models\Employee;
 use App\Models\Level;
 use App\Models\Order;
@@ -13,6 +14,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class EmployeeController extends Controller
 {
@@ -99,8 +102,8 @@ class EmployeeController extends Controller
 
         $skills = explode(',', $request->input('skills'));
 
-        $position = Position::findOrFail($positionId);
 
+        $position = Position::findOrFail($positionId);
         $level = $position->levels->filter(function($item) use($levelId) {
             return $item->id == $levelId;
         })->first();
@@ -124,9 +127,22 @@ class EmployeeController extends Controller
         $user->full_name = "$lastName $firstName $middleName";
         $user->email = $email;
 
+
         //TODO: send email with credentials
         $user->save();
-        //TODO avatar
+
+        if($request->hasFile('newAvatar')) {
+            $milliseconds = round(microtime(true) * 1000);
+            $newName = "avatar_$milliseconds." .
+                $request->file('newAvatar')->extension();
+
+            $avatarPath = $request
+                ->file('newAvatar')
+                ->storeAs("users/$user->id/images/avatars", $newName);
+            $user->avatar = $avatarPath;
+            $user->save();
+        }
+
 
         //TODO: social links
 
@@ -140,6 +156,7 @@ class EmployeeController extends Controller
         foreach ($skills as $skill) {
             $skillDb = Skill::firstOrCreate(['name' => strtoupper($skill)]);
             $employee->skills()->attach($skillDb);
+
         }
         $employee->save();
         return $employee;
@@ -186,6 +203,18 @@ class EmployeeController extends Controller
         $skills = Skill::all();
         return response()->json($skills);
     }
+
+    public function exportExcel(Request $request)
+    {
+        if($request->input('ids')) {
+            $ids = json_decode($request->input('ids') ?? []);
+            return Excel::download(new EmployeeExport(count($ids) > 0 ? $ids : []), 'employees.xlsx');
+        }
+        return Excel::download(new EmployeeExport([]), 'employees.xlsx');
+
+    }
+
+
 
     //TODO: csv, print
 }

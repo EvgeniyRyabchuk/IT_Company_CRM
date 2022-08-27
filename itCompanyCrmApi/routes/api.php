@@ -219,3 +219,6 @@ Route::prefix('job-applications')->group(function () {
     Route::delete('{jobApplicationId}', [JobApplicationController::class, 'destroy']);
 });
 
+Route::prefix('excel')->group(function () {
+    Route::get('employees', [EmployeeController::class, 'exportExcel']);
+});
