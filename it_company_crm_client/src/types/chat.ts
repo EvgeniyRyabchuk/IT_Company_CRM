@@ -77,7 +77,8 @@ export enum ChatActionTypes {
     SET_ERROR = "SET_ERROR",
     MARK_ALL_CHAT_MESSAGES_AS_SEEN = 'MARK_ALL_CHAT_MESSAGES_AS_SEEN',
 
-    ADD_CHAT = 'ADD_CHAT'
+    ADD_CHAT = 'ADD_CHAT',
+    CLEAN = 'CLEAN'
 }
 
 interface FetchChatsAction {
@@ -168,6 +169,10 @@ interface AddChatAction {
     payload: Chat;
 }
 
+interface CleanAction {
+    type: ChatActionTypes.CLEAN,
+}
+
 export type ChatAction =
     FetchChatsAction | FetchChatsSuccessAction | FetchChatsErrorAction |
     ChatSetPageAction | ChatSetLimitAction |
@@ -179,7 +184,8 @@ export type ChatAction =
     SetChatSearchStringAction |
     SetErrorAction |
     MarkAllMessagesAsSeenAction |
-    AddChatAction
+    AddChatAction |
+    CleanAction
 
 
 

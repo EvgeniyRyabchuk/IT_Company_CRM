@@ -108,7 +108,8 @@ class DatabaseSeeder extends Seeder
         $this->call(KanbanLaneSeeder::class, false, compact('developers'));
 
         $users = User::all();
-        /// $this->call(ChatMessageSeeder::class, false, compact('users'));
+
+        $this->call(ChatMessageSeeder::class, false, compact('users'));
 
         $this->call(PersonalNotificationSeeder::class);
     }

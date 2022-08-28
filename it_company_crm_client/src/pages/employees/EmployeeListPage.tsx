@@ -14,8 +14,11 @@ import {getQueryString} from "../../utils/pages";
 import CreateEditEmployeeModal from "../../components/modals/CreateEditEmployeeModal/CreateEditEmployeeModal";
 import { RowSelectionState } from '@tanstack/react-table';
 import {downloadResponseFile} from "../../utils/axiosUtills";
+import {ChatService} from "../../services/ChatService";
+import {userId} from "../chat/ChatPage";
+import {useNavigate} from "react-router-dom";
 const EmployeeListPage = () => {
-
+    const navigate = useNavigate();
     const [employees, setEmployees] = useState<Employee[]>([]);
 
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -289,8 +292,13 @@ const EmployeeListPage = () => {
                     </MenuItem>,
                     <MenuItem
                         key={1}
-                        onClick={() => {
-                            // Send email logic...
+                        onClick={ async () => {
+
+                            const toUser = row.original;
+
+                            const { data } = await ChatService.createChat(userId, toUser.id);
+                            navigate(`/chats/${toUser.id}`);
+
                             closeMenu();
                         }}
                         sx={{ m: 0 }}

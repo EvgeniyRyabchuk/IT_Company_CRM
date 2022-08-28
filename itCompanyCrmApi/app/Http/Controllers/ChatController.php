@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    public function showChats(Request $request, $userId) {
+    public function showChats(Request $request, $userId) { 
         $user = User::findOrFail($userId);
         $chats = Chat::with('users.roles')
             ->whereIn('id', $user->chats->pluck('id')->toArray())
@@ -52,6 +52,18 @@ class ChatController extends Controller
     public function createChat(Request $request, $userId) {
         $fromUser = User::findOrFail($userId);
         $toUser = User::findOrFail($request->input('toUserId'));
+
+        $existChat = $fromUser->chats->filter(function($chat) use($toUser) {
+            $userExist = $chat->users->filter(function($user) use($toUser) {
+                return $user->id == $toUser->id;
+            })->first();
+            if($userExist) return $chat;
+        })->first();
+
+        if($existChat) return response()->json([
+            'message' => 'chat already exist',
+        ], 201);
+
 
         $chat = new Chat();
         $chat->last_message_at = Carbon::now();

@@ -16,12 +16,14 @@ export const createChat = (userId: number, toUserId: number) => {
     }
 }
 
-export const fetchChats = (userId: number) => {
+export const fetchChats = (userId: number, openedChatId?: number) => {
     return async (dispatch: Dispatch<ChatAction>) => {
         try {
             dispatch({type: ChatActionTypes.FETCH_CHATS})
             const responce = await ChatService.getChats(userId);
             dispatch({type: ChatActionTypes.FETCH_CHATS_SUCCESS, payload: responce.data});
+
+            return responce.data;
         }
         catch(err: any) {
             dispatch({type: ChatActionTypes.FETCH_CHATS_ERROR,
@@ -106,6 +108,9 @@ export const setChatSearchString = (search: string) => {
     return { type: ChatActionTypes.SET_CHAT_SEARCH, payload: search };
 }
 
+export const clean = () => {
+    return { type: ChatActionTypes.CLEAN };
+}
 
 // export const setChatPage = (page: number): ChatAction => {
 //     return { type: ChatActionTypes.SET_CHAT_PAGE, payload: page };

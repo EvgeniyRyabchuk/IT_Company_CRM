@@ -63,18 +63,16 @@ const ChatSidebarBody = () => {
                     </button>
             </form>
 
-            {/* Chat with only customer */}
+            {/* ChatPage with only customer */}
             <ChatSidebarDirectList
-                currentChat={currentChat}
                 chats={filteredChatByRole(['customer'])}
-                title='Chat with Customers'
+                title='ChatPage with Customers'
                 open={true}
             />
-            {/* Chat with only employee */}
+            {/* ChatPage with only employee */}
             <ChatSidebarDirectList
-                currentChat={currentChat}
                 chats={filteredChatByRole(['developer', 'manager', 'admin'])}
-                title='Chat with Employees'
+                title='ChatPage with Employees'
                 open={true}
 
             />

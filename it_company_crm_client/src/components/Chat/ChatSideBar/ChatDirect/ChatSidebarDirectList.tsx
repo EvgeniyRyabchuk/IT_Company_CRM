@@ -14,7 +14,6 @@ type ChatSidebarDirectListPropsType = {
     title: string;
     open?: boolean;
     chats: any[];
-    currentChat: any;
 }
 
 const ChatSidebarDirectList = ({chats, title, open}: ChatSidebarDirectListPropsType) => {

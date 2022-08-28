@@ -2,13 +2,14 @@ import React, {useMemo} from 'react';
 import {useAction} from "../../../../hooks/useAction";
 import {useTypeSelector} from "../../../../hooks/useTypedSelector";
 import {DEFAULT_LIMIT, DEFAULT_PAGE} from "../../../../store/reducers/chatReducer";
+import {useNavigate} from "react-router-dom";
 
 export const apiUrl = `http://127.0.0.1:8000/api/`;
 
 const ChatSidebarDirectItem = ({chat}: any) => {
-
+    const navigate = useNavigate();
     const { setCurrentChatId } = useAction();
-    const { currentChat } = useTypeSelector(state => state.chat)
+    const { currentChat, currentChatId } = useTypeSelector(state => state.chat)
 
     const { fetchMessageByChat } = useAction();
 
@@ -34,11 +35,14 @@ const ChatSidebarDirectItem = ({chat}: any) => {
                 true
             );
         }
+        navigate(`/chats/${withUser.id}`);
     }
 
+
     return (
-        <li className={currentChat && currentChat.id === chat.id ? 'nv chat-selected' : 'nv'}>
+        <li className={currentChat && currentChatId == chat.id ? 'nv chat-selected' : 'nv'}>
             <button
+                style={{backgroundColor: 'transparent'}}
                 className={chat.newCount > 0 ? "flex items-center fe ou dx rounded hl" : "flex items-center fe ou dx rounded"}
                 onClick={onChatChange}
             >

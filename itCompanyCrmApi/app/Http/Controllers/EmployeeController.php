@@ -23,17 +23,25 @@ class EmployeeController extends Controller
         $perPage = $request->input('perPage') ?? 10;
         $filters = $request->input('filters') ?? [];
         $search = $request->input('search') ?? '';
+        $sort = $request->input('sort') ?? [];
 
+        $filters = json_decode($filters, true, 3);
+        $sort = json_decode($sort, true, 3);
+        // default sort
+        if(count($sort) === 0) {
+            $sort = [
+                "id" => "created_at",
+                "desc" => false
+            ];
+        } else {
+            $sort = $sort[0];
+        }
+//        dd($filters);
 
-        if(is_array($filters) && count($filters) > 0)
-            $filters = json_decode($filters, true, 3);
-        else
-            $filters = [];
 
         //$doneStatus = OrderStatus::where('name', 'Finished')->first();
 
         $query = Employee::with('user', 'level', "position", 'skills')
-            ->orderBy('created_at', 'desc')
             ->withCount(['projects as project_count'])
             ->whereHas('user', function ($q) use ($search) {
                 if($search !== '')
@@ -41,10 +49,27 @@ class EmployeeController extends Controller
                         ->orWhere('email', 'LIKE', "%$search%");
              });
 
+            $sortDirect = $sort['desc'] ? 'desc' : 'asc';
+
+            switch ($sort['id']) {
+                case 'user.full_name':
+                    $query->join('users', 'employees.user_id', '=', 'users.id');
+                    $query->orderBy('users.full_name', $sortDirect);
+                    break;
+                case 'user.created_at':
+                    $query->join('users', 'employees.user_id', '=', 'users.id');
+                    $query->orderBy('users.created_at', $sortDirect);
+                    break;
+                case 'project_count':
+                    $query->orderBy('project_count', $sortDirect);
+                    break;
+            }
+
             foreach ($filters as $filter) {
                 $value = $filter['value'];
                 switch ($filter['id']) {
                     case 'user.full_name':
+
                         $query->whereHas('user', function ($q) use ($value) {
                             $q->where('full_name', 'LIKE', "%$value%");
                         });

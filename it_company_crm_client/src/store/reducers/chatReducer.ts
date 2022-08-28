@@ -4,7 +4,7 @@ import {getPageCount} from "../../utils/pages";
 export const DEFAULT_PAGE = 1
 export const DEFAULT_LIMIT = 10;
 
-const initialState: ChatState = {
+const defaultState = {
     chats: [],
     currentChatId: null,
     currentChat: null,
@@ -21,6 +21,10 @@ const initialState: ChatState = {
 
     totalChatPages: 1,
     totalMessagePages: 1
+}
+
+const initialState: ChatState = {
+   ...defaultState
 }
 
 
@@ -69,10 +73,10 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
             console.log('message page SET CURRENT CHAT = ', newCurrentChat.messagePage)
 
             return {
-                    ...state,
-                    currentChatId: newCurrentChatId,
-                    currentChat: { ...newCurrentChat },
-                    totalMessagePages: totalMessagePages,
+                ...state,
+                currentChatId: newCurrentChatId,
+                currentChat: { ...newCurrentChat },
+                totalMessagePages: totalMessagePages,
             }
 
         }
@@ -166,6 +170,9 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
                     currentChat: newCurrentChat
                 }
         }
+
+        case ChatActionTypes.CLEAN:
+            return { ...defaultState }
 
         default:
             return state;
