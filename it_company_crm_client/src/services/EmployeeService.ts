@@ -6,7 +6,7 @@ import {PaginatedResponse} from "../types/global";
 
 export class EmployeeService {
 
-    static async getEmployees(queryParams: string):
+    static async getEmployees(queryParams: string = ''):
         Promise<AxiosResponse<PaginatedResponse<Employee>>> {
         return $api.get<PaginatedResponse<Employee>>(`/users/employees${queryParams}`);
     }

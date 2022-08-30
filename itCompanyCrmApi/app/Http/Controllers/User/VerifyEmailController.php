@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\UserVerification;
 use App\Notifications\EmailVerificationNotification;
 use Carbon\Carbon;

@@ -8,12 +8,14 @@ import useQueryParams from "../../hooks/useQueryParams";
 import defaultSortData from "./defaultSortData";
 import KanbanCardEditModal from "../modals/KanbanCardEditModal/KanbanCardEditModal";
 import {useAction} from "../../hooks/useAction";
-import {userId} from "../Chat/ChatComponent";
+
 import {useTypeSelector} from "../../hooks/useTypedSelector";
 import {KanbanService} from "../../services/KanbanService";
 import {KanbanCard} from "../../types/kanban";
+import useAuth from "../../hooks/useAuth";
 
-const Kanban = () => {
+const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
+    const { user } = useAuth();
 
     const {
         getLanesByMember,
@@ -35,7 +37,6 @@ const Kanban = () => {
 
     } = useTypeSelector(state => state.kanban);
 
-    const projectId = 2;
     const data = { lanes: [] };
 
     const [isDataChangeHandled, setIsDataChangeHandled] = useState(false);
@@ -61,7 +62,7 @@ const Kanban = () => {
     console.log(lanes);
 
     useEffect(() => {
-        getLanesByMember(projectId, userId, queryParamString);
+        getLanesByMember(projectId, user!.id, queryParamString);
     }, [queryParamString])
 
 
@@ -72,7 +73,7 @@ const Kanban = () => {
         console.log("========== onCardAdd");
 
         await KanbanService.addCard(projectId, laneId, card);
-        getLanesByMember(projectId, userId, queryParamString);
+        getLanesByMember(projectId, user!.id, queryParamString);
     }
 
     const onCardDelete = (cardId: any, laneId: any) => {
@@ -114,7 +115,7 @@ const Kanban = () => {
     const onLaneAdd = (params: any) => {
         console.log("onLaneAdd");
         console.log(params);
-        addLane(projectId, userId, { ...params, employee_id: userId});
+        addLane(projectId, user!.id, { ...params, employee_id: user!.id});
     }
 
     const onLaneDelete = (laneId: any) => {

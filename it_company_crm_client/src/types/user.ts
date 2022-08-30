@@ -1,3 +1,4 @@
+import {Tag} from "./project";
 
 
 export interface User {
@@ -13,6 +14,7 @@ export interface User {
     created_at: string;
     updated_at: string;
     email_verified_at: string;
+    tags?: { id: number; name: string; }[];
 }
 
 export interface Skill {
@@ -54,6 +56,8 @@ export interface Customer {
     id: number;
     user: User;
     vip: boolean;
+    order_count?: number;
+    finished_order_count?: number;
 }
 
 

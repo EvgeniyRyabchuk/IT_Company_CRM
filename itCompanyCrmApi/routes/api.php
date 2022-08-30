@@ -1,26 +1,24 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\VerifyEmailController;
-use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\_ChunkFileController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PersonalNotificationController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\StorageController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
-use App\Http\Controllers\NewsController;
+use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\EmployeeController;
+use App\Http\Controllers\User\ResetPasswordController;
+use App\Http\Controllers\User\VerifyEmailController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
-use App\Http\Controllers\JobApplicationController;
-use App\Http\Controllers\_ChunkFileController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\StorageController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\PersonalNotificationController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\CustomerController;
-
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,15 +68,28 @@ Route::post('password-reset/{id}/{token}', [ResetPasswordController::class, 'res
 //Route::prefix('users')->middleware('auth:api')->group(function () {
 Route::prefix('users')->group(function () {
 
-    Route::prefix('employees')->group(function() {
-        Route::get('/', [EmployeeController::class, 'index']);
-        Route::post('/', [EmployeeController::class, 'store']);
-        Route::put('/{employeeId}', [EmployeeController::class, 'update']);
-        Route::delete('/{employeeId}', [EmployeeController::class, 'destroy']);
+    Route::controller(EmployeeController::class)
+        ->prefix('employees')
+            ->group(function() {
+            Route::get('/', 'index');
+            Route::post('/',  'store');
+            Route::put('/{employeeId}','update');
+            Route::delete('/{employeeId}','destroy');
 
-        Route::get('positions', [EmployeeController::class, 'getPositions']);
-        Route::get('positions/{positionId}/levels', [EmployeeController::class, 'getLevels']);
-        Route::get('skills', [EmployeeController::class, 'getSkills']);
+            Route::get('positions','getPositions');
+            Route::get('positions/{positionId}/levels','getLevels');
+            Route::get('skills','getSkills');
+    });
+
+    Route::controller(CustomerController::class)
+        ->prefix('customers')
+            ->group(function() {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{customerId}', 'update');
+        Route::delete('/{customerId}', 'destroy');
+
+        Route::put('/{customerId}/favorite', 'changeFavorite');
     });
 
 
@@ -221,4 +232,5 @@ Route::prefix('job-applications')->group(function () {
 
 Route::prefix('excel')->group(function () {
     Route::get('employees', [EmployeeController::class, 'exportExcel']);
+    Route::get('customers', [CustomerController::class, 'exportExcel']);
 });

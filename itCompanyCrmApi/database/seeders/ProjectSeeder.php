@@ -18,7 +18,7 @@ class ProjectSeeder extends Seeder
      */
     public function run(Collection $developers)
     {
-        Project::factory()->count(20)->create()
+        Project::factory()->count(50)->create()
         ->each(function ($p) use ($developers) {
             $p->name .= " (#$p->id)";
             // rand count rand developers

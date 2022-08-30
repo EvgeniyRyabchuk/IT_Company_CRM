@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\PersonalNotificationController;
 use App\Models\AccessToken;
-use App\Models\PersonalNotification;
 use App\Models\PersonalNotificationType;
 use App\Models\RefreshToken;
 use App\Models\Role;
@@ -15,8 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
-use PHPOpenSourceSaver\JWTAuth\Token;
 
 class AuthController extends Controller
 {
@@ -189,7 +188,7 @@ class AuthController extends Controller
 
         $dbAccessToken->delete();
         if(!is_null($dbRefreshToken))
-            $dbRefreshToken->delete(); 
+            $dbRefreshToken->delete();
 
         $cookie = \Cookie::forget('refreshToken');
 

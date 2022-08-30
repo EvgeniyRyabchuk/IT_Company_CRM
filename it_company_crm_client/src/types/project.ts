@@ -54,7 +54,7 @@ export interface Project {
     paid: number;
     created_at: string;
     updated_at: string;
-
+    project_type: ProjectType;
 
     tags: Tag[],
     order: Order;
@@ -62,5 +62,5 @@ export interface Project {
 
     project_links: ProjectLink[];
     project_history: ProjectHistory[];
-
+    member_count: number;
 }

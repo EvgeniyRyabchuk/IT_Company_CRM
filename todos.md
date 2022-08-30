@@ -11,22 +11,24 @@ Add hirizontal scrollbar
 
 --- Client FeedBack
 
+
+
+
 Online Chat:  
 - send message from customer to manager 
 - infinity scrolling and change chat large loading 
 
 
-
-Tidio handle 
 Layout fix 
 Refact stylying 
-Error show system 
+Error  showsystem 
 Perfect scroll mobile 
 Alert system 
+Pdf-export 
 
-
-
-
+Phone generate rand count 
+Add table loader 
+Modal pagginate employee loading  
 
 
 

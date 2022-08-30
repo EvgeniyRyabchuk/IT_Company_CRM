@@ -1,6 +1,6 @@
-import Loadable from '../../components/Loadable';
+import Loadable from '../../../components/Loadable';
 import { lazy } from 'react';
-import { authRoles } from '../../auth/authRoles';
+import { authRoles } from '../../../auth/authRoles';
 
 
 const EmployeeListPage = Loadable(lazy(() => import('./EmployeeListPage')));

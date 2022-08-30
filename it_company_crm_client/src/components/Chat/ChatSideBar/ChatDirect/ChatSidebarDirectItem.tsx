@@ -3,20 +3,20 @@ import {useAction} from "../../../../hooks/useAction";
 import {useTypeSelector} from "../../../../hooks/useTypedSelector";
 import {DEFAULT_LIMIT, DEFAULT_PAGE} from "../../../../store/reducers/chatReducer";
 import {useNavigate} from "react-router-dom";
+import useAuth from "../../../../hooks/useAuth";
 
 export const apiUrl = `http://127.0.0.1:8000/api/`;
 
 const ChatSidebarDirectItem = ({chat}: any) => {
+    const { user } = useAuth();
     const navigate = useNavigate();
     const { setCurrentChatId } = useAction();
     const { currentChat, currentChatId } = useTypeSelector(state => state.chat)
 
     const { fetchMessageByChat } = useAction();
 
-    //TODO: change
-    const userId = 1;
     const withUser = useMemo(() => {
-        return chat.users.filter((e: any) => e.id != userId)[0];
+        return chat.users.filter((e: any) => e.id != user!.id)[0];
     }, [chat]);
 
     const imageUrl = useMemo(() => `${apiUrl}storage/${withUser.avatar}`,[chat, currentChat]);
@@ -28,7 +28,7 @@ const ChatSidebarDirectItem = ({chat}: any) => {
         setCurrentChatId(newCurrentChat.id);
         if(!newCurrentChat.messages || newCurrentChat.messages.length === 0) {
             fetchMessageByChat(
-                userId,
+                user!.id,
                 newCurrentChat.id,
                 DEFAULT_LIMIT,
                 DEFAULT_PAGE,

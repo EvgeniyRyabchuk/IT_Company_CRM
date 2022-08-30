@@ -5,7 +5,14 @@ import FileManager, { Permissions, ItemView, Upload } from 'devextreme-react/fil
 import RemoteFileSystemProvider from 'devextreme/file_management/remote_provider';
 import FileUploader from 'devextreme-react/file-uploader';
 
-const ProjectFileManager = () => {
+import folderSvg from '../../assets/images/folder.svg';
+import docRtfSvg from '../../assets/images/doc-rtf.svg';
+import docXmlSvg from '../../assets/images/doc-xml.svg';
+import docTxtSvg from '../../assets/images/doc-txt.svg';
+import {API_URL} from "../../http";
+
+
+const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}) => {
 
     const [chunks, setChunks] = useState([]);
     const [state, setState] = useState<any>({ chunks });
@@ -32,7 +39,7 @@ const ProjectFileManager = () => {
     }
 
     const remoteFileProvider = new RemoteFileSystemProvider({
-        endpointUrl: 'http://127.0.0.1:8000/api/projects/1/file-manager'
+        endpointUrl: `${API_URL}/projects/${projectId}/file-manager`
 
     });
 
@@ -64,19 +71,19 @@ const ProjectFileManager = () => {
 
     const customizeIcon = (fileSystemItem: any) => {
         if (fileSystemItem.isDirectory) {
-            return '/assets/images/folder.svg';
+            return folderSvg;
         }
 
         const fileExtension = fileSystemItem.getFileExtension();
         switch (fileExtension) {
             case '.txt':
-                return '/assets/images/doc-txt.svg';
+                return '';
             case '.rtf':
-                return '/assets/images/doc-rtf.svg';
+                return docRtfSvg;
             case '.xml':
-                return '/assets/images/doc-xml.svg';
+                return docXmlSvg;
             default:
-                return '/assets/images/doc-txt.svg';
+                return docTxtSvg;
         }
     }
 

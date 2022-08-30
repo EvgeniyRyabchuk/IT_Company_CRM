@@ -22,9 +22,10 @@ class CustomerSeeder extends Seeder
                 Customer::create(
                     [
                         'user_id' => $user->id,
-                        'vip' => $isVip
+                        'vip' => rand(0, 1)
                     ]
                 );
+
             });
     }
 }

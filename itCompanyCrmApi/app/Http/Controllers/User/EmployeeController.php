@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Exports\EmployeeExport;
+use App\Http\Controllers\Controller;
 use App\Models\Employee;
-use App\Models\Level;
-use App\Models\Order;
-use App\Models\OrderStatus;
 use App\Models\Position;
-use App\Models\Project;
 use App\Models\Skill;
 use App\Models\User;
 use Carbon\Carbon;
@@ -25,8 +22,10 @@ class EmployeeController extends Controller
         $search = $request->input('search') ?? '';
         $sort = $request->input('sort') ?? [];
 
-        $filters = json_decode($filters, true, 3);
-        $sort = json_decode($sort, true, 3);
+        if($filters !== [])
+            $filters = json_decode($filters, true, 3);
+        if($sort !== [])
+            $sort = json_decode($sort, true, 3);
         // default sort
         if(count($sort) === 0) {
             $sort = [
@@ -69,7 +68,6 @@ class EmployeeController extends Controller
                 $value = $filter['value'];
                 switch ($filter['id']) {
                     case 'user.full_name':
-
                         $query->whereHas('user', function ($q) use ($value) {
                             $q->where('full_name', 'LIKE', "%$value%");
                         });
@@ -241,5 +239,4 @@ class EmployeeController extends Controller
 
 
 
-    //TODO: csv, print
 }

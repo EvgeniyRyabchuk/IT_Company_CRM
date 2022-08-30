@@ -82,17 +82,11 @@ https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/landing/
 
 https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/apps/email
 
-
-https://mosaic.cruip.com/
+https://cruip.com/demos/mosaic/
 
 http://matx-react.ui-lib.com/dashboard/default
 
 https://mui.com/store/previews/uko-client-admin-dashboard/
-
-
-https://cruip.com/mosaic/
-
-https://cruip.com/demos/mosaic/
 
 https://demo.uifort.com/carolina-react-admin-dashboard-material-ui-free-demo/DashboardDefault
 

@@ -1,21 +1,21 @@
 import React from 'react';
 // user-40-12.jpg
-import userIcon from '../../../assets/images/chat/user-40-12.jpg';
 import {apiUrl} from "../ChatSideBar/ChatDirect/ChatSidebarDirectItem";
-import {userId} from "../ChatComponent";
 import moment from "moment";
 import {ChatMessage} from "../../../types/chat";
+import useAuth from "../../../hooks/useAuth";
 
 
 type CharMessageProbs = { message: ChatMessage; }
 
 const CharMessage = ({message} : CharMessageProbs) => {
+    const { user } = useAuth();
 
     return (
         <div className="flex aj ri ww chat-message">
             <img className="rounded-full mr-4" src={`${apiUrl}storage/${message.from_user.avatar}`} width="40" height="40" alt="User 02" />
                 <div>
-                    <div className={userId === message.from_user.id ? "text-sm ho ye dk lw ct border cp shadow-md rt" : "text-sm bg-white text-slate-800 dk lw ct border border-slate-200 shadow-md rt"}>
+                    <div className={user!.id === message.from_user.id ? "text-sm ho ye dk lw ct border cp shadow-md rt" : "text-sm bg-white text-slate-800 dk lw ct border border-slate-200 shadow-md rt"}>
                         {message.content.message}
                     </div>
                     <div className="flex items-center fe">

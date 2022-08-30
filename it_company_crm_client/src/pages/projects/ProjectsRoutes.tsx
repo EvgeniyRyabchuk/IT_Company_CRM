@@ -13,7 +13,7 @@ const projectRoutes = [
         allowForRole: authRoles.all,
     },
     {
-        path: '/projects/1',
+        path: '/projects/:projectId',
         element: <ProjectPage />,
         allowForRole: authRoles.all,
     }

@@ -10,8 +10,9 @@ import RoleGuard from "../auth/RoleGuard";
 import chatRoutes from "../pages/chat/ChatRoutes";
 import projectRoutes from "../pages/projects/ProjectsRoutes";
 import eventCalendarRoutes from "../pages/eventCalendar/EventCalendarRoutes";
-import employeeRoutes from "../pages/employees/employeeRoutes";
+import employeeRoutes from "../pages/users/employees/employeeRoutes";
 import statisticRoute from "../pages/statistic/StatisticRoute";
+import customerRoutes from "../pages/users/customers/CustomerRoutes";
 
 const children = [
   ...dashboardRoutes,
@@ -20,9 +21,8 @@ const children = [
   ...chatRoutes,
   ...projectRoutes,
   ...eventCalendarRoutes,
-  ...employeeRoutes
-
-
+  ...employeeRoutes,
+  ...customerRoutes
 ];
 
 const getChildRoutesWithRoleContext = () => {

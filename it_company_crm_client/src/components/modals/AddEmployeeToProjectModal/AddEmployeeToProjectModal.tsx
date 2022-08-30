@@ -1,50 +1,43 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {
-    Autocomplete,
-    Avatar,
-    Box, Button,
-    DialogActions,
-    Fade,
-    Hidden,
-    MenuItem,
-    Modal,
-    TextareaAutosize,
-    TextField
-} from "@mui/material";
+import React, {useEffect, useState} from 'react';
+import {Autocomplete, Box, Button, DialogActions, Fade, Modal, TextField} from "@mui/material";
 
-import {modalStyle, Span, UserMenu} from "../../../assets/components/Modals";
+import {modalStyle} from "../../../assets/components/Modals";
 import {apiUrl} from "../../Chat/ChatSideBar/ChatDirect/ChatSidebarDirectItem";
 import {useAction} from "../../../hooks/useAction";
-import {ChatService} from "../../../services/ChatService";
 import useAuth from "../../../hooks/useAuth";
-import {Employee, User} from "../../../types/user";
+import {Project} from "../../../types/project";
 import {EmployeeService} from "../../../services/EmployeeService";
+import {Employee} from "../../../types/user";
 
-type AddUserToProjectModal = {
+type AddUserChatModal = {
     open: any;
     setOpen: any;
     onClose: any;
     onSave: any;
-
+    project: Project | null;
 }
 
+type User = {
+    full_name: string;
+    avatar: string;
+    id: number;
+}
 
-
-const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModal) => {
+const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: AddUserChatModal) => {
 
     const { user } = useAuth();
     const { createChat } = useAction();
 
     const [userIndentity, setUserIndentity] = useState<string>('');
-    const [users, setUsers] = useState<readonly User[]>([]);
-    const [selecteOption, setSelectedOption] = useState<User|null>(null);
+    const [users, setUsers] = useState<readonly Employee[]>([]);
+    const [selecteOption, setSelectedOption] = useState<Employee|null>(null);
 
     // const loading = open && employees.length === 0;
     const loading = open;
 
-    const getUsers = async () : Promise<User[]> => {
-        const responce = await ChatService.getUsersWithNonExistChat(user!.id);
-        return responce.data;
+    const getUsers = async () : Promise<Employee[]> => {
+        const { data } = await EmployeeService.getEmployees();
+        return data.data;
     }
 
     useEffect(() => {
@@ -111,17 +104,17 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModa
                             sx={{ width: 300 }}
                             options={users}
                             autoHighlight
-                            getOptionLabel={(option: User) => option.full_name}
-                            renderOption={(props, option: User) => (
+                            getOptionLabel={(option: Employee) => option.user.full_name}
+                            renderOption={(props, option: Employee) => (
                                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
 
                                     <img
                                         loading="lazy"
                                         width="20"
-                                        src={`${apiUrl}storage/${option.avatar}`}
+                                        src={`${apiUrl}storage/${option.user.avatar}`}
                                     />
 
-                                    {option.full_name} ({option.id})
+                                    {option.user.full_name} ({option.id})
                                 </Box>
                             )}
                             renderInput={(params) => (
@@ -157,4 +150,4 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModa
     );
 };
 
-export default AddUserChatModal;
+export default AddEmployeeToProjectModal;

@@ -1,24 +1,27 @@
+
+import '../../assets/components/Chat/index.css';
 import React, {useEffect, useRef, useState} from 'react';
-import ChatComponent from "../../components/Chat/ChatComponent";
-import {Box, styled} from "@mui/material";
+import {Box} from "@mui/material";
 import {Breadcrumb} from "../../components";
 import {Container} from "../../assets/components/breadcrumb";
 import {useTypeSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
 import {useObserver} from "../../hooks/useObserver";
-import AddUserChatModal from "../../components/modals/AddUserChatModal/AddUserChatModal";
+import AddEmployeeToProjectModal from "../../components/modals/AddEmployeeToProjectModal/AddEmployeeToProjectModal";
 import ChatSidebar from "../../components/Chat/ChatSideBar/ChatSidebar";
 import ChatMain from "../../components/Chat/ChatMain/ChatMain";
 import {useParams} from "react-router-dom";
 import {Chat} from "../../types/chat";
 import {DEFAULT_LIMIT, DEFAULT_PAGE} from "../../store/reducers/chatReducer";
 import {User} from "../../types/user";
+import useAuth from "../../hooks/useAuth";
+import AddUserChatModal from "../../components/modals/AddUserChatModal/AddUserChatModal";
 
-export const userId = 1;
 
 const ChatPage = () => {
 
     const { withUserId } = useParams();
+    const { user } = useAuth();
 
     const {
         chats,
@@ -53,7 +56,7 @@ const ChatPage = () => {
 
         console.log('chatId', withUserId);
         const fetchChatsAndMessages = async () => {
-            const receivedChats = await fetchChats(userId);
+            const receivedChats = await fetchChats(user!.id);
             if(withUserId) {
                 // @ts-ignore
                 const existChat = receivedChats.find((e: Chat) => {
@@ -68,7 +71,7 @@ const ChatPage = () => {
                     setCurrentChatId(newCurrentChat.id);
                     if(!newCurrentChat.messages || newCurrentChat.messages.length === 0) {
                         fetchMessageByChat(
-                            userId,
+                            user!.id,
                             newCurrentChat.id,
                             DEFAULT_LIMIT,
                             DEFAULT_PAGE,
@@ -82,10 +85,12 @@ const ChatPage = () => {
         fetchChatsAndMessages();
 
         return () => {
-            clean(); 
+            clean();
         }
 
     }, [])
+
+
 
     const lastElement = useRef<any>();
 
@@ -107,7 +112,7 @@ const ChatPage = () => {
             // console.log('length', currentChat.messages.length ?? 0)
             // if(messagePage === DEFAULT_PAGE) setMessagePage(DEFAULT_PAGE+1);
 
-            fetchMessageByChat(userId, currentChat.id, messageLimit, currentChat.messagePage);
+            fetchMessageByChat(user!.id, currentChat.id, messageLimit, currentChat.messagePage);
 
         }
     }, [messagePage])

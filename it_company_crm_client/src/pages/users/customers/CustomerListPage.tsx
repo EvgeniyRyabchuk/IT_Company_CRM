@@ -1,25 +1,28 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Container} from "../../assets/components/breadcrumb";
+import React, {useEffect, useMemo, useState} from 'react';
+import {Container} from "../../../assets/components/breadcrumb";
 import MaterialReactTable from 'material-react-table';
 import MRT_Row, {MRT_ColumnDef} from 'material-react-table';
-import {Box, Button, ListItemIcon, MenuItem, Typography} from '@mui/material';
+import {Box, Button, Fab, ListItemIcon, MenuItem, Typography} from '@mui/material';
 import {AccountCircle, Delete, Edit, FileDownload, GroupAdd, Send} from '@mui/icons-material';
-import {Employee, Skill} from "../../types/user";
-import {EmployeeService} from "../../services/EmployeeService";
-import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../http";
+import {Customer, Employee, Phone} from "../../../types/user";
+import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import type {ColumnFiltersState, PaginationState, SortingState,} from '@tanstack/react-table';
-import {getQueryString} from "../../utils/pages";
-import CreateEditEmployeeModal from "../../components/modals/CreateEditEmployeeModal/CreateEditEmployeeModal";
-import { RowSelectionState } from '@tanstack/react-table';
-import {downloadResponseFile} from "../../utils/axiosUtills";
-import {ChatService} from "../../services/ChatService";
-import {userId} from "../chat/ChatPage";
+import {RowSelectionState} from '@tanstack/react-table';
+import {getQueryVarsInStringFormat} from "../../../utils/pages";
+import {ChatService} from "../../../services/ChatService";
+
 import {useNavigate} from "react-router-dom";
-const EmployeeListPage = () => {
+import useAuth from "../../../hooks/useAuth";
+import {CustomerService} from "../../../services/CustomerService";
+
+const CustomerListPage = () => {
+
+    const { user } = useAuth();
     const navigate = useNavigate();
-    const [employees, setEmployees] = useState<Employee[]>([]);
+    const [customers, setCustomers] = useState<Customer[]>([]);
 
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
@@ -38,40 +41,37 @@ const EmployeeListPage = () => {
 
     const [rowCount, setRowCount] = useState(0);
 
-    const [createEditModalState, setCreateEditModalState] = useState({
-            isOpen: false,
-            mode: 'create',
-    });
-    const [selectedEmployee, setSelectedEmployee] = useState<Employee>();
+    const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
 
-    const handleCreateEditRow = async (values: Employee, mode: string) => {
+
+    const handleCreateEditRow = async (values: Customer, mode: string) => {
         console.log('submit', values);
         if(mode === 'create') {
-            const { data } = await EmployeeService.createEmployee(values);
-            fetchEmployees();
+            const { data } = await CustomerService.createCustomer(values);
+            fetchCustomers();
         }
         else {
-            const { data } = await EmployeeService.updateEmployee(values);
+            const { data } = await CustomerService.updateCustomer(values);
             // update employee list
-            const newEmployees = employees.map((e: Employee) => e.id === data.id ? data : e);
-            setEmployees(newEmployees);
+            const newCustomers = customers.map((e: Customer) => e.id === data.id ? data : e);
+            setCustomers(newCustomers);
         }
     };
 
-    const fetchEmployees = async () => {
+    const fetchCustomers = async () => {
         try {
             // hooks that returns query string for url
-            const queryParamString = getQueryString([
+            const queryParamString = getQueryVarsInStringFormat([
                 {key: 'perPage', value: pagination.pageSize},
                 {key: 'filters', value: JSON.stringify(columnFilters ?? [])},
                 {key: 'search', value: globalFilter ?? ''},
                 {key: 'sort', value: JSON.stringify(sorting ?? [])},
                 {key: 'page', value: pagination.pageIndex + 1}
             ])
+            setIsLoading(true);
+            const { data } = await CustomerService.getCustomer(queryParamString);
 
-            const { data } = await EmployeeService.getEmployees(queryParamString);
-
-            setEmployees(data.data);
+            setCustomers(data.data);
             setRowCount(data.total);
         } catch (error) {
             setIsError(true);
@@ -83,19 +83,30 @@ const EmployeeListPage = () => {
         setIsRefetching(false);
     };
 
+    const onFavoriteClick = (customerId: number, oldValue: boolean) => {
+        CustomerService.changeFavorite(customerId, !oldValue)
+        const customerForUpdate = customers.find((e: Customer) => e.id === customerId);
+        if(!customerForUpdate) return;
+        customerForUpdate!.vip = !oldValue;
+        const newCustomers = customers.
+            map((e: Customer) => e.id === customerId ? customerForUpdate : e);
+
+        setCustomers(newCustomers);
+    }
+
     useEffect(() => {
-        fetchEmployees();
+        fetchCustomers();
     }, [ columnFilters,
         globalFilter,
         pagination.pageIndex,
         pagination.pageSize,
         sorting,])
 
-    const columns = useMemo<MRT_ColumnDef<Employee>[]>(
+    const columns = useMemo<MRT_ColumnDef<Customer>[]>(
         () => [
             {
-                id: 'id',
-                header: '#',
+                id: 'user.id',
+                header: '#(id)',
                 size: 100,
                 accessorKey: 'user.id',
             },
@@ -115,7 +126,8 @@ const EmployeeListPage = () => {
                     >
                         <img
                             alt="avatar"
-                            height={40}
+                            width='40px'
+                            height='40px'
                             src={`${API_URL_WITH_PUBLIC_STORAGE}/${row.original.user.avatar}`}
                             loading="lazy"
                             style={{ borderRadius: '50%' }}
@@ -128,12 +140,33 @@ const EmployeeListPage = () => {
                     </Box>
                 ),
             },
-
             {
-                id: 'project_count',
-                header: 'Members in projects',
+                id: 'user.phones',
+                header: 'Phone Number',
+                size: 250,
+                accessorKey: 'user.phones',
+                enableSorting: false,
+                Cell: ({ cell, row }) => (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '1rem',
+                        }}
+                    >
+                        <ul>
+                            {row.original.user.phones.map((e: Phone) =>
+                              <li>{e.phone_number}</li>
+                            )}
+                        </ul>
+                    </Box>
+                ),
+            },
+            {
+                id: 'order_count',
+                header: 'Orders (all/finished)',
                 size: 200,
-                accessorKey: 'project_count',
+                accessorKey: 'order_count',
                 Cell: ({ cell, row }) => (
                     <Box
                         sx={(theme) => ({
@@ -150,49 +183,54 @@ const EmployeeListPage = () => {
                             p: '0.25rem',
                         })}
                     >
-                        {row.original.project_count}
+                        {row.original.order_count} / {row.original.finished_order_count}
                     </Box>
                 ),
+            },
+            {
+
+                id: 'user.created_at',
+                header: 'Account Created At',
+                muiTableHeadCellFilterTextFieldProps: {
+                    type: 'date',
                 },
-                {
+                sortingFn: 'datetime',
+                accessorKey: 'user.created_at',
+                Cell: ({ cell, row }) => moment(row.original.user.created_at).format('DD/MM/YYYY'), //render Date as a string
+                Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
+            },
+            {
 
-                    id: 'user.created_at',
-                    header: 'Account Created At',
-                    muiTableHeadCellFilterTextFieldProps: {
-                        type: 'date',
-                    },
-                    sortingFn: 'datetime',
-                    accessorKey: 'user.created_at',
-                    Cell: ({ cell, row }) => moment(row.original.user.created_at).format('DD/MM/YYYY'), //render Date as a string
-                    Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
-                },
-            ], []);
+                id: 'vip',
+                size: 80,
+                header: 'Favorite',
+                accessorKey: 'vip',
+                enableColumnFilter: false,
+                Cell: ({ cell, row }) =>
+                    <Fab
+                        aria-label="like"
+                        style={{width: '40px', height: '40px'}}
+                    >
+                        <FavoriteIcon
+                            style={{color: row.original.vip ? 'red' : 'black'}}
+                            onClick={() =>
+                                onFavoriteClick(row.original.id, row.original.vip ?? false)
+                            }
+                        />
+                    </Fab>,
+                Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
+            },
+        ], [customers]);
 
-
-
-    const handleDeleteRow = useCallback(
-        (row: any) => {
-            if (
-                // eslint-disable-next-line no-restricted-globals
-                !confirm(`Are you sure you want to delete ${row.original.user.full_name}`)
-            ) {
-                return;
-            }
-            //send api delete request here, then refetch or update local table data for re-render
-            employees.splice(row.index, 1);
-            setEmployees([...employees]);
-        },
-        [employees],
-    );
 
     return (
         <Container>
 
-            <h2>All employees</h2>
+            <h2>All customers</h2>
 
             <MaterialReactTable
                 columns={columns}
-                data={employees}
+                data={customers}
                 enableColumnFilterModes
                 enableColumnResizing
 
@@ -238,42 +276,44 @@ const EmployeeListPage = () => {
 
                 renderDetailPanel={({ row }) => (
                     <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-around',
-                            alignItems: 'center',
-                        }}
+
                     >
-                        <img
-                            alt="avatar"
-                            height={200}
-                            src={`${API_URL_WITH_PUBLIC_STORAGE}/${row.original.user.avatar}`}
-                            loading="lazy"
-                            style={{ borderRadius: '50%' }}
-                        />
-                        <Box sx={{ textAlign: 'center' }}>
-                            <Typography variant="h2">
-                                Position: {row.original.position.name}
-                            </Typography>
-                            <Typography variant="h2">
-                                Level: {row.original.level.name}
-                            </Typography>
-                        </Box>
 
-                        {row.original.skills?.map((skill: Skill) =>
-                            <Box
-                                sx={(theme) => ({
-                                    backgroundColor: theme.palette.success.dark,
-                                    borderRadius: '0.25rem',
-                                    color: '#fff',
-                                    maxWidth: '9ch',
-                                    p: '0.25rem',
-                                })}
-                            >
-                                {skill.name}
-                            </Box>
-                        )}
+                        {row.original && row.original.user &&
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-around',
+                                alignItems: 'center',
+                                padding: '20px',
+                                flexWrap: 'wrap'
+                            }}
+                        >
 
+                            <img
+                                alt="avatar"
+                                height={200}
+                                src={`${API_URL_WITH_PUBLIC_STORAGE}/${row.original.user.avatar}`}
+                                loading="lazy"
+                                style={{borderRadius: '50%'}}
+                            />
+
+                            {row.original.user.tags?.map((tag: { id: number; name: string; }) =>
+                                <Box
+                                    key={tag.id}
+                                    sx={(theme) => ({
+                                        backgroundColor: theme.palette.success.dark,
+                                        borderRadius: '0.25rem',
+                                        color: '#fff',
+                                        maxWidth: '9ch',
+                                        p: '0.25rem',
+                                    })}
+                                >
+                                    {tag.name}
+                                </Box>
+                            )}
+                            </div>
+                        }
                     </Box>
                 )}
                 renderRowActionMenuItems={({ closeMenu, row }) => [
@@ -296,7 +336,7 @@ const EmployeeListPage = () => {
 
                             const toUser = row.original;
 
-                            const { data } = await ChatService.createChat(userId, toUser.id);
+                            const { data } = await ChatService.createChat(user!.id, toUser.id);
                             navigate(`/chats/${toUser.id}`);
 
                             closeMenu();
@@ -312,8 +352,8 @@ const EmployeeListPage = () => {
                         key={2}
                         onClick={() => {
                             console.log('selected employee', row.original);
-                            setSelectedEmployee({ ...row.original });
-                            setCreateEditModalState({ isOpen: true, mode: 'update'})
+                            setSelectedCustomer({ ...row.original });
+                            // setCreateEditModalState({ isOpen: true, mode: 'update'})
                             closeMenu();
                         }}
                         sx={{ m: 0 }}
@@ -326,10 +366,10 @@ const EmployeeListPage = () => {
                     <MenuItem
                         key={3}
                         onClick={async () => {
-                            const employeeIndex = employees.findIndex(e => e.id === row.original.id);
-                            await EmployeeService.deleteEmployee(row.original.id);
-                            employees.splice(employeeIndex, 1);
-                            setEmployees([...employees]);
+                            const customerIndex = customers.findIndex(e => e.id === row.original.id);
+                            await CustomerService.deleteCustomer(row.original.id);
+                            customers.splice(customerIndex, 1);
+                            setCustomers([...customers]);
                             closeMenu();
                         }}
                         sx={{ m: 0 }}
@@ -339,18 +379,6 @@ const EmployeeListPage = () => {
                         </ListItemIcon>
                         Delete
                     </MenuItem>,
-                    <MenuItem
-                        key={4}
-                        onClick={() => {
-                            closeMenu();
-                        }}
-                        sx={{ m: 0 }}
-                    >
-                        <ListItemIcon>
-                            <GroupAdd />
-                        </ListItemIcon>
-                        Add to projects
-                    </MenuItem>,
                 ]}
                 renderTopToolbarCustomActions={({ table }) => {
 
@@ -358,7 +386,7 @@ const EmployeeListPage = () => {
                         const ids = Object.keys(rowSelection);
                         // const param = ids ? `?${JSON.stringify(ids)}` : '';
                         // eslint-disable-next-line no-restricted-globals
-                        location.href = `${API_URL}/excel/employees`;
+                        location.href = `${API_URL}/excel/customers`;
 
                     };
                     const handleExportSelectedRows = async () => {
@@ -366,16 +394,16 @@ const EmployeeListPage = () => {
                         console.log(Object.keys(rowSelection));
                         const param = ids ? `?ids=${JSON.stringify(ids)}` : '';
 
-                        console.log( `${API_URL}/excel/employees${param}`);
+                        console.log( `${API_URL}/excel/customers${param}`);
                         // eslint-disable-next-line no-restricted-globals
-                        location.href = `${API_URL}/excel/employees${param}`;
+                        location.href = `${API_URL}/excel/customers${param}`;
                     };
                     // @ts-ignore
                     const handleExportPageRows = async (rows: MRT_Row<Employee>[]) => {
                         const ids = rows.map(e => e.id);
                         const param = ids ? `?ids=${JSON.stringify(ids)}` : '';
                         // eslint-disable-next-line no-restricted-globals
-                        location.href = `${API_URL}/excel/employees${param}`;
+                        location.href = `${API_URL}/excel/customers${param}`;
                     }
 
                     return (
@@ -383,13 +411,13 @@ const EmployeeListPage = () => {
                         <Box
                             sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
                         >
-                            <Button
-                                color="secondary"
-                                onClick={() => setCreateEditModalState({ isOpen: true, mode: 'create'})}
-                                variant="contained"
-                            >
-                                Create New Employee Account
-                            </Button>
+                            {/*<Button*/}
+                            {/*    color="secondary"*/}
+                            {/*    // onClick={() => setCreateEditModalState({ isOpen: true, mode: 'create'})}*/}
+                            {/*    variant="contained"*/}
+                            {/*>*/}
+                            {/*    Create New Customer Account*/}
+                            {/*</Button>*/}
 
                             <Button
                                 color="primary"
@@ -427,17 +455,16 @@ const EmployeeListPage = () => {
 
             />
 
-            <CreateEditEmployeeModal
-                onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
-                onSubmit={handleCreateEditRow}
-                open={createEditModalState.isOpen}
-                mode={createEditModalState.mode}
-                employee={selectedEmployee}
-            />
+            {/*<CreateEditEmployeeModal*/}
+            {/*    onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}*/}
+            {/*    onSubmit={handleCreateEditRow}*/}
+            {/*    open={createEditModalState.isOpen}*/}
+            {/*    mode={createEditModalState.mode} */}
+            {/*    employee={selectedEmployee}*/}
+            {/*/>*/}
 
         </Container>
     );
 };
 
-export default EmployeeListPage;
-
+export default CustomerListPage;

@@ -4,23 +4,26 @@ import ProjectFileManager from "../../components/ProjectFileManager/ProjectFileM
 import {Box} from "@mui/material";
 import {Container} from "../../assets/components/breadcrumb";
 import {Breadcrumb} from "../../components";
+import {useParams} from "react-router-dom";
 
 const ProjectPage = () => {
+    const { projectId } = useParams();
+
     return (
         <Container style={{padding: '30px'}}>
 
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[
                     { name: "Projects", path: '/projects' },
-                    { name: 1 } 
+                    { name: projectId }
                 ]} />
             </Box>
 
-            Project 1
+            Project { projectId }
 
-            <Kanban />
+            <Kanban projectId={parseInt(projectId!)} />
 
-            <ProjectFileManager />
+            <ProjectFileManager projectId={projectId!} />
         </Container>
     );
 };

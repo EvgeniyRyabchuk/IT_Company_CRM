@@ -1,0 +1,528 @@
+/*! CSS Used from: Embedded */
+.table-alt-1 svg:not(:root).svg-inline--fa {
+    overflow: visible;
+}
+
+.svg-inline--fa {
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+}
+
+.svg-inline--fa.fa-w-16 {
+    width: 1em;
+}
+
+.svg-inline--fa.fa-w-18 {
+    width: 1.125em;
+}
+
+.h-auto {
+    height: auto;
+}
+
+.font-size-lg {
+    font-size: 1.1875rem;
+}
+
+.text-black {
+    color: #070919;
+}
+
+
+
+
+.table-alt-1 small {
+    font-size: 80%;
+}
+
+
+
+.table-alt-1 img {
+    vertical-align: middle;
+    border-style: none;
+}
+
+.table-alt-1 svg {
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.table-alt-1 table {
+    border-collapse: collapse;
+}
+
+.table-alt-1 th {
+    text-align: inherit;
+}
+
+.table-alt-1 button {
+    border-radius: 0;
+}
+
+.table-alt-1 button:focus {
+    outline: 1px dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+}
+
+.table-alt-1 button {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.table-alt-1 button {
+    overflow: visible;
+}
+
+.table-alt-1 button {
+    text-transform: none;
+}
+
+.table-alt-1 button,
+[type=button] {
+    -webkit-appearance: button;
+}
+
+.table-alt-1 button::-moz-focus-inner,
+[type=button]::-moz-focus-inner {
+    padding: 0;
+    border-style: none;
+}
+
+.table-alt-1 small {
+    font-size: 80%;
+    font-weight: 400;
+}
+
+.table-alt-1 .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #3b3e66;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dcdef1;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dcdef1;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9fafe;
+}
+
+.table-hover tbody tr:hover {
+    color: #3b3e66;
+    background-color: #fffbf2;
+}
+
+.table .thead-light th {
+    color: #3b3e66;
+    background-color: rgba(239, 239, 247, 0.7);
+    border-color: #dcdef1;
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #fff;
+    border-bottom: 0 solid rgba(122, 123, 151, 0.3);
+}
+
+.card-header:first-child {
+    border-radius: 0.65rem 0.65rem 0 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0 0.7em;
+    font-size: 70%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.2rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .badge {
+        transition: none;
+    }
+}
+
+.badge-success {
+    color: #fff;
+    background-color: #1bc943;
+}
+
+.badge-warning {
+    color: #fff;
+    background-color: #f4772e;
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: #f83245;
+}
+
+.d-block {
+    display: block !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.h-auto {
+    height: auto !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mr-2 {
+    margin-right: 0.5rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.p-0 {
+    padding: 0 !important;
+}
+
+.py-0 {
+    padding-top: 0 !important;
+}
+
+.py-0 {
+    padding-bottom: 0 !important;
+}
+
+.px-3 {
+    padding-right: 1rem !important;
+}
+
+.px-3 {
+    padding-left: 1rem !important;
+}
+
+.text-nowrap {
+    white-space: nowrap !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
+}
+
+.text-primary {
+    color: #5383ff !important;
+}
+
+.text-black-50 {
+    color: rgba(7, 9, 25, 0.5) !important;
+}
+
+
+
+.table-alt-1 small {
+    font-size: 80%;
+}
+
+
+.table-alt-1 img {
+    vertical-align: middle;
+    border-style: none;
+}
+
+.table-alt-1 svg {
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.table-alt-1 table {
+    border-collapse: collapse;
+}
+
+.table-alt-1 th {
+    text-align: inherit;
+}
+
+.table-alt-1 button {
+    border-radius: 0;
+}
+
+.table-alt-1 button:focus {
+    outline: 1px dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+}
+
+.table-alt-1 button {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.table-alt-1 button {
+    overflow: visible;
+}
+
+.table-alt-1 button {
+    text-transform: none;
+}
+
+.table-alt-1 button,
+[type=button] {
+    -webkit-appearance: button;
+}
+
+.table-alt-1 button::-moz-focus-inner,
+[type=button]::-moz-focus-inner {
+    padding: 0;
+    border-style: none;
+}
+
+.table-alt-1 small {
+    font-size: 80%;
+    font-weight: 400;
+}
+
+.table-alt-1 .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #3b3e66;
+}
+
+.table-alt-1 .table th,
+.table-alt-1 .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dcdef1;
+}
+
+.table-alt-1 .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dcdef1;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9fafe;
+}
+
+.table-hover tbody tr:hover {
+    color: #3b3e66;
+    background-color: #fffbf2;
+}
+
+.table .thead-light th {
+    color: #3b3e66;
+    background-color: rgba(239, 239, 247, 0.7);
+    border-color: #dcdef1;
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #fff;
+    border-bottom: 0 solid rgba(122, 123, 151, 0.3);
+}
+
+.card-header:first-child {
+    border-radius: 0.65rem 0.65rem 0 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0 0.7em;
+    font-size: 70%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.2rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .badge {
+        transition: none;
+    }
+}
+
+.badge-success {
+    color: #fff;
+    background-color: #1bc943;
+}
+
+.badge-warning {
+    color: #fff;
+    background-color: #f4772e;
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: #f83245;
+}
+
+.d-block {
+    display: block !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.h-auto {
+    height: auto !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mr-2 {
+    margin-right: 0.5rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.p-0 {
+    padding: 0 !important;
+}
+
+.py-0 {
+    padding-top: 0 !important;
+}
+
+.py-0 {
+    padding-bottom: 0 !important;
+}
+
+.px-3 {
+    padding-right: 1rem !important;
+}
+
+.px-3 {
+    padding-left: 1rem !important;
+}
+
+.text-nowrap {
+    white-space: nowrap !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.font-weight-bold {
+    font-weight: 700 !important;
+}
+
+.text-primary {
+    color: #5383ff !important;
+}
+
+.text-black-50 {
+    color: rgba(7, 9, 25, 0.5) !important;
+}
+
+.badge {
+    text-transform: uppercase;
+    height: 20px;
+    line-height: 21px;
+}
+
+.card-box {
+    border-width: 1px;
+}
+
+.card-box .card-header {
+    border-width: 1px;
+    border-color: rgba(7, 9, 25, 0.125);
+}
+
+.card-box .card-header {
+    display: flex;
+    align-items: center;
+}
+
+.card-box .card-header--title {
+    flex-grow: 1;
+}
+
+.card-box .card-header--title>b {
+    display: block;
+}
+
+.card-box .card-header--title>small {
+    text-transform: uppercase;
+    display: block;
+    opacity: 0.3;
+    font-weight: bold;
+}
+
+.card-box .card-header--title>small+b {
+    padding-top: 0.25rem;
+}
+
+.table {
+    font-size: 0.95rem;
+}
+
+.table thead th {
+    text-transform: uppercase;
+    background: #f4f5fd;
+    font-size: 0.83125rem;
+}
+
+.table-alt-1 .table tr {
+    transition: all 0.2s ease-in-out;
+}
+
+.table-alt-1 .table td,
+.table-alt-1 .table th {
+    vertical-align: middle;
+}

@@ -1,18 +1,18 @@
 import React, {useState} from 'react';
-import {userId} from "../ChatComponent";
 import {useTypeSelector} from "../../../hooks/useTypedSelector";
 import {useAction} from "../../../hooks/useAction";
+import useAuth from "../../../hooks/useAuth";
 
 const ChatInput = () => {
-
+    const { user } = useAuth();
     const { currentChat } = useTypeSelector(state => state.chat)
     const { sendMessage } = useAction();
     const [inputContent, setInputContent] = useState<string>('');
 
     const onSend = () => {
         if(currentChat && inputContent.length > 0) {
-            const withUser = currentChat.users.filter((e: any) => e.id !== userId)[0];
-            sendMessage(userId, withUser.id, currentChat.id, inputContent);
+            const withUser = currentChat.users.filter((e: any) => e.id !== user!.id)[0];
+            sendMessage(user!.id, withUser.id, currentChat.id, inputContent);
             setInputContent('');
         }
     }
@@ -21,9 +21,9 @@ const ChatInput = () => {
 
     const send = async (content: string) => {
         if(currentChat) {
-            const toUserId = currentChat.users.filter((e: any) => e.id != userId)[0].id;
+            const toUserId = currentChat.users.filter((e: any) => e.id != user!.id)[0].id;
 
-            const data = await fetch(`http://127.0.0.1:8000/api/users/${userId}/chats/messages`,
+            const data = await fetch(`http://127.0.0.1:8000/api/users/${user!.id}/chats/messages`,
                 { headers: {
                         "Content-Type": 'application/json'
                     },

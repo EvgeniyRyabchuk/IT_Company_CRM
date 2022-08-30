@@ -3,15 +3,16 @@ import React, {useEffect, useRef, useState} from 'react';
 import '../../assets/components/Chat/index.css';
 import ChatMain from "./ChatMain/ChatMain";
 import ChatSidebar from "./ChatSideBar/ChatSidebar";
-import AddUserChatModal from "../modals/AddUserChatModal/AddUserChatModal";
+import AddEmployeeToProjectModal from "../modals/AddEmployeeToProjectModal/AddEmployeeToProjectModal";
 import {useObserver} from "../../hooks/useObserver";
 import {useTypeSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
+import useAuth from "../../hooks/useAuth";
+import AddUserChatModal from "../modals/AddUserChatModal/AddUserChatModal";
 
-export const userId = 1;
 
 const ChatComponent = () => {
-
+    const { user } = useAuth();
     const {
         chats,
         error,
@@ -39,7 +40,7 @@ const ChatComponent = () => {
     const messageId = 1;
 
     useEffect(() => {
-        fetchChats(userId);
+        fetchChats(user!.id);
     }, [])
 
     const lastElement = useRef<any>();
@@ -63,7 +64,7 @@ const ChatComponent = () => {
             // console.log('length', currentChat.messages.length ?? 0)
             // if(messagePage === DEFAULT_PAGE) setMessagePage(DEFAULT_PAGE+1);
 
-            fetchMessageByChat(userId, currentChat.id, messageLimit, currentChat.messagePage);
+            fetchMessageByChat(user!.id, currentChat.id, messageLimit, currentChat.messagePage);
         }
     }, [messagePage])
 

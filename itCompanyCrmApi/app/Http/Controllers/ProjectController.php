@@ -28,13 +28,23 @@ use function Symfony\Component\String\b;
 
 class ProjectController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
+        $perPage = $request->input('limit') ?? 10;
+        $filters = $request->input('filters') ?? null;
+        $search = $request->input('search') ?? '';
+
+        $sort = $request->input('sort') ?? 'created_at';
+        $order = $request->input('order') ?? 'desc';
+
         $projects = Project::with(
             'projectType',
             'order',
             'projectLinks',
             'lanes'
-        )->get();
+        )
+        ->withCount(['employees as member_count'])
+        ->orderBy($sort, $order)
+        ->paginate($perPage);
 
         return response()->json($projects, 201);
 

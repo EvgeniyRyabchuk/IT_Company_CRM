@@ -12,3 +12,11 @@ export interface PaginatedResponse<T> {
     to: number;
     total: number;
 }
+
+export interface SortOrderOptionType {
+    id: number,
+    name: string,
+    value: string,
+    order: string,
+    selected: boolean
+}

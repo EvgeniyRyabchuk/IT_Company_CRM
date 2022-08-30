@@ -4,9 +4,11 @@ import ChatSidebarDirectList from "./ChatDirect/ChatSidebarDirectList";
 import {useTypeSelector} from "../../../hooks/useTypedSelector";
 import {useAction} from "../../../hooks/useAction";
 import {Chat} from "../../../types/chat";
-import {userId} from "../ChatComponent";
+import useAuth from "../../../hooks/useAuth";
+
 
 const ChatSidebarBody = () => {
+    const { user } = useAuth();
     const {
         currentChat,
         chats,
@@ -18,7 +20,7 @@ const ChatSidebarBody = () => {
     const filteredChats = useMemo(() => {
         return chats.filter((chat: Chat) => {
             if(!search || search === '') return true;
-            const withUser = chat.users.filter((e: any) => e.id !== userId)[0];
+            const withUser = chat.users.filter((e: any) => e.id !== user!.id)[0];
             return withUser?.full_name?.toLowerCase()
                 .includes(search.toLowerCase());
         });
@@ -28,7 +30,7 @@ const ChatSidebarBody = () => {
 
     const filteredChatByRole = (roleNames: string[]) : any => {
         return filteredChats.filter((chat: any) => {
-            const withUser = chat.users.filter((e: any) => e.id !== userId)[0];
+            const withUser = chat.users.filter((e: any) => e.id !== user!.id)[0];
             const withUserRoles = withUser.roles;
 
             let isCustomer = false;

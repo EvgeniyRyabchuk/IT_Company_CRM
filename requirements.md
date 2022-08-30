@@ -209,3 +209,164 @@ dogapay828@agrolivana.com
 380934611664
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <Card className={styles['card-box mb-4']}>
+                <div className={styles['card-header']}>
+                    <div className={styles['card-header--title']}>
+                        <small>Tables</small>
+                        <b>This table card has custom content</b>
+                    </div>
+                    <Box className={styles['card-header--actions']}>
+                        <IconButton
+                            size="small"
+                            color="primary"
+                            title="View details">
+                            className={styles['text-primary']}
+                            keyboard
+                            {/*<FontAwesomeIcon*/}
+                            {/*    icon={['far', 'keyboard']}*/}
+                            {/*    className="font-size-lg"*/}
+                            {/*/>*/}
+                        </IconButton>
+                    </Box>
+                </div>
+                <CardContent className="p-0">
+                    <div className={styles['table-responsive']} >
+                        <table className={styles['table table-striped table-hover text-nowrap mb-0']}>
+                            <thead
+                                className={styles['thead-light']}
+                            >
+                            <tr>
+                                <th style={{ width: '40%' }}>Employee</th>
+                                <th className={styles['text-center']} >Status</th>
+                                <th className={styles['text-center']}>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div className={styles['d-flex align-items-center']}>
+                                            <Avatar className={styles['mr-2']} alt="..." src={avatar2} />
+                                            <div>
+                                                <a
+                                                    className={styles['font-weight-bold text-black']}
+                                                    href="#/"
+                                                    onClick={e => e.preventDefault()}
+                                                    title="...">
+                                                    Shanelle Wynn
+                                                </a>
+                                                <span
+                                                    className={styles['text-black-50 d-block']}
+                                                >
+                                                      UI Engineer, Apple Inc.
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className={styles['text-center']}>
+                                        <div
+                                            className={styles['h-auto py-0 px-3 badge badge-warning']}>
+                                            Pending
+                                        </div>
+                                    </td>
+                                    <td className={styles['text-center']}>
+                                        <Box>
+                                            <IconButton
+                                                color="primary"
+                                                size="small"
+                                            >
+                                                ellipsis
+                                                {/*<FontAwesomeIcon icon={['fas', 'ellipsis-h']} />*/}
+                                            </IconButton>
+                                        </Box>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div className={styles['d-flex align-items-center']}>
+                                            <Avatar alt="..." src={avatar1} className="mr-2" />
+                                            <div>
+                                                <a
+                                                    className={styles['font-weight-bold text-black']}
+                                                    href="#/"
+                                                    onClick={e => e.preventDefault()}
+                                                    title="...">
+                                                    Beck Simpson
+                                                </a>
+                                                <span className={styles['text-black-50 d-']}>
+                                                  Frontend Developer
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className={styles['text-center']}>
+                                        <div
+                                            className={styles['badge badge-success h-auto py-0 px-3']}>
+                                            Completed
+                                        </div>
+                                    </td>
+                                    <td className={styles['text-center']}>
+                                        <Box>
+                                            <IconButton color="primary" size="small">
+                                                ellipsis
+                                                {/*<FontAwesomeIcon icon={['fas', 'ellipsis-h']} />*/}
+                                            </IconButton>
+                                        </Box>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div className={styles['d-flex align-items-center']}>
+                                            <Avatar
+                                                alt="..." src={avatar3}
+                                                className={styles['mr-2']}
+                                            />
+                                            <div>
+                                                <a
+                                                    href="#/"
+                                                    onClick={e => e.preventDefault()}
+                                                    className={styles['font-weight-bold text-black']}
+                                                    title="...">
+                                                    Regan Norris
+                                                </a>
+                                                <span
+                                                    className={styles['text-black-50 d-block']}
+                                                >
+                                                    Senior Project Manager
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className={styles['text-center']}>
+                                        <div className={styles['h-auto py-0 px-3 badge badge-danger']}>
+                                            Declined
+                                        </div>
+                                    </td>
+                                    <td className={styles['text-center']}>
+                                        <Box>
+                                            <IconButton color="primary" size="small">
+                                                ellipsis
+                                                {/*<FontAwesomeIcon icon={['fas', 'ellipsis-h']} />*/}
+                                            </IconButton>
+                                        </Box>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </CardContent>
+            </Card>

@@ -14,7 +14,7 @@ export const getPagesArray = (totalPages) =>
     return result;
 }
 
-export const getQueryString = (params) => {
+export const getQueryVarsInStringFormat = (params) => {
     let keyValue = [];
     for (let param of params) {
         if(param.value)
