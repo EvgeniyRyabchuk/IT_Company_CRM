@@ -40,7 +40,6 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
 
     const remoteFileProvider = new RemoteFileSystemProvider({
         endpointUrl: `${API_URL}/projects/${projectId}/file-manager`
-
     });
 
     const onOptionChanged = (e: any) => {
@@ -69,6 +68,8 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
 
     }
 
+    console.log('render')
+
     const customizeIcon = (fileSystemItem: any) => {
         if (fileSystemItem.isDirectory) {
             return folderSvg;
@@ -91,7 +92,8 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
         <div>
 
             File manager
-            {/*
+            {
+                /*
 
                 <FileUploader
                     name="file"
@@ -121,7 +123,8 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
                 <br />
                 <br />
                 <br />
-            */}
+            */
+            }
 
             <FileManager
                 fileSystemProvider={remoteFileProvider}

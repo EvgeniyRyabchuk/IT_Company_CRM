@@ -1,24 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {
-    Autocomplete,
-    Avatar,
-    Box, Button,
-    DialogActions,
-    Fade,
-    Hidden,
-    MenuItem,
-    Modal,
-    TextareaAutosize,
-    TextField
-} from "@mui/material";
+import React, {useEffect, useState} from 'react';
+import {Autocomplete, Box, Button, DialogActions, Fade, Modal, TextField} from "@mui/material";
 
-import {modalStyle, Span, UserMenu} from "../../../assets/components/Modals";
+import {modalStyle} from "../../../assets/components/Modals";
 import {apiUrl} from "../../Chat/ChatSideBar/ChatDirect/ChatSidebarDirectItem";
 import {useAction} from "../../../hooks/useAction";
 import {ChatService} from "../../../services/ChatService";
 import useAuth from "../../../hooks/useAuth";
-import {Employee, User} from "../../../types/user";
-import {EmployeeService} from "../../../services/EmployeeService";
+import {User} from "../../../types/user";
 
 type AddUserToProjectModal = {
     open: any;
@@ -43,11 +31,13 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModa
     const loading = open;
 
     const getUsers = async () : Promise<User[]> => {
+
         const responce = await ChatService.getUsersWithNonExistChat(user!.id);
         return responce.data;
     }
 
     useEffect(() => {
+        console.log(123);
         let active = true;
 
         if (!loading) {
@@ -76,6 +66,7 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModa
     }
 
     const create = async () => {
+        console.log(123);
         if(selecteOption != null) {
             const toUserId = selecteOption.id;
             createChat(user!.id, toUserId);
@@ -97,6 +88,7 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModa
             >
                 <Fade in={open}>
                     <Box sx={modalStyle}>
+                        <h1>Add chat with</h1>
                         {/*<div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div>*/}
                         {/*<div>{`inputValue: '${inputValue}'`}</div>*/}
 
@@ -140,11 +132,11 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModa
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
                                 <Button onClick={() => setOpen(false)} color="primary">
-                                    Disagree
+                                    Cancel
                                 </Button>
 
                                 <Button onClick={create} color="primary" autoFocus>
-                                    Agree
+                                    Add chat with user
                                 </Button>
                             </Box>
                         </DialogActions>

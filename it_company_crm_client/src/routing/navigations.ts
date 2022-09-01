@@ -39,14 +39,6 @@ export const navigations : NavigationRoute[]  = [
       { name: 'Table', path: '/material/table', iconText: 'T' },
     ],
   },
-
-  {
-    name: 'Documentation',
-    icon: 'launch',
-    type: 'extLink',
-    path: 'http://demos.ui-lib.com/matx-react-doc/',
-  },
-
   {
     name: 'Users',
     icon: 'person_outline',

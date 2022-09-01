@@ -1,29 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
-use App\Mail\HelloMail;
-use App\Models\Chat;
-use App\Models\Customer;
+use App\Http\Controllers\Controller;
 use App\Models\UndoOrder;
 use App\Models\User;
-use App\Models\UserVerification;
-use App\Notifications\EmailVerificationNotification;
-use App\Notifications\HelloNot;
-use App\Notifications\PasswordResetNotification;
-use Carbon\Carbon;
-use Faker\Core\Number;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Str;
-use function Sodium\add;
 
 class UserController extends Controller
 {
@@ -54,7 +38,6 @@ class UserController extends Controller
             $request->input('non-existent-chat-with-user-id');
 
         // get users with whom there is no chat
-
 
         if($nonExistChatWithUserId !== null) {
             $users = new Collection();

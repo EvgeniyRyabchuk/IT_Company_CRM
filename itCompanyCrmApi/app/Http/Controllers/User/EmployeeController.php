@@ -6,6 +6,7 @@ use App\Exports\EmployeeExport;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Position;
+use App\Models\Role;
 use App\Models\Skill;
 use App\Models\User;
 use Carbon\Carbon;
@@ -18,9 +19,15 @@ class EmployeeController extends Controller
 {
     public function index(Request $request) {
         $perPage = $request->input('perPage') ?? 10;
+        if($perPage === 'all') {
+            $perPage = Employee::all()->count();
+        }
+
         $filters = $request->input('filters') ?? [];
         $search = $request->input('search') ?? '';
         $sort = $request->input('sort') ?? [];
+        $nonExistInProjectId =
+            $request->input('non-exist-in-project-id') ?? null;
 
         if($filters !== [])
             $filters = json_decode($filters, true, 3);
@@ -40,13 +47,27 @@ class EmployeeController extends Controller
 
         //$doneStatus = OrderStatus::where('name', 'Finished')->first();
 
-        $query = Employee::with('user', 'level', "position", 'skills')
+        $query = Employee::with('user.roles', 'level', "position", 'skills')
             ->withCount(['projects as project_count'])
             ->whereHas('user', function ($q) use ($search) {
                 if($search !== '')
                     $q->where('full_name','LIKE', "%$search%")
                         ->orWhere('email', 'LIKE', "%$search%");
              });
+
+            if(!is_null($nonExistInProjectId)) {
+                $query->whereDoesntHave('projects', function ($q) use($nonExistInProjectId) {
+                    $q->where('projects.id', '=', $nonExistInProjectId);
+                });
+//                $query->join('employee_project',
+//                    'employees.id', '=',
+//                    'employee_project.employee_id')
+//                    ->where('employee_project.project_id', '!=', $nonExistInProject);
+
+//                $query->whereHas('projects', function($q) use($nonExistInProject) {
+//                    $q->where('projects.id', '!=', $nonExistInProject);
+//                });
+            }
 
             $sortDirect = $sort['desc'] ? 'desc' : 'asc';
 
@@ -124,6 +145,7 @@ class EmployeeController extends Controller
         $levelId = $request->input('level_id');
 
         $skills = explode(',', $request->input('skills'));
+        $roles = explode(',', $request->input('roles'));
 
 
         $position = Position::findOrFail($positionId);
@@ -175,11 +197,19 @@ class EmployeeController extends Controller
         $employee->level()->associate($level);
         $employee->save();
 
-        if($mode === 'update') $employee->skills()->detach();
+        if($mode === 'update') {
+            $employee->skills()->detach();
+            $employee->user->roles()->detach();
+        }
         foreach ($skills as $skill) {
             $skillDb = Skill::firstOrCreate(['name' => strtoupper($skill)]);
             $employee->skills()->attach($skillDb);
-
+        }
+        foreach ($roles as $role) {
+            $roleDb = Role::where('name', strtolower($role))->first();
+            if($roleDb === null)
+                return response()->json(['message' => 'Such role does not exist'], 404);
+            $employee->user->roles()->attach($roleDb);
         }
         $employee->save();
         return $employee;
@@ -188,7 +218,7 @@ class EmployeeController extends Controller
     public function store(Request $request) {
 
         $employee =  $this->saveEmployee($request, 'create');
-        $addedEmployee = Employee::with('user', 'position', 'level', 'skills')
+        $addedEmployee = Employee::with('user.roles', 'position', 'level', 'skills')
             ->withCount(['projects as project_count'])
             ->findOrFail($employee->id);
         return response()->json($addedEmployee);
@@ -196,7 +226,7 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $employeeId) {
         $employee = $this->saveEmployee($request, 'update');
-        $addedEmployee = Employee::with('user', 'position', 'level', 'skills')
+        $addedEmployee = Employee::with('user.roles', 'position', 'level', 'skills')
             ->withCount(['projects as project_count'])
             ->findOrFail($employee->id);
         return response()->json($addedEmployee);

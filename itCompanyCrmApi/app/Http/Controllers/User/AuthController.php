@@ -6,6 +6,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PersonalNotificationController;
 use App\Models\AccessToken;
+use App\Models\Employee;
 use App\Models\PersonalNotificationType;
 use App\Models\RefreshToken;
 use App\Models\Role;
@@ -22,7 +23,7 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api',
-            ['except' => ['login','register', 'refresh']]);
+            ['except' => ['login','register', 'refresh', 'getRoles']]);
     }
 
     public function getProfile(Request $request) {
@@ -124,7 +125,18 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->roles()->attach(Role::where('name', 'customer')->first()->id);
+        $user->roles()->attach(
+            Role::where('name', 'developer')->first()->id
+        );
+
+        //TODO: temp
+        Employee::create([
+            'position_id' => 1,
+            'level_id' => 1,
+            'user_id' => $user->id,
+        ]);
+
+
 
         $token = Auth::login($user);
 
@@ -243,6 +255,11 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ]);
+    }
+
+    public function getRoles() {
+        $roles = Role::all();
+        return response()->json($roles);
     }
 
 }

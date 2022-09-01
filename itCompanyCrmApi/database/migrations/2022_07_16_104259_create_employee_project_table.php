@@ -15,9 +15,22 @@ return new class extends Migration
     {
         Schema::create('employee_project', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('project_role_id')->default(1)->constrained('employees')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('project_id')->constrained('projects')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('employee_id')
+                ->constrained('employees')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreignId('project_role_id')
+                ->default(1)
+                ->constrained('employees')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreignId('project_id')
+                ->constrained('projects')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }

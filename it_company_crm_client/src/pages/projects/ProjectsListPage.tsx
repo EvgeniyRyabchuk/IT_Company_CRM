@@ -80,8 +80,13 @@ const ProjectsListPage = () => {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
 
-    const addEmployeeToProjectHanle = () => {
-
+    const addEmployeeToProjectHanle = async (employee: Employee) => {
+        console.log('===============================');
+        console.log(employee.id, selectedProject!.id);
+        if(selectedProject)
+        {
+            const { data } = await ProjectService.addEmployeeToProject(employee.id, selectedProject.id);
+        }
     }
 
     return (

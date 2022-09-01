@@ -20,6 +20,7 @@ use App\Models\User;
 use Database\Factories\Creators\StaticCreator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -45,6 +46,26 @@ class DatabaseSeeder extends Seeder
          $this->call([EmployeeSeeder::class], false, ['count' => 10, 'roleId' => $developerRoleId]);
          $this->call([EmployeeSeeder::class], false, ['count' => 3, 'roleId' => $manageRoleId]);
          $this->call([CustomerSeeder::class], false, ['count' => 10, 'roleId' => $customerRoleId]);
+
+        $testEmployeeAcoount = User::create([
+            'first_name' => 'Evgeniy',
+            'last_name' => 'Ryabchuk',
+            'middle_name' => 'Andreevich',
+            'full_name' => 'Ryabchuk Evgeniy Andreevich',
+            'email' => 'jeka.rubchuk@gmail.com',
+            'password' => Hash::make('123'),
+        ]);
+
+        $testEmployeeAcoount->roles()->attach($adminRoleId);
+
+        //TODO: temp
+        Employee::create([
+            'position_id' => 1,
+            'level_id' => 1,
+            'user_id' => $testEmployeeAcoount->id,
+        ]);
+
+
 
          $this->call([PhoneSeeder::class]);
          $this->call([SkillSeeder::class]);
@@ -103,7 +124,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(EventSeeder::class);
 
-//        $this->call(KanbanPrioritySeeder::class);
+        $this->call(KanbanPrioritySeeder::class);
 
 //        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
 

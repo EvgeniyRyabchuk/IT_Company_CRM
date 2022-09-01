@@ -13,6 +13,9 @@ import {
     Typography
 } from "@mui/material";
 import {modalStyle, Span, UserMenu} from "../../../assets/components/Modals";
+import {KanbanCard, KanbanLane} from "../../../types/kanban";
+import {Employee} from "../../../types/user";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 
 
 
@@ -20,18 +23,18 @@ type KanbanCardEditModal = {
     open: any;
     setOpen: any;
     onClose: any;
-    card: any;
+    card: KanbanCard | null | undefined;
+    owner: Employee | null | undefined;
     onSave: any;
 }
 
 
-const KanbanCardEditModal : React.FC<KanbanCardEditModal> = ({open, setOpen, onClose, card, onSave}) => {
+const KanbanCardEditModal : React.FC<KanbanCardEditModal> = ({open, setOpen, onClose, card,owner, onSave}) => {
 
-    const [title, setTitle] = useState();
-    const [description, setDescription] = useState();
-    const [priority, setPriority] = useState('');
-    const [color, setColor] = useState({ background: '#fff'});
-
+    const [title, setTitle] = useState<string>();
+    const [description, setDescription] = useState<string>();
+    const [priority, setPriority] = useState<string>('');
+    const [color, setColor] = useState<{background: string}>({ background: '#fff'});
 
 
     useEffect(() => {
@@ -45,7 +48,9 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> = ({open, setOpen, onC
     }, [card])
 
     const save = () => {
-        onSave({title, description, priority, color, id: card.id, laneId: card.laneId});
+        console.log(card)
+        if(card)
+            onSave({title, description, priority, color, id: card.id, lane_id: card.lane_id});
     }
 
 
@@ -103,12 +108,12 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> = ({open, setOpen, onC
                             <UserMenu>
                                 <Hidden xsDown>
                                     <Span>
-                                        Owner <strong>Jeka Ryabchuk</strong>
+                                        Owner <strong>{owner?.user.full_name}</strong>
                                     </Span>
                                 </Hidden>
 
                                 <Avatar
-                                    src='http://matx-react.ui-lib.com/assets/images/face-1.png'
+                                    src={`${API_URL_WITH_PUBLIC_STORAGE}/${owner?.user.avatar}`}
                                     sx={{ cursor: 'pointer' }}
                                 />
                             </UserMenu>
@@ -117,11 +122,11 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> = ({open, setOpen, onC
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
                                 <Button onClick={() => setOpen(false)} color="primary">
-                                    Disagree
+                                    Cancel
                                 </Button>
 
                                 <Button onClick={save} color="primary" autoFocus>
-                                    Agree
+                                    OK
                                 </Button>
                             </Box>
                         </DialogActions>

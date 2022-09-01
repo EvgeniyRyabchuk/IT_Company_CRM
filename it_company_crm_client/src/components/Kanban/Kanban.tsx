@@ -11,8 +11,9 @@ import {useAction} from "../../hooks/useAction";
 
 import {useTypeSelector} from "../../hooks/useTypedSelector";
 import {KanbanService} from "../../services/KanbanService";
-import {KanbanCard} from "../../types/kanban";
+import {KanbanCard, KanbanLane} from "../../types/kanban";
 import useAuth from "../../hooks/useAuth";
+import {Employee} from "../../types/user";
 
 const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
     const { user } = useAuth();
@@ -165,13 +166,15 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
 
     const [open, setOpen] = useState(false);
     const [card, setCard] = useState<KanbanCard>();
+    const [cardOwner, setCardOwner] = useState<Employee>();
 
     const onCardClick = (cardId: any, metadata: any, laneId: any) => {
         console.log('===============Click===============')
         console.log(cardId, metadata, laneId);
-        const lane = lanes.filter((kd: any) => kd.id === laneId)[0];
+        const lane = lanes.filter((kd: KanbanLane) => kd.id === laneId)[0];
         const card = lane.cards.filter((c: any) => c.id == cardId)[0];
         setCard({...card});
+        setCardOwner(lane.employee);
         setOpen(true);
     }
 
@@ -179,10 +182,10 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
         setOpen(false);
     }
 
-    const onModalSave = async (newCard: any) => {
+    const onModalSave = async (newCard: KanbanCard) => {
         console.log(newCard)
 
-        const lane = lanes.filter((kd: any) => kd.id === newCard.laneId)[0];
+        const lane = lanes.filter((kd: any) => kd.id == newCard.lane_id)[0];
         const card = lane.cards.filter((c: any) => c.id == newCard.id)[0];
         card.title = newCard.title;
         card.description = newCard.description;
@@ -204,7 +207,7 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
                 onSave={onModalSave}
                 setOpen={setOpen}
                 card={card}
-
+                owner={cardOwner}
             />
 
             <select

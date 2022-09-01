@@ -51,8 +51,10 @@ class ProjectController extends Controller
     }
 
     public function show(Request $request, $projectId) {
-        $project = Project::with('tags')->findOrFail($projectId);
-        return response()->json($project, 201);
+        $projectRoles = ProjectRole::take(20)->get();
+        $project = Project::with('tags', 'employees.user')
+            ->findOrFail($projectId);
+        return response()->json(compact('project','projectRoles'), 201);
     }
 
     public function store(Request $request) {
@@ -88,7 +90,9 @@ class ProjectController extends Controller
         return response()->json($project, 201);
     }
 
-    public function addMember(Request $request, $projectId, $memberId) {
+    public function addMember(Request $request, $projectId) {
+        $memberId = $request->input('employeeId');
+
         $employee = Employee::findOrFail($memberId);
         $project = Project::findOrFail($projectId);
 
@@ -97,7 +101,7 @@ class ProjectController extends Controller
 
         // if employee already include in the project then throw error
         if(count($exist) > 0) {
-            return response()->json(["message" => "member already exist"], 201);
+            return response()->json(["message" => "member already exist"], 409);
         }
 
         $project->employees()->attach($employee, ['project_role_id' => 2]);

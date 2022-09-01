@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/send', [\App\Http\Controllers\UserController::class, 'index']);
+Route::post('/send', [\App\Http\Controllers\User\UserController::class, 'index']);
 
 
 

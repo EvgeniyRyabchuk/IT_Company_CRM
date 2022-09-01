@@ -12,13 +12,13 @@ use App\Http\Controllers\StorageController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\CustomerController;
 use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\ResetPasswordController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\VerifyEmailController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +54,8 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('refresh', 'refresh');
 
     Route::get('profile', 'getProfile');
+
+    Route::get('roles', 'getRoles');
 });
 
 
@@ -165,8 +167,8 @@ Route::prefix('projects')->group(function() {
     Route::post("{projectId}/file-manager", [ProjectController::class, 'fileManager']);
 
     Route::prefix('{projectId}/members')->group(function () {
+        Route::post('/', [ProjectController::class, 'addMember']);
         Route::get('/', [ProjectController::class, 'getMembers']);
-        Route::post('/{memberId}', [ProjectController::class, 'addMember']);
         Route::delete('/{memberId}', [ProjectController::class, 'deleteMember']);
 
         Route::get('{memberId}/lanes', [TaskController::class, 'getKanbanLanesByMember']);

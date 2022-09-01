@@ -26,21 +26,26 @@ type User = {
 const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: AddUserChatModal) => {
 
     const { user } = useAuth();
-    const { createChat } = useAction();
 
-    const [userIndentity, setUserIndentity] = useState<string>('');
-    const [users, setUsers] = useState<readonly Employee[]>([]);
-    const [selecteOption, setSelectedOption] = useState<Employee|null>(null);
+    const [userIndentity, setEmployeeIndentity] = useState<string>('');
+    const [employees, setEmployees] = useState<readonly Employee[]>([]);
+    const [selectedOption, setSelectedOption] = useState<Employee|null>(null);
 
     // const loading = open && employees.length === 0;
     const loading = open;
 
-    const getUsers = async () : Promise<Employee[]> => {
-        const { data } = await EmployeeService.getEmployees();
-        return data.data;
+    const getEmployees = async () : Promise<Employee[]> => {
+        if(project) {
+            const { data } = await EmployeeService.getEmployees(
+                `?non-exist-in-project-id=${project.id}&perPage=all`
+            );
+            return data.data;
+        }
+        return [];
     }
 
     useEffect(() => {
+
         let active = true;
 
         if (!loading) {
@@ -48,10 +53,10 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
         }
 
         (async () => {
-            const usersResponse = await getUsers();
+            const employeeResponse = await getEmployees();
 
             if (active) {
-                setUsers([...usersResponse]);
+                setEmployees([...employeeResponse]);
             }
         })();
 
@@ -61,20 +66,15 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
     }, [loading]);
 
     const onInputChange = (value: any) => {
-        setUserIndentity(value);
+        setEmployeeIndentity(value);
     }
 
     const onChange = (e: any, value: any) => {
         setSelectedOption({...value});
     }
 
-    const create = async () => {
-        if(selecteOption != null) {
-            const toUserId = selecteOption.id;
-            createChat(user!.id, toUserId);
-            onSave();
-        }
-    }
+
+
 
     return (
         <div>
@@ -92,17 +92,17 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                     <Box sx={modalStyle}>
                         {/*<div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div>*/}
                         {/*<div>{`inputValue: '${inputValue}'`}</div>*/}
-
+                        <h1>Add employee to project</h1>
                         <Autocomplete
 
                             onInputChange={(event, newInputValue) => {
-                                setUserIndentity(newInputValue);
+                                setEmployeeIndentity(newInputValue);
                                 console.log('on input change', newInputValue)
                             }}
                             onChange={onChange}
                             id="country-select-demo"
                             sx={{ width: 300 }}
-                            options={users}
+                            options={employees}
                             autoHighlight
                             getOptionLabel={(option: Employee) => option.user.full_name}
                             renderOption={(props, option: Employee) => (
@@ -133,11 +133,14 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
                                 <Button onClick={() => setOpen(false)} color="primary">
-                                    Disagree
+                                    Add
                                 </Button>
 
-                                <Button onClick={create} color="primary" autoFocus>
-                                    Agree
+                                <Button onClick={() => {
+                                    onSave(selectedOption);
+                                    onClose();
+                                }} color="primary" autoFocus>
+                                    Cancel
                                 </Button>
                             </Box>
                         </DialogActions>

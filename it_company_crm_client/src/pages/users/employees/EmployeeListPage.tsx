@@ -4,7 +4,7 @@ import MaterialReactTable from 'material-react-table';
 import MRT_Row, {MRT_ColumnDef} from 'material-react-table';
 import {Box, Button, ListItemIcon, MenuItem, Typography} from '@mui/material';
 import {AccountCircle, Delete, Edit, FileDownload, GroupAdd, Send} from '@mui/icons-material';
-import {Employee, Skill} from "../../../types/user";
+import {Employee, Role, Skill} from "../../../types/user";
 import {EmployeeService} from "../../../services/EmployeeService";
 import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
@@ -287,7 +287,22 @@ const EmployeeListPage = () => {
                                     })}>
                                         {skill.name}
                                     </Box>
-                                    )}
+                                )}
+                                {
+                                    row.original.user.roles.map((role: Role) =>
+                                        <Box
+                                            key={role.id}
+                                            sx={(theme) => ({
+                                                backgroundColor: theme.palette.secondary.dark,
+                                                borderRadius: '0.25rem',
+                                                color: '#fff',
+                                                maxWidth: '9ch',
+                                                p: '0.25rem',
+                                            })}>
+                                            {role.name}
+                                        </Box>
+                                    )
+                                }
                             </div>
                         }
 
@@ -418,7 +433,7 @@ const EmployeeListPage = () => {
                             </Button>
 
                             <Button
-                                disabled={table.getRowModel().rows.length === 0}
+                                disabled={table.getSelectedRowModel().flatRows.length === 0}
                                 onClick={handleExportSelectedRows}
                                 startIcon={<FileDownload />}
                                 variant="contained"

@@ -2,7 +2,7 @@
 import $api from "../http";
 import {AxiosResponse} from 'axios';
 import {AuthorizedResponse, LoginRequest, RegisterRequest} from "../types/auth";
-import {User} from "../types/user";
+import {Role, User} from "../types/user";
 
 export default class AuthService {
     static async login({email, password, remember_me = false} : LoginRequest):
@@ -29,6 +29,10 @@ export default class AuthService {
         return $api.get<User>('/auth/profile');
     }
 
+    static async getRoles(): Promise<AxiosResponse<Role[]>> {
+        return $api.get<Role[]>('/auth/roles');
+    }
+
     static async sendEmailVerification(): Promise<AxiosResponse<string>> {
         return $api.post<string>('/email/verification-notification');
     }
@@ -45,4 +49,6 @@ export default class AuthService {
     static async passwordReset(userId: number, token: string, password: string): Promise<AxiosResponse<string>> {
         return $api.post<string>(`/password-reset/${userId}/${token}`, { password });
     }
+
+
 }

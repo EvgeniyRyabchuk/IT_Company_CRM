@@ -19,7 +19,8 @@ class PhoneSeeder extends Seeder
         $users = User::all();
 
         foreach ($users as $user) {
-            Phone::factory()->count(3)->create()
+            $phoneCount = rand(1, 3);
+            Phone::factory()->count($phoneCount)->create()
                 ->each(function ($phone) use($user) {
                     $phone->user()->associate($user);
                     $phone->save();

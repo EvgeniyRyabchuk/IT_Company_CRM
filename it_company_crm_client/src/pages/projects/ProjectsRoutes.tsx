@@ -16,6 +16,26 @@ const projectRoutes = [
         path: '/projects/:projectId',
         element: <ProjectPage />,
         allowForRole: authRoles.all,
+    },
+    {
+        path: '/projects/:projectId/?tab=kanban',
+        element: <ProjectPage />,
+        allowForRole: authRoles.all,
+    },
+    {
+        path: '/projects/:projectId/?tab=members',
+        element: <ProjectPage />,
+        allowForRole: authRoles.all,
+    },
+    {
+        path: '/projects/:projectId/?tab=filemanager',
+        element: <ProjectPage />,
+        allowForRole: authRoles.all,
+    },
+    {
+        path: '/projects/:projectId/?tab=history',
+        element: <ProjectPage />,
+        allowForRole: authRoles.all,
     }
 ];
 

@@ -18,6 +18,7 @@ export interface KanbanCard {
     created_at: string,
     updated_at: string,
     tags: KanbanPriorities[]
+    bgcolor: string;
 }
 
 export interface KanbanLane {

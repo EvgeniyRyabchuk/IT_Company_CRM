@@ -25,10 +25,10 @@ const UpgradeCard = () => {
   return (
     <CardRoot>
       <StyledCard elevation={0}>
-        <img src="/assets/images/illustrations/upgrade.svg" alt="upgrade" />
+        <img src="/assets/images/illustrations/upgrade.svg" alt="" />
 
         <Paragraph>
-          Upgrade to <b>MatX PRO</b> for <br /> more resources
+          {/*Upgrade to <b>MatX PRO</b> for <br /> more resources*/}
         </Paragraph>
 
         <Button
@@ -37,7 +37,7 @@ const UpgradeCard = () => {
           variant="contained"
           sx={{ textTransform: 'uppercase' }}
         >
-          upgrade now
+          {/*upgrade now*/}
         </Button>
       </StyledCard>
     </CardRoot>

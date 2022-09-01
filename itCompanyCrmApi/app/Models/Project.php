@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-
+    //TODO: get pivot relationships
     public function employees() {
         return
             $this->belongsToMany(Employee::class)

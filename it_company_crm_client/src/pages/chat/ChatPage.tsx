@@ -1,4 +1,3 @@
-
 import '../../assets/components/Chat/index.css';
 import React, {useEffect, useRef, useState} from 'react';
 import {Box} from "@mui/material";
@@ -7,7 +6,6 @@ import {Container} from "../../assets/components/breadcrumb";
 import {useTypeSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
 import {useObserver} from "../../hooks/useObserver";
-import AddEmployeeToProjectModal from "../../components/modals/AddEmployeeToProjectModal/AddEmployeeToProjectModal";
 import ChatSidebar from "../../components/Chat/ChatSideBar/ChatSidebar";
 import ChatMain from "../../components/Chat/ChatMain/ChatMain";
 import {useParams} from "react-router-dom";
@@ -48,10 +46,6 @@ const ChatPage = () => {
         clean
     } = useAction();
 
-    const chatId = 1;
-    const messageId = 1;
-
-
     useEffect(() => {
 
         console.log('chatId', withUserId);
@@ -91,7 +85,6 @@ const ChatPage = () => {
     }, [])
 
 
-
     const lastElement = useRef<any>();
 
     useObserver(lastElement,
@@ -121,18 +114,12 @@ const ChatPage = () => {
 
     return (
         <Container>
+
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "Chats" }]} />
             </Box>
 
             <div className='chat' style={{display: 'flex', padding: '20px'}}>
-
-                <AddUserChatModal
-                    open={userModalOpen}
-                    onClose={() => setUserModalOpen(false)}
-                    onSave={() => { setUserModalOpen(false) }}
-                    setOpen={setUserModalOpen}
-                />
 
                 <ChatSidebar setUserModalOpen={setUserModalOpen} />
 
@@ -140,6 +127,13 @@ const ChatPage = () => {
 
             </div>
 
+            <AddUserChatModal
+                open={userModalOpen}
+                onClose={() => setUserModalOpen(false)}
+                onSave={() => {
+                    console.log(123); setUserModalOpen(false) }}
+                setOpen={setUserModalOpen}
+            />
         </Container>
     );
 };

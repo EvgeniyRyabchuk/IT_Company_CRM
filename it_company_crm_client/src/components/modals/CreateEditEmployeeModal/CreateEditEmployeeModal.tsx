@@ -1,8 +1,9 @@
 //example of creating a mui dialog modal for creating new rows
 import React, {FC, useEffect, useMemo, useRef, useState} from "react";
-import {Employee, Level, Position, Skill} from "../../../types/user";
+import {Employee, Level, Position, Role, Skill} from "../../../types/user";
 import {
-    Autocomplete, Avatar,
+    Autocomplete,
+    Avatar,
     Button,
     Card,
     Dialog,
@@ -12,20 +13,21 @@ import {
     Grid,
     IconButton,
     Switch,
-    TextField, Typography
+    TextField,
+    Typography
 } from "@mui/material";
 import {Box, styled} from "@mui/system";
 
 import {Formik, FormikProps, FormikValues} from 'formik';
 import * as Yup from "yup";
-import {Delete, PhotoCamera, Upload} from "@mui/icons-material";
+import {Delete, PhotoCamera} from "@mui/icons-material";
 import {Small, Tiny} from "../../../assets/typography/FormTypography";
 import {EmployeeService} from "../../../services/EmployeeService";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import {defaultUserAvatar} from "../../../utils/constant";
 // @ts-ignore
 import AvatarImageCropper from "react-avatar-image-cropper";
-import { downloadResponseFile } from '../../../utils/axiosUtills';
+import AuthService from "../../../services/AuthService";
 // styled components
 const ButtonWrapper = styled(Box)(({ theme }) => ({
     width: 100,
@@ -70,7 +72,22 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().email().required("Email is Required!"),
     position_id: Yup.number().required("Position is required"),
     level_id: Yup.number().required('Level is required'),
+
 });
+
+interface InitialValueType {
+    id?: number | null;
+    first_name: string;
+    last_name: string;
+    middle_name: string;
+    email: string;
+    position_id: number | null;
+    level_id: number | null;
+    skills: string;
+    roles: string;
+    avatar: string;
+    newAvatar?: any;
+}
 
 export const CreateEditEmployeeModal: FC<{
     onClose: () => void;
@@ -80,14 +97,15 @@ export const CreateEditEmployeeModal: FC<{
     employee?: Employee
 }> = ({ open, onClose, onSubmit, mode, employee }) => {
 
-
     const formik = useRef<FormikProps<FormikValues>>(null);
+    const innerForm = useRef<any>();
 
     const [positions, setPositions] = useState<Position[]>([]);
     const [levels, setLevels] = useState<Level[]>([]);
     const [skills, setSkills] = useState<Skill[]>([]);
+    const [roles, setRoles] = useState<Role[]>([]);
 
-    const defInitialValues = useMemo(() => {
+    const defInitialValues = useMemo<any>(() => {
         return {
             id: null,
             first_name: '123',
@@ -97,23 +115,12 @@ export const CreateEditEmployeeModal: FC<{
             position_id: null,
             level_id: null,
             skills: '',
+            roles: '',
             avatar: ''
         }
     }, [])
 
-
-    const initialValues = useMemo<{
-        id?: number | null;
-        first_name: string,
-        last_name: string,
-        middle_name: string,
-        email: string,
-        position_id: number | null,
-        level_id: number | null,
-        skills: string,
-        avatar: string,
-        newAvatar?: any
-    }>(() => {
+    const initialValues = useMemo<InitialValueType>(() => {
         if(mode === 'update' && employee) {
             return {
                 id: employee.id,
@@ -124,7 +131,8 @@ export const CreateEditEmployeeModal: FC<{
                 position_id: employee.position.id,
                 level_id: employee.level.id,
                 skills: employee.skills.map((e: Skill) => e.name).join(','),
-                avatar: employee.user.avatar
+                roles:  employee.user.roles.map((e: Skill) => e.name).join(','),
+                avatar: employee.user.avatar,
             };
         }
         else if(mode === 'create') {
@@ -133,10 +141,14 @@ export const CreateEditEmployeeModal: FC<{
         return defInitialValues;
     }, [open]);
 
-    const [image, _setImage] = useState<any>(null);
-    const inputFileRef = useRef<any>(null);
+    const [imageUrl, _setImageUrl] = useState<any>(null);
+    const [imageFile, _setImageFile] = useState<any>(null);
 
     const handleFormSubmit = (values: any) => {
+        console.log('create edit employee submit');
+        if(imageFile !== null) {
+            values.newAvatar = imageFile;
+        }
         if(mode === 'update' && employee) values.id = employee.id
         onSubmit(values, mode);
         onClose();
@@ -151,6 +163,10 @@ export const CreateEditEmployeeModal: FC<{
 
     useEffect(() => {
         if(open) {
+            const getRoles = async () => {
+                const { data } = await AuthService.getRoles();
+                setRoles([...data]);
+            }
             const getPositions = async () => {
                 const { data } = await EmployeeService.getPositions();
                 setPositions([...data]);
@@ -162,41 +178,45 @@ export const CreateEditEmployeeModal: FC<{
             if(mode === 'update' && employee) {
                 getLevels(employee.level);
             }
+            getRoles();
             getPositions();
             getSkills();
             if(employee && mode === 'update') {
-                setImage(`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`);
+                setImageUrl(`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`);
             }
         }
         else {
-            if(image) setImage(null);
+            if(imageUrl) setImageUrl(null);
+            if(imageFile) _setImageFile(null);
         }
     }, [open])
 
 
     const cleanup = () => {
-        URL.revokeObjectURL(image);
+        URL.revokeObjectURL(imageUrl);
+        _setImageFile(null);
         // inputFileRef.current.value = null;
     };
     // crop image
-    const setImage = (newImage: any) => {
-        if (image) {
+    const setImageUrl = (newImage: any) => {
+        if (imageUrl) {
             cleanup();
         }
-        _setImage(newImage);
+        _setImageUrl(newImage);
     };
     const handleImageOnChange = (file: any, formikSetter: any) => {
         // const newImage = event.target?.files?.[0];
         if (file) {
             const url = URL.createObjectURL(file);
-            setImage(url);
-            formikSetter('newAvatar', file);
+            setImageUrl(url);
+            _setImageFile(file);
+            // formikSetter('newAvatar', file);
         }
     };
     const cleanImage = (event: any) => {
-        if (image) {
+        if (imageUrl) {
             event.preventDefault();
-            setImage(null);
+            setImageUrl(null);
         }
     };
 
@@ -210,142 +230,154 @@ export const CreateEditEmployeeModal: FC<{
 
             <DialogTitle textAlign="center">Create New Employee Account</DialogTitle>
             <DialogContent sx={{paddingTop: '20px !important'}}>
-                <Formik
-                    onSubmit={handleFormSubmit}
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                >
-                    {({ values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          setFieldValue
-                    }) => (
-                        <form onSubmit={handleSubmit}>
-                            <Box pt={2} pb={4}>
-                                <Card sx={{ padding: 4 }}>
-                                    <Grid container spacing={3}>
-                                        <Grid item md={4} xs={12}>
-                                            <Card
-                                                sx={{
-                                                    padding: 3,
-                                                    boxShadow: 2,
-                                                    minHeight: 400,
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    alignItems: "center",
-                                                    position: 'relative'
-                                                }}
-                                            >
 
-                                                <Avatar
-                                                    alt={employee?.user.first_name}
-                                                    src={image ?? defaultUserAvatar}
-                                                    sx={{width: 150, height: 150}}
+                    <Box pt={2} pb={4}>
+                        <Card sx={{ padding: 4 }}>
+                            <Grid container spacing={3}>
+                                <Grid item md={4} xs={12}>
+                                    <Card
+                                        sx={{
+                                            padding: 3,
+                                            boxShadow: 2,
+                                            minHeight: 400,
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            position: 'relative'
+                                        }}
+                                    >
+
+
+                                        <Avatar
+                                            alt={employee?.user.first_name}
+                                            src={imageUrl ?? defaultUserAvatar}
+                                            sx={{width: 150, height: 150}}
+                                        />
+                                        {/*<form onSubmit={(e: any) => {*/}
+                                        {/*    e.preventDefault();*/}
+                                        {/*    e.stopPropagation();*/}
+
+                                        {/*}}>*/}
+                                            <div style={{
+                                                width: '150px',
+                                                height: '150px',
+                                                position: 'absolute',
+
+                                            }}>
+                                                <AvatarImageCropper
+                                                    apply={(e: any) => handleImageOnChange(e, formik)}
+                                                    icon={ <IconButton component="span">
+                                                        <PhotoCamera sx={{ fontSize: 30,    color: "white" }} />
+                                                    </IconButton>}
                                                 />
-                                                <div style={{
-                                                    width: '150px',
-                                                    height: '150px',
-                                                    position: 'absolute',
+                                            </div>
+                                        {/*</form>*/}
 
-                                                }}>
-                                                    <AvatarImageCropper
-                                                        apply={(e: any) => handleImageOnChange(e, setFieldValue)}
-                                                        icon={ <IconButton component="span">
-                                                            <PhotoCamera sx={{ fontSize: 30,    color: "white" }} />
-                                                        </IconButton>}
+                                        {/*
+                                          <ButtonWrapper>
+                                            <UploadButton>
+                                                <label htmlFor="upload-btn">
+                                                    <input
+                                                        id='upload-btn'
+                                                        accept="image/*"
+                                                        type="file"
+                                                        style={{ display: "none" }}
+                                                        ref={inputFileRef}
+                                                        name='newAvatar'
+                                                        onChange={(e: any) =>
+                                                            handleImageOnChange(e, setFieldValue)}
                                                     />
-                                                </div>
 
-                                                {/*<ButtonWrapper>*/}
-                                                {/*    <UploadButton>*/}
-                                                {/*        <label htmlFor="upload-btn">*/}
-                                                {/*            <input*/}
-                                                {/*                id='upload-btn'*/}
-                                                {/*                accept="image/*"*/}
-                                                {/*                type="file"*/}
-                                                {/*                style={{ display: "none" }}*/}
-                                                {/*                ref={inputFileRef}*/}
-                                                {/*                name='newAvatar'*/}
-                                                {/*                onChange={(e: any) =>*/}
-                                                {/*                    handleImageOnChange(e, setFieldValue)}*/}
-                                                {/*            />*/}
-                                                {/*         */}
-                                                {/*            <IconButton component="span">*/}
-                                                {/*                <PhotoCamera sx={{ fontSize: 30, color: "white" }} />*/}
-                                                {/*            </IconButton>*/}
-                                                {/*        </label>*/}
-                                                {/*    </UploadButton>*/}
-                                                {/*</ButtonWrapper>*/}
+                                                    <IconButton component="span">
+                                                        <PhotoCamera sx={{ fontSize: 30, color: "white" }} />
+                                                    </IconButton>
+                                                </label>
+                                            </UploadButton>
+                                        </ButtonWrapper>
+                                        */}
 
 
 
-                                                {image || employee?.user.avatar ?
-                                                    <label>
-                                                        <Button
-                                                            variant="contained"
-                                                            color="primary"
-                                                            component="span"
-                                                            onClick={cleanImage}
-                                                        >
-                                                            <Delete style={{marginRight: 2}}/>
-                                                            Delete
-                                                        </Button>
-                                                    </label> : ''
-                                                }
 
-                                                <Typography variant="caption" display="block" gutterBottom>
-                                                    Para obter os melhores resultados, use uma imagem de pelo menos 128 x
-                                                    128 pixels no formato .jpg
-                                                </Typography>
-
-                                                <Small
-                                                    marginTop={2}
-                                                    maxWidth={200}
-                                                    lineHeight={1.9}
-                                                    display="block"
-                                                    textAlign="center"
-                                                    color="text.disabled"
+                                        {imageUrl || employee?.user.avatar ?
+                                            <label>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    component="span"
+                                                    onClick={cleanImage}
                                                 >
-                                                    Allowed *.jpeg, *.jpg, *.png, *.gif max size of 3.1 MB
+                                                    <Delete style={{marginRight: 2}}/>
+                                                    Delete
+                                                </Button>
+                                            </label> : ''
+                                        }
+
+                                        <Typography variant="caption" display="block" gutterBottom>
+                                            Para obter os melhores resultados, use uma imagem de pelo menos 128 x
+                                            128 pixels no formato .jpg
+                                        </Typography>
+
+                                        <Small
+                                            marginTop={2}
+                                            maxWidth={200}
+                                            lineHeight={1.9}
+                                            display="block"
+                                            textAlign="center"
+                                            color="text.disabled"
+                                        >
+                                            Allowed *.jpeg, *.jpg, *.png, *.gif max size of 3.1 MB
+                                        </Small>
+
+                                        <Box maxWidth={250} marginTop={5} marginBottom={1}>
+                                            <SwitchWrapper>
+                                                <Small display="block" fontWeight={600}>
+                                                    Public Profile
                                                 </Small>
+                                                <Switch defaultChecked />
+                                            </SwitchWrapper>
 
-                                                <Box maxWidth={250} marginTop={5} marginBottom={1}>
-                                                    <SwitchWrapper>
-                                                        <Small display="block" fontWeight={600}>
-                                                            Public Profile
-                                                        </Small>
-                                                        <Switch defaultChecked />
-                                                    </SwitchWrapper>
+                                            <SwitchWrapper>
+                                                <Small display="block" fontWeight={600}>
+                                                    Banned
+                                                </Small>
+                                                <Switch defaultChecked />
+                                            </SwitchWrapper>
+                                            <Tiny display="block" color="text.disabled" fontWeight={500}>
+                                                Apply disable account
+                                            </Tiny>
 
-                                                    <SwitchWrapper>
-                                                        <Small display="block" fontWeight={600}>
-                                                            Banned
-                                                        </Small>
-                                                        <Switch defaultChecked />
-                                                    </SwitchWrapper>
-                                                    <Tiny display="block" color="text.disabled" fontWeight={500}>
-                                                        Apply disable account
-                                                    </Tiny>
+                                            <SwitchWrapper>
+                                                <Small display="block" fontWeight={600}>
+                                                    Email Verified
+                                                </Small>
+                                                <Switch defaultChecked />
+                                            </SwitchWrapper>
+                                            <Tiny display="block" color="text.disabled" fontWeight={500}>
+                                                Disabling this will automatically send the user a verification
+                                                email
+                                            </Tiny>
+                                        </Box>
+                                    </Card>
+                                </Grid>
 
-                                                    <SwitchWrapper>
-                                                        <Small display="block" fontWeight={600}>
-                                                            Email Verified
-                                                        </Small>
-                                                        <Switch defaultChecked />
-                                                    </SwitchWrapper>
-                                                    <Tiny display="block" color="text.disabled" fontWeight={500}>
-                                                        Disabling this will automatically send the user a verification
-                                                        email
-                                                    </Tiny>
-                                                </Box>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item md={8} xs={12}>
-                                            <Card sx={{ padding: 3, boxShadow: 2 }}>
-                                                <Grid container spacing={3}>
+                                 <Grid item md={8} xs={12}>
+                                     <Formik
+                                         onSubmit={handleFormSubmit}
+                                         initialValues={initialValues}
+                                         validationSchema={validationSchema}
+                                     >
+                                         {({ values,
+                                               errors,
+                                               touched,
+                                               handleChange,
+                                               handleBlur,
+                                               handleSubmit,
+                                               setFieldValue
+                                           }) => (
+                                             <form id="inner-form" onSubmit={handleSubmit}>
+                                                <Card sx={{ padding: 3, boxShadow: 2 }}>
+                                                    <Grid container spacing={3}>
                                                     <Grid item sm={4} xs={12}>
                                                         <TextField
                                                             fullWidth
@@ -488,11 +520,11 @@ export const CreateEditEmployeeModal: FC<{
                                                             />
                                                         </div>
                                                     </Grid>
-
                                                 </Grid>
 
                                                 <Grid sx={{mt: 2}} container spacing={3}>
                                                     <Grid item sm={6} xs={12}>
+
                                                         <Autocomplete
                                                             size="small"
                                                             getOptionLabel={(option: Skill) => option.name}
@@ -536,30 +568,73 @@ export const CreateEditEmployeeModal: FC<{
                                                                 // }
                                                             }}
                                                         />
+                                                    </Grid>
+                                                    <Grid item sm={6} xs={12}>
+                                                        <Autocomplete
+                                                            size="small"
+                                                            getOptionLabel={(option: Role) => option.name}
+                                                            multiple
+                                                            disablePortal
+                                                            id="combo-box-roles"
+                                                            options={roles}
+                                                            sx={{ width: 300 }}
+                                                            defaultValue={
+                                                                mode === 'update' && employee
+                                                                    ? employee.user.roles : []
+                                                            }
+                                                            renderInput={
+                                                                (params, ) =>
+                                                                    <TextField
+                                                                        {...params}
+                                                                        error={Boolean(touched.roles && errors.roles)}
+                                                                        fullWidth
+                                                                        helperText={touched.roles && errors.roles}
+                                                                        label="Roles"
+                                                                        name="roles"
+                                                                        variant="outlined"
+                                                                    />
+                                                            }
+                                                            renderOption={(props, option: Role) => (
+                                                                <Box component="li" {...props}>
+                                                                    {option.name} ({option.id})
+                                                                </Box>
+                                                            )}
 
+                                                            onChange={(event: any, values: any) => {
+                                                                const names = values.map((e: Role) => e.name);
+                                                                console.log('roles on change ', names.join(','))
+                                                                setFieldValue("roles", names.join(','));
+                                                            }}
+                                                        />
                                                     </Grid>
                                                 </Grid>
+                                                </Card>
+                                             </form>
+                                         )}
+                                     </Formik>
+                                 </Grid>
+
+                            </Grid>
+                        </Card>
+                    </Box>
 
 
+                    <DialogActions sx={{ p: '1.25rem' }}>
+                        <Button onClick={onClose}>Cancel</Button>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            type='submit'
+                            form="inner-form"
+                            onClick={() => {
+                            console.log('submit')
+                            innerForm.current?.handleSubmit();
 
-                                            </Card>
-                                        </Grid>
-                                    </Grid>
-                                </Card>
-                            </Box>
+                        }}>
+                            { mode === 'create' ? 'Create New Account' : 'Update Employee Information' }
+                        </Button>
+                    </DialogActions>
 
-
-                            <DialogActions sx={{ p: '1.25rem' }}>
-                                <Button onClick={onClose}>Cancel</Button>
-                                <Button color="secondary" variant="contained" type='submit'>
-                                    { mode === 'create' ? 'Create New Account' : 'Update Employee Information' }
-                                </Button>
-                            </DialogActions>
-                        </form>
-
-                    )}
-
-                </Formik>
             </DialogContent>
 
         </Dialog>

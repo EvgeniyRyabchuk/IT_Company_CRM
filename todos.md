@@ -26,12 +26,8 @@ Perfect scroll mobile
 Alert system 
 Pdf-export 
 
-Phone generate rand count 
-Add table loader 
-Modal pagginate employee loading  
-
-
-
+Role show in user table 
+User kanban card owner 
 
 
 

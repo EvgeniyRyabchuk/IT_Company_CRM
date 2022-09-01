@@ -25,7 +25,7 @@ class TaskController extends Controller
     public function getKanbanLanes(Request $request, $projectId) {
         //TODO: sort by priority
 
-        $project = Project::with('lanes.employee',)
+        $project = Project::with('lanes.employee')
             ->findOrFail($projectId);
 
 //        $project->lanes->each(function ($todo) {
@@ -37,13 +37,16 @@ class TaskController extends Controller
 
     public function getKanbanLanesByMember(Request $request, $projectId, $memberId) {
 
-        $employee = Employee::findOrFail($memberId);
+        $employee = Employee::with('user')
+            ->where('user_id', $memberId)
+            ->first();
+//        dd($employee->toSql());
         $sort = $request->input('sort') ?? 'index';
         $order = $request->input('order') ?? 'asc';
 
 
         $query = KanbanLane::
-            with(['employee',
+            with(['employee.user',
                 'cards' => function($c) use($sort, $order) {
                     $c->orderBy($sort, $order);
                 },
@@ -66,7 +69,9 @@ class TaskController extends Controller
 
         $project = Project::findOrFail($projectId);
         $employeeId = $request->input('employee_id');
-        $employee = Employee::findOrFail($employeeId);
+        $employee = Employee::with('user')
+            ->where('user_id', $employeeId)
+            ->first();
 
         $lane = new KanbanLane();
         $lane->title = $request->input('title');

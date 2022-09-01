@@ -411,14 +411,6 @@ const CustomerListPage = () => {
                         <Box
                             sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
                         >
-                            {/*<Button*/}
-                            {/*    color="secondary"*/}
-                            {/*    // onClick={() => setCreateEditModalState({ isOpen: true, mode: 'create'})}*/}
-                            {/*    variant="contained"*/}
-                            {/*>*/}
-                            {/*    Create New Customer Account*/}
-                            {/*</Button>*/}
-
                             <Button
                                 color="primary"
                                 onClick={handleAllExportRows}
@@ -429,10 +421,10 @@ const CustomerListPage = () => {
                             </Button>
 
                             <Button
-                                disabled={table.getRowModel().rows.length === 0}
                                 onClick={handleExportSelectedRows}
                                 startIcon={<FileDownload />}
                                 variant="contained"
+                                disabled={table.getSelectedRowModel().flatRows.length === 0}
                             >
                                 Export Selected rows
                             </Button>

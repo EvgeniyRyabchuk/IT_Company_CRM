@@ -1,5 +1,6 @@
 import {Order} from "./order";
 import {KanbanLane} from "./kanban";
+import {Employee} from "./user";
 
 
 export interface Tag {
@@ -46,6 +47,15 @@ export interface ProjectRole {
     name: string;
 }
 
+export interface EmployeeWithProjectRoles extends Employee {
+    pivot: {
+        project_id: number;
+        employee_id: number;
+        project_role_id: number;
+    }
+    role: ProjectRole | undefined;
+}
+
 export interface Project {
     id: number;
     name: string;
@@ -63,4 +73,5 @@ export interface Project {
     project_links: ProjectLink[];
     project_history: ProjectHistory[];
     member_count: number;
+    employees: EmployeeWithProjectRoles[];
 }
