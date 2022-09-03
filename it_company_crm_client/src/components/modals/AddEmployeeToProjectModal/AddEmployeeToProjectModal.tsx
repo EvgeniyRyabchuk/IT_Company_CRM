@@ -89,7 +89,7 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={modalStyle}>
+                    <Box sx={modalStyle} >
                         {/*<div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div>*/}
                         {/*<div>{`inputValue: '${inputValue}'`}</div>*/}
                         <h1>Add employee to project</h1>
@@ -132,14 +132,14 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
 
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
-                                <Button onClick={() => setOpen(false)} color="primary">
+                                <Button autoFocus onClick={() => {
+                                    onSave(selectedOption);
+                                    onClose();
+                                }} color="primary">
                                     Add
                                 </Button>
 
-                                <Button onClick={() => {
-                                    onSave(selectedOption);
-                                    onClose();
-                                }} color="primary" autoFocus>
+                                <Button onClick={() => setOpen(false)}  color="primary" >
                                     Cancel
                                 </Button>
                             </Box>

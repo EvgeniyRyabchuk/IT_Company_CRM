@@ -4,7 +4,7 @@ import MaterialReactTable from 'material-react-table';
 import MRT_Row, {MRT_ColumnDef} from 'material-react-table';
 import {Box, Button, ListItemIcon, MenuItem, Typography} from '@mui/material';
 import {AccountCircle, Delete, Edit, FileDownload, GroupAdd, Send} from '@mui/icons-material';
-import {Employee, Role, Skill} from "../../../types/user";
+import {Employee, Phone, Role, Skill} from "../../../types/user";
 import {EmployeeService} from "../../../services/EmployeeService";
 import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
@@ -303,6 +303,14 @@ const EmployeeListPage = () => {
                                         </Box>
                                     )
                                 }
+                                <ul>
+                                    {
+                                        row.original.user.phones.map((e: Phone) =>
+                                            <li>{e.phone_number}</li>
+                                        )
+                                    }
+                                </ul>
+
                             </div>
                         }
 
@@ -383,6 +391,7 @@ const EmployeeListPage = () => {
                         </ListItemIcon>
                         Add to projects
                     </MenuItem>,
+
                 ]}
                 renderTopToolbarCustomActions={({ table }) => {
 

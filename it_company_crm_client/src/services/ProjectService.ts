@@ -1,12 +1,17 @@
 import $api from "../http";
 import {AxiosResponse} from "axios";
 import {PaginatedResponse} from "../types/global";
-import {Project, ProjectRole} from "../types/project";
+import {Project, ProjectRole, ProjectType} from "../types/project";
 
 
 interface GetProjectResponse{
     project: Project,
     projectRoles: ProjectRole[]
+}
+
+interface ProjectMinMax {
+    minMaxProjectBudget: string[];
+    minMaxProjectDeadline: string[];
 }
 
 export class ProjectService {
@@ -28,5 +33,22 @@ export class ProjectService {
             });
     }
 
+    static async updateProject(projectId: number, newProject: Project): Promise<AxiosResponse<Project>> {
+        return $api.put<Project>(`/projects/${projectId}`);
+    }
 
+    static async deleteProject(projectId: number): Promise<AxiosResponse<string>> {
+        return $api.delete<string>(`/projects/${projectId}`);
+    }
+
+
+    static async getProjectTypes(queryParams?: string):
+        Promise<AxiosResponse<ProjectType[]>> {
+        return $api.get<ProjectType[]>(`/projects/types${queryParams ?? ''}`);
+    }
+
+    static async getMinMaxValues():
+        Promise<AxiosResponse<ProjectMinMax>> {
+        return $api.get<ProjectMinMax>(`/projects/min-max`);
+    }
 }

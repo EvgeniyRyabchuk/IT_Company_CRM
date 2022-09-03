@@ -1,9 +1,18 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Container} from "../../../assets/components/breadcrumb";
 import MaterialReactTable from 'material-react-table';
 import MRT_Row, {MRT_ColumnDef} from 'material-react-table';
-import {Box, Button, Fab, ListItemIcon, MenuItem, Typography} from '@mui/material';
-import {AccountCircle, Delete, Edit, FileDownload, GroupAdd, Send} from '@mui/icons-material';
+import {Box, Button, Fab, IconButton, ListItemIcon, MenuItem, Typography} from '@mui/material';
+import {
+    AccountCircle,
+    Delete,
+    Edit,
+    FileDownload,
+    GroupAdd,
+    PictureAsPdf,
+    PictureAsPdfTwoTone,
+    Send
+} from '@mui/icons-material';
 import {Customer, Employee, Phone} from "../../../types/user";
 import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
@@ -17,6 +26,7 @@ import {ChatService} from "../../../services/ChatService";
 import {useNavigate} from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import {CustomerService} from "../../../services/CustomerService";
+import JsPDF from 'jspdf';
 
 const CustomerListPage = () => {
 
@@ -223,12 +233,15 @@ const CustomerListPage = () => {
         ], [customers]);
 
 
+    const tableRef = useRef<any>(null);
+
     return (
-        <Container>
+        <Container ref={tableRef}>
 
             <h2>All customers</h2>
 
             <MaterialReactTable
+
                 columns={columns}
                 data={customers}
                 enableColumnFilterModes
@@ -405,6 +418,16 @@ const CustomerListPage = () => {
                         // eslint-disable-next-line no-restricted-globals
                         location.href = `${API_URL}/excel/customers${param}`;
                     }
+                    // @ts-ignore
+                    const handleExportPageRowsAsPdf = async (rows: MRT_Row<Employee>[]) => {
+                        if(tableRef.current !== null) {
+                            const report = new JsPDF('landscape','px','a4');
+                            report.html(tableRef.current).then(() => {
+                                report.save('report.pdf');
+                            });
+                        }
+
+                    }
 
                     return (
 
@@ -438,6 +461,17 @@ const CustomerListPage = () => {
                             >
                                 Export Page Rows
                             </Button>
+
+
+                            <Button
+                                disabled={table.getRowModel().rows.length === 0}
+                                onClick={() => handleExportPageRowsAsPdf(table.getRowModel().rows)}
+                                startIcon={<PictureAsPdf />}
+                                variant="contained"
+                            >
+                                Export Page As PDF
+                            </Button>
+
 
                         </Box>
 

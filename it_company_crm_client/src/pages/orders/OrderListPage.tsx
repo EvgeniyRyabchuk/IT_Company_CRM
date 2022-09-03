@@ -14,25 +14,23 @@ import {
 import {Breadcrumb} from "../../components";
 import {Container} from "../../assets/components/breadcrumb";
 import '../../assets/components/AltTable/style.scss';
-import {Project} from "../../types/project";
-import {ProjectService} from "../../services/ProjectService";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import moment from "moment";
-import {Add, Delete, East, Edit, Filter, FilterAlt, Info, Keyboard, Rowing, Search, Sort} from "@mui/icons-material";
+import {Add, Delete, East, Edit, FilterAlt, Search, Sort} from "@mui/icons-material";
 import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
-import defProjectSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
+import defOrderSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
 import {SortOrderOptionType} from "../../types/global";
 import {defLimit, defPage} from "../../utils/constant";
-import AddEmployeeToProjectModal from "../../components/modals/AddEmployeeToProjectModal/AddEmployeeToProjectModal";
-import {Employee} from "../../types/user";
-import ProjectFilter, {ProjectFilterData} from "./ProjectFilter";
+import ProjectFilter, {OrderFilterData} from "./OrderFilter";
 import useDebounce from "../../hooks/useDebounce";
+import {Order} from "../../types/order";
+import {OrderService} from "../../services/OrderService";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
-    width: '300px',
+    width: '400px',
     display: 'flex',
 }));
 
@@ -41,7 +39,7 @@ const ProjectsListPage = () => {
 
     const navigator = useNavigate();
 
-    const [projects, setProjects] = useState<Project[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const lastElementRef = useRef<any>();
 
     const [search, setSearch] = useState<string>('');
@@ -53,11 +51,11 @@ const ProjectsListPage = () => {
     const [sort, setSort] = useState<string>( 'created_at');
     const [order, setOrder] = useState<string>('desc');
 
-    const [filterOptionData, setFilterOptionData] = useState<ProjectFilterData | null>(null);
+    const [filterOptionData, setFilterOptionData] = useState<OrderFilterData | null>(null);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [openEmployeeAddMoal, setOpenEmployeeAddModal] = useState<boolean>(false);
-    const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+    // const [openEmployeeAddMoal, setOpenEmployeeAddModal] = useState<boolean>(false);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
 
     const urlParamsStr = useMemo<string>( () => {
@@ -68,31 +66,31 @@ const ProjectsListPage = () => {
             { key: 'order', value: order },
             { key: 'search', value: search },
 
-            { key: 'projectTypes', value: JSON.stringify(filterOptionData?.projectTypes) },
-            { key: 'budgetRange', value: JSON.stringify(filterOptionData?.budgetRange) },
-            { key: 'deadlineRange', value: JSON.stringify(filterOptionData?.deadlineRange) },
+            // { key: 'projectTypes', value: JSON.stringify(filterOptionData?.projectTypes) },
+            // { key: 'budgetRange', value: JSON.stringify(filterOptionData?.budgetRange) },
+            // { key: 'deadlineRange', value: JSON.stringify(filterOptionData?.deadlineRange) },
         ];
         return getQueryVarsInStringFormat(params);
     }, [sort, order, page, limit, debouncedSearch, filterOptionData]);
 
-    const [fetchProjects, isLoading, error ] = useFetching(async () => {
-        const { data } = await ProjectService.getProjects(urlParamsStr);
+    const [fetchOrders, isLoading, error ] = useFetching(async () => {
+        const { data } = await OrderService.getOrders(urlParamsStr);
         const total = getPageCount(data.total, limit);
 
         setTotalPage(total);
         if(page > 1) {
-            setProjects([...projects, ...data.data]);
+            setOrders([...orders, ...data.data]);
         }
         else if(page === 1) {
-            setProjects([...data.data]);
+            setOrders([...data.data]);
         }
         else {
-            setProjects([]);
+            setOrders([]);
         }
     });
 
     useEffect(() => {
-        fetchProjects();
+        fetchOrders();
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
@@ -102,34 +100,33 @@ const ProjectsListPage = () => {
 
     const onSortOrderHandleChange = (event: any) => {
         const value = event.target.value;
-        const option = defProjectSortOrderData.find((e: SortOrderOptionType) => e.id == value);
+        const option = defOrderSortOrderData.find((e: SortOrderOptionType) => e.id == value);
         if(option) {
             setSort(option.value);
             setOrder(option.order);
             setPage(defPage);
             setLimit(defLimit);
         }
-
         console.log('sort', option)
     }
 
-    const addEmployeeToProjectHanle = async (employee: Employee) => {
-        console.log('===============================');
-        console.log(employee.id, selectedProject!.id);
-        if(selectedProject)
-        {
-            const { data } = await ProjectService.addEmployeeToProject(employee.id, selectedProject.id);
-        }
+    // const addEmployeeToProjectHanle = async (employee: Employee) => {
+    //     console.log('===============================');
+    //     console.log(employee.id, selectedOrder!.id);
+    //     if(selectedOrder)
+    //     {
+    //         const { data } = await ProjectService.addEmployeeToProject(employee.id, selectedOrder.id);
+    //     }
+    // }
+
+    const deleteOrder = (orderId: number) => {
+        const deleteIndex = orders.findIndex((e: Order) => e.id === orderId);
+        orders.splice(deleteIndex, 1);
+        setOrders([...orders]);
+        OrderService.deleteOrder(orderId);
     }
 
-    const deleteProject = (projectId: number) => {
-        const deleteIndex = projects.findIndex((e: Project) => e.id === projectId);
-        projects.splice(deleteIndex, 1);
-        setProjects([...projects]);
-        ProjectService.deleteProject(projectId);
-    }
-
-    const handlerFilterChange = useCallback((data: ProjectFilterData) => {
+    const handlerFilterChange = useCallback((data: OrderFilterData) => {
         setFilterOptionData({...data});
     }, []);
 
@@ -137,7 +134,7 @@ const ProjectsListPage = () => {
         <Container>
 
             <Box className="breadcrumb">
-                <Breadcrumb routeSegments={[ { name: "Projects" }]} />
+                <Breadcrumb routeSegments={[ { name: "Orders" }]} />
             </Box>
 
             <div className='table-alt-1'>
@@ -145,13 +142,13 @@ const ProjectsListPage = () => {
                     <div className="card-header" style={{display: 'block'}}>
                         <div className="card-header--title">
                             <small>Tables</small>
-                            <h3>Projects</h3>
+                            <h3>Orders</h3>
                         </div>
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <SearchInput>
                                 <TextField
                                     id="outlined-search"
-                                    label="Search Project By Name"
+                                    label="Search Order By Client (phone, email, name)"
                                     type="search"
                                     size='small'
                                     fullWidth
@@ -189,7 +186,7 @@ const ProjectsListPage = () => {
                                     onChange={(e: any) => onSortOrderHandleChange(e)}
                                 >
                                     {
-                                        defProjectSortOrderData.map((e: SortOrderOptionType) =>
+                                        defOrderSortOrderData.map((e: SortOrderOptionType) =>
                                             <MenuItem
                                                 key={e.id}
                                                 value={e.id}
@@ -239,16 +236,34 @@ const ProjectsListPage = () => {
                             <table className="table table-striped table-hover text-nowrap mb-0">
                                 <thead className="thead-light">
                                 <tr>
-                                    <th style={{ width: '40%' }}>Name</th>
-                                    <th className="text-center">Deadline</th>
-                                    <th className="text-center">Budget/Paid</th>
-                                    <th className="text-center">Member Count</th>
+                                    <th style={{ width: '40%' }}>#id</th>
+                                    <th className="text-center">Project</th>
+                                    <th className="text-center">Status</th>
+                                    <th className="text-center">Customer Contact Info</th>
+                                    <th className="text-center">Extra File</th>
+                                    <th className="text-center">Order Created At / Project Deadline</th>
                                     <th className="text-center">Actions</th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
-                                { projects.map((e: Project) =>
-                                    <tr key={e.id}>
+                                { orders.map((e: Order) =>
+                                    <tr
+                                        key={e.id}>
+                                        <td>
+                                            <div
+                                                className="d-flex align-items-center"
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center'
+                                                }}>
+                                                <div>
+                                                    <span className="font-weight-bold text-black">
+                                                        {e.id}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div
                                                 className="d-flex align-items-center"
@@ -256,53 +271,102 @@ const ProjectsListPage = () => {
                                                      display: 'flex',
                                                      justifyContent: 'center'
                                                  }}>
-                                                <div>
-                                                    <span className="font-weight-bold text-black">
-                                                        {e.name}
-                                                    </span>
-                                                    <span className="text-black-50 d-block">
-                                                        {e.project_type.name}
-                                                    </span>
-                                                </div>
+                                                    {
+                                                        e.project ?
+                                                            <div>
+                                                                 <span className="font-weight-bold text-black">
+                                                                    {e.project.name}
+                                                                </span>
+                                                                    <span className="text-black-50 d-block">
+                                                                    {e.project.project_type.name}
+                                                                </span>
+                                                            </div>
+                                                            :
+                                                            <span className="font-weight-bold text-black">
+                                                                No project yet
+                                                            </span>
+                                                    }
                                             </div>
                                         </td>
+                                        <td className="text-center">
+                                            <Box>
+                                                { e.order_status.name }
+                                            </Box>
+                                        </td>
+
+                                        <td className="text-center">
+                                            <Box
+                                                className="h-auto py-0 px-3 badge badge-warning"
+                                            >
+                                                { e.customer_id ?
+                                                    <div>
+                                                         <span className="font-weight-bold text-black">
+                                                            {e.customer!.user.full_name}
+                                                        </span>
+                                                        <span className="text-black-50 d-block">
+                                                           {e.customer!.user.email}
+                                                        </span>
+                                                    </div>
+                                                    :
+                                                    <div>
+                                                         <span className="font-weight-bold text-black">
+                                                            {e.order_contact!.name}
+                                                        </span>
+                                                        <span className="text-black-50 d-block">
+                                                           {e.order_contact!.phone}
+                                                        </span>
+                                                    </div>
+                                                }
+
+                                            </Box>
+                                        </td>
+
+                                        <td className="text-center">
+                                            <Box
+                                                className="h-auto py-0 px-3 badge badge-warning"
+                                            >
+                                                {
+                                                    e.extra_file ?
+                                                    'Extra File'
+                                                        :
+                                                    'no extra file'
+                                                }
+
+                                            </Box>
+                                        </td>
+
                                         <td className="text-center">
                                             <div
                                                 className="h-auto py-0 px-3 badge badge-danger"
                                                  style={{fontSize: '13px'}}>
                                                     {
-                                                        moment(e.deadline).format('DD/MM/YYYY')
+                                                        moment(e.created_at).format('DD/MM/YYYY')
+                                                    }
+                                                    /
+                                                    {
+                                                        e.project_id && e.project?.deadline ?
+                                                            moment(e.project.deadline).format('DD/MM/YYYY')
+                                                        :
+                                                            'no deadline yet'
                                                     }
                                             </div>
                                         </td>
-                                        <td
-                                            className="text-center">
-                                            <Box>
-                                                { e.budget } / {e.paid} $
-                                            </Box>
-                                        </td>
-                                        <td
-                                            className="text-center">
-                                            <Box
-                                                className="h-auto py-0 px-3 badge badge-warning"
-                                            >
-                                                { e.member_count }
-                                            </Box>
-                                        </td>
+
+
 
                                         <td className="text-center table-action-btn">
                                             <Box>
                                                 <IconButton>
                                                     <Edit />
                                                 </IconButton>
-                                                <IconButton onClick={() => deleteProject(e.id)}>
+                                                <IconButton onClick={() => deleteOrder(e.id)}>
                                                     <Delete />
                                                 </IconButton>
                                                 <IconButton
-                                                    onClick={() => {
-                                                        setSelectedProject(e);
-                                                        setOpenEmployeeAddModal(true);
-                                                    }}
+                                                    // onClick={() => {
+                                                    //     setSelectedOrder(e);
+                                                    //     setOpenEmployeeAddModal(true);
+                                                    // }}
                                                 >
                                                     <div>
                                                         <Add />
@@ -326,7 +390,7 @@ const ProjectsListPage = () => {
                                 </tbody>
                             </table>
                             {
-                                !isLoading && projects.length === 0 &&
+                                !isLoading && orders.length === 0 &&
                                     <h3>No data</h3>
                             }
 
@@ -349,13 +413,13 @@ const ProjectsListPage = () => {
 
 
 
-            <AddEmployeeToProjectModal
-                open={openEmployeeAddMoal}
-                onClose={() => setOpenEmployeeAddModal(false)}
-                onSave={addEmployeeToProjectHanle}
-                setOpen={setOpenEmployeeAddModal}
-                project={selectedProject}
-            />
+            {/*<AddEmployeeToProjectModal*/}
+            {/*    open={openEmployeeAddMoal}*/}
+            {/*    onClose={() => setOpenEmployeeAddModal(false)}*/}
+            {/*    onSave={addEmployeeToProjectHanle}*/}
+            {/*    setOpen={setOpenEmployeeAddModal}*/}
+            {/*    project={selectedOrder}*/}
+            {/*/>*/}
 
 
         </Container>

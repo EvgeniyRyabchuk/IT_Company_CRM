@@ -8,7 +8,7 @@ const BrandRoot = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '20px 18px 20px 29px',
+  padding: '20px 20px 20px 28px',
 }));
 
 const StyledSpan = styled(Span)(({ mode }) => ({
@@ -26,9 +26,9 @@ const Brand = ({ children }) => {
     <BrandRoot>
       <Box display="flex" alignItems="center">
         {/*<MatxLogo />*/}
-        <img src={Icon} alt="logo" width={40} height={40}/>
+        <img src={Icon} alt="logo" width={26} height={26}/>
         <StyledSpan mode={mode} className="sidenavHoverShow">
-          Crm for IT
+          Crm for IT 
         </StyledSpan>
       </Box>
 

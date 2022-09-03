@@ -19,19 +19,13 @@ Online Chat:
 - infinity scrolling and change chat large loading 
 
 
-Layout fix 
 Refact stylying 
 Error  showsystem 
 Perfect scroll mobile 
 Alert system 
 Pdf-export 
-
-Role show in user table 
-User kanban card owner 
-
-
-
-
+Order data for project 
+Project types desable if not match the queryString 
 
 
 

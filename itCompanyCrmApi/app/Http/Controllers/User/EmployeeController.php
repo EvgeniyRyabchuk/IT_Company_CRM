@@ -47,7 +47,7 @@ class EmployeeController extends Controller
 
         //$doneStatus = OrderStatus::where('name', 'Finished')->first();
 
-        $query = Employee::with('user.roles', 'level', "position", 'skills')
+        $query = Employee::with('user.roles', 'user.phones', 'level', "position", 'skills')
             ->withCount(['projects as project_count'])
             ->whereHas('user', function ($q) use ($search) {
                 if($search !== '')

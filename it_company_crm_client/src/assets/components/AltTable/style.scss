@@ -1,4 +1,9 @@
 /*! CSS Used from: Embedded */
+.table-alt-1 {
+    //box-shadow: 1px 0px 14px -2px rgba(0,0,0,0.46);
+    //-webkit-box-shadow: 1px 0px 14px -2px rgba(0,0,0,0.46);
+    //-moz-box-shadow: 1px 0px 14px -2px rgba(0,0,0,0.46);
+}
 .table-alt-1 svg:not(:root).svg-inline--fa {
     overflow: visible;
 }
@@ -117,12 +122,12 @@
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f9fafe;
+    background-color: #768ef6;
 }
 
 .table-hover tbody tr:hover {
     color: #3b3e66;
-    background-color: #fffbf2;
+    background-color: #2A324C;
 }
 
 .table .thead-light th {
@@ -159,7 +164,9 @@
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.2rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s
+    ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -335,12 +342,22 @@
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f9fafe;
+    background-color: #efefef;
 }
 
 .table-hover tbody tr:hover {
     color: #3b3e66;
-    background-color: #fffbf2;
+    background-color: #c4cbff;
+    cursor: pointer;
+}
+
+.table-alt-1 td > * {
+    cursor: text;
+}
+
+.table-alt-1 .table-action-btn button:hover {
+    background-color: #97b6e0;
+    color: white;
 }
 
 .table .thead-light th {
@@ -377,7 +394,8 @@
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.2rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 @media (prefers-reduced-motion: reduce) {

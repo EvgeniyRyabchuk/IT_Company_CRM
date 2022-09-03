@@ -13,6 +13,7 @@ import eventCalendarRoutes from "../pages/eventCalendar/EventCalendarRoutes";
 import employeeRoutes from "../pages/users/employees/employeeRoutes";
 import statisticRoute from "../pages/statistic/StatisticRoute";
 import customerRoutes from "../pages/users/customers/CustomerRoutes";
+import ordersRoutes from "../pages/orders/OrdersRoutes";
 
 const children = [
   ...dashboardRoutes,
@@ -22,7 +23,8 @@ const children = [
   ...projectRoutes,
   ...eventCalendarRoutes,
   ...employeeRoutes,
-  ...customerRoutes
+  ...customerRoutes,
+  ...ordersRoutes
 ];
 
 const getChildRoutesWithRoleContext = () => {

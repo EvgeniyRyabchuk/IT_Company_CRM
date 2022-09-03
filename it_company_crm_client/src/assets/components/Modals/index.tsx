@@ -10,7 +10,10 @@ const modalStyle = {
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
-    padding: '20px 40px'
+    padding: '20px 40px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
 };
 
 const UserMenu = styled(Box)(() => ({

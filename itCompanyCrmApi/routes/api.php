@@ -140,6 +140,9 @@ Route::get('test', [UserController::class, 'test']);
 
 
 Route::prefix('orders')->group(function() {
+    Route::get('/statuses', [OrderController::class, 'getStatuses']);
+    Route::get('/min-max', [OrderController::class, 'getMinMaxValues']);
+
     Route::get('/', [OrderController::class, 'index']);
     Route::post('/', [OrderController::class, 'store']);
 
@@ -148,19 +151,25 @@ Route::prefix('orders')->group(function() {
     Route::put('/{orderId}', [OrderController::class, 'update']);
     Route::delete('/{orderId}', [OrderController::class, 'destroy']);
 
-    Route::post('/{orderId}/status/undo/case/{caseId}', [OrderController::class, 'addUndoCaseEntry']);
 
+
+    Route::post('/{orderId}/status/undo/case/{caseId}', [OrderController::class, 'addUndoCaseEntry']);
     Route::post('/{orderId}/create-customer-account', [OrderController::class, 'createCustomerAccount']);
 
 });
 
 
 Route::prefix('projects')->group(function() {
+    Route::get('/types', [ProjectController::class, 'getTypes']);
+    Route::get('/min-max', [ProjectController::class, 'getMaxValues']);
+
     Route::get('/', [ProjectController::class, 'index']);
     Route::post('/', [ProjectController::class, 'store']);
     Route::get('/{projectId}', [ProjectController::class, 'show']);
     Route::put('/{projectId}', [ProjectController::class, 'update']);
     Route::delete('/{projectId}', [ProjectController::class, 'destroy']);
+
+
 
     // Project File Manager Routing
     Route::get("{projectId}/file-manager", [ProjectController::class, 'fileManager']);

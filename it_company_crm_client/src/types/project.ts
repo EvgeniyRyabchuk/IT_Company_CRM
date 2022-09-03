@@ -74,4 +74,6 @@ export interface Project {
     project_history: ProjectHistory[];
     member_count: number;
     employees: EmployeeWithProjectRoles[];
+
+    order_id: number;
 }

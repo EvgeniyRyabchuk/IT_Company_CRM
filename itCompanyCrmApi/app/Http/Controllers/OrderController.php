@@ -27,26 +27,29 @@ class OrderController extends Controller
     //TODO: fillter handler class
 
     public function index(Request $request) {
-        //filter: status,
-        // sort: created_at,
-        $defPerPage = 5;
-        $perPage = $request->get('perPage') ?? $defPerPage;
 
-        $status = $request->get('status');
+        $perPage = $request->input('limit') ?? 10;
+        $search = $request->input('search') ?? '';
 
-        $sort  = $request->get('sort') ?? 'created_at';
-        $sortOrder  = $request->get('order') ?? 'desc';
+        $sort = $request->input('sort') ?? 'created_at';
+        $sortOrder = $request->input('order') ?? 'desc';
 
-        $query = Order::query();
-        if(!is_null($status)) {
-            $stIdsArr = explode(',', $status);
-            foreach ($stIdsArr as $st) {
-                $query = $query->orWhere('order_status_id', "=", $st);
-            }
-        }
+        $orderStatus = json_decode($request->input('orderStatus') ?? '[]');
+
+        $query = Order::with('project.projectType',
+            'orderStatus',
+            'customer.user',
+            'orderContact');
+//        if(!is_null($orderStatus)) {
+//            $stIdsArr = explode(',', $status);
+//            foreach ($stIdsArr as $st) {
+//                $query = $query->orWhere('order_status_id', "=", $st);
+//            }
+//        }
 
         $query = $query->orderBy($sort, $sortOrder);
-        $orders = $query->get()->paginate($perPage);
+        $orders = $query->paginate($perPage);
+
         return response()->json($orders, 201);
     }
 

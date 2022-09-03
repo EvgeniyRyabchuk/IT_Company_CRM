@@ -30,21 +30,47 @@ class ProjectController extends Controller
 {
     public function index(Request $request) {
         $perPage = $request->input('limit') ?? 10;
-        $filters = $request->input('filters') ?? null;
         $search = $request->input('search') ?? '';
 
         $sort = $request->input('sort') ?? 'created_at';
         $order = $request->input('order') ?? 'desc';
 
-        $projects = Project::with(
+        $projectTypes = json_decode($request->input('projectTypes') ?? '[]');
+        $budgetRange = json_decode($request->input('budgetRange') ?? '[]');
+        $deadlineRange = json_decode($request->input('deadlineRange') ?? '[]');
+
+        $query = Project::with(
             'projectType',
             'order',
             'projectLinks',
             'lanes'
         )
-        ->withCount(['employees as member_count'])
-        ->orderBy($sort, $order)
-        ->paginate($perPage);
+        ->withCount(['employees as member_count']);
+
+        $query->where('projects.name', 'LIKE', "%$search%");
+        $query->orderBy($sort, $order);
+        if(count($projectTypes) > 0)
+            $query
+                ->join('project_types', 'projects.project_type_id', 'project_types.id')
+                ->whereIn('project_types.id', $projectTypes);
+
+        if(count($budgetRange) >= 2)
+            $query->whereBetween('budget', $budgetRange);
+
+        if(count($deadlineRange) >= 2) {
+//            dd(123);
+            $deadlineRange = [
+                Carbon::parse($deadlineRange[0]),
+                Carbon::parse($deadlineRange[1]),
+            ];
+            $query->whereBetween('deadline', $deadlineRange);
+        }
+
+
+
+//            dd($budgetRange);
+
+        $projects = $query->paginate($perPage);
 
         return response()->json($projects, 201);
 
@@ -58,8 +84,6 @@ class ProjectController extends Controller
     }
 
     public function store(Request $request) {
-        //TODO: check project role rights
-
         $nextId = DbHelper::nextId('projects');
         $projectType = ProjectType::findOrFail($request->input('project_type_id'));
         $projectLinks = $request->input('project_links');
@@ -85,7 +109,6 @@ class ProjectController extends Controller
         $employee = Employee::inRandomOrder()->first();
         ProjectHistoryHandler::commit($project, $employee,"created project");
 
-        //TODO: files
 
         return response()->json($project, 201);
     }
@@ -444,7 +467,7 @@ class ProjectController extends Controller
         }
     }
 
-    public function update() {
+    public function update(Request $request, $projectId) {
 
     }
 
@@ -452,6 +475,21 @@ class ProjectController extends Controller
         $project = Project::findOrFail($projectId);
         $project->delete();
         return response()->json('project deleted success', 201);
+    }
+
+    public function getTypes(Request $request) {
+
+        $types = ProjectType::all();
+        return response()->json($types);
+    }
+
+    public function getMaxValues(Request $request) {
+        $minMaxProjectBudget = [Project::min('budget'), Project::max('budget')];
+        $minMaxProjectDeadline = [Project::min('deadline'), Project::max('deadline')];
+
+        return response()->json(
+            compact('minMaxProjectBudget', 'minMaxProjectDeadline')
+        );
     }
 
 }
