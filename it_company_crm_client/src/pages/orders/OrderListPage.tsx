@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
     Avatar,
     Box,
+    Button,
     Card,
     CardContent,
     CircularProgress,
@@ -17,12 +18,12 @@ import {Container} from "../../assets/components/breadcrumb";
 import '../../assets/components/AltTable/style.scss';
 import {useNavigate} from "react-router-dom";
 import moment from "moment";
-import {CloudDownload, Delete, Devices, East, Edit, FilterAlt, Search, Sort} from "@mui/icons-material";
+import {CloudDownload, Delete, Devices, East, Edit, FilterAlt, Info, Search, Sort} from "@mui/icons-material";
 import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
 import defOrderSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
-import {SortOrderOptionType} from "../../types/global";
+import {PageMode, SortOrderOptionType} from "../../types/global";
 import {defLimit, defPage} from "../../utils/constant";
 import OrderFilter, {OrderFilterData} from "./OrderFilter";
 import useDebounce from "../../hooks/useDebounce";
@@ -30,7 +31,6 @@ import {Order, OrderStatus} from "../../types/order";
 import {OrderService} from "../../services/OrderService";
 import {styled} from "@mui/system";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
-import defProjectSortOrderData from "../projects/sortOptions";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -80,6 +80,7 @@ const ProjectsListPage = () => {
             { key: 'orderStatuses', value: JSON.stringify(filterOptionData?.orderStatuses) },
             { key: 'deadlineRange', value: JSON.stringify(filterOptionData?.deadlineRange) },
             { key: 'createdAtOrderRange', value: JSON.stringify(filterOptionData?.createdOrderRange) },
+            { key: 'projectExistMode', value: filterOptionData?.projectExistMode},
         ];
         return getQueryVarsInStringFormat(params);
     }, [sort, order, page, limit, debouncedSearch, filterOptionData]);
@@ -155,6 +156,8 @@ const ProjectsListPage = () => {
         setOrders(newOrders);
     }
 
+
+
     return (
         <Container>
 
@@ -164,13 +167,29 @@ const ProjectsListPage = () => {
 
             <div className='table-alt-1'>
                 <Card className="card-box mb-4">
-                    <div className="card-header" style={{display: 'block'}}>
+                    <div className="card-header" style={{
+                        display: 'block',
+                        padding: '15px 10px'
+                    }}>
                         <div className="card-header--title">
                             <small>Tables</small>
                             <h3>Orders</h3>
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <SearchInput>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignContent: 'center'}}
+                        >
+                            <Button
+                                variant="outlined"
+                                onClick={() => {}}
+                                style={{width: '500px' ,height: "40px"}}
+                            >
+                                Create project for order
+                            </Button>
+
+                            <SearchInput
+                                sx={{p: 0}}>
                                 <TextField
                                     id="outlined-search"
                                     label="Search Order By Client (phone, email, name)"
@@ -190,8 +209,10 @@ const ProjectsListPage = () => {
                                     onChange={(e) =>
                                         setSearch(e.target.value)
                                     }
+
                                 />
                             </SearchInput>
+
                             <Box
                                 className="card-header--actions"
                                 style={{
@@ -460,9 +481,6 @@ const ProjectsListPage = () => {
 
                                         <td className="text-center table-action-btn">
                                             <Box>
-                                                <IconButton>
-                                                    <Edit />
-                                                </IconButton>
                                                 <IconButton onClick={() => deleteOrder(e.id)}>
                                                     <Delete />
                                                 </IconButton>
@@ -477,7 +495,11 @@ const ProjectsListPage = () => {
                                                         <East />
                                                     </IconButton>
                                                 }
-
+                                                <IconButton onClick={() => {
+                                                  navigator(`/orders/${e.id}`);
+                                                }}>
+                                                    <Info />
+                                                </IconButton>
                                             </Box>
                                         </td>
                                     </tr>

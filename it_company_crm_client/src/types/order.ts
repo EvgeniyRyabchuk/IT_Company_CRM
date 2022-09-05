@@ -27,6 +27,7 @@ export interface OrderStatus {
     name: string;
     is_public: boolean;
     bgColor: string;
+    index: number;
 }
 
 export interface Order {

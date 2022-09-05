@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderContact;
+use App\Models\OrderStatusHistory;
 use App\Models\Status;
 use App\Models\Project;
 use App\Models\UndoOrder;
@@ -31,25 +32,32 @@ class OrderSeeder extends Seeder
         $contacts = OrderContact::factory()->count(10)->create()
         ->each(function ($c) use($reqPath) {
             $status = Status::inRandomOrder()->first();
-            Order::create([
+            $order = Order::create([
                 'status_id' => $status->id,
                 'order_contact_id' => $c->id,
                 'about' => fake()->sentence(10),
                 'extra_file' => $reqPath
+            ]);
+            OrderStatusHistory::create([
+                'order_id' => $order->id,
+                'status_id' => $status->id,
             ]);
         });
 
         for ($i = 0; $i < 10; $i++) {
             $status = Status::where('name', 'Finished')->first();
 
-            Order::create([
+            $order = Order::create([
                 'project_id' => $projects[$i]->id,
                 'status_id' => $status->id,
                 'customer_id' => $customers[$i]->id,
                 'about' => fake()->sentence(10),
                 'extra_file' => $reqPath
             ]);
-
+            OrderStatusHistory::create([
+                'order_id' => $order->id,
+                'status_id' => $status->id,
+            ]);
         }
 
         Order::all()->each(function ($order) {

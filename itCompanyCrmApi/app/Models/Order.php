@@ -24,4 +24,8 @@ class Order extends Model
     public function orderContact() {
         return $this->belongsTo(OrderContact::class);
     }
+
+    public function statusHistory() {
+        return $this->hasMany(OrderStatusHistory::class);
+    }
 }

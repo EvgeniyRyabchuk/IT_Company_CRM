@@ -28,7 +28,6 @@ Pdf-export
 
 Order status history and order index 
 Order more seeding 
-Is project exist radio button  
 
 if sort and filter too fast app work is wrong  
 Search by guest name 

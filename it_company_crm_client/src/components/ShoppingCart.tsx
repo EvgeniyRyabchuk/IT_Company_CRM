@@ -96,13 +96,13 @@ function ShoppingCart({ container } : any) {
   const theme = useTheme();
   const secondary = theme.palette.text.secondary;
 
-  if (!cartListLoaded) {
-    if(user) {
-      // @ts-ignore
-      getCartList(user.id);
-    }
-    cartListLoaded = true;
-  }
+  // if (!cartListLoaded) {
+  //   if(user) {
+  //     // @ts-ignore
+  //     getCartList(user.id);
+  //   }
+  //   cartListLoaded = true;
+  // }
 
   const handleDrawerToggle = () => {
     setPanelOpen(!panelOpen);

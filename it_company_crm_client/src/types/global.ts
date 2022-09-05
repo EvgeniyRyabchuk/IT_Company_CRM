@@ -20,3 +20,10 @@ export interface SortOrderOptionType {
     order: string,
     selected: boolean
 }
+
+
+export enum PageMode {
+    SELECT,
+    CREATE,
+    EDIT
+}

@@ -6,6 +6,7 @@ use App\_SL\FileManager;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderContact;
+use App\Models\OrderStatusHistory;
 use App\Models\Status;
 use App\Models\Project;
 use App\Models\Role;
@@ -39,11 +40,23 @@ class OrderController extends Controller
         $deadlineRange = json_decode($request->input('deadlineRange') ?? '[]');
         $createdAtOrderRange = json_decode($request->input('createdAtOrderRange') ?? '[]');
 
+        $projectExistMode = $request->input('projectExistMode') ?? 0;
+
         $query = Order::with('project.projectType',
             'status',
             'customer.user.phones',
             'orderContact');
 
+        switch ($projectExistMode) {
+            case 1:
+                $query->whereNotNull('orders.project_id');
+                break;
+            case 2:
+                $query->whereNull('orders.project_id');
+                break;
+            default:
+                break;
+        }
 
         if(count($orderStatus) > 0) {
             $query->select('orders.*');
@@ -52,7 +65,6 @@ class OrderController extends Controller
         }
 
 
-        //TODO: resolve
         if(count($deadlineRange) >= 2) {
             $deadlineRange = [
                 Carbon::parse($deadlineRange[0]),
@@ -62,8 +74,6 @@ class OrderController extends Controller
             $query->leftJoin('projects', 'orders.project_id', 'projects.id')
             ->whereBetween('projects.deadline', $deadlineRange);
         }
-
-
 
         if(count($createdAtOrderRange) >= 2) {
             $from = Carbon::parse($createdAtOrderRange[0]);
@@ -112,7 +122,14 @@ class OrderController extends Controller
     }
 
     public function show(Request $request, $orderId) {
-        $order = Order::with(['status', 'orderContact'])->find($orderId);
+        $order = Order::with('project.projectType',
+            'status',
+            'customer.user.phones',
+            'orderContact',
+            'statusHistory.status'
+        )
+            ->find($orderId);
+
         return response()->json($order, 201);
     }
 
@@ -154,9 +171,11 @@ class OrderController extends Controller
 
         $order->orderContact()->associate($contact);
         $order->status()->associate($orderStatus);
+
         $order->about = $request->input('about') ?? '';
         $order->save();
 
+        OrderStatusHistory::create(['order_id' => $order->id, 'status_id' => $orderStatus->id]);
 //        $extension = $request->file('extra_file')->getClientOriginalExtension();
 //        $path = $request->file('extra_file')
 //            ->storeAs("orders/$order->id", 'extra_file_'. time() . '.' . $extension);
@@ -174,21 +193,17 @@ class OrderController extends Controller
     //TODO: create project if order status is Processing
     // TODO: status change history
     public function update(Request $request, $orderId) {
-
         $order = Order::findOrFail($orderId);
 
         $oldStatus = Status::findOrFail($request->input('order_status_id'));
         $newStatus = Status::findOrFail($request->input('new_order_status_id'));
 
-
-
         // if order status already does not undo, then remove entry in undo_order table
         if($oldStatus->name == 'Undo' && $newStatus->id != $oldStatus->id) {
-            dd($oldStatus);
             $undoOrderEntry = UndoOrder::where("order_id", $order->id)->first();
             $undoOrderEntry->delete();
         }
-        else if ($order->status->name == 'Undo') {
+        else if ($newStatus->name == 'Undo') {
             $caseId = $request->input('order_undo_case_id');
             UndoOrder::create([
                 'order_id' => $order->id,
@@ -197,11 +212,8 @@ class OrderController extends Controller
         }
 
         $order->status()->associate($newStatus);
+        OrderStatusHistory::create(['order_id' => $order->id, 'status_id' => $newStatus->id]);
         $order->save();
-
-//        switch ($order->status) {
-//            case ""
-//        }
 
         $resOrder = Order::with(
     'project.projectType',
@@ -259,7 +271,7 @@ class OrderController extends Controller
 
 
     public function getStatuses(Request $request) {
-        $statuses = Status::all();
+        $statuses = Status::orderBy('index', 'asc')->get();
         return response()->json($statuses);
     }
 

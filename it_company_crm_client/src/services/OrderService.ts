@@ -17,6 +17,11 @@ export class OrderService {
         return $api.get<PaginatedResponse<Order>>(`/orders${queryParams ?? ''}`);
     }
 
+    static async getOrder(orderId: number | string):
+        Promise<AxiosResponse<Order>> {
+        return $api.get<Order>(`/orders/${orderId}`);
+    }
+
 
     static async updateOrder(orderId: number, payload: any): Promise<AxiosResponse<Order>> {
         return $api.put<Order>(`/orders/${orderId}`, payload);

@@ -19,27 +19,7 @@ function App() {
           <SettingsProvider>
               <MatxTheme>
                 <div className="App">
-
                     <AuthProvider>{content}</AuthProvider>
-
-                    {/*<ChatComponent />*/}
-
-                    {/*<ProjectFileManager />*/}
-
-                    {/*<EventCalendar />*/}
-
-                    {/*<LargeEventCalendar />*/}
-
-                    {/*<Kanban />*/}
-
-                    {/*<JwtLogin />*/}
-
-                    {/*<JwtRegister />*/}
-
-                    {/*<ForgotPassword />*/}
-
-                    {/*<NotFound />*/}
-
                 </div>
               </MatxTheme>
           </SettingsProvider>

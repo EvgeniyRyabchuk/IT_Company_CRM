@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {
     Accordion, AccordionDetails, AccordionSummary,
     Button,
-    Checkbox,
+    Checkbox, FormControl,
     FormControlLabel,
-    FormGroup,
-    Grid,
+    FormGroup, FormLabel,
+    Grid, Radio, RadioGroup,
     Slider,
     TextField,
     Typography
@@ -27,9 +27,16 @@ interface CheckBoxGroup {
 }
 
 export interface OrderFilterData {
+    projectExistMode: ProjectExistMode;
     orderStatuses: number[];
     deadlineRange: string[];
     createdOrderRange: string[],
+}
+
+enum ProjectExistMode {
+    ALL,
+    EXIST,
+    NOT_EXIST,
 }
 
 const OrderFilter : React.FC<{
@@ -70,6 +77,8 @@ const OrderFilter : React.FC<{
     const [toCreatedOrder, setToCreatedOrder] = React.useState<Date>(defaultValues.createdOrderRange[1] );
 
     const [isReset, setIsReset] = useState<boolean>(false);
+
+    const [projectMustExist, setProjectMustExist] = useState<ProjectExistMode>(ProjectExistMode.ALL);
 
     const handleOrderStatusCheck = (typeId: number, checked: boolean) => {
         const newCheckBoxList = checkBoxOrdersStatuses.map((e) => {
@@ -126,6 +135,7 @@ const OrderFilter : React.FC<{
                 moment(toDeadline).format('DD-MM-yyyy'),
             ];
             const data : OrderFilterData = {
+                projectExistMode: projectMustExist,
                 orderStatuses: selectedStatuses,
                 deadlineRange: [],
                 createdOrderRange: [
@@ -134,15 +144,14 @@ const OrderFilter : React.FC<{
                 ]
             }
 
-            if(fromDeadline !== defaultValues.deadlineRange[0]
-                && toDeadline !== defaultValues.deadlineRange[1]) {
+            if(projectMustExist === ProjectExistMode.EXIST) {
                 data.deadlineRange = deadlineRange;
             }
             console.log(fromDeadline.getDate().toString(), toDeadline.getDate().toString());
             onFilterChange(data, isReset);
             if(isReset) setIsReset(false);
         }
-    }, [selectedStatuses, fromDeadline, toDeadline, fromCreatedOrder, toCreatedOrder]);
+    }, [selectedStatuses, fromDeadline, toDeadline, fromCreatedOrder, toCreatedOrder, projectMustExist]);
 
     const resetToDefault = () => {
         setSelectedStatuses([]);
@@ -153,8 +162,9 @@ const OrderFilter : React.FC<{
         setCheckBoxOrdersStatuses(newCheckBoxList);
         setFromDeadline(defaultValues.deadlineRange[0]);
         setToDeadline(defaultValues.deadlineRange[1]);
-        setFromDeadline(defaultValues.createdOrderRange[0]);
-        setToDeadline(defaultValues.createdOrderRange[1]);
+        setFromCreatedOrder(defaultValues.createdOrderRange[0]);
+        setToCreatedOrder(defaultValues.createdOrderRange[1]);
+        setProjectMustExist(ProjectExistMode.ALL);
         setIsReset(true);
     }
 
@@ -174,7 +184,9 @@ const OrderFilter : React.FC<{
                 top: '10px',
                 left: '10px',
                 display: 'flex',
-                position: 'relative'
+                position: 'relative',
+                justifyContent: 'space-between',
+                padding: '0 10px'
             }}>
                 <Button
                     variant='contained'
@@ -182,15 +194,48 @@ const OrderFilter : React.FC<{
                     style={{
                         backgroundColor: 'gray',
                         color: 'white',
-                        marginLeft: '10px'
+                        marginLeft: '10px',
+                        height: '40px'
                     }}
                 >
                     Reset
                 </Button>
+
+                <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">Project is exist</FormLabel>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                    >
+                        <FormControlLabel value="female"
+                                          control={<Radio />}
+                                          label="All"
+                                          checked={projectMustExist === ProjectExistMode.ALL}
+                                          onChange={() => setProjectMustExist(ProjectExistMode.ALL)}
+                        />
+                        <FormControlLabel value="male"
+                                          control={<Radio />}
+                                          label="Project Exist"
+                                          checked={projectMustExist === ProjectExistMode.EXIST}
+                                          onChange={() => setProjectMustExist(ProjectExistMode.EXIST)}
+                        />
+                        <FormControlLabel value="other"
+                                          control={<Radio />}
+                                          label="Project Not Exist"
+                                          checked={projectMustExist === ProjectExistMode.NOT_EXIST}
+                                          onChange={() => setProjectMustExist(ProjectExistMode.NOT_EXIST)}
+                        />
+                    </RadioGroup>
+                </FormControl>
             </div>
 
-            <Grid container spacing={3} style={{ padding: '30px', margin: '0'}}>
-                <Grid item md={4} xs={12}>
+            <Grid
+                container
+                spacing={3}
+                style={{ padding: '15px', margin: '0'}}
+            >
+                <Grid md={4} xs={12}>
 
                     <Accordion defaultExpanded={true}>
                         <AccordionSummary
@@ -255,6 +300,7 @@ const OrderFilter : React.FC<{
                         <Stack spacing={3}>
 
                             <DesktopDatePicker
+                                disabled={projectMustExist !== ProjectExistMode.EXIST}
                                 label="From date"
                                 inputFormat="dd/MM/yyyy"
                                 value={fromDeadline}
@@ -262,6 +308,7 @@ const OrderFilter : React.FC<{
                                 renderInput={(params) => <TextField {...params} />}
                             />
                             <DesktopDatePicker
+                                disabled={projectMustExist !== ProjectExistMode.EXIST}
                                 label="To date"
                                 inputFormat="dd/MM/yyyy"
                                 value={toDeadline}
