@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->date('label');
             $table->string('title', 300);
-            $table->string('color');
+            $table->string('color', 10);
             $table->unsignedSmallInteger('index');
             $table->timestamps();
         });

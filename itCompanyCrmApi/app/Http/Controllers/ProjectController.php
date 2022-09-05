@@ -58,17 +58,12 @@ class ProjectController extends Controller
             $query->whereBetween('budget', $budgetRange);
 
         if(count($deadlineRange) >= 2) {
-//            dd(123);
             $deadlineRange = [
                 Carbon::parse($deadlineRange[0]),
                 Carbon::parse($deadlineRange[1]),
             ];
             $query->whereBetween('deadline', $deadlineRange);
         }
-
-
-
-//            dd($budgetRange);
 
         $projects = $query->paginate($perPage);
 

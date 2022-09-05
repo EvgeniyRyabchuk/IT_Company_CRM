@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Exports\CustomerExport;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
-use App\Models\OrderStatus;
+use App\Models\Status;
 use App\Models\Position;
 use App\Models\Skill;
 use App\Models\User;
@@ -51,7 +51,7 @@ class CustomerController extends Controller
         }
 
 
-        $doneOrderStatus = OrderStatus::where('name', 'Finished')->first();
+        $doneOrderStatus = Status::where('name', 'Finished')->first();
 
         $query = Customer::with('user', 'user.phones', 'user.tags', 'user.phones')
             ->withCount([

@@ -6,7 +6,7 @@ use App\_SL\FileManager;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderContact;
-use App\Models\OrderStatus;
+use App\Models\Status;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\UndoOrder;
@@ -14,6 +14,7 @@ use App\Models\UndoOrderCase;
 use App\Models\User;
 use App\Notifications\AccountCreatedNotification;
 use App\Notifications\PasswordResetNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -34,27 +35,84 @@ class OrderController extends Controller
         $sort = $request->input('sort') ?? 'created_at';
         $sortOrder = $request->input('order') ?? 'desc';
 
-        $orderStatus = json_decode($request->input('orderStatus') ?? '[]');
+        $orderStatus = json_decode($request->input('orderStatuses') ?? '[]');
+        $deadlineRange = json_decode($request->input('deadlineRange') ?? '[]');
+        $createdAtOrderRange = json_decode($request->input('createdAtOrderRange') ?? '[]');
 
         $query = Order::with('project.projectType',
-            'orderStatus',
-            'customer.user',
+            'status',
+            'customer.user.phones',
             'orderContact');
-//        if(!is_null($orderStatus)) {
-//            $stIdsArr = explode(',', $status);
-//            foreach ($stIdsArr as $st) {
-//                $query = $query->orWhere('order_status_id', "=", $st);
-//            }
-//        }
 
-        $query = $query->orderBy($sort, $sortOrder);
+
+        if(count($orderStatus) > 0) {
+            $query->select('orders.*');
+            $query->join('statuses', 'orders.status_id', 'statuses.id')
+                ->whereIn('statuses.id', $orderStatus);
+        }
+
+
+        //TODO: resolve
+        if(count($deadlineRange) >= 2) {
+            $deadlineRange = [
+                Carbon::parse($deadlineRange[0]),
+                Carbon::parse($deadlineRange[1]),
+            ];
+
+            $query->leftJoin('projects', 'orders.project_id', 'projects.id')
+            ->whereBetween('projects.deadline', $deadlineRange);
+        }
+
+
+
+        if(count($createdAtOrderRange) >= 2) {
+            $from = Carbon::parse($createdAtOrderRange[0]);
+            $to = Carbon::parse($createdAtOrderRange[1]);
+            $from->setTime(0, 0);
+            $to->setTime(23, 59);
+
+            $query->whereBetween('orders.created_at', [$from, $to]);
+        }
+
+        if($search && $search !== '') {
+            $query
+                ->leftJoin('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
+                ->join('customers', 'orders.customer_id', 'customers.id')
+                ->join('users', 'customers.user_id', 'users.id')
+                ->join('phones', 'users.id', 'phones.user_id')
+                ->where('full_name', 'LIKE', "%$search%")
+                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
+
+                ->orWhere('order_contacts.name', 'LIKE', "%$search%")
+                ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
+            ;
+        }
+
+        switch ($sort) {
+            case "status":
+                $query->select('orders.*');
+                $query->join('statuses as statuses_table',
+                    'orders.status_id',
+                    '=', 'statuses_table.id')
+                ->orderBy('statuses_table.index', $sortOrder);
+                break;
+            case "deadline":
+                $query->select('orders.*');
+                $query->join('projects', 'orders.project_id', 'projects.id')
+                ->orderBy('projects.deadline', $sortOrder);
+                break;
+            default:
+                $query = $query->orderBy("orders.$sort", $sortOrder);
+                break;
+        }
+
         $orders = $query->paginate($perPage);
 
         return response()->json($orders, 201);
     }
 
     public function show(Request $request, $orderId) {
-        $order = Order::with(['orderStatus', 'orderContact'])->find($orderId);
+        $order = Order::with(['status', 'orderContact'])->find($orderId);
         return response()->json($order, 201);
     }
 
@@ -66,7 +124,7 @@ class OrderController extends Controller
             $q->where('email', $email);
         })->first();
 
-        $orderStatus = OrderStatus::where(['name' => 'pending'])->first();
+        $orderStatus = Status::where(['name' => 'pending'])->first();
         $order = new Order();
 
         // if account exist redirect to log in page
@@ -77,7 +135,7 @@ class OrderController extends Controller
                       Please log in to make order');
             }
 
-            $order->orderStatus()->associate($orderStatus);
+            $order->status()->associate($orderStatus);
             $order->customer()->associate($customer);
             $order->about = $request->input('about') ?? '';
             $order->save();
@@ -95,7 +153,7 @@ class OrderController extends Controller
         ]);
 
         $order->orderContact()->associate($contact);
-        $order->orderStatus()->associate($orderStatus);
+        $order->status()->associate($orderStatus);
         $order->about = $request->input('about') ?? '';
         $order->save();
 
@@ -114,51 +172,44 @@ class OrderController extends Controller
     }
 
     //TODO: create project if order status is Processing
-
+    // TODO: status change history
     public function update(Request $request, $orderId) {
+
         $order = Order::findOrFail($orderId);
-        $oldStatus = $order->orderStatus;
 
-        $status = OrderStatus::findOrFail($request->order_status_id);
+        $oldStatus = Status::findOrFail($request->input('order_status_id'));
+        $newStatus = Status::findOrFail($request->input('new_order_status_id'));
 
-        if($request->customer)
-            $customer = Customer::findOrFail($request->customer["id"]);
-        if($request->project)
-            $project = Project::findOrFail($request->project["id"]);
 
-        //TODO: validate nested model
-
-        if(!is_null($request->order_contact)) {
-            $contact = OrderContact::firstOrCreate([
-                'name' => $request->order_contact["name"],
-                'email' => $request->order_contact["email"],
-                'phone' => $request->order_contact["phone"],
-            ]);
-            $order->orderContact()->associate($contact);
-        }
-
-        $order->orderStatus()->associate($status);
-        $order->project()->associate($project ?? null);
-        $order->customer()->associate($customer ?? null);
-        $order->about = $request->about;
-        $order->save();
 
         // if order status already does not undo, then remove entry in undo_order table
-        if($oldStatus->name = 'Undo' && $order->orderStatus->id != $oldStatus->id) {
+        if($oldStatus->name == 'Undo' && $newStatus->id != $oldStatus->id) {
+            dd($oldStatus);
             $undoOrderEntry = UndoOrder::where("order_id", $order->id)->first();
             $undoOrderEntry->delete();
         }
-        else if ($order->orderStatus->name == 'Undo') {
+        else if ($order->status->name == 'Undo') {
+            $caseId = $request->input('order_undo_case_id');
             UndoOrder::create([
                 'order_id' => $order->id,
-                'order_undo_case_id' => null
+                'order_undo_case_id' => $caseId
             ]);
         }
 
-//        switch ($order->orderStatus) {
+        $order->status()->associate($newStatus);
+        $order->save();
+
+//        switch ($order->status) {
 //            case ""
 //        }
-        return response()->json(['data' => $order, 201]);
+
+        $resOrder = Order::with(
+    'project.projectType',
+            'status',
+            'customer.user',
+            'orderContact')
+            ->findOrFail($order->id);
+        return response()->json($resOrder, 201);
     }
 
     public function addUndoCaseEntry(Request $request, $orderId, $caseId) {
@@ -185,7 +236,8 @@ class OrderController extends Controller
     }
 
     public function createCustomerAccount($orderId) {
-        $order = Order::with("orderContact")->findOrFail($orderId);
+        $order = Order::with("orderContact")
+            ->findOrFail($orderId);
 
         $pwd = Str::random(10);
 
@@ -205,5 +257,19 @@ class OrderController extends Controller
         return response()->json(['data' => $order, 201]);
     }
 
+
+    public function getStatuses(Request $request) {
+        $statuses = Status::all();
+        return response()->json($statuses);
+    }
+
+    public function getMinMaxValues(Request $request) {
+        $minMaxProjectDeadline = [Project::min('deadline'), Project::max('deadline')];
+        $minMaxOrderCreatedDate = [Order::min('created_at'), Order::max('created_at')];
+
+        return response()->json(
+            compact('minMaxOrderCreatedDate', 'minMaxProjectDeadline')
+        );
+    }
 
 }

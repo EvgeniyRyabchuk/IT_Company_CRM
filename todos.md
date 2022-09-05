@@ -11,7 +11,8 @@ Add hirizontal scrollbar
 
 --- Client FeedBack
 
-
+Project types disable if not match the queryString 
+Order data for project 
 
 
 Online Chat:  
@@ -24,11 +25,13 @@ Error  showsystem
 Perfect scroll mobile 
 Alert system 
 Pdf-export 
-Order data for project 
-Project types desable if not match the queryString 
 
+Order status history and order index 
+Order more seeding 
+Is project exist radio button  
 
-
+if sort and filter too fast app work is wrong  
+Search by guest name 
 
 --- DB 
 

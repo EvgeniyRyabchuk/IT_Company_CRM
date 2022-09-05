@@ -14,9 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_statuses', function (Blueprint $table) {
+        Schema::create('statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 500);
+            $table->string('bgColor', 10);
+            $table->unsignedSmallInteger('index');
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ return new class extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        Schema::dropIfExists('order_statuses');
+        Schema::dropIfExists('statuses');
     }
 };

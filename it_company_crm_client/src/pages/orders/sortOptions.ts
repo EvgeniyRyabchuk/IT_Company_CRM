@@ -5,14 +5,14 @@ const defOrderSortOrderData : SortOrderOptionType[] = [
 
     {
         id: 1,
-        name: 'Дата',
+        name: 'Дата создания заказа',
         value: 'created_at',
         order: 'asc',
         selected: true
     },
     {
         id: 2,
-        name: 'Дата',
+        name: 'Дата создания заказа',
         value: 'created_at',
         order: 'desc',
         selected: false
@@ -27,7 +27,7 @@ const defOrderSortOrderData : SortOrderOptionType[] = [
     },
     {
         id: 4,
-        value: 'member_count',
+        value: 'status',
         order: 'desc',
         name: 'Статусу',
         selected: false
@@ -35,14 +35,14 @@ const defOrderSortOrderData : SortOrderOptionType[] = [
 
     {
         id: 5,
-        value: 'project.deadline',
+        value: 'deadline',
         order: 'asc',
         name: 'Крайний срок',
         selected: false
     },
     {
         id: 6,
-        value: 'project.deadline',
+        value: 'deadline',
         order: 'desc',
         name: 'Крайний срок',
         selected: false

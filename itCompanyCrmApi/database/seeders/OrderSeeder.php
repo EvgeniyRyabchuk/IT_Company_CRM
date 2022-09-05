@@ -5,12 +5,13 @@ namespace Database\Seeders;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderContact;
-use App\Models\OrderStatus;
+use App\Models\Status;
 use App\Models\Project;
 use App\Models\UndoOrder;
 use App\Models\UndoOrderCase;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class OrderSeeder extends Seeder
 {
@@ -24,32 +25,35 @@ class OrderSeeder extends Seeder
         $projects = Project::take(10)->get();
         $customers = Customer::take(10)->get();
 
+        $reqPath = 'static/files/orders/requirements/SoftwareRequirements.doc';
+//        $requirementFile= Storage::disk('public')->files($reqPth);
+
         $contacts = OrderContact::factory()->count(10)->create()
-        ->each(function ($c) {
-            $status = OrderStatus::inRandomOrder()->first();
+        ->each(function ($c) use($reqPath) {
+            $status = Status::inRandomOrder()->first();
             Order::create([
-                'order_status_id' => $status->id,
+                'status_id' => $status->id,
                 'order_contact_id' => $c->id,
                 'about' => fake()->sentence(10),
-                'extra_file' => fake()->filePath()
+                'extra_file' => $reqPath
             ]);
         });
 
         for ($i = 0; $i < 10; $i++) {
-            $status = OrderStatus::where('name', 'Finished')->first();
+            $status = Status::where('name', 'Finished')->first();
 
             Order::create([
                 'project_id' => $projects[$i]->id,
-                'order_status_id' => $status->id,
+                'status_id' => $status->id,
                 'customer_id' => $customers[$i]->id,
                 'about' => fake()->sentence(10),
-                'extra_file' => fake()->filePath()
+                'extra_file' => $reqPath
             ]);
 
         }
 
         Order::all()->each(function ($order) {
-            $undoStatus = OrderStatus::where('name', 'Undo')->first();
+            $undoStatus = Status::where('name', 'Undo')->first();
 
             if($order->order_status_id == $undoStatus->id) {
                 $undoCase = UndoOrderCase::inRandomOrder()->first();

@@ -1,14 +1,15 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
+    Avatar,
     Box,
     Card,
     CardContent,
     CircularProgress,
+    FormControl,
     IconButton,
     InputAdornment,
     MenuItem,
     Select,
-    styled,
     TextField
 } from "@mui/material";
 import {Breadcrumb} from "../../components";
@@ -16,17 +17,20 @@ import {Container} from "../../assets/components/breadcrumb";
 import '../../assets/components/AltTable/style.scss';
 import {useNavigate} from "react-router-dom";
 import moment from "moment";
-import {Add, Delete, East, Edit, FilterAlt, Search, Sort} from "@mui/icons-material";
+import {CloudDownload, Delete, Devices, East, Edit, FilterAlt, Search, Sort} from "@mui/icons-material";
 import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
 import defOrderSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
 import {SortOrderOptionType} from "../../types/global";
 import {defLimit, defPage} from "../../utils/constant";
-import ProjectFilter, {OrderFilterData} from "./OrderFilter";
+import OrderFilter, {OrderFilterData} from "./OrderFilter";
 import useDebounce from "../../hooks/useDebounce";
-import {Order} from "../../types/order";
+import {Order, OrderStatus} from "../../types/order";
 import {OrderService} from "../../services/OrderService";
+import {styled} from "@mui/system";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
+import defProjectSortOrderData from "../projects/sortOptions";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -34,6 +38,12 @@ export const SearchInput = styled("div")(({ theme }) => ({
     display: 'flex',
 }));
 
+export const Line = styled("div")(({theme}) => ({
+    height: '2px',
+    backgroundColor: 'black',
+    margin: '5px 0px',
+    width: '100px',
+}));
 
 const ProjectsListPage = () => {
 
@@ -57,6 +67,7 @@ const ProjectsListPage = () => {
     // const [openEmployeeAddMoal, setOpenEmployeeAddModal] = useState<boolean>(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+    const [statuses, setStatuses] = useState<OrderStatus[]>([]);
 
     const urlParamsStr = useMemo<string>( () => {
         const params = [
@@ -66,9 +77,9 @@ const ProjectsListPage = () => {
             { key: 'order', value: order },
             { key: 'search', value: search },
 
-            // { key: 'projectTypes', value: JSON.stringify(filterOptionData?.projectTypes) },
-            // { key: 'budgetRange', value: JSON.stringify(filterOptionData?.budgetRange) },
-            // { key: 'deadlineRange', value: JSON.stringify(filterOptionData?.deadlineRange) },
+            { key: 'orderStatuses', value: JSON.stringify(filterOptionData?.orderStatuses) },
+            { key: 'deadlineRange', value: JSON.stringify(filterOptionData?.deadlineRange) },
+            { key: 'createdAtOrderRange', value: JSON.stringify(filterOptionData?.createdOrderRange) },
         ];
         return getQueryVarsInStringFormat(params);
     }, [sort, order, page, limit, debouncedSearch, filterOptionData]);
@@ -90,6 +101,15 @@ const ProjectsListPage = () => {
     });
 
     useEffect(() => {
+
+        const fetchStatuses = async () => {
+            const { data }  = await OrderService.getOrderStatuses();
+            setStatuses(data);
+        }
+        fetchStatuses();
+    }, []);
+
+    useEffect(() => {
         fetchOrders();
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
@@ -101,23 +121,13 @@ const ProjectsListPage = () => {
     const onSortOrderHandleChange = (event: any) => {
         const value = event.target.value;
         const option = defOrderSortOrderData.find((e: SortOrderOptionType) => e.id == value);
-        if(option) {
+        if (option) {
             setSort(option.value);
             setOrder(option.order);
             setPage(defPage);
             setLimit(defLimit);
         }
-        console.log('sort', option)
     }
-
-    // const addEmployeeToProjectHanle = async (employee: Employee) => {
-    //     console.log('===============================');
-    //     console.log(employee.id, selectedOrder!.id);
-    //     if(selectedOrder)
-    //     {
-    //         const { data } = await ProjectService.addEmployeeToProject(employee.id, selectedOrder.id);
-    //     }
-    // }
 
     const deleteOrder = (orderId: number) => {
         const deleteIndex = orders.findIndex((e: Order) => e.id === orderId);
@@ -126,9 +136,24 @@ const ProjectsListPage = () => {
         OrderService.deleteOrder(orderId);
     }
 
-    const handlerFilterChange = useCallback((data: OrderFilterData) => {
+    const handlerFilterChange = useCallback((data: OrderFilterData, isReset: boolean) => {
         setFilterOptionData({...data});
+        setPage(defPage);
+        setLimit(defLimit);
+
     }, []);
+
+    const handleStatusChange = async (event: any, orderId: number, oldStatusId: number) => {
+        const value = event.target.value;
+        const { data } = await OrderService.updateOrder(orderId, {
+            'order_status_id': oldStatusId,
+            'new_order_status_id': value
+        });
+        const newOrders = [ ...orders ];
+        const findIndex = newOrders.findIndex(e => e.id === data.id);
+        newOrders.splice(findIndex, 1, data);
+        setOrders(newOrders);
+    }
 
     return (
         <Container>
@@ -177,7 +202,7 @@ const ProjectsListPage = () => {
                                 <Select
                                     size='small'
                                     style={{
-                                        minWidth: '200px'
+                                        minWidth: '200px',
                                     }}
                                     labelId="demo-select-small"
                                     id="demo-select-small"
@@ -195,10 +220,10 @@ const ProjectsListPage = () => {
                                                     size="small"
                                                     color="primary"
                                                     className="text-primary"
-                                                    title="View details">
-                                                    <Sort
-                                                        onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                                    />
+                                                    title="View details"
+                                                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                                                >
+                                                    <Sort/>
 
                                                 </IconButton>
                                                 { getSortOrderOptionValue(e) }
@@ -228,7 +253,7 @@ const ProjectsListPage = () => {
 
                     </div>
                     <CardContent className="p-0">
-                       <ProjectFilter
+                       <OrderFilter
                            isOpen={isFilterOpen}
                            onFilterChange={handlerFilterChange}
                        />
@@ -236,12 +261,12 @@ const ProjectsListPage = () => {
                             <table className="table table-striped table-hover text-nowrap mb-0">
                                 <thead className="thead-light">
                                 <tr>
-                                    <th style={{ width: '40%' }}>#id</th>
+                                    <th className="text-center">#id</th>
                                     <th className="text-center">Project</th>
                                     <th className="text-center">Status</th>
                                     <th className="text-center">Customer Contact Info</th>
                                     <th className="text-center">Extra File</th>
-                                    <th className="text-center">Order Created At / Project Deadline</th>
+                                    <th className="text-center">Created Order / Deadline Date</th>
                                     <th className="text-center">Actions</th>
 
                                 </tr>
@@ -290,27 +315,94 @@ const ProjectsListPage = () => {
                                         </td>
                                         <td className="text-center">
                                             <Box>
-                                                { e.order_status.name }
+                                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                                    <Select
+                                                        style={{
+                                                            width: '200px',
+                                                            border: `1px solid black`,
+                                                            color: `${statuses.find(status =>
+                                                                status.id === e.status_id
+                                                            )!.bgColor}`
+                                                        }}
+                                                        id="demo-select-status"
+                                                        defaultValue={
+                                                            statuses.find(status =>
+                                                                status.id === e.status_id
+                                                            )!.id}
+                                                        onChange={(event: any) =>
+                                                            handleStatusChange(event, e.id, e.status_id)
+                                                        }
+                                                    >
+                                                        {
+                                                            statuses.map(status =>
+                                                                <MenuItem
+                                                                    key={status.id}
+                                                                    value={status.id}
+                                                                    style={{
+                                                                        border: `1px solid ${status.bgColor} !important`
+                                                                    }}
+                                                                >
+                                                                    {status.name}
+                                                                </MenuItem>
+                                                            )
+                                                        }
+                                                    </Select>
+                                                </FormControl>
                                             </Box>
                                         </td>
 
                                         <td className="text-center">
-                                            <Box
-                                                className="h-auto py-0 px-3 badge badge-warning"
-                                            >
+                                            <Box style={{
+                                                width: '250px',
+                                                overflowX: 'hidden'
+                                            }}>
                                                 { e.customer_id ?
-                                                    <div>
-                                                         <span className="font-weight-bold text-black">
-                                                            {e.customer!.user.full_name}
-                                                        </span>
-                                                        <span className="text-black-50 d-block">
-                                                           {e.customer!.user.email}
-                                                        </span>
+                                                    <div className="d-flex align-items-center">
+                                                        <div
+                                                            className="MuiAvatar-root MuiAvatar-circle"
+                                                            style={{marginRight: '10px'}}
+                                                            >
+                                                            <Avatar
+                                                                alt="avatar"
+                                                                src={`${API_URL_WITH_PUBLIC_STORAGE}/${e.customer?.user.avatar}`}
+                                                                className="MuiAvatar-img"
+                                                            />
+                                                            </div>
+                                                        <div style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            alignContent: 'start'}}
+                                                        >
+                                                            <a href="#/"
+                                                               style={{
+                                                                   maxWidth: '200px',
+                                                                   whiteSpace: 'nowrap',
+                                                                   overflow: 'hidden',
+                                                                   textOverflow: 'ellipsis',
+                                                               }}
+                                                               className="text-left font-weight-bold text-black"
+                                                                title="...">
+                                                                {e.customer!.user.full_name}
+                                                            </a>
+                                                            <div className="text-left text-black-50 d-block">
+                                                                  {e.customer!.user.email}
+                                                            </div>
+                                                            <div className="text-left text-black-50 d-block">
+                                                                {
+                                                                    e.customer!.user.phones &&
+                                                                    e.customer!.user.phones.length > 0 &&
+                                                                    `${e.customer!.user.phones[0].phone_number}`
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     :
                                                     <div>
                                                          <span className="font-weight-bold text-black">
                                                             {e.order_contact!.name}
+                                                        </span>
+                                                        <span className="text-black-50 d-block">
+                                                           {e.order_contact!.email}
                                                         </span>
                                                         <span className="text-black-50 d-block">
                                                            {e.order_contact!.phone}
@@ -322,30 +414,42 @@ const ProjectsListPage = () => {
                                         </td>
 
                                         <td className="text-center">
-                                            <Box
-                                                className="h-auto py-0 px-3 badge badge-warning"
-                                            >
+                                            <Box className="py-0 px-3 file-download">
                                                 {
                                                     e.extra_file ?
-                                                    'Extra File'
+                                                        <IconButton onClick={() => {
+                                                            // eslint-disable-next-line no-restricted-globals
+                                                            location.href = `${API_URL_WITH_PUBLIC_STORAGE}/${e.extra_file}`;
+                                                        }}>
+                                                            <CloudDownload/>
+                                                        </IconButton>
                                                         :
-                                                    'no extra file'
+                                                        'no extra file'
                                                 }
-
                                             </Box>
                                         </td>
 
                                         <td className="text-center">
                                             <div
-                                                className="h-auto py-0 px-3 badge badge-danger"
-                                                 style={{fontSize: '13px'}}>
+                                                className="h-auto py-0 px-3 badge d-flex"
+                                                 style={{
+                                                     fontSize: '13px',
+                                                     flexWrap: 'wrap',
+                                                     flexDirection: 'column',
+                                                     alignContent: 'center'
+                                                 }}>
                                                     {
-                                                        moment(e.created_at).format('DD/MM/YYYY')
+                                                        <div>
+                                                            {moment(e.created_at).format('DD/MM/YYYY')}
+                                                        </div>
+
                                                     }
-                                                    /
+                                                    <Line />
                                                     {
                                                         e.project_id && e.project?.deadline ?
-                                                            moment(e.project.deadline).format('DD/MM/YYYY')
+                                                            <div>
+                                                                {moment(e.project.deadline).format('DD/MM/YYYY')}
+                                                            </div>
                                                         :
                                                             'no deadline yet'
                                                     }
@@ -362,26 +466,18 @@ const ProjectsListPage = () => {
                                                 <IconButton onClick={() => deleteOrder(e.id)}>
                                                     <Delete />
                                                 </IconButton>
-                                                <IconButton
-                                                    // onClick={() => {
-                                                    //     setSelectedOrder(e);
-                                                    //     setOpenEmployeeAddModal(true);
-                                                    // }}
-                                                >
-                                                    <div>
-                                                        <Add />
-                                                       <small>
-                                                           Add to project
-                                                       </small>
-                                                    </div>
-                                                </IconButton>
-                                                <IconButton
-                                                    onClick={() => {
-                                                        navigator(`/projects/${e.id}`)
-                                                    }}
-                                                >
-                                                    <East />
-                                                </IconButton>
+                                                {
+                                                    e.project_id &&
+                                                    <IconButton
+                                                        onClick={() => {
+                                                            navigator(`/projects/${e.project_id}`)
+                                                        }}
+                                                    >
+                                                        <Devices />
+                                                        <East />
+                                                    </IconButton>
+                                                }
+
                                             </Box>
                                         </td>
                                     </tr>

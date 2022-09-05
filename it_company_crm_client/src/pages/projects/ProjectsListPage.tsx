@@ -131,7 +131,15 @@ const ProjectsListPage = () => {
 
     const handlerFilterChange = useCallback((data: ProjectFilterData) => {
         setFilterOptionData({...data});
+        setPage(defPage);
+        setLimit(defLimit);
     }, []);
+
+    useEffect(() => {
+        console.log(page, limit, totalPage, isLoading);
+    }, [page, limit, totalPage, isLoading]);
+
+
 
     return (
         <Container>
@@ -334,7 +342,7 @@ const ProjectsListPage = () => {
                                 ref={lastElementRef}
                                 style={{
                                     width: '100%',
-                                    // height: 20,
+                                    height: 20,
                                     background: 'red',
                                 }}>
 

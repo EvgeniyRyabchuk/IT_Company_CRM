@@ -13,8 +13,8 @@ class Order extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function orderStatus() {
-        return $this->belongsTo(OrderStatus::class);
+    public function status() {
+        return $this->belongsTo(Status::class);
     }
 
     public function customer() {

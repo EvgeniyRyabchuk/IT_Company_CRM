@@ -5,8 +5,8 @@ import {Order, OrderStatus} from "../types/order";
 
 
 interface OrderMinMax {
-    minMaxProjectBudget: string[];
     minMaxProjectDeadline: string[];
+    minMaxOrderCreatedDate: string[];
 }
 
 export class OrderService {
@@ -17,15 +17,9 @@ export class OrderService {
         return $api.get<PaginatedResponse<Order>>(`/orders${queryParams ?? ''}`);
     }
 
-    // static async addEmployeeToProject(employeeId: number, projectId: number)
-    //     : Promise<AxiosResponse<string>> {
-    //     return $api.post<string>(`/projects/${projectId}/members`, {
-    //         employeeId
-    //     });
-    // }
 
-    static async updateOrder(orderId: number, newOrder: Order): Promise<AxiosResponse<Order>> {
-        return $api.put<Order>(`/orders/${orderId}`);
+    static async updateOrder(orderId: number, payload: any): Promise<AxiosResponse<Order>> {
+        return $api.put<Order>(`/orders/${orderId}`, payload);
     }
 
     static async deleteOrder(orderId: number): Promise<AxiosResponse<string>> {

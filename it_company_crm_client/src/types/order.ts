@@ -26,13 +26,14 @@ export interface OrderStatus {
     id: number;
     name: string;
     is_public: boolean;
+    bgColor: string;
 }
 
 export interface Order {
     id: number;
 
     project: Project;
-    order_status: OrderStatus;
+    status: OrderStatus;
     order_contact: OrderContact | null;
     customer: Customer | null;
 
@@ -42,7 +43,7 @@ export interface Order {
     updated_at: string;
 
     customer_id: number;
-    order_status_id: number;
+    status_id: number;
     order_contact_id: number;
     project_id: number;
 }
