@@ -28,6 +28,17 @@ export interface OrderStatus {
     is_public: boolean;
     bgColor: string;
     index: number;
+    created_at: string;
+}
+
+export interface StatusHistory {
+    id: number;
+    // order: Order;
+    status: OrderStatus;
+
+    order_id: number;
+    status_id: number;
+    created_at: string;
 }
 
 export interface Order {
@@ -35,6 +46,8 @@ export interface Order {
 
     project: Project;
     status: OrderStatus;
+    status_history: StatusHistory[];
+
     order_contact: OrderContact | null;
     customer: Customer | null;
 

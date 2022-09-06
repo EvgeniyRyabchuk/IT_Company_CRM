@@ -342,14 +342,14 @@ const ProjectsListPage = () => {
                                                             width: '200px',
                                                             border: `1px solid black`,
                                                             color: `${statuses.find(status =>
-                                                                status.id === e.status_id
-                                                            )!.bgColor}`
+                                                                status.id === e.status_id)!.bgColor
+                                                            }`
                                                         }}
                                                         id="demo-select-status"
                                                         defaultValue={
                                                             statuses.find(status =>
                                                                 status.id === e.status_id
-                                                            )!.id}
+                                                            )!.id }
                                                         onChange={(event: any) =>
                                                             handleStatusChange(event, e.id, e.status_id)
                                                         }

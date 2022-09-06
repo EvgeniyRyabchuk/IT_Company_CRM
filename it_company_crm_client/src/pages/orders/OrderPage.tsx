@@ -15,6 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {height} from "@mui/system";
+import moment from "moment";
 
 function createData(
     name: string,
@@ -178,7 +179,16 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                 <Step key={status.name}>
                                     <StepLabel
                                         optional={
-                                            <Typography variant="caption">Order status №{index+1}</Typography>
+                                            <Typography variant="caption">
+                                                Order status №{index+1}
+                                                <br/>
+                                                {
+                                                    moment(order?.status_history
+                                                        .find(sh => sh.status_id === status?.id)
+                                                        ?.created_at ?? '')
+                                                        .format('YYYY-MM-DD hh:mm:ss')
+                                                }
+                                            </Typography>
                                         }
                                     >
                                         {status.name}

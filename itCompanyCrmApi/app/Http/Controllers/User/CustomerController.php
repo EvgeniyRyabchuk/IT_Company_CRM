@@ -60,8 +60,8 @@ class CustomerController extends Controller
                 },
                 'orders as finished_order_count' => function($q) use($doneOrderStatus) {
                     $q->join('orders as _orders', 'customers.id', '_orders.customer_id')
-                        ->join('order_statuses', '_orders.order_status_id', 'order_statuses.id')
-                        ->where('order_statuses.id', $doneOrderStatus->id);
+                        ->join('statuses', '_orders.status_id', 'statuses.id')
+                        ->where('statuses.id', $doneOrderStatus->id);
                 }
             ])
             ->whereHas('user', function ($q) use ($search) {
