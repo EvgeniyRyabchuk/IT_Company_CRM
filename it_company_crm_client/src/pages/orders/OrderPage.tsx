@@ -88,6 +88,7 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     }, [])
 
 
+
     return (
         <Container>
 
@@ -256,26 +257,31 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                             Tags
                                         </div>
                                         //TODO: solve
-                                        {/*<div className='flex-cell-list'>*/}
-                                        {/*    <Autocomplete*/}
-                                        {/*        multiple*/}
-                                        {/*        id="tags-filled"*/}
-                                        {/*        defaultValue={order?.customer?.user.tags.map(*/}
-                                        {/*            (e) => e.name)}*/}
-                                        {/*        options={*/}
-                                        {/*          order && order.customer ?*/}
-                                        {/*              order.customer.user.phones.map(t => t.phone_number) : ['123']*/}
-                                        {/*        }*/}
-
-                                        {/*        freeSolo*/}
-                                        {/*        // renderTags={(value: readonly string[], getTagProps) =>*/}
-                                        {/*        //     value.map((option: string, index: number) => (*/}
-                                        {/*        //         <Chip variant="outlined" label={option} {...getTagProps({ index })} />*/}
-                                        {/*        //     ))*/}
-                                        {/*        // }*/}
-
-                                        {/*    />*/}
-                                        {/*</div>*/}
+                                        <div className='flex-cell-list'>
+                                            <Autocomplete
+                                                multiple
+                                                id="tags-filled"
+                                                options={order && order.customer ?
+                                                    order.customer!.user.tags.map((tag) => tag.name)
+                                                    : []
+                                                }
+                                                // defaultValue={order!.customer!.user.tags.map(
+                                                //     (e) => e.name)}
+                                                freeSolo
+                                                renderTags={(value: readonly string[], getTagProps) =>
+                                                    value.map((option: string, index: number) => (
+                                                        <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                                                    ))
+                                                }
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        variant="filled"
+                                                        label="freeSolo"
+                                                        placeholder="Favorites"
+                                                    />)}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </Grid>
