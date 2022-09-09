@@ -235,7 +235,7 @@ const OrderFilter : React.FC<{
                 spacing={3}
                 style={{ padding: '15px', margin: '0'}}
             >
-                <Grid md={4} xs={12}>
+                <Grid item md={4} xs={12}>
 
                     <Accordion defaultExpanded={true}>
                         <AccordionSummary

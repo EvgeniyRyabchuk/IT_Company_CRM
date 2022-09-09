@@ -39,7 +39,7 @@ function TabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <div>{children}</div>
                 </Box>
             )}
         </div>
@@ -143,12 +143,11 @@ const ProjectPage = () => {
             </AppBar>
 
             <TabPanel value={value} index={0} dir={theme.direction}>
-                <h1>Main</h1>
-
+                    Main
             </TabPanel>
 
             <TabPanel value={value} index={1} dir={theme.direction}>
-                <h1>Kanban Board</h1>
+                Kanban Board
 
                 <Kanban projectId={parseInt(projectId!)} />
             </TabPanel>
@@ -166,27 +165,25 @@ const ProjectPage = () => {
 
                 <ul>
                     { project?.employees.map((e: EmployeeWithProjectRoles) =>
-                        <li>{e.user.full_name} ({e.id}) : role {e.role?.name}</li>
+                        <li key={e.id}>{e.user.full_name} ({e.id}) : role {e.role?.name}</li>
                     ) }
                 </ul>
             </TabPanel>
             <TabPanel value={value} index={4} dir={theme.direction}>
 
-                <h1>History</h1>
+                <div>
+                    <h1>History</h1>
 
-                <div>action 1</div>
-                <div>action 2</div>
-                <div>action 3</div>
-                <div>action 4</div>
-                <div>action 5</div>
-                <div>action 6</div>
+                    <div>action 1</div>
+                    <div>action 2</div>
+                    <div>action 3</div>
+                    <div>action 4</div>
+                    <div>action 5</div>
+                    <div>action 6</div>
+                </div>
+
 
             </TabPanel>
-
-
-
-
-
 
         </Container>
     );

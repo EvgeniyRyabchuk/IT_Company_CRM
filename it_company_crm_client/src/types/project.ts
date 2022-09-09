@@ -3,7 +3,7 @@ import {KanbanLane} from "./kanban";
 import {Employee} from "./user";
 
 
-export interface Tag {
+interface Tag {
     title: string;
 
     created_at: string;

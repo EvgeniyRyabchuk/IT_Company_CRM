@@ -206,10 +206,10 @@ const ProjectsListPage = () => {
                                                     size="small"
                                                     color="primary"
                                                     className="text-primary"
-                                                    title="View details">
-                                                    <Sort
-                                                        onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                                    />
+                                                    title="View details"
+                                                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                                                >
+                                                    <Sort />
 
                                                 </IconButton>
                                                 { getSortOrderOptionValue(e) }

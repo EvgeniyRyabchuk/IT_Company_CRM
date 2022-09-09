@@ -126,7 +126,8 @@ class OrderController extends Controller
             'status',
             'customer.user.phones',
             'orderContact',
-            'statusHistory.status'
+            'statusHistory.status',
+            'customer.user.tags'
         )
             ->find($orderId);
 

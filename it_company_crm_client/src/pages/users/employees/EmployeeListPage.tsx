@@ -306,7 +306,7 @@ const EmployeeListPage = () => {
                                 <ul>
                                     {
                                         row.original.user.phones.map((e: Phone) =>
-                                            <li>{e.phone_number}</li>
+                                            <li key={e.id}>{e.phone_number}</li>
                                         )
                                     }
                                 </ul>

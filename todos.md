@@ -31,6 +31,9 @@ Order more seeding
 
 if sort and filter too fast app work is wrong  
 Search by guest name 
+customers visibility on others pc 
+user tags autocomplite 
+
 
 --- DB 
 
@@ -39,3 +42,6 @@ Search by guest name
 Как разделить номера 
 
 Есть две роли киент и рабочий. У них есть общее поля(имя,почта), но больше различий (у работника - рарплата, у пользователя - отзывы и тд.). Стоит ли вынослить их в отдельные таблицы, а общее хранить в таблице users. И их вообще разделить полностью? Или как? 
+
+
+

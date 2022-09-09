@@ -24,7 +24,7 @@ const ChatHeader = () => {
 
                 <div className="flex fp rd">
                     {currentChat && currentChat.users && currentChat.users.map((e: any) =>
-                        <a className="block" href="#0">
+                        <a key={e.id} className="block" href="#0">
                             <img className="rounded-full cr cc st" src={apiUrl + "storage/" +  e.avatar} width="32" height="32" alt="User 01" />
                         </a>
                     )}

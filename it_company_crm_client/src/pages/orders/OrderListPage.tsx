@@ -69,6 +69,8 @@ const ProjectsListPage = () => {
 
     const [statuses, setStatuses] = useState<OrderStatus[]>([]);
 
+
+
     const urlParamsStr = useMemo<string>( () => {
         const params = [
             { key: 'page', value: page },
@@ -101,12 +103,13 @@ const ProjectsListPage = () => {
         }
     });
 
-    useEffect(() => {
 
-        const fetchStatuses = async () => {
-            const { data }  = await OrderService.getOrderStatuses();
-            setStatuses(data);
-        }
+    const fetchStatuses = async () => {
+        const { data }  = await OrderService.getOrderStatuses();
+        setStatuses(data);
+    }
+
+    useEffect(() => {
         fetchStatuses();
     }, []);
 
@@ -156,7 +159,7 @@ const ProjectsListPage = () => {
         setOrders(newOrders);
     }
 
-
+    console.log(statuses);
 
     return (
         <Container>
@@ -341,15 +344,10 @@ const ProjectsListPage = () => {
                                                         style={{
                                                             width: '200px',
                                                             border: `1px solid black`,
-                                                            color: `${statuses.find(status =>
-                                                                status.id === e.status_id)!.bgColor
-                                                            }`
+                                                            color: `${e.status.bgColor}`
                                                         }}
                                                         id="demo-select-status"
-                                                        defaultValue={
-                                                            statuses.find(status =>
-                                                                status.id === e.status_id
-                                                            )!.id }
+                                                        defaultValue={e.status_id}
                                                         onChange={(event: any) =>
                                                             handleStatusChange(event, e.id, e.status_id)
                                                         }
@@ -360,7 +358,7 @@ const ProjectsListPage = () => {
                                                                     key={status.id}
                                                                     value={status.id}
                                                                     style={{
-                                                                        border: `1px solid ${status.bgColor} !important`
+                                                                        border: `1px solid ${status.bgColor ?? '#ffffff'} !important`
                                                                     }}
                                                                 >
                                                                     {status.name}

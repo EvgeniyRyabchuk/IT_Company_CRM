@@ -53,15 +53,15 @@ class CustomerController extends Controller
 
         $doneOrderStatus = Status::where('name', 'Finished')->first();
 
-        $query = Customer::with('user', 'user.phones', 'user.tags', 'user.phones')
-            ->withCount([
-                'orders as order_count' => function($q) {
-                    $q->join('orders as order_table', 'customers.id', 'order_table.customer_id');
-                },
+        $query = Customer::with('user', 'user.phones', 'user.tags', 'user.phones');
+
+        $query->withCount([
+                'orders as order_count',
                 'orders as finished_order_count' => function($q) use($doneOrderStatus) {
-                    $q->join('orders as _orders', 'customers.id', '_orders.customer_id')
-                        ->join('statuses', '_orders.status_id', 'statuses.id')
-                        ->where('statuses.id', $doneOrderStatus->id);
+            //TODO: solve customers visible
+//                    $q->join('orders as _orders', 'customers.id', '_orders.customer_id')
+//                    ->join('statuses as _statuses', '_orders.status_id', '_statuses.id')
+//                    ->where('_statuses.id', $doneOrderStatus->id);
                 }
             ])
             ->whereHas('user', function ($q) use ($search) {
