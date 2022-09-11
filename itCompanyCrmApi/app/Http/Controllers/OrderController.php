@@ -45,7 +45,11 @@ class OrderController extends Controller
         $query = Order::with('project.projectType',
             'status',
             'customer.user.phones',
-            'orderContact');
+            'orderContact',
+            'project.tags',
+            'project.employees.user',
+            'project.projectLinks'
+        );
 
         switch ($projectExistMode) {
             case 1:
@@ -127,7 +131,8 @@ class OrderController extends Controller
             'customer.user.phones',
             'orderContact',
             'statusHistory.status',
-            'customer.user.tags'
+            'customer.user.tags',
+            'project.tags'
         )
             ->find($orderId);
 

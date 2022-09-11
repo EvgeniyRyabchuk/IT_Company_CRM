@@ -473,9 +473,23 @@ class ProjectController extends Controller
     }
 
     public function getTypes(Request $request) {
-
         $types = ProjectType::all();
         return response()->json($types);
+    }
+
+    public function getRoles(Request $request) {
+        $roles = ProjectRole::all();
+        return response()->json($roles);
+    }
+
+    public function getTags(Request $request) {
+        $tags = DB::table('project_tag')
+            ->join('tags', 'project_tag.tag_id', 'tags.id')
+            ->select('tags.name', 'tags.id')
+            ->distinct()
+            ->get();
+
+        return response()->json($tags);
     }
 
     public function getMaxValues(Request $request) {

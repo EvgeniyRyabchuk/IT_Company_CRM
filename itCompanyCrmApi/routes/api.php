@@ -161,6 +161,8 @@ Route::prefix('orders')->group(function() {
 
 Route::prefix('projects')->group(function() {
     Route::get('/types', [ProjectController::class, 'getTypes']);
+    Route::get('/roles', [ProjectController::class, 'getRoles']);
+    Route::get('/tags', [ProjectController::class, 'getTags']);
     Route::get('/min-max', [ProjectController::class, 'getMaxValues']);
 
     Route::get('/', [ProjectController::class, 'index']);
