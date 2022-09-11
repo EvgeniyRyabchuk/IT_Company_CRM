@@ -3,8 +3,8 @@ import {KanbanLane} from "./kanban";
 import {Employee} from "./user";
 
 
-interface Tag {
-    title: string;
+export interface ProjectTag {
+    name: string;
 
     created_at: string;
     updated_at: string;
@@ -17,8 +17,8 @@ export interface ProjectLink {
     project_id: number,
     link: string;
 
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface ProjectHistory {
@@ -66,7 +66,7 @@ export interface Project {
     updated_at: string;
     project_type: ProjectType;
 
-    tags: Tag[],
+    tags: ProjectTag[],
     order: Order;
     lanes: KanbanLane[];
 

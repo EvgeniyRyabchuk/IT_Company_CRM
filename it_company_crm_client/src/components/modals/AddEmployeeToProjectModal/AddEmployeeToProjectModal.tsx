@@ -14,7 +14,7 @@ type AddUserChatModal = {
     setOpen: any;
     onClose: any;
     onSave: any;
-    project: Project | null;
+    project: Project | null | undefined;
 }
 
 type User = {
@@ -35,13 +35,15 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
     const loading = open;
 
     const getEmployees = async () : Promise<Employee[]> => {
+
         if(project) {
             const { data } = await EmployeeService.getEmployees(
                 `?non-exist-in-project-id=${project.id}&perPage=all`
             );
             return data.data;
         }
-        return [];
+        const { data } = await EmployeeService.getEmployees();
+        return data.data;
     }
 
     useEffect(() => {
@@ -77,7 +79,6 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
 
 
     return (
-        <div>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -87,6 +88,7 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                 BackdropProps={{
                     timeout: 500,
                 }}
+
             >
                 <Fade in={open}>
                     <Box sx={modalStyle} >
@@ -133,6 +135,7 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
                                 <Button autoFocus onClick={() => {
+                                    console.log('selected')
                                     onSave(selectedOption);
                                     onClose();
                                 }} color="primary">
@@ -149,7 +152,6 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                 </Fade>
 
             </Modal>
-        </div>
     );
 };
 

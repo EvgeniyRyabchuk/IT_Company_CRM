@@ -18,7 +18,7 @@ import {Container} from "../../assets/components/breadcrumb";
 import '../../assets/components/AltTable/style.scss';
 import {useNavigate} from "react-router-dom";
 import moment from "moment";
-import {CloudDownload, Delete, Devices, East, Edit, FilterAlt, Info, Search, Sort} from "@mui/icons-material";
+import {Add, CloudDownload, Delete, Devices, East, Edit, FilterAlt, Info, Search, Sort} from "@mui/icons-material";
 import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
@@ -31,6 +31,12 @@ import {Order, OrderStatus} from "../../types/order";
 import {OrderService} from "../../services/OrderService";
 import {styled} from "@mui/system";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
+import CreateEditEmployeeModal from "../../components/modals/CreateEditEmployeeModal/CreateEditEmployeeModal";
+import CreateEditProjectModal from "../../components/modals/CreateEditProjectModal/CreateEditProjectModal";
+import {Employee} from "../../types/user";
+import {Project} from "../../types/project";
+import {EmployeeService} from "../../services/EmployeeService";
+import {ProjectService} from "../../services/ProjectService";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -64,12 +70,10 @@ const ProjectsListPage = () => {
     const [filterOptionData, setFilterOptionData] = useState<OrderFilterData | null>(null);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    // const [openEmployeeAddMoal, setOpenEmployeeAddModal] = useState<boolean>(false);
-    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+
 
     const [statuses, setStatuses] = useState<OrderStatus[]>([]);
-
-
 
     const urlParamsStr = useMemo<string>( () => {
         const params = [
@@ -102,7 +106,6 @@ const ProjectsListPage = () => {
             setOrders([]);
         }
     });
-
 
     const fetchStatuses = async () => {
         const { data }  = await OrderService.getOrderStatuses();
@@ -159,7 +162,34 @@ const ProjectsListPage = () => {
         setOrders(newOrders);
     }
 
-    console.log(statuses);
+
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [createEditModalState, setCreateEditModalState] = useState({
+        isOpen: false,
+        mode: 'create',
+    });
+
+    const handleCreateEditRow = async (orderId: number | null | undefined, values: Project, mode: string) => {
+        console.log('submit', values);
+
+        if(mode === 'create') {
+            const { data } = await ProjectService.createProjectForOrder(values);
+            fetchOrders();
+        }
+        else {
+            const { data: updatedProject } = await ProjectService.updateProject(values.id, values);
+
+            const newOrders = orders.map((e: Order) => {
+                if(e.id === orderId) {
+                    e.project = updatedProject;
+                    return e;
+                } else {
+                    return e;
+                }});
+            setOrders(newOrders);
+        }
+    };
+
 
     return (
         <Container>
@@ -483,19 +513,35 @@ const ProjectsListPage = () => {
                                                     <Delete />
                                                 </IconButton>
                                                 {
-                                                    e.project_id &&
-                                                    <IconButton
-                                                        onClick={() => {
-                                                            navigator(`/projects/${e.project_id}`)
-                                                        }}
-                                                    >
-                                                        <Devices />
-                                                        <East />
-                                                    </IconButton>
+                                                    e.project_id ?
+                                                        <span>
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    navigator(`/projects/${e.project_id}`)
+                                                                }}
+                                                            >
+                                                                <Devices/>
+                                                                <East/>
+                                                            </IconButton>
+                                                            <IconButton
+                                                                onClick={() => {
+                                                                    setCreateEditModalState({isOpen: true, mode: 'update'})
+                                                                    setSelectedOrder(e);
+                                                                }}
+                                                            >
+                                                                Edit Project
+                                                                <Edit/>
+                                                            </IconButton>
+                                                            </span>
+                                                    :
+                                                        <IconButton onClick={() => {
+                                                            setCreateEditModalState({isOpen: true, mode: 'create'})
+                                                        }}>
+                                                            <Add />
+                                                            Create Project
+                                                        </IconButton>
                                                 }
-                                                <IconButton onClick={() => {
-                                                  navigator(`/orders/${e.id}`);
-                                                }}>
+                                                <IconButton onClick={() => { navigator(`/orders/${e.id}`) }}>
                                                     <Info />
                                                 </IconButton>
                                             </Box>
@@ -529,13 +575,13 @@ const ProjectsListPage = () => {
 
 
 
-            {/*<AddEmployeeToProjectModal*/}
-            {/*    open={openEmployeeAddMoal}*/}
-            {/*    onClose={() => setOpenEmployeeAddModal(false)}*/}
-            {/*    onSave={addEmployeeToProjectHanle}*/}
-            {/*    setOpen={setOpenEmployeeAddModal}*/}
-            {/*    project={selectedOrder}*/}
-            {/*/>*/}
+            <CreateEditProjectModal
+                onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
+                onSubmit={handleCreateEditRow}
+                open={createEditModalState.isOpen}
+                mode={createEditModalState.mode}
+                order={selectedOrder}
+            />
 
 
         </Container>

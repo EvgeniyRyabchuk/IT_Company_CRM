@@ -20,7 +20,7 @@ const SidebarNavRoot = styled(Box)(({ theme, width, primaryBg, bgImgURL }) => ({
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'top',
   backgroundSize: 'cover',
-  zIndex: 2000,
+  zIndex: 1000,
   overflow: 'hidden',
   color: theme.palette.text.primary,
   transition: 'all 250ms ease-in-out',

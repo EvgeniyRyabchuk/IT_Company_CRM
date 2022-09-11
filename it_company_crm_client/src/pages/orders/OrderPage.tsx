@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {PageMode} from "../../types/global";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {Order, OrderStatus} from "../../types/order";
@@ -88,6 +88,19 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     }, [])
 
 
+   const userTagsAutocompliteDefaultValues = useMemo<string[]>(() => {
+           return order && order.customer ?
+               order.customer.user.tags.map(e => e.name) : [];
+       }
+   , [order]);
+
+
+    const deleteOrder = async () => {
+        if(order) {
+            const { data } = await OrderService.deleteOrder(order.id);
+            navigate(-1);
+        }
+    }
 
     return (
         <Container>
@@ -112,22 +125,23 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                         <Box style={{
                             display: 'flex', alignItems: 'center'
                         }}>
-                            <Button
-                                sx={{mx: 1}}
-                                variant='contained'
-                                color='secondary'
-                            >
-                                <div>
-                                    EDIT
-                                </div>
-                                <Edit />
-                            </Button>
+                            {/*<Button*/}
+                            {/*    sx={{mx: 1}}*/}
+                            {/*    variant='contained'*/}
+                            {/*    color='secondary'*/}
+                            {/*>*/}
+                            {/*    <div>*/}
+                            {/*        EDIT*/}
+                            {/*    </div>*/}
+                            {/*    <Edit />*/}
+                            {/*</Button>*/}
                             <Button
                                 sx={{
                                     mx: 1,
                                 }}
                                 variant='contained'
                                 color={'error'}
+                                onClick={deleteOrder}
                             >
                                 <div>
                                     DELETE
@@ -140,9 +154,9 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                 <Grid container spacing={3} sx={{mt: 5}}>
                     <Grid item md={9} xs={12}>
                         <Grid container spacing={3}>
-                            <Grid item md={6} xs={12} style={{height: '450px'}}>
+                            <Grid item md={6} xs={12}>
                                 <h3>Order Data</h3>
-                                <div className='flex-table'>
+                                <div className='flex-table' style={{height: '450px'}}>
                                     <div className='flex-row'>
                                         <div className='flex-cell'>
                                             Created at:
@@ -220,70 +234,113 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                             </Grid>
                             <Grid item md={6} xs={12} >
                                 <h3>Customer Data</h3>
-                                <div className='flex-table'>
-                                    <div className='flex-row'>
-                                        <div className='flex-cell'>
-                                            Full Name
-                                        </div>
-                                        <div className='flex-cell'>
-                                            {order?.customer?.user.full_name}
-                                        </div>
-                                    </div>
+                                {
+                                    order?.customer ?
+                                        <div className='flex-table' style={{height: '450px'}}>
+                                            <div className='flex-row'>
+                                                <div className='flex-cell'>
+                                                    CUSTOMER USER ID
+                                                </div>
+                                                <div className='flex-cell'>
+                                                    {order?.customer?.user.id}
+                                                </div>
+                                            </div>
+                                            <div className='flex-row'>
+                                                <div className='flex-cell'>
+                                                    Full Name
+                                                </div>
+                                                <div className='flex-cell'>
+                                                    {order?.customer?.user.full_name}
+                                                </div>
+                                            </div>
 
-                                    <div className='flex-row'>
-                                        <div className='flex-cell'>
-                                            Email
-                                        </div>
-                                        <div className='flex-cell'>
-                                            {order?.customer?.user.email}
-                                        </div>
-                                    </div>
+                                            <div className='flex-row'>
+                                                <div className='flex-cell'>
+                                                    Email
+                                                </div>
+                                                <div className='flex-cell'>
+                                                    {order?.customer?.user.email}
+                                                </div>
+                                            </div>
 
-                                    <div className='flex-row'>
-                                        <div className='flex-cell text-center' style={{padding: '20px 0'}}>
-                                            Phones
-                                        </div>
-                                        <div className='flex-cell-list'>
-                                            <ul>
-                                                {order?.customer?.user.phones.map(phone =>
-                                                    <li>{phone.phone_number}</li>
-                                                )}
-                                            </ul>
+                                            <div className='flex-row'>
+                                                <div className='flex-cell text-center' style={{padding: '20px 0'}}>
+                                                    Phones
+                                                </div>
+                                                <div className='flex-cell-list'>
+                                                    <ul>
+                                                        {order?.customer?.user.phones.map(phone =>
+                                                            <li>{phone.phone_number}</li>
+                                                        )}
+                                                    </ul>
 
-                                        </div>
-                                    </div>
-                                    <div className='flex-row'>
-                                        <div className='flex-cell text-center' style={{padding: '20px 0'}}>
-                                            Tags
-                                        </div>
-                                        //TODO: solve
-                                        <div className='flex-cell-list'>
-                                            <Autocomplete
-                                                multiple
-                                                id="tags-filled"
-                                                options={order && order.customer ?
-                                                    order.customer!.user.tags.map((tag) => tag.name)
-                                                    : []
+                                                </div>
+                                            </div>
+                                            <div className='flex-row-column'>
+                                                <div className='text-center'>
+                                                    Tags
+                                                </div>
+                                                { order &&
+                                                    <div className='flex-cell-list'>
+                                                        <Autocomplete
+                                                            multiple
+                                                            id="tags-filled"
+                                                            options={order.customer ?
+                                                                order.customer.user.tags.map((tag) => tag.name)
+                                                                : []
+                                                            }
+                                                            defaultValue={[...userTagsAutocompliteDefaultValues]}
+                                                            freeSolo
+                                                            renderTags={(value: readonly string[], getTagProps) =>
+                                                                value.map((option: string, index: number) => (
+                                                                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                                                                ))
+                                                            }
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    variant="filled"
+                                                                    label="freeSolo"
+                                                                    placeholder="Favorites"
+                                                                />)}
+                                                        />
+                                                    </div>
                                                 }
-                                                // defaultValue={order!.customer!.user.tags.map(
-                                                //     (e) => e.name)}
-                                                freeSolo
-                                                renderTags={(value: readonly string[], getTagProps) =>
-                                                    value.map((option: string, index: number) => (
-                                                        <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                                                    ))
-                                                }
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        {...params}
-                                                        variant="filled"
-                                                        label="freeSolo"
-                                                        placeholder="Favorites"
-                                                    />)}
-                                            />
+
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        :
+                                        <div className='flex-table' style={{height: '450px'}}>
+                                            <div className='flex-row'>
+                                                <div className='flex-cell'>
+                                                    Name
+                                                </div>
+                                                <div className='flex-cell'>
+                                                    {order?.order_contact!.name}
+                                                </div>
+                                            </div>
+
+                                            <div className='flex-row'>
+                                                <div className='flex-cell'>
+                                                    Email
+                                                </div>
+                                                <div className='flex-cell'>
+                                                    {order?.order_contact!.email}
+                                                </div>
+                                            </div>
+
+                                            <div className='flex-row'>
+                                                <div className='flex-cell text-center'
+                                                     style={{padding: '20px 0'}}>
+                                                    Phones
+                                                </div>
+                                                <div className='flex-cell'>
+                                                    {order?.order_contact!.phone}
+                                                </div>
+                                            </div>
+                                        </div>
+                                }
+
                             </Grid>
                         </Grid>
                         <Box style={{marginTop: "50px"}}>

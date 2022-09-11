@@ -72,6 +72,17 @@ body, html {
   border-bottom: 1px solid gray;
   padding: 10px;
 }
+
+.flex-row-column .flex-cell {
+  background-color: lightgray;
+}
+.flex-row .flex-cell-list {
+  width: 153px;
+}
+.flex-row-column .text-center {
+  padding: 20px 0;
+}
+
 .flex-table > .flex-row-column .flex-cell {
   width: auto;
   flex-grow: 1;
@@ -88,7 +99,6 @@ body, html {
   align-content: center;
 }
 .flex-cell-list {
-  width: 155px;
   flex-grow: 1;
   text-align: start;
   padding: 0px 3px;
