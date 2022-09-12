@@ -1,6 +1,5 @@
 //example of creating a mui dialog modal for creating new rows
 import React, {FC, useEffect, useMemo, useRef, useState} from "react";
-import {Employee} from "../../../types/user";
 import {
     Autocomplete,
     Button,
@@ -22,7 +21,14 @@ import {Formik, FormikProps, FormikValues} from 'formik';
 import * as Yup from "yup";
 // @ts-ignore
 import AvatarImageCropper from "react-avatar-image-cropper";
-import {Project, ProjectLink, ProjectRole, ProjectTag, ProjectType} from "../../../types/project";
+import {
+    EmployeeWithProjectRoles,
+    Project,
+    ProjectLink,
+    ProjectRole,
+    ProjectTag,
+    ProjectType
+} from "../../../types/project";
 import {ProjectService} from "../../../services/ProjectService";
 import {Order} from "../../../types/order";
 import moment from "moment";
@@ -88,22 +94,21 @@ const SwitchWrapper = styled(Box)(() => ({
  Budget
  Tags
 
-
  */
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Project Name is required!'),
-    projectTypeId: Yup.string().required('Project Type is required!'),
-    deadline: Yup.string().required('Deadline is required!'),
-    budget: Yup.number().required("Budget is Required!"),
+    project_type_id: Yup.string().required('Project Type is required!'),
+    // deadline: Yup.string().required('Deadline is required!'),
+    // budget: Yup.number().required("Budget is Required!"),
 });
 
 interface InitialValueType {
     id?: number | null;
     name: string;
     project_type_id: string;
-    members: Employee[],
+    members: EmployeeWithProjectRoles[],
     links: ProjectLink[],
     deadline: string;
     budget: string;
@@ -112,11 +117,13 @@ interface InitialValueType {
 
 export const CreateEditProjectModal: FC<{
     onClose: () => void;
-    onSubmit: (orderId: number | undefined, values: Project, mode: string) => void;
+    onSubmit: (orderId: number | undefined, values: any, mode: string) => void;
     open: boolean;
     mode: string;
-    order?: Order | null | undefined
+    order: Order;
 }> = ({ open, onClose, onSubmit, mode, order }) => {
+
+    console.log(order, 'order');
 
     const formik = useRef<FormikProps<FormikValues>>(null);
     const innerForm = useRef<any>();
@@ -151,7 +158,6 @@ export const CreateEditProjectModal: FC<{
                 deadline: order.project.deadline,
                 budget: order.project.budget,
                 tags: order.project.tags.join(','),
-
             };
         }
         else if(mode === 'create') {
@@ -160,15 +166,22 @@ export const CreateEditProjectModal: FC<{
         return defInitialValues;
     }, [open]);
 
-    const handleFormSubmit = (values: any) => {
+    const handleFormSubmit = (values: InitialValueType) => {
         console.log('create edit project submit');
 
-        if(mode === 'update' && order?.project && order) values.id = order.project.id
+        const payload : any = { ...values };
 
-        onSubmit(order?.id, values, mode);
+        if(mode === 'update' && order?.project && order) payload.id = order.project.id
+
+        payload.deadline = moment(payload.deadline).format('DD-MM-yyyy')
+        payload.members = JSON.stringify(members.map(m => m.pivot));
+        payload.links = JSON.stringify(projectLinks);
+        payload.tags = JSON.stringify(payload.tags)
+        payload.order_id = order.id
+        onSubmit(order.id, payload, mode);
         onClose();
 
-        console.log(values);
+        console.log(payload);
     };
 
     useEffect(() => {
@@ -191,7 +204,7 @@ export const CreateEditProjectModal: FC<{
             getProjectRoles();
             getProjectTagsOptions();
 
-            if(mode === 'update' && order && order.project) {
+            if(mode === 'update') {
                 setMembers([...order.project.employees]);
                 setProjectLinks([...order.project.project_links]);
             }
@@ -204,8 +217,8 @@ export const CreateEditProjectModal: FC<{
         }
     }, [open])
 
-    const [checkedMember, setCheckedMember] = React.useState<Employee[]>([]);
-    const [members, setMembers] = React.useState<Employee[]>(
+    const [checkedMember, setCheckedMember] = React.useState<EmployeeWithProjectRoles[]>([]);
+    const [members, setMembers] = React.useState<EmployeeWithProjectRoles[]>(
         order?.project?.employees ?? []
     );
 
@@ -217,14 +230,19 @@ export const CreateEditProjectModal: FC<{
         } else {
             newChecked.splice(currentIndex, 1);
         }
-
         setCheckedMember(newChecked);
     };
 
     const [openEmployeeAddMoal, setOpenEmployeeAddModal] = useState<boolean>(false);
 
-    const addEmployeeToProjectHanle = (employee: Employee) => {
-        setMembers([...members, employee]);
+    const addEmployeeToProjectHanle = (employee: EmployeeWithProjectRoles) => {
+        setMembers([...members, {...employee, pivot:
+                {
+                    employee_id: employee.id,
+                    project_role_id: 1,
+                    project_id: 1
+                }}
+        ]);
     }
 
     const deleteMember = async () => {
@@ -274,6 +292,20 @@ export const CreateEditProjectModal: FC<{
 
             <DialogTitle textAlign="center">Create New Project </DialogTitle>
             <DialogContent sx={{paddingTop: '20px !important'}}>
+                <Formik
+                    onSubmit={handleFormSubmit}
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                >
+                    {({ values,
+                          errors,
+                          touched,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          setFieldValue
+                      }) => (
+                        <form id="inner-form" onSubmit={handleSubmit}>
                 <Box pt={2} pb={4}>
                     <Card sx={{ padding: 4 }}>
                         <Grid container spacing={3}>
@@ -320,7 +352,7 @@ export const CreateEditProjectModal: FC<{
 
                                         }}>
 
-                                        { members.map((value: Employee) => {
+                                        {projectRoles.length > 0 && members.map((value: EmployeeWithProjectRoles) => {
                                             const labelId = `checkbox-list-secondary-label-${value}`;
                                             return (
                                                 <ListItem
@@ -346,15 +378,32 @@ export const CreateEditProjectModal: FC<{
 
                                                         <Autocomplete
                                                             size='small'
-                                                            defaultValue={'role1'}
+                                                            defaultValue={
+                                                                projectRoles.find(pr => pr.id ===
+                                                                    value.pivot.project_role_id
+                                                                )
+                                                            }
+                                                            getOptionLabel={(option) => option.name}
                                                             disablePortal
                                                             id="combo-box-project-roles"
-                                                            options={['role1', 'role2', 'role3']}
+                                                            options={projectRoles}
                                                             sx={{ minWidth: '150px' }}
                                                             renderInput={(params) =>
                                                                 <TextField {...params}
                                                                            label="Project Role"
                                                                 />}
+                                                            onChange={(event, value, reason, details) => {
+                                                                if(value) {
+                                                                    const newMembers = members.map(m => {
+                                                                        if(m.id === value.id) {
+                                                                            m.pivot.project_role_id = value.id;
+                                                                            return m;
+                                                                        }
+                                                                        else { return m;}
+                                                                    });
+                                                                    setMembers(newMembers)
+                                                                }
+                                                            }}
                                                         />
 
                                                     </ListItemButton>
@@ -454,7 +503,7 @@ export const CreateEditProjectModal: FC<{
                                                 setProjectLinks([...projectLinks, {
                                                     id: random(1, 100000),
                                                     title: '',
-                                                    project_id: order?.project.id ?? 1,
+                                                    project_id: order.project?.id ?? 1,
                                                     link: ''
                                                 }])
                                             }}
@@ -468,20 +517,7 @@ export const CreateEditProjectModal: FC<{
                             </Grid>
 
                             <Grid item md={6} xs={12}>
-                                <Formik
-                                    onSubmit={handleFormSubmit}
-                                    initialValues={initialValues}
-                                    validationSchema={validationSchema}
-                                >
-                                    {({ values,
-                                          errors,
-                                          touched,
-                                          handleChange,
-                                          handleBlur,
-                                          handleSubmit,
-                                          setFieldValue
-                                      }) => (
-                                        <form id="inner-form" onSubmit={handleSubmit}>
+
                                             <Card sx={{ padding: 3, boxShadow: 2 }}>
                                                 <Grid container spacing={3}>
                                                     <Grid item xs={12}>
@@ -566,10 +602,11 @@ export const CreateEditProjectModal: FC<{
                                                             <Stack spacing={3}>
                                                                 <DesktopDatePicker
                                                                     label="Date desktop"
-                                                                    inputFormat="MM/DD/YYYY"
+                                                                    inputFormat="DD/MM/YYYY"
                                                                     value={values.deadline}
-                                                                    onChange={(newValue: Dayjs | null) => {
-                                                                        setFieldValue("deadline", Dayjs);
+                                                                    onChange={(newValue) => {
+                                                                        if(newValue)
+                                                                            setFieldValue("deadline", newValue);
                                                                     }}
                                                                     renderInput={(params) => <TextField {...params} />}
                                                                 />
@@ -619,14 +656,14 @@ export const CreateEditProjectModal: FC<{
                                                     </Grid>
                                                 </Grid>
                                             </Card>
-                                        </form>
-                                    )}
-                                </Formik>
                             </Grid>
 
                         </Grid>
                     </Card>
                 </Box>
+                </form>
+            )}
+        </Formik>
 
 
                 <DialogActions sx={{ p: '1.25rem' }}>

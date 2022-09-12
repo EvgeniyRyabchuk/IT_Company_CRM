@@ -29,7 +29,7 @@ export class ProjectService {
     static async createProjectForOrder(payload: Project)
         : Promise<AxiosResponse<string>> {
         return $api.post<string>(`/projects`, {
-            payload
+            ...payload
         });
     }
 

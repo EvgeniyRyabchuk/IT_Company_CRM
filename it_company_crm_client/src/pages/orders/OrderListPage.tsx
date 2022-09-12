@@ -169,7 +169,7 @@ const ProjectsListPage = () => {
         mode: 'create',
     });
 
-    const handleCreateEditRow = async (orderId: number | null | undefined, values: Project, mode: string) => {
+    const handleCreateEditRow = async (orderId: number | null | undefined, values: any, mode: string) => {
         console.log('submit', values);
 
         if(mode === 'create') {
@@ -189,6 +189,8 @@ const ProjectsListPage = () => {
             setOrders(newOrders);
         }
     };
+
+    console.log('selected order', order);
 
 
     return (
@@ -536,6 +538,7 @@ const ProjectsListPage = () => {
                                                     :
                                                         <IconButton onClick={() => {
                                                             setCreateEditModalState({isOpen: true, mode: 'create'})
+                                                            setSelectedOrder(e);
                                                         }}>
                                                             <Add />
                                                             Create Project
@@ -574,14 +577,20 @@ const ProjectsListPage = () => {
             </div>
 
 
+            {
+                selectedOrder ?
+                <CreateEditProjectModal
+                    onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
+                    onSubmit={handleCreateEditRow}
+                    open={createEditModalState.isOpen}
+                    mode={createEditModalState.mode}
+                    order={selectedOrder}
+                />
+                    : 'no selected order'
 
-            <CreateEditProjectModal
-                onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
-                onSubmit={handleCreateEditRow}
-                open={createEditModalState.isOpen}
-                mode={createEditModalState.mode}
-                order={selectedOrder}
-            />
+            }
+
+
 
 
         </Container>

@@ -9,12 +9,15 @@ use App\_Sl\ProjectRoleHandler;
 use App\_Sl\TagAttacher;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\Order;
 use App\Models\Project;
 use App\Models\ProjectFile;
 use App\Models\ProjectLink;
 use App\Models\ProjectRole;
 use App\Models\ProjectType;
+use App\Models\Tag;
 use Carbon\Carbon;
+use Database\Seeders\OrderSeeder;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -81,24 +84,59 @@ class ProjectController extends Controller
     public function store(Request $request) {
         $nextId = DbHelper::nextId('projects');
         $projectType = ProjectType::findOrFail($request->input('project_type_id'));
-        $projectLinks = $request->input('project_links');
+        $projectLinks = json_decode($request->input('links') ?? '[]', true);
+        $projectMembers = json_decode($request->input('members') ?? '[]', true);
+        $projectTags = json_decode($request->input('tags') ?? '[]');
+        $deadline = $request->input('deadline') ?? Carbon::now()->toDateTime();
+        $orderId = $request->input('order_id');
+
+        $order = Order::findOrFail($orderId);
 
         // add project
         $project = new Project();
         $project->name = $request->input('name') ?? $projectType->name . " (#$nextId)";
         $project->projectType()->associate($projectType);
-        $project->deadline = $request->input('deadline') ?? Carbon::now()->toDateTime();
+        $project->deadline =  Carbon::parse($deadline);
         $project->budget = $request->input('budget');
         $project->paid = $request->input('paid') ?? 0;
         $project->save();
 
+        $order->project()->associate($project);
+        $order->save();
+
         // add project links
         if(!is_null($projectLinks)) {
             foreach ($projectLinks as $link) {
-                $pl = new ProjectLink(['title' => $link['title'], 'link' => $link['link']]);
+                $pl = ProjectLink::create([
+                    'title' => $link['title'],
+                    'link' => $link['link'],
+                    'project_id' => $project->id
+                ]);
                 $project->projectLinks()->save($pl);
             }
         }
+
+        if(is_array($projectMembers) && $projectMembers > 0) {
+            foreach ($projectMembers as $member) {
+                DB::table('employee_project')->insert([
+                    'employee_id' => $member['employee_id'],
+                    'project_id' => $project->id,
+                    'project_role_id' => $member['project_role_id'],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+            }
+        }
+
+        if(is_array($projectTags) && $projectTags > 0) {
+            $project->tags()->detach();
+            foreach ($projectTags as $tag) {
+                $selectedTag = Tag::firstOrCreate(['name' => $tag]);
+                $project->tags()->attach($selectedTag);
+            }
+        }
+
+        $project->save();
 
         // temp
         $employee = Employee::inRandomOrder()->first();
