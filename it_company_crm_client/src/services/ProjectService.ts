@@ -1,7 +1,8 @@
 import $api from "../http";
 import {AxiosResponse} from "axios";
 import {PaginatedResponse} from "../types/global";
-import {Project, ProjectRole, ProjectTag, ProjectType} from "../types/project";
+import {Project, ProjectHistory, ProjectRole, ProjectTag, ProjectType} from "../types/project";
+import {PublicOrderInfo} from "../types/order";
 
 
 interface GetProjectResponse{
@@ -51,14 +52,24 @@ export class ProjectService {
         return $api.delete<string>(`/projects/${projectId}/members/many?ids=${ids}`);
     }
 
-    static async updateProject(projectId: number, newProject: Project): Promise<AxiosResponse<Project>> {
-        return $api.put<Project>(`/projects/${projectId}`);
+    static async updateProject(projectId: number, newProject: any): Promise<AxiosResponse<Project>> {
+        return $api.put<Project>(`/projects/${projectId}`, { ...newProject});
     }
 
     static async deleteProject(projectId: number): Promise<AxiosResponse<string>> {
         return $api.delete<string>(`/projects/${projectId}`);
     }
 
+    static async getHistory(projectId: number, queryParams?: string)
+        : Promise<AxiosResponse<PaginatedResponse<ProjectHistory>>> {
+        return $api.get<PaginatedResponse<ProjectHistory>>(
+            `/projects/${projectId}/history${queryParams ?? ''}`);
+    }
+
+    static async getOrderInfoForProject(projectId: number):
+        Promise<AxiosResponse<PublicOrderInfo>> {
+        return $api.get<PublicOrderInfo>(`/projects/${projectId}/order-info`);
+    }
 
     static async getProjectTypes():
         Promise<AxiosResponse<ProjectType[]>> {
@@ -69,6 +80,9 @@ export class ProjectService {
         Promise<AxiosResponse<ProjectTag[]>> {
         return $api.get<ProjectTag[]>(`/projects/tags`);
     }
+
+
+
 
 
     static async getProjectRoles():

@@ -1,5 +1,4 @@
-
-
+import {ReactNode} from "react";
 
 
 export interface PaginatedResponse<T> {
@@ -26,4 +25,22 @@ export enum PageMode {
     SELECT,
     CREATE,
     EDIT
+}
+
+export type ComponentMode = 'create' | 'update' | 'view' | 'preview'
+
+export interface ModalStandartState {
+    isOpen: boolean,
+    mode: ComponentMode,
+}
+
+export interface LinkIcon {
+    title: string;
+    icon: ReactNode;
+}
+
+export enum SocialLinkTitle {
+    GITHUB = 'GitHub',
+    JIRA = 'Jira',
+    DEFAULT = 'Default'
 }

@@ -12,6 +12,7 @@ use App\Models\Employee;
 use App\Models\Order;
 use App\Models\Project;
 use App\Models\ProjectFile;
+use App\Models\ProjectHistory;
 use App\Models\ProjectLink;
 use App\Models\ProjectRole;
 use App\Models\ProjectType;
@@ -20,6 +21,7 @@ use Carbon\Carbon;
 use Database\Seeders\OrderSeeder;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -31,6 +33,7 @@ use function Symfony\Component\String\b;
 
 class ProjectController extends Controller
 {
+
     public function index(Request $request) {
         $perPage = $request->input('limit') ?? 10;
         $search = $request->input('search') ?? '';
@@ -76,12 +79,15 @@ class ProjectController extends Controller
 
     public function show(Request $request, $projectId) {
         $projectRoles = ProjectRole::take(20)->get();
-        $project = Project::with('tags', 'employees.user')
+        $project = Project::with('tags', 'employees.user',
+            'employees.position', 'employees.level', 'projectLinks'
+        )
             ->findOrFail($projectId);
         return response()->json(compact('project','projectRoles'), 201);
     }
 
-    public function store(Request $request) {
+    public static function save(Request $request, $mode) {
+
         $nextId = DbHelper::nextId('projects');
         $projectType = ProjectType::findOrFail($request->input('project_type_id'));
         $projectLinks = json_decode($request->input('links') ?? '[]', true);
@@ -92,20 +98,29 @@ class ProjectController extends Controller
 
         $order = Order::findOrFail($orderId);
 
-        // add project
-        $project = new Project();
-        $project->name = $request->input('name') ?? $projectType->name . " (#$nextId)";
+        if($mode === 'create') {
+            $project = new Project();
+            $project->name = $request->input('name') ?? $projectType->name . " (#$nextId)";
+        }
+        else if($mode === 'update') {
+            $project = Project::findOrFail($request->input('id'));
+            $project->name = $request->input('name') ?? $project->name;
+        }
+
         $project->projectType()->associate($projectType);
         $project->deadline =  Carbon::parse($deadline);
         $project->budget = $request->input('budget');
         $project->paid = $request->input('paid') ?? 0;
         $project->save();
 
-        $order->project()->associate($project);
-        $order->save();
+        if($mode === 'create') {
+            $order->project()->associate($project);
+            $order->save();
+        }
 
         // add project links
         if(!is_null($projectLinks)) {
+            $project->projectLinks()->delete();
             foreach ($projectLinks as $link) {
                 $pl = ProjectLink::create([
                     'title' => $link['title'],
@@ -116,7 +131,8 @@ class ProjectController extends Controller
             }
         }
 
-        if(is_array($projectMembers) && $projectMembers > 0) {
+        if(is_array($projectMembers)) {
+            $project->employees()->detach();
             foreach ($projectMembers as $member) {
                 DB::table('employee_project')->insert([
                     'employee_id' => $member['employee_id'],
@@ -138,11 +154,29 @@ class ProjectController extends Controller
 
         $project->save();
 
-        // temp
-        $employee = Employee::inRandomOrder()->first();
-        ProjectHistoryHandler::commit($project, $employee,"created project");
+        if($mode === 'create')
+            ProjectHistoryHandler::commit($project, Auth::user(),"created project");
+        else if($mode === 'update')
+            ProjectHistoryHandler::commit($project, Auth::user(),"updated project");
 
+        $project = Project::with(
+            'projectType',
+            'order',
+            'projectLinks',
+            'tags',
+            'employees.user',
+            'projectLinks'
+        )->findOrFail($project->id);
+        return $project;
+    }
 
+    public function store(Request $request) {
+        $project = ProjectController::save($request, 'create');
+        return response()->json($project, 201);
+    }
+
+    public function update(Request $request, $projectId) {
+        $project = ProjectController::save($request, 'update');
         return response()->json($project, 201);
     }
 
@@ -186,6 +220,34 @@ class ProjectController extends Controller
         return response()->json(['message' => 'member deleted successfully', 'data' => $members], 201);
     }
 
+    public function getHistory(Request $request, $projectId) {
+        $perPage = $request->input('limit') ?? 20;
+        $search = $request->input('search') ?? '';
+
+        $project = Project::where('id', $projectId)->first();
+        if(!$project)
+            return response()->json(['message' => 'Project does not found'], 404);
+
+        $history = ProjectHistory::with('employee.user', 'employee.position')
+            ->where('project_id', $project->id)
+            ->where('action', 'LIKE', "%$search%")
+            ->paginate($perPage);
+        return response()->json($history);
+    }
+
+    public function getOrderInfo(Request $request, $projectId) {
+        $project = Project::findOrFail($projectId);
+        $order = Order::where('project_id', $project->id)->first();
+        if(!$order) {
+            return response()->json(['message' => 'Order does not found'], 404);
+        }
+        $publicOrderInfo = [
+            'id' => $order->id,
+            'deadline' => $order->deadline,
+            'about' => $order->about
+        ];
+        return response()->json($publicOrderInfo);
+    }
 
     public function getMembers(Request $request, $projectId) {
         $members = Project::findOrFail($projectId)->employees->each(function($e) {
@@ -500,9 +562,6 @@ class ProjectController extends Controller
         }
     }
 
-    public function update(Request $request, $projectId) {
-
-    }
 
     public function destroy(Request $request, $projectId) {
         $project = Project::findOrFail($projectId);

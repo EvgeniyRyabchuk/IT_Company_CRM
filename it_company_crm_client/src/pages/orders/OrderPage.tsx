@@ -1,13 +1,14 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {PageMode} from "../../types/global";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Order, OrderStatus} from "../../types/order";
 import {OrderService} from "../../services/OrderService";
 import {
     Autocomplete,
     Box,
     Button,
-    Card, Chip,
+    Card,
+    Chip,
     Grid,
     IconButton,
     Step,
@@ -18,7 +19,7 @@ import {
 } from "@mui/material";
 import {Container} from "../../assets/components/breadcrumb";
 import {Breadcrumb} from "../../components";
-import {Delete, Devices, Edit, FileDownload} from "@mui/icons-material";
+import {Delete, Devices, FileDownload} from "@mui/icons-material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -26,10 +27,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {height} from "@mui/system";
 import moment from "moment";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
-import {Skill, UserTag} from "../../types/user";
+import '../../assets/components/ProjectPage/index.css';
 
 function createData(
     name: string,

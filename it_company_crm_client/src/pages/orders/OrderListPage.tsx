@@ -23,7 +23,7 @@ import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
 import defOrderSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
-import {PageMode, SortOrderOptionType} from "../../types/global";
+import {ModalStandartState, SortOrderOptionType} from "../../types/global";
 import {defLimit, defPage} from "../../utils/constant";
 import OrderFilter, {OrderFilterData} from "./OrderFilter";
 import useDebounce from "../../hooks/useDebounce";
@@ -31,11 +31,7 @@ import {Order, OrderStatus} from "../../types/order";
 import {OrderService} from "../../services/OrderService";
 import {styled} from "@mui/system";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
-import CreateEditEmployeeModal from "../../components/modals/CreateEditEmployeeModal/CreateEditEmployeeModal";
 import CreateEditProjectModal from "../../components/modals/CreateEditProjectModal/CreateEditProjectModal";
-import {Employee} from "../../types/user";
-import {Project} from "../../types/project";
-import {EmployeeService} from "../../services/EmployeeService";
 import {ProjectService} from "../../services/ProjectService";
 
 export const SearchInput = styled("div")(({ theme }) => ({
@@ -70,7 +66,6 @@ const ProjectsListPage = () => {
     const [filterOptionData, setFilterOptionData] = useState<OrderFilterData | null>(null);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-
 
 
     const [statuses, setStatuses] = useState<OrderStatus[]>([]);
@@ -121,7 +116,6 @@ const ProjectsListPage = () => {
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
-        console.log('-' , page, totalPage, '-');
         setPage(page + 1);
     });
 
@@ -164,7 +158,7 @@ const ProjectsListPage = () => {
 
 
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-    const [createEditModalState, setCreateEditModalState] = useState({
+    const [createEditModalState, setCreateEditModalState] = useState<ModalStandartState>({
         isOpen: false,
         mode: 'create',
     });
@@ -189,9 +183,6 @@ const ProjectsListPage = () => {
             setOrders(newOrders);
         }
     };
-
-    console.log('selected order', order);
-
 
     return (
         <Container>
@@ -306,7 +297,6 @@ const ProjectsListPage = () => {
 
                             </Box>
                         </div>
-
                     </div>
                     <CardContent className="p-0">
                        <OrderFilter
@@ -324,7 +314,6 @@ const ProjectsListPage = () => {
                                     <th className="text-center">Extra File</th>
                                     <th className="text-center">Created Order / Deadline Date</th>
                                     <th className="text-center">Actions</th>
-
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -507,8 +496,6 @@ const ProjectsListPage = () => {
                                             </div>
                                         </td>
 
-
-
                                         <td className="text-center table-action-btn">
                                             <Box>
                                                 <IconButton onClick={() => deleteOrder(e.id)}>
@@ -576,9 +563,8 @@ const ProjectsListPage = () => {
                 </Card>
             </div>
 
-
             {
-                selectedOrder ?
+                selectedOrder &&
                 <CreateEditProjectModal
                     onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
                     onSubmit={handleCreateEditRow}
@@ -586,16 +572,11 @@ const ProjectsListPage = () => {
                     mode={createEditModalState.mode}
                     order={selectedOrder}
                 />
-                    : 'no selected order'
-
             }
-
-
 
 
         </Container>
     );
 }
-
 
 export default ProjectsListPage;

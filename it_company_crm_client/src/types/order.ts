@@ -61,3 +61,9 @@ export interface Order {
     order_contact_id: number;
     project_id: number;
 }
+
+export interface PublicOrderInfo {
+    id: number;
+    deadline: string;
+    about: string;
+}

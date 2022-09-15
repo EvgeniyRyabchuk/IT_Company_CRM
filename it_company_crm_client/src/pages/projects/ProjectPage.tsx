@@ -9,7 +9,10 @@ import {ProjectService} from "../../services/ProjectService";
 import {EmployeeWithProjectRoles, Project, ProjectRole} from "../../types/project";
 import {useTheme} from '@mui/material/styles';
 import {toLower} from "lodash";
-
+import ProjectMain from "./Tabs/ProjectMain";
+import '../../assets/components/ProjectPage/index.css';
+import ProjectHistoryList from "./Tabs/ProjectHistory/ProjectHistoryList";
+import ProjectMemberList from "../../components/UI/ProjectMemberList";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -96,6 +99,9 @@ const ProjectPage = () => {
     }
 
     useEffect(() => {
+        setDefaultTab();
+    }, [searchParams])
+    useEffect(() => {
         const fetchProject = async () => {
             if(projectId) {
                 const { data } = await ProjectService.getProject(parseInt(projectId));
@@ -143,7 +149,13 @@ const ProjectPage = () => {
             </AppBar>
 
             <TabPanel value={value} index={0} dir={theme.direction}>
-                    Main
+                {
+                    project ?
+                        <ProjectMain project={project}/>
+                        :
+                        'Loading Project'
+                }
+
             </TabPanel>
 
             <TabPanel value={value} index={1} dir={theme.direction}>
@@ -162,25 +174,32 @@ const ProjectPage = () => {
 
             <TabPanel value={value} index={3} dir={theme.direction}>
                 <h1>Members</h1>
+                {
+                    project &&
+                        <ProjectMemberList
 
-                <ul>
-                    { project?.employees.map((e: EmployeeWithProjectRoles) =>
-                        <li key={e.id}>{e.user.full_name} ({e.id}) : role {e.role?.name}</li>
-                    ) }
-                </ul>
+                            members={project.employees}
+                            setMembers={() => {}}
+                            mode='create'
+                            project={project}
+                            className={`members-list`}
+                                style={{
+                                maxWidth: '100%'
+                            }}
+                        />
+                }
+
+                {/*<ul>*/}
+                {/*    { project?.employees.map((e: EmployeeWithProjectRoles) =>*/}
+                {/*        <li key={e.id}>{e.user.full_name} ({e.id}) : role {e.role?.name}</li>*/}
+                {/*    ) }*/}
+                {/*</ul>*/}
             </TabPanel>
             <TabPanel value={value} index={4} dir={theme.direction}>
-
-                <div>
-                    <h1>History</h1>
-
-                    <div>action 1</div>
-                    <div>action 2</div>
-                    <div>action 3</div>
-                    <div>action 4</div>
-                    <div>action 5</div>
-                    <div>action 6</div>
-                </div>
+                {
+                    project &&
+                        <ProjectHistoryList project={project} />
+                }
 
 
             </TabPanel>

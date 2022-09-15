@@ -171,6 +171,8 @@ Route::prefix('projects')->group(function() {
     Route::put('/{projectId}', [ProjectController::class, 'update']);
     Route::delete('/{projectId}', [ProjectController::class, 'destroy']);
 
+    Route::get('/{projectId}/history', [ProjectController::class, 'getHistory']);
+    Route::get('/{projectId}/order-info', [ProjectController::class, 'getOrderInfo']);
 
 
     // Project File Manager Routing

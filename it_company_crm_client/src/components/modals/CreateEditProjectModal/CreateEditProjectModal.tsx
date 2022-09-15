@@ -43,12 +43,14 @@ import Avatar from '@mui/material/Avatar';
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import {Add, Delete, PlusOne} from "@mui/icons-material";
 import AddEmployeeToProjectModal from "../AddEmployeeToProjectModal/AddEmployeeToProjectModal";
-import {Dayjs} from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Stack from '@mui/material/Stack';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import {random} from "lodash";
+import ProjectMemberList from "../../UI/ProjectMemberList";
+import {ComponentMode} from "../../../types/global";
 
 // styled components
 const ButtonWrapper = styled(Box)(({ theme }) => ({
@@ -100,8 +102,8 @@ const SwitchWrapper = styled(Box)(() => ({
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Project Name is required!'),
     project_type_id: Yup.string().required('Project Type is required!'),
-    // deadline: Yup.string().required('Deadline is required!'),
-    // budget: Yup.number().required("Budget is Required!"),
+    deadline: Yup.string().required('Deadline is required!'),
+    budget: Yup.number().required("Budget is Required!"),
 });
 
 interface InitialValueType {
@@ -119,17 +121,15 @@ export const CreateEditProjectModal: FC<{
     onClose: () => void;
     onSubmit: (orderId: number | undefined, values: any, mode: string) => void;
     open: boolean;
-    mode: string;
+    mode: ComponentMode;
     order: Order;
 }> = ({ open, onClose, onSubmit, mode, order }) => {
-
-    console.log(order, 'order');
 
     const formik = useRef<FormikProps<FormikValues>>(null);
     const innerForm = useRef<any>();
 
     const [projectTypes, setProjectTypes] = useState<ProjectType[]>([]);
-    const [projectRoles, setProjectRoles] = useState<ProjectRole[]>([]);
+
     const [projectTags, setProjectTags] = useState<ProjectTag[]>([]);
 
     const [projectLinks, setProjectLinks] = useState<ProjectLink[]>([]);
@@ -173,7 +173,11 @@ export const CreateEditProjectModal: FC<{
 
         if(mode === 'update' && order?.project && order) payload.id = order.project.id
 
-        payload.deadline = moment(payload.deadline).format('DD-MM-yyyy')
+        const deadline = payload.deadline;
+        console.log(deadline);
+        const formatedDeadline = moment(deadline).format('DD-MM-yyyy');
+
+        payload.deadline = formatedDeadline;
         payload.members = JSON.stringify(members.map(m => m.pivot));
         payload.links = JSON.stringify(projectLinks);
         payload.tags = JSON.stringify(payload.tags)
@@ -190,10 +194,7 @@ export const CreateEditProjectModal: FC<{
                 const { data } = await ProjectService.getProjectTypes();
                 setProjectTypes([...data]);
             }
-            const getProjectRoles = async () => {
-                const { data } = await ProjectService.getProjectRoles();
-                setProjectRoles([...data]);
-            }
+
             const getProjectTagsOptions = async () => {
                 const {data} = await ProjectService.getProjectTags();
                 setProjectTags([...data]);
@@ -201,7 +202,7 @@ export const CreateEditProjectModal: FC<{
 
 
             getProjectTypes();
-            getProjectRoles();
+
             getProjectTagsOptions();
 
             if(mode === 'update') {
@@ -210,78 +211,23 @@ export const CreateEditProjectModal: FC<{
             }
         }
         else {
-            setCheckedMember([]);
+            // setCheckedMember([]);
             setMembers([]);
             setProjectLinks([]);
 
         }
     }, [open])
 
-    const [checkedMember, setCheckedMember] = React.useState<EmployeeWithProjectRoles[]>([]);
+
     const [members, setMembers] = React.useState<EmployeeWithProjectRoles[]>(
         order?.project?.employees ?? []
     );
 
-    const handleToggle = (value: any) => () => {
-        const currentIndex = checkedMember.indexOf(value);
-        const newChecked = [...checkedMember];
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-        setCheckedMember(newChecked);
-    };
-
-    const [openEmployeeAddMoal, setOpenEmployeeAddModal] = useState<boolean>(false);
-
-    const addEmployeeToProjectHanle = (employee: EmployeeWithProjectRoles) => {
-        setMembers([...members, {...employee, pivot:
-                {
-                    employee_id: employee.id,
-                    project_role_id: 1,
-                    project_id: 1
-                }}
-        ]);
-    }
-
-    const deleteMember = async () => {
-
-        const _delete = () => {
-            const newMembers = [...members];
-            for (let memeber of members) {
-                const find = checkedMember.find(e => e.id === memeber.id);
-                if(find) {
-                    const index = newMembers.indexOf(memeber);
-                    newMembers.splice(index, 1);
-                }
-            }
-            setMembers(newMembers);
-        }
-        if(mode === 'update' && order && order.project) {
-            if(checkedMember.length == 1) {
-                    // const { data } =
-                    //     await ProjectService.deleteEmployeeFromProject
-                    //     (checkedMember[0].id, order.project.id);
-            }
-            else if (checkedMember.length > 1) {
-                // const { data } = await
-                //     ProjectService.deleteManyEmployeesFromProject(
-                //         checkedMember.map(e => e.id), order.project.id
-                // );
-            }
-        }
-        _delete();
-    }
-
     const projectTagsForAutocompliteOptionDefault = useMemo<string[]>(() => {
-            if(order && order.project && mode === 'update')
-                return order.project.tags.map(e => e.name);
-            else return [];
+        if(order && order.project && mode === 'update')
+            return order.project.tags.map(e => e.name);
+        else return [];
     }, [order]);
-
-
-    console.log(members);
 
     return (
         <Dialog
@@ -289,7 +235,6 @@ export const CreateEditProjectModal: FC<{
             open={open}
             style={{zIndex: '1001'}}
         >
-
             <DialogTitle textAlign="center">Create New Project </DialogTitle>
             <DialogContent sx={{paddingTop: '20px !important'}}>
                 <Formik
@@ -297,370 +242,275 @@ export const CreateEditProjectModal: FC<{
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                 >
-                    {({ values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          setFieldValue
-                      }) => (
-                        <form id="inner-form" onSubmit={handleSubmit}>
-                <Box pt={2} pb={4}>
-                    <Card sx={{ padding: 4 }}>
-                        <Grid container spacing={3}>
-                            <Grid item md={6} xs={12}>
-                                <Card
-                                    sx={{
-                                        padding: '5px',
-                                        boxShadow: 2,
-                                        minHeight: 400,
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        position: 'relative'
-                                    }}
-                                >
-                                    <div style={{
-                                        display: 'flex'
-                                    }}>
-                                        <Button
-                                            variant='contained'
-                                            color={'primary'}
-                                            onClick={() => setOpenEmployeeAddModal(true)}
-                                        >
-                                            <Add />
-                                        </Button>
-                                        <Button
-                                            style={{display: checkedMember.length > 0 ? 'block' : 'none',}}
-                                            variant='contained'
-                                            color={'error'}
-                                            onClick={deleteMember}
-                                        >
-                                            <Delete/>
-                                        </Button>
-                                    </div>
-
-                                    <List
-                                        dense
+                {({ values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      setFieldValue
+                  }) => (
+                <form id="inner-form" onSubmit={handleSubmit}>
+                    <Box pt={2} pb={4}>
+                        <Card sx={{ padding: 4 }}>
+                            <Grid container spacing={3}>
+                                <Grid item md={6} xs={12}>
+                                    <Card
                                         sx={{
-                                            width: '100%',
-                                            maxWidth: 500,
-                                            bgcolor: 'background.paper',
-                                            height: '220px',
-                                            overflowY: 'auto',
+                                            padding: '5px',
+                                            boxShadow: 2,
+                                            minHeight: 400,
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            position: 'relative'
+                                        }}
+                                    >
 
+                                        <ProjectMemberList
+                                            members={members}
+                                            setMembers={setMembers}
+                                            mode={mode}
+                                            project={order?.project}
+                                        />
+                                        <div style={{
+                                            padding: '0 10px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            height: '235px',
+                                            overflowY: 'auto',
+                                            marginTop: "10px",
+                                            width: '100%',
+                                            paddingTop: '20px'
                                         }}>
 
-                                        {projectRoles.length > 0 && members.map((value: EmployeeWithProjectRoles) => {
-                                            const labelId = `checkbox-list-secondary-label-${value}`;
-                                            return (
-                                                <ListItem
-                                                    key={value.id}
-                                                    secondaryAction={
-                                                        <Checkbox
-                                                            edge="end"
-                                                            onChange={handleToggle(value)}
-                                                            checked={checkedMember.indexOf(value) !== -1}
-                                                            inputProps={{ 'aria-labelledby': labelId }}
-                                                        />
-                                                    }
-                                                    disablePadding
-                                                >
-                                                    <ListItemButton>
-                                                        <ListItemAvatar>
-                                                            <Avatar
-                                                                alt={`Avatar for ${value.user.first_name}`}
-                                                                src={`${API_URL_WITH_PUBLIC_STORAGE}/${value.user.avatar}`}
-                                                            />
-                                                        </ListItemAvatar>
-                                                        <ListItemText id={labelId} primary={`${value.user.full_name}`} />
-
-                                                        <Autocomplete
-                                                            size='small'
-                                                            defaultValue={
-                                                                projectRoles.find(pr => pr.id ===
-                                                                    value.pivot.project_role_id
-                                                                )
-                                                            }
-                                                            getOptionLabel={(option) => option.name}
-                                                            disablePortal
-                                                            id="combo-box-project-roles"
-                                                            options={projectRoles}
-                                                            sx={{ minWidth: '150px' }}
-                                                            renderInput={(params) =>
-                                                                <TextField {...params}
-                                                                           label="Project Role"
-                                                                />}
-                                                            onChange={(event, value, reason, details) => {
-                                                                if(value) {
-                                                                    const newMembers = members.map(m => {
-                                                                        if(m.id === value.id) {
-                                                                            m.pivot.project_role_id = value.id;
-                                                                            return m;
-                                                                        }
-                                                                        else { return m;}
-                                                                    });
-                                                                    setMembers(newMembers)
-                                                                }
-                                                            }}
-                                                        />
-
-                                                    </ListItemButton>
-                                                </ListItem>
-                                            );
-                                        })}
-                                    </List>
-
-
-                                    <div style={{
-                                        padding: '0 10px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        height: '235px',
-                                        overflowY: 'auto',
-                                        marginTop: "10px",
-                                        width: '100%',
-                                        paddingTop: '20px'
-                                    }}>
-
-                                        {
-                                            projectLinks.map(link =>
-                                                <div style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'start',
-                                                    alignItems: 'center',
-                                                    height: '50px',
-                                                    margin: '5px 0'
-                                                }}>
-                                                    <div key={link.id}>
-                                                        <Button
-                                                            color='error'
-                                                            onClick={() => {
-                                                                const index = projectLinks.findIndex(l => l.id === link.id);
-                                                                projectLinks.splice(index, 1);
-                                                                setProjectLinks([...projectLinks]);
-                                                            }}
-                                                        >
-                                                            <Delete />
-                                                        </Button>
-                                                    </div>
-                                                    <div style={{ margin: '0 3px'}}>
-                                                        <Autocomplete
-                                                            defaultValue={link.title}
-                                                            value={link.title}
-                                                            onChange={(event: any, value) => {
-                                                               const newLinks = projectLinks.map((l) => {
-                                                                   if(l.id === link.id) {
-                                                                       l.title = value ?? '';
-                                                                       return l;
-                                                                   }
-                                                                   else return l;
-                                                               });
-                                                               setProjectLinks([...newLinks]);
-                                                            }}
-                                                            freeSolo
-                                                            style={{height: '100%', width: '120px'}}
-                                                            size='small'
-                                                            disablePortal
-                                                            id="combo-box-demo"
-                                                            options={['GitHub', 'Jira']}
-                                                            sx={{ width: '100%' }}
-                                                            renderInput={(params) =>
-                                                                <TextField {...params} label="Link Titles" />}
-                                                        />
-                                                    </div>
-
-                                                    <div style={{flexGrow: 1, margin: '0 3px'}}>
-                                                        <TextField
-                                                            style={{ width: '100%'}}
-                                                            label="Url"
-                                                            id="outlined-size-small"
-                                                            defaultValue={link.link}
-                                                            size="small"
-                                                            onChange={(event: any) => {
-                                                                const newLinks = projectLinks.map((l) => {
-                                                                    if(l.id === link.id) {
-                                                                        l.link = event.target.value ?? '';
-                                                                        return l;
-                                                                    }
-                                                                    else return l;
-                                                                });
-                                                                setProjectLinks([...newLinks]);
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )
-                                        }
-
-
-                                        <Button
-                                            variant="outlined"
-                                            color='primary'
-                                            style={{width: '100%'}}
-                                            onClick={() => {
-                                                setProjectLinks([...projectLinks, {
-                                                    id: random(1, 100000),
-                                                    title: '',
-                                                    project_id: order.project?.id ?? 1,
-                                                    link: ''
-                                                }])
-                                            }}
-                                        >
-                                            <Add/>
-
-                                        </Button>
-                                    </div>
-
-                                </Card>
-                            </Grid>
-
-                            <Grid item md={6} xs={12}>
-
-                                            <Card sx={{ padding: 3, boxShadow: 2 }}>
-                                                <Grid container spacing={3}>
-                                                    <Grid item xs={12}>
-                                                        <TextField
-                                                            fullWidth
-                                                            size="small"
-                                                            type="input"
-                                                            name="name"
-                                                            label="Project Name"
-                                                            variant="outlined"
-                                                            onBlur={handleBlur}
-                                                            value={values.name}
-                                                            onChange={handleChange}
-                                                            helperText={touched.name && errors.name}
-                                                            error={Boolean(errors.name && touched.name)}
-                                                        />
-                                                    </Grid>
-                                                </Grid>
-
-                                                <Grid sx={{mt: 2}} container spacing={3}>
-                                                    <Grid item xs={12}>
-                                                        <div style={{display: 'flex'}}>
-                                                            <Autocomplete
-                                                                fullWidth
-                                                                defaultValue={mode === 'update' && order && order.project ? order.project.project_type : null}
-                                                                size="small"
-                                                                getOptionLabel={(option: ProjectType) => option.name}
-                                                                disablePortal
-                                                                id="combo-box-types"
-                                                                options={projectTypes}
-                                                                sx={{ width: 500 }}
-
-                                                                renderInput={
-                                                                    (params) =>
-                                                                        <TextField
-                                                                            {...params}
-                                                                            error={
-                                                                                Boolean(touched.project_type_id && errors.project_type_id)
-                                                                            }
-                                                                            fullWidth
-                                                                            helperText={
-                                                                                touched.project_type_id && errors.project_type_id
-                                                                            }
-                                                                            label="Project Type"
-                                                                            name="project_type_id"
-                                                                            variant="outlined"
-                                                                        />
-                                                                }
-                                                                renderOption={(props, option: ProjectType) => (
-                                                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                                                        {option.name} ({option.id})
-                                                                    </Box>
-                                                                )}
-                                                                onChange={ (event: any, values: any) => {
-                                                                    if(values)
-                                                                        setFieldValue("project_type_id", values.id);
+                                            {
+                                                projectLinks.map(link =>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'start',
+                                                        alignItems: 'center',
+                                                        height: '50px',
+                                                        margin: '5px 0'
+                                                    }}>
+                                                        <div key={link.id}>
+                                                            <Button
+                                                                color='error'
+                                                                onClick={() => {
+                                                                    const index = projectLinks.findIndex(l => l.id === link.id);
+                                                                    projectLinks.splice(index, 1);
+                                                                    setProjectLinks([...projectLinks]);
                                                                 }}
-                                                            />
-
+                                                            >
+                                                                <Delete />
+                                                            </Button>
                                                         </div>
-                                                    </Grid>
-
-                                                    <Grid item sm={6} xs={12}>
-                                                        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-                                                            <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>
-                                                            <Input
-                                                                id="standard-adornment-amount"
-                                                                value={values.budget}
-                                                                onChange={(event: any) => {
-                                                                    const value = event.target.value;
-                                                                    if(value)
-                                                                        setFieldValue("budget", value);
+                                                        <div style={{ margin: '0 3px'}}>
+                                                            <Autocomplete
+                                                                defaultValue={link.title}
+                                                                value={link.title}
+                                                                onChange={(event: any, value) => {
+                                                                   const newLinks = projectLinks.map((l) => {
+                                                                       if(l.id === link.id) {
+                                                                           l.title = value ?? '';
+                                                                           return l;
+                                                                       }
+                                                                       else return l;
+                                                                   });
+                                                                   setProjectLinks([...newLinks]);
                                                                 }}
-                                                                startAdornment={
-                                                                <InputAdornment position="start">$</InputAdornment>
-                                                            }
+                                                                freeSolo
+                                                                style={{height: '100%', width: '120px'}}
+                                                                size='small'
+                                                                disablePortal
+                                                                id="combo-box-demo"
+                                                                options={['GitHub', 'Jira']}
+                                                                sx={{ width: '100%' }}
+                                                                renderInput={(params) =>
+                                                                    <TextField {...params} label="Link Titles" />}
                                                             />
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item sm={6} xs={12}>
-                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <Stack spacing={3}>
-                                                                <DesktopDatePicker
-                                                                    label="Date desktop"
-                                                                    inputFormat="DD/MM/YYYY"
-                                                                    value={values.deadline}
-                                                                    onChange={(newValue) => {
-                                                                        if(newValue)
-                                                                            setFieldValue("deadline", newValue);
-                                                                    }}
-                                                                    renderInput={(params) => <TextField {...params} />}
-                                                                />
-                                                            </Stack>
-                                                        </LocalizationProvider>
-                                                    </Grid>
-                                                    <Grid item sm={12}
-                                                          style={{
-                                                              height: '200px',
-                                                              overflowY: 'auto',
-                                                              marginTop: '20px'
-                                                    }}
-                                                    >
-                                                        <Autocomplete
-                                                            multiple
-                                                            id="tags-filled"
-                                                            options={projectTags.map(tag => tag.name) ?? []}
-                                                            defaultValue={[...projectTagsForAutocompliteOptionDefault]}
-                                                            freeSolo
-                                                            renderTags={(value: readonly string[], getTagProps) =>
-                                                                value.map((option: string, index: number) => (
-                                                                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                                                                ))
-                                                            }
-                                                            renderInput={(params) => (
+                                                        </div>
+
+                                                        <div style={{flexGrow: 1, margin: '0 3px'}}>
+                                                            <TextField
+                                                                style={{ width: '100%'}}
+                                                                label="Url"
+                                                                id="outlined-size-small"
+                                                                defaultValue={link.link}
+                                                                size="small"
+                                                                onChange={(event: any) => {
+                                                                    const newLinks = projectLinks.map((l) => {
+                                                                        if(l.id === link.id) {
+                                                                            l.link = event.target.value ?? '';
+                                                                            return l;
+                                                                        }
+                                                                        else return l;
+                                                                    });
+                                                                    setProjectLinks([...newLinks]);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+
+
+                                            <Button
+                                                variant="outlined"
+                                                color='primary'
+                                                style={{width: '100%'}}
+                                                onClick={() => {
+                                                    setProjectLinks([...projectLinks, {
+                                                        id: random(1, 100000),
+                                                        title: '',
+                                                        project_id: order.project?.id ?? 1,
+                                                        link: ''
+                                                    }])
+                                                }}
+                                            >
+                                                <Add/>
+
+                                            </Button>
+                                        </div>
+
+                                    </Card>
+                                </Grid>
+
+                                <Grid item md={6} xs={12}>
+                                    <Card sx={{ padding: 3, boxShadow: 2 }}>
+                                        <Grid container spacing={3}>
+                                            <Grid item xs={12}>
+                                                <TextField
+                                                    fullWidth
+                                                    size="small"
+                                                    type="input"
+                                                    name="name"
+                                                    label="Project Name"
+                                                    variant="outlined"
+                                                    onBlur={handleBlur}
+                                                    value={values.name}
+                                                    onChange={handleChange}
+                                                    helperText={touched.name && errors.name}
+                                                    error={Boolean(errors.name && touched.name)}
+                                                />
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid sx={{mt: 2}} container spacing={3}>
+                                            <Grid item xs={12}>
+                                                <div style={{display: 'flex'}}>
+                                                    <Autocomplete
+                                                        fullWidth
+                                                        defaultValue={mode === 'update' && order && order.project ? order.project.project_type : null}
+                                                        size="small"
+                                                        getOptionLabel={(option: ProjectType) => option.name}
+                                                        disablePortal
+                                                        id="combo-box-types"
+                                                        options={projectTypes}
+                                                        sx={{ width: 500 }}
+
+                                                        renderInput={
+                                                            (params) =>
                                                                 <TextField
                                                                     {...params}
-                                                                    variant="filled"
-                                                                    label="freeSolo"
-                                                                    placeholder="Favorites"
-                                                                />)}
-                                                            onChange={(event, value, reason, details) => {
-                                                                if(value)
-                                                                    setFieldValue('tags', value)
+                                                                    error={
+                                                                        Boolean(touched.project_type_id && errors.project_type_id)
+                                                                    }
+                                                                    fullWidth
+                                                                    helperText={
+                                                                        touched.project_type_id && errors.project_type_id
+                                                                    }
+                                                                    label="Project Type"
+                                                                    name="project_type_id"
+                                                                    variant="outlined"
+                                                                />
+                                                        }
+                                                        renderOption={(props, option: ProjectType) => (
+                                                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                {option.name} ({option.id})
+                                                            </Box>
+                                                        )}
+                                                        onChange={ (event: any, values: any) => {
+                                                            if(values)
+                                                                setFieldValue("project_type_id", values.id);
+                                                        }}
+                                                    />
+
+                                                </div>
+                                            </Grid>
+
+                                            <Grid item sm={6} xs={12}>
+                                                <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                                                    <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>
+                                                    <Input
+                                                        id="standard-adornment-amount"
+                                                        value={values.budget}
+                                                        onChange={(event: any) => {
+                                                            const value = event.target.value;
+                                                            if(value)
+                                                                setFieldValue("budget", value);
+                                                        }}
+                                                        startAdornment={
+                                                        <InputAdornment position="start">$</InputAdornment>
+                                                    }
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item sm={6} xs={12}>
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <Stack spacing={3}>
+                                                        <DesktopDatePicker
+                                                            label="Deadline date"
+                                                            inputFormat="DD-MM-YYYY"
+                                                            value={values.deadline}
+                                                            onChange={(newValue: Dayjs | null) => {
+                                                                if(newValue)
+                                                                    setFieldValue('deadline', newValue.toDate());
                                                             }}
+                                                            renderInput={(params) =>
+                                                                <TextField {...params} />}
                                                         />
-                                                    </Grid>
-                                                </Grid>
+                                                    </Stack>
+                                                </LocalizationProvider>
+                                            </Grid>
+                                            <Grid item sm={12}
+                                                  style={{
+                                                      height: '200px',
+                                                      overflowY: 'auto',
+                                                      marginTop: '20px'
+                                            }}
+                                            >
+                                                <Autocomplete
+                                                    multiple
+                                                    id="tags-filled"
+                                                    options={projectTags.map(tag => tag.name) ?? []}
+                                                    defaultValue={[...projectTagsForAutocompliteOptionDefault]}
+                                                    freeSolo
+                                                    renderTags={(value: readonly string[], getTagProps) =>
+                                                        value.map((option: string, index: number) => (
+                                                            <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                                                        ))
+                                                    }
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            {...params}
+                                                            variant="filled"
+                                                            label="freeSolo"
+                                                            placeholder="Favorites"
+                                                        />)}
+                                                    onChange={(event, value, reason, details) => {
+                                                        if(value)
+                                                            setFieldValue('tags', value)
+                                                    }}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Card>
+                                </Grid>
 
-
-                                                <Grid sx={{mt: 2}} container spacing={3}>
-                                                    <Grid item sm={6} xs={12}>
-
-                                                    </Grid>
-                                                    <Grid item sm={6} xs={12}>
-
-                                                    </Grid>
-                                                </Grid>
-                                            </Card>
                             </Grid>
-
-                        </Grid>
-                    </Card>
-                </Box>
+                        </Card>
+                    </Box>
                 </form>
             )}
         </Formik>
@@ -681,17 +531,6 @@ export const CreateEditProjectModal: FC<{
                 </DialogActions>
 
             </DialogContent>
-
-
-            <AddEmployeeToProjectModal
-                open={openEmployeeAddMoal}
-                onClose={() => setOpenEmployeeAddModal(false)}
-                onSave={addEmployeeToProjectHanle}
-                setOpen={setOpenEmployeeAddModal}
-                project={order?.project}
-            />
-
-
 
         </Dialog>
     );

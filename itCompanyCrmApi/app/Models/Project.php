@@ -14,7 +14,7 @@ class Project extends Model
             $this->belongsToMany(Employee::class)
             ->withPivot('project_role_id');
     }
-
+    
     public function tags() {
         return $this->belongsToMany(Tag::class);
     }
@@ -35,4 +35,9 @@ class Project extends Model
     public function lanes() {
         return $this->hasMany(KanbanLane::class);
     }
+
+    public function history() {
+        return $this->hasMany(ProjectHistory::class);
+    }
+
 }

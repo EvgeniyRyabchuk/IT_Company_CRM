@@ -24,6 +24,12 @@ export interface ProjectLink {
 export interface ProjectHistory {
     id: number;
 
+    employee_id: number,
+    project_id: number,
+
+    action: string;
+    employee: Employee;
+
     created_at: string;
     updated_at: string;
 }

@@ -1,0 +1,11 @@
+
+.list-item-text {
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.list-item-text .lit-item {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

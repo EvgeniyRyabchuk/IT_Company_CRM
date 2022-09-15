@@ -19,15 +19,10 @@ class ProjectHistorySeeder extends Seeder
         $projects = Project::all();
 
         foreach ($projects as $project) {
-            ProjectHistory::factory()->count(10)->create()
+            ProjectHistory::factory()->count(100)->create()
                 ->each(function ($ph) use ($project) {
-
-                    $employeeCount = $project->employees->count();
-                    $employees = $project->employees->random($employeeCount);
-
-                    foreach ($employees as $employee) {
-                        $ph->employee()->associate($employee);
-                    }
+                    $employee = $project->employees->random(1);
+                    $ph->employee()->associate($employee[0]);
                     $ph->project()->associate($project);
                     $ph->save();
                 });
