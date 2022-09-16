@@ -3,7 +3,8 @@ import React, {FC, useEffect, useMemo, useRef, useState} from "react";
 import {
     Autocomplete,
     Button,
-    Card, Chip,
+    Card,
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -21,36 +22,20 @@ import {Formik, FormikProps, FormikValues} from 'formik';
 import * as Yup from "yup";
 // @ts-ignore
 import AvatarImageCropper from "react-avatar-image-cropper";
-import {
-    EmployeeWithProjectRoles,
-    Project,
-    ProjectLink,
-    ProjectRole,
-    ProjectTag,
-    ProjectType
-} from "../../../types/project";
+import {EmployeeWithProjectRoles, ProjectLink, ProjectTag, ProjectType} from "../../../types/project";
 import {ProjectService} from "../../../services/ProjectService";
 import {Order} from "../../../types/order";
 import moment from "moment";
-
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Checkbox from '@mui/material/Checkbox';
-import Avatar from '@mui/material/Avatar';
-import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
-import {Add, Delete, PlusOne} from "@mui/icons-material";
-import AddEmployeeToProjectModal from "../AddEmployeeToProjectModal/AddEmployeeToProjectModal";
-import dayjs, { Dayjs } from 'dayjs';
+import {Add, Delete} from "@mui/icons-material";
+import {Dayjs} from 'dayjs';
 import Stack from '@mui/material/Stack';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import {random} from "lodash";
 import ProjectMemberList from "../../UI/ProjectMemberList";
-import {ComponentMode} from "../../../types/global";
+import {ComponentMode, LinkIcon, ModalProps, SocialLinkTitle} from "../../../types/global";
+import {linkTitleIcon} from "../../../utils/constant";
 
 // styled components
 const ButtonWrapper = styled(Box)(({ theme }) => ({
@@ -86,17 +71,6 @@ const SwitchWrapper = styled(Box)(() => ({
     marginTop: 10,
 }));
 
-/*
-
- Project Name
- Project Type
- Add Member (with role)
- Add Link
- Deadline
- Budget
- Tags
-
- */
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
@@ -117,14 +91,19 @@ interface InitialValueType {
     tags: string;
 }
 
-export const CreateEditProjectModal: FC<{
-    onClose: () => void;
-    onSubmit: (orderId: number | undefined, values: any, mode: string) => void;
-    open: boolean;
+export const CreateEditProjectModal: FC<ModalProps & {
     mode: ComponentMode;
     order: Order;
-}> = ({ open, onClose, onSubmit, mode, order }) => {
+}> = ({ open, onClose, onSave, mode, order }) => {
 
+
+    const linkResourceOptions = [
+        SocialLinkTitle.GITHUB,
+        SocialLinkTitle.JIRA,
+        SocialLinkTitle.MAIL_SERVICE,
+        SocialLinkTitle.HOST,
+        SocialLinkTitle.EXTERNAL_LINK
+    ];
     const formik = useRef<FormikProps<FormikValues>>(null);
     const innerForm = useRef<any>();
 
@@ -182,7 +161,7 @@ export const CreateEditProjectModal: FC<{
         payload.links = JSON.stringify(projectLinks);
         payload.tags = JSON.stringify(payload.tags)
         payload.order_id = order.id
-        onSubmit(order.id, payload, mode);
+        onSave(order.id, payload, mode);
         onClose();
 
         console.log(payload);
@@ -267,12 +246,18 @@ export const CreateEditProjectModal: FC<{
                                         }}
                                     >
 
-                                        <ProjectMemberList
-                                            members={members}
-                                            setMembers={setMembers}
-                                            mode={mode}
-                                            project={order?.project}
-                                        />
+                                        <div style={{
+                                            height: '320px',
+                                            overflowY: 'auto'
+                                        }}>
+                                            <ProjectMemberList
+                                                members={members}
+                                                setMembers={setMembers}
+                                                mode={mode}
+                                                project={order?.project}
+                                            />
+                                        </div>
+
                                         <div style={{
                                             padding: '0 10px',
                                             display: 'flex',
@@ -319,12 +304,29 @@ export const CreateEditProjectModal: FC<{
                                                                    });
                                                                    setProjectLinks([...newLinks]);
                                                                 }}
-                                                                freeSolo
-                                                                style={{height: '100%', width: '120px'}}
+                                                                style={{
+                                                                    height: '100%',
+                                                                    width: '120px',
+                                                                    zIndex: '999999'
+                                                                }}
                                                                 size='small'
                                                                 disablePortal
                                                                 id="combo-box-demo"
-                                                                options={['GitHub', 'Jira']}
+                                                                renderOption={(props, option) => (
+                                                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                        <div style={{width: '24px', height: '24px', marginRight: '10px'}}>
+                                                                            {
+                                                                                linkTitleIcon.find((lti: LinkIcon) =>
+                                                                                    option === lti.title)!.icon
+                                                                            }
+                                                                        </div>
+                                                                        {
+                                                                            option
+                                                                        }
+                                                                    </Box>
+                                                                )}
+
+                                                                options={linkResourceOptions}
                                                                 sx={{ width: '100%' }}
                                                                 renderInput={(params) =>
                                                                     <TextField {...params} label="Link Titles" />}
@@ -495,7 +497,7 @@ export const CreateEditProjectModal: FC<{
                                                         <TextField
                                                             {...params}
                                                             variant="filled"
-                                                            label="freeSolo"
+                                                            label="Project Tags"
                                                             placeholder="Favorites"
                                                         />)}
                                                     onChange={(event, value, reason, details) => {

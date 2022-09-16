@@ -27,12 +27,13 @@ import {ModalStandartState, SortOrderOptionType} from "../../types/global";
 import {defLimit, defPage} from "../../utils/constant";
 import OrderFilter, {OrderFilterData} from "./OrderFilter";
 import useDebounce from "../../hooks/useDebounce";
-import {Order, OrderStatus} from "../../types/order";
+import {Order, OrderStatus, OrderStatusNameEnum, UndoOrderReason} from "../../types/order";
 import {OrderService} from "../../services/OrderService";
 import {styled} from "@mui/system";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import CreateEditProjectModal from "../../components/modals/CreateEditProjectModal/CreateEditProjectModal";
 import {ProjectService} from "../../services/ProjectService";
+import UndoOrderModal from "../../components/modals/UndoOrderModal/UndoOrderModal";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -102,6 +103,7 @@ const ProjectsListPage = () => {
         }
     });
 
+
     const fetchStatuses = async () => {
         const { data }  = await OrderService.getOrderStatuses();
         setStatuses(data);
@@ -144,11 +146,31 @@ const ProjectsListPage = () => {
 
     }, []);
 
-    const handleStatusChange = async (event: any, orderId: number, oldStatusId: number) => {
-        const value = event.target.value;
-        const { data } = await OrderService.updateOrder(orderId, {
+    const handleStatusChange =
+        async (statusId: number,
+               order: Order,
+               oldStatusId: number,
+               undoReason?: UndoOrderReason | null | undefined
+        ) => {
+        const status = statuses.find(s => s.id === statusId);
+        if(status) {
+            if(status.name === OrderStatusNameEnum.UNDO) {
+                if(!undoReason) {
+
+                    setUndoModalOpen(true);
+                    setSelectedOrder(order)
+                    return;
+                }
+                // const { data } = await OrderService.undoOrder(order.id, undoReason);
+                // setUndoModalOpen(false);
+                // console.log(data);
+            }
+        }
+
+        const { data } = await OrderService.updateOrder(order.id, {
             'order_status_id': oldStatusId,
-            'new_order_status_id': value
+            'new_order_status_id': statusId,
+            'undoReason': undoReason ?? null
         });
         const newOrders = [ ...orders ];
         const findIndex = newOrders.findIndex(e => e.id === data.id);
@@ -162,6 +184,7 @@ const ProjectsListPage = () => {
         isOpen: false,
         mode: 'create',
     });
+    const [undoModalOpen, setUndoModalOpen] = useState<boolean>(false);
 
     const handleCreateEditRow = async (orderId: number | null | undefined, values: any, mode: string) => {
         console.log('submit', values);
@@ -182,6 +205,7 @@ const ProjectsListPage = () => {
                 }});
             setOrders(newOrders);
         }
+        setSelectedOrder(null);
     };
 
     return (
@@ -369,9 +393,10 @@ const ProjectsListPage = () => {
                                                         }}
                                                         id="demo-select-status"
                                                         defaultValue={e.status_id}
-                                                        onChange={(event: any) =>
-                                                            handleStatusChange(event, e.id, e.status_id)
-                                                        }
+                                                        value={e.status_id}
+                                                        onChange={(event: any) => {
+                                                            handleStatusChange(event.target.value, e, e.status_id)
+                                                        }}
                                                     >
                                                         {
                                                             statuses.map(status =>
@@ -566,12 +591,36 @@ const ProjectsListPage = () => {
             {
                 selectedOrder &&
                 <CreateEditProjectModal
+                    setOpen={() => {}}
                     onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
-                    onSubmit={handleCreateEditRow}
+                    onSave={handleCreateEditRow}
                     open={createEditModalState.isOpen}
                     mode={createEditModalState.mode}
                     order={selectedOrder}
                 />
+            }
+            {
+                statuses && selectedOrder &&
+                    <UndoOrderModal
+                        onClose={() => {
+                            setUndoModalOpen(false);
+                            // setOrders([...orders])
+                            setSelectedOrder(null);
+                            fetchOrders();
+                            console.log('close');
+                        }}
+                        onSave={(reason) => {
+                            const undoStatus = statuses.find(s => s.name === OrderStatusNameEnum.UNDO);
+                            handleStatusChange(undoStatus!.id,
+                                selectedOrder,
+                                selectedOrder.status.id,
+                                reason
+                            )
+                        }}
+                        open={undoModalOpen}
+                        setOpen={setUndoModalOpen}
+                        order={selectedOrder}
+                    />
             }
 
 

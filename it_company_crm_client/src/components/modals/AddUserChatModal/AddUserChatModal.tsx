@@ -7,18 +7,11 @@ import {useAction} from "../../../hooks/useAction";
 import {ChatService} from "../../../services/ChatService";
 import useAuth from "../../../hooks/useAuth";
 import {User} from "../../../types/user";
-
-type AddUserToProjectModal = {
-    open: any;
-    setOpen: any;
-    onClose: any;
-    onSave: any;
-
-}
+import {ModalProps} from "../../../types/global";
 
 
 
-const AddUserChatModal = ({open, setOpen, onClose, onSave}: AddUserToProjectModal) => {
+const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
 
     const { user } = useAuth();
     const { createChat } = useAction();

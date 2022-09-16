@@ -3,17 +3,13 @@ import {Autocomplete, Box, Button, DialogActions, Fade, Modal, TextField} from "
 
 import {modalStyle} from "../../../assets/components/Modals";
 import {apiUrl} from "../../Chat/ChatSideBar/ChatDirect/ChatSidebarDirectItem";
-import {useAction} from "../../../hooks/useAction";
 import useAuth from "../../../hooks/useAuth";
 import {Project} from "../../../types/project";
 import {EmployeeService} from "../../../services/EmployeeService";
 import {Employee} from "../../../types/user";
+import {ModalProps} from "../../../types/global";
 
-type AddUserChatModal = {
-    open: any;
-    setOpen: any;
-    onClose: any;
-    onSave: any;
+type AddUserChatModal = ModalProps & {
     project: Project | null | undefined;
 }
 

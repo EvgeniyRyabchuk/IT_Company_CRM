@@ -34,6 +34,15 @@ const HistoryEntry : React.FC<{entry: ProjectHistory}> = ({ entry}) => {
                     <small className="text-nowrap text-muted me-1">
                         { moment(entry.created_at).format('DD/MM/yyyy HH:MM:ss')}
                     </small>
+                    <small className="text-nowrap text-muted me-1"
+                           style={{
+                               width: '150px',
+                               marginRight: '40px',
+                               textOverflow: 'ellipsis',
+                               overflow: 'hidden'
+                           }}>
+                        { entry.employee.user.full_name}
+                    </small>
                     <div className="avatar">
                         <img
                             src={`${API_URL_WITH_PUBLIC_STORAGE}/${entry.employee.user.avatar}`}

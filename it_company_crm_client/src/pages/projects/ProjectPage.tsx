@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Kanban from "../../components/Kanban/Kanban";
 import ProjectFileManager from "../../components/ProjectFileManager/ProjectFileManager";
-import {AppBar, Box, Tab, Tabs, Typography} from "@mui/material";
+import {AppBar, Box, Button, IconButton, Tab, Tabs, Typography} from "@mui/material";
 import {Container} from "../../assets/components/breadcrumb";
 import {Breadcrumb} from "../../components";
 import {createSearchParams, useNavigate, useParams, useSearchParams} from "react-router-dom";
@@ -13,6 +13,9 @@ import ProjectMain from "./Tabs/ProjectMain";
 import '../../assets/components/ProjectPage/index.css';
 import ProjectHistoryList from "./Tabs/ProjectHistory/ProjectHistoryList";
 import ProjectMemberList from "../../components/UI/ProjectMemberList";
+import {Close, Edit} from "@mui/icons-material";
+import {PublicOrderInfo} from "../../types/order";
+import {setOrder} from "../../store/action-creator/kanban";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -57,11 +60,17 @@ function a11yProps(index: number) {
 }
 
 const ProjectPage = () => {
+
+    const [project, setProject] = useState<Project>();
+
+    const [memberEditMode, setMemberEditMode] = useState<boolean>(false);
+    const [newMembers, setNewMembers] = useState<EmployeeWithProjectRoles[]>( []);
+
     const { projectId } = useParams();
     const [ searchParams ] = useSearchParams();
     const navigator = useNavigate();
 
-    const [project, setProject] = useState<Project>();
+
 
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
@@ -101,6 +110,9 @@ const ProjectPage = () => {
     useEffect(() => {
         setDefaultTab();
     }, [searchParams])
+
+    const [orderInfo, setOrderInfo] = useState<PublicOrderInfo>();
+
     useEffect(() => {
         const fetchProject = async () => {
             if(projectId) {
@@ -113,11 +125,16 @@ const ProjectPage = () => {
                 );
                 data.project.employees = employeesWithRoles;
                 setProject(data.project);
+                setNewMembers(data.project.employees);
+                setOrderInfo(data.orderInfo);
             }
         }
+
         setDefaultTab();
         fetchProject();
     }, []);
+
+
 
     return (
         <Container style={{padding: '30px'}}>
@@ -137,7 +154,9 @@ const ProjectPage = () => {
                     onChange={handleChange}
                     indicatorColor="secondary"
                     textColor="inherit"
-                    variant="fullWidth"
+                    variant="scrollable"
+                    centered
+                    scrollButtons="auto"
                     aria-label="full width tabs example"
                 >
                     <Tab label="Main" {...a11yProps(0)} />
@@ -150,8 +169,11 @@ const ProjectPage = () => {
 
             <TabPanel value={value} index={0} dir={theme.direction}>
                 {
-                    project ?
-                        <ProjectMain project={project}/>
+                    project && orderInfo ?
+                        <ProjectMain
+                            project={project}
+                            orderInfo={orderInfo}
+                        />
                         :
                         'Loading Project'
                 }
@@ -174,26 +196,49 @@ const ProjectPage = () => {
 
             <TabPanel value={value} index={3} dir={theme.direction}>
                 <h1>Members</h1>
+                <div style={{display: 'flex', justifyContent: 'end'}}>
+                    <IconButton
+                        onClick={() => setMemberEditMode(!memberEditMode)}>
+                        {memberEditMode ? <Close /> : <Edit/>}
+                    </IconButton>
+                </div>
                 {
                     project &&
                         <ProjectMemberList
-
-                            members={project.employees}
-                            setMembers={() => {}}
-                            mode='create'
+                            members={memberEditMode ? newMembers : project.employees}
+                            setMembers={setNewMembers}
+                            mode={memberEditMode ? 'update' : 'view' }
                             project={project}
                             className={`members-list`}
-                                style={{
+                            style={{
                                 maxWidth: '100%'
                             }}
                         />
                 }
 
-                {/*<ul>*/}
-                {/*    { project?.employees.map((e: EmployeeWithProjectRoles) =>*/}
-                {/*        <li key={e.id}>{e.user.full_name} ({e.id}) : role {e.role?.name}</li>*/}
-                {/*    ) }*/}
-                {/*</ul>*/}
+                {
+                    memberEditMode && project && orderInfo &&
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={ async () => {
+                                console.log(newMembers);
+                                const payload : any = { ...project};
+                                payload.members = JSON.stringify(newMembers.map(m => m.pivot));
+                                payload.tags = project.tags.map(t => t.name).join(',');
+                                payload.order_id = orderInfo.id;
+
+                                const { data: updatedProject } =
+                                    await ProjectService.updateProject(project.id, payload);
+                                setProject({...updatedProject});
+                                setMemberEditMode(false);
+                            }}
+                        >
+                            Save
+                        </Button>
+                }
+
+
             </TabPanel>
             <TabPanel value={value} index={4} dir={theme.direction}>
                 {

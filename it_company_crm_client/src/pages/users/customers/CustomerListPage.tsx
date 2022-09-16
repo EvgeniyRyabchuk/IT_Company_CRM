@@ -361,21 +361,21 @@ const CustomerListPage = () => {
                         </ListItemIcon>
                         Chat
                     </MenuItem>,
-                    <MenuItem
-                        key={2}
-                        onClick={() => {
-                            console.log('selected employee', row.original);
-                            setSelectedCustomer({ ...row.original });
-                            // setCreateEditModalState({ isOpen: true, mode: 'update'})
-                            closeMenu();
-                        }}
-                        sx={{ m: 0 }}
-                    >
-                        <ListItemIcon>
-                            <Edit />
-                        </ListItemIcon>
-                        Edit
-                    </MenuItem>,
+                    // <MenuItem
+                    //     key={2}
+                    //     onClick={() => {
+                    //         console.log('selected employee', row.original);
+                    //         setSelectedCustomer({ ...row.original });
+                    //         // setCreateEditModalState({ isOpen: true, mode: 'update'})
+                    //         closeMenu();
+                    //     }}
+                    //     sx={{ m: 0 }}
+                    // >
+                    //     <ListItemIcon>
+                    //         <Edit />
+                    //     </ListItemIcon>
+                    //     Edit
+                    // </MenuItem>,
                     <MenuItem
                         key={3}
                         onClick={async () => {

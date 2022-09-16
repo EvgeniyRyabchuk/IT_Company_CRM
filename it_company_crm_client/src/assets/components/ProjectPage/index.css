@@ -19,3 +19,9 @@
 .hidden-bottom-60 {
     mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
+
+.box-shadow-1 {
+    -webkit-box-shadow: 0px 0px 9px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 9px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 9px -1px rgba(0,0,0,0.75);
+}

@@ -9,9 +9,9 @@ import LinkList from "../../../components/UI/LinkList/LinkList";
 import {Box} from "@mui/system";
 import ProjectHistoryList from "./ProjectHistory/ProjectHistoryList";
 
-const ProjectMain : React.FC<{project: Project}> = ({project}) => {
+const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = ({project, orderInfo}) => {
 
-    const [orderInfo, setOrderInfo] = useState<PublicOrderInfo>();
+
     const [history, setHistory] = useState<ProjectHistory[]>();
     const orderTextBox = useRef<any>();
     const navigate = useNavigate();
@@ -20,15 +20,11 @@ const ProjectMain : React.FC<{project: Project}> = ({project}) => {
 
     useEffect(() => {
 
-        const getOrderInfo = async () => {
-            const { data } = await ProjectService.getOrderInfoForProject(project.id);
-            setOrderInfo({...data});
-        }
         const getHistory = async () => {
             const { data } = await ProjectService.getHistory(project.id);
             setHistory([...data.data]);
         }
-        getOrderInfo();
+
         getHistory();
 
     }, []);
@@ -40,24 +36,26 @@ const ProjectMain : React.FC<{project: Project}> = ({project}) => {
 
 
     return (
-        <div>
+        <div style={{paddingTop: '30px'}}>
 
             {
                 orderInfo ?
                     <div>
                         <Grid container spacing={3}>
-                            <Grid item  xs={12} md={12} lg={8}>
+                            <Grid item xs={12} md={12} lg={8}>
                                 <Box sx={{
                                     p: 1,
-                                    maxHeight: '650px',
-                                    overflowY: 'auto'
-                                }}>
+                                    maxHeight: '800px',
+                                    overflowY: 'auto',
+                                    paddingTop: '30px',
+
+                                }}
+                                className={'box-shadow-1'}
+                                >
                                     <LinkList
                                         list={project.project_links}
                                     />
                                 </Box>
-
-                                {/*History*/}
 
                             </Grid>
                             <Grid item xs={12} md={12} lg={4}>
@@ -153,7 +151,8 @@ const ProjectMain : React.FC<{project: Project}> = ({project}) => {
                         </Grid>
                         <hr/>
                         <Grid container spacing={3}>
-                            <Grid item md={12}>
+                            <Grid item xs={12} md={12}>
+                                <h2>Project Action History</h2>
                                 <ProjectHistoryList project={project} previewCount={5} />
                                 <div>
                                     <Button

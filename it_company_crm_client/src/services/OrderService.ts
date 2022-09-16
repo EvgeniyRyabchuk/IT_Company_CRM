@@ -1,7 +1,7 @@
 import $api from "../http";
 import {AxiosResponse} from "axios";
 import {PaginatedResponse} from "../types/global";
-import {Order, OrderStatus} from "../types/order";
+import {Order, OrderStatus, UndoOrderCase, UndoOrderCaseGrouped, UndoOrderReason} from "../types/order";
 
 
 interface OrderMinMax {
@@ -23,9 +23,20 @@ export class OrderService {
     }
 
 
-    static async updateOrder(orderId: number, payload: any): Promise<AxiosResponse<Order>> {
+    static async updateOrder(orderId: number, payload: any):
+        Promise<AxiosResponse<Order>> {
         return $api.put<Order>(`/orders/${orderId}`, payload);
     }
+
+    // static async undoOrder(orderId: number, reason: any) :
+    //     Promise<AxiosResponse<string>> {
+    //
+    //     return $api.post<string>(
+    //         `/orders/${orderId}/statuses/undo/cases/${reason.order_undo_case_id}`
+    //         , reason);
+    // }
+
+
 
     static async deleteOrder(orderId: number): Promise<AxiosResponse<string>> {
         return $api.delete<string>(`/orders/${orderId}`);
@@ -41,4 +52,10 @@ export class OrderService {
         Promise<AxiosResponse<OrderMinMax>> {
         return $api.get<OrderMinMax>(`/orders/min-max`);
     }
+
+    static async getUndoOrderCases():
+        Promise<AxiosResponse<UndoOrderCaseGrouped>> {
+        return $api.get<UndoOrderCaseGrouped>(`/orders/statuses/undo/cases`);
+    }
+
 }

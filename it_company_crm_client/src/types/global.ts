@@ -42,5 +42,15 @@ export interface LinkIcon {
 export enum SocialLinkTitle {
     GITHUB = 'GitHub',
     JIRA = 'Jira',
-    DEFAULT = 'Default'
+    MAIL_SERVICE = 'Mail Service',
+    HOST = 'Host',
+    EXTERNAL_LINK = 'External Link',
+}
+
+
+export interface ModalProps {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    onClose: () => void;
+    onSave: (...args: any[]) => any
 }

@@ -10,7 +10,7 @@ const LinkListItem : React.FC<{link: ProjectLink, iconList: LinkIcon[]}> =
     const linkIcon = useMemo<ReactNode>(() => {
         const item = iconList.find(e => e.title === link.title);
         if(!item) {
-            return iconList.find(e => e.title === SocialLinkTitle.DEFAULT)!.icon;
+            return iconList.find(e => e.title === SocialLinkTitle.EXTERNAL_LINK)!.icon;
         }
         return item.icon;
     }, []);

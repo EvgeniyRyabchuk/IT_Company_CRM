@@ -16,20 +16,18 @@ import {modalStyle, Span, UserMenu} from "../../../assets/components/Modals";
 import {KanbanCard, KanbanLane} from "../../../types/kanban";
 import {Employee} from "../../../types/user";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
+import {ModalProps} from "../../../types/global";
 
 
 
-type KanbanCardEditModal = {
-    open: any;
-    setOpen: any;
-    onClose: any;
+type KanbanCardEditModal = ModalProps & {
     card: KanbanCard | null | undefined;
     owner: Employee | null | undefined;
-    onSave: any;
 }
 
 
-const KanbanCardEditModal : React.FC<KanbanCardEditModal> = ({open, setOpen, onClose, card,owner, onSave}) => {
+const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
+    ({open, setOpen, onClose, card,owner, onSave}) => {
 
     const [title, setTitle] = useState<string>();
     const [description, setDescription] = useState<string>();

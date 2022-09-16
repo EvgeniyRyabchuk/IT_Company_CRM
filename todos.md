@@ -34,6 +34,7 @@ Search by guest name
 customers visibility on others pc 
 user tags autocomplite 
 link icon types 
+group by problem 
 
 --- DB 
 

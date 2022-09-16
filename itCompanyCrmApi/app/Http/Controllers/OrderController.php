@@ -18,6 +18,7 @@ use App\Notifications\PasswordResetNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -199,6 +200,7 @@ class OrderController extends Controller
     //TODO: create project if order status is Processing
     // TODO: status change history
     public function update(Request $request, $orderId) {
+
         $order = Order::findOrFail($orderId);
 
         $oldStatus = Status::findOrFail($request->input('order_status_id'));
@@ -210,10 +212,20 @@ class OrderController extends Controller
             $undoOrderEntry->delete();
         }
         else if ($newStatus->name == 'Undo') {
-            $caseId = $request->input('order_undo_case_id');
+            $extraReasonText = $request->input('undoReason.extra_reason_text');
+            $type =  $request->input('undoReason.orderUndoCase.type_name');
+            $reason =  $request->input('undoReason.orderUndoCase.reason');
+
+            $case = UndoOrderCase::where(['type_name' => $type, 'reason' => $reason])->first();
+
+            if(!$case) {
+                return response()->json(['message' => 'case does not exist'], 201);
+            }
+
             UndoOrder::create([
                 'order_id' => $order->id,
-                'order_undo_case_id' => $caseId
+                'order_undo_case_id' => $case->id,
+                'extra_reason_text' => $extraReasonText
             ]);
         }
 
@@ -229,6 +241,8 @@ class OrderController extends Controller
             ->findOrFail($order->id);
         return response()->json($resOrder, 201);
     }
+
+
 
     public function addUndoCaseEntry(Request $request, $orderId, $caseId) {
         $undoOrder = UndoOrder::where('order_id', $orderId)->first();
@@ -246,6 +260,24 @@ class OrderController extends Controller
         $undoOrder->save();
 
         return response()->json("undo case added success $undoOrder", 201);
+    }
+
+    public function getUndoReasonCases(Request $request) {
+
+        $undoCases = DB::table('undo_order_cases')
+            ->selectRaw('type_name, reason')
+//            ->groupByRaw('type_name')
+            ->get()
+            ->groupBy('type_name')
+            ->map(function ($items) {
+                $newItem = [];
+                for ($i = 0; $i < count($items); $i++) {
+                    $newItem[] = $items[$i]->reason;
+                }
+                return $newItem;
+            });
+
+        return response()->json($undoCases);
     }
 
     public function destroy(Request $request, $orderId) {

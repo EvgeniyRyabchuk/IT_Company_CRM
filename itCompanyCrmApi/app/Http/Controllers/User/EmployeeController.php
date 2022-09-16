@@ -218,7 +218,7 @@ class EmployeeController extends Controller
     public function store(Request $request) {
 
         $employee =  $this->saveEmployee($request, 'create');
-        $addedEmployee = Employee::with('user.roles', 'position', 'level', 'skills')
+        $addedEmployee = Employee::with('user.roles', 'user.phones', 'position', 'level', 'skills')
             ->withCount(['projects as project_count'])
             ->findOrFail($employee->id);
         return response()->json($addedEmployee);
@@ -226,7 +226,7 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $employeeId) {
         $employee = $this->saveEmployee($request, 'update');
-        $addedEmployee = Employee::with('user.roles', 'position', 'level', 'skills')
+        $addedEmployee = Employee::with('user.roles', 'user.phones', 'position', 'level', 'skills')
             ->withCount(['projects as project_count'])
             ->findOrFail($employee->id);
         return response()->json($addedEmployee);

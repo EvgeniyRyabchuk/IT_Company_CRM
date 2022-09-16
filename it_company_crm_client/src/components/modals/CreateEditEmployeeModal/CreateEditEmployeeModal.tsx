@@ -28,6 +28,7 @@ import {defaultUserAvatar} from "../../../utils/constant";
 // @ts-ignore
 import AvatarImageCropper from "react-avatar-image-cropper";
 import AuthService from "../../../services/AuthService";
+import {ModalProps} from "../../../types/global";
 // styled components
 const ButtonWrapper = styled(Box)(({ theme }) => ({
     width: 100,
@@ -89,13 +90,10 @@ interface InitialValueType {
     newAvatar?: any;
 }
 
-export const CreateEditEmployeeModal: FC<{
-    onClose: () => void;
-    onSubmit: (values: Employee, mode: string) => void;
-    open: boolean;
+export const CreateEditEmployeeModal: FC< ModalProps & {
     mode: string;
     employee?: Employee
-}> = ({ open, onClose, onSubmit, mode, employee }) => {
+}> = ({ open, onClose, onSave, mode, employee }) => {
 
     const formik = useRef<FormikProps<FormikValues>>(null);
     const innerForm = useRef<any>();
@@ -150,7 +148,7 @@ export const CreateEditEmployeeModal: FC<{
             values.newAvatar = imageFile;
         }
         if(mode === 'update' && employee) values.id = employee.id
-        onSubmit(values, mode);
+        onSave(values, mode);
         onClose();
         console.log(values);
     };

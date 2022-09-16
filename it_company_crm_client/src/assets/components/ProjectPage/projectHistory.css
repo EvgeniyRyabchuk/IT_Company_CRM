@@ -3,9 +3,9 @@
 .todo-application .content-area-wrapper .content-right .todo-task-list-wrapper .todo-task-list li .badge-wrapper {
     display: flex;
 }
-[dir=ltr] .todo-application .content-area-wrapper .content-right .todo-task-list-wrapper .todo-task-list li .badge-wrapper .badge:not(:last-child) {
-    margin-right: .5rem;
-}
+/*[dir=ltr] .todo-application .content-area-wrapper .content-right .todo-task-list-wrapper .todo-task-list li .badge-wrapper .badge:not(:last-child) {*/
+/*    margin-right: .5rem;*/
+/*}*/
 
 .ps {
     overflow: hidden !important;
@@ -68,7 +68,7 @@
 [dir] .ps .ps__rail-x:hover,
 [dir] .ps .ps__rail-y:focus,
 [dir] .ps .ps__rail-y:hover {
-    background-color: #eee;
+
 }
 
 .ps__thumb-x {
@@ -107,7 +107,7 @@
 
 [dir] .ps__rail-x:focus>.ps__thumb-x,
 [dir] .ps__rail-x:hover>.ps__thumb-x {
-    background-color: #999;
+
 }
 
 .ps__rail-y:focus>.ps__thumb-y,
@@ -168,18 +168,13 @@ small {
     font-size: .857rem;
 }
 
-a {
-    color: #7367f0;
-}
 
 a,
 a:hover {
     text-decoration: none;
 }
 
-a:hover {
-    color: #6d62e4;
-}
+
 
 img,
 svg {
@@ -270,11 +265,6 @@ button {
     outline: 0;
 }
 
-[dir] .form-control:focus {
-    background-color: #fff;
-    border-color: #7367f0;
-    box-shadow: 0 3px 10px 0 rgba(34, 41, 47, .1);
-}
 
 .form-control::-webkit-input-placeholder {
     color: #b9b9c3;
@@ -350,14 +340,11 @@ button {
 }
 
 [dir] .form-check-input:focus {
-    border-color: #7367f0;
+
     box-shadow: 0 2px 4px 0 rgba(115, 103, 240, .4);
 }
 
-[dir] .form-check-input:checked {
-    background-color: #7367f0;
-    border-color: #7367f0;
-}
+
 
 [dir] .form-check-input:checked[type=checkbox] {
     background-image: url("data:image/svg+xml;charset=utf8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9.5 7.5'%3e%3cpolyline points='0.75 4.35 4.18 6.75 8.75 0.75' style='fill:none;stroke:%23fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5px'/%3e%3c/svg%3e");
@@ -446,9 +433,6 @@ button {
     }
 }
 
-.btn:hover {
-    color: #6e6b7b;
-}
 
 .btn:focus {
     outline: 0;
@@ -467,19 +451,9 @@ button {
     color: #fff;
 }
 
-[dir] .btn-primary {
-    background-color: #7367f0;
-    border-color: #7367f0;
-}
 
-.btn-primary:hover {
-    color: #fff;
-}
 
-[dir] .btn-primary:hover {
-    background-color: #6258cc;
-    border-color: #5c52c0;
-}
+
 
 .btn-primary:focus {
     color: #fff;
@@ -508,10 +482,6 @@ button {
     color: #fff;
 }
 
-[dir] .btn-primary:disabled {
-    background-color: #7367f0;
-    border-color: #7367f0;
-}
 
 .dropdown {
     position: relative;
@@ -560,24 +530,15 @@ button {
     border: 0;
 }
 
-.dropdown-item:focus,
-.dropdown-item:hover {
-    color: #7367f0;
-}
 
-[dir] .dropdown-item:focus,
-[dir] .dropdown-item:hover {
-    background-color: rgba(115, 103, 240, .12);
-}
+
 
 .dropdown-item:active {
     color: #fff;
     text-decoration: none;
 }
 
-[dir] .dropdown-item:active {
-    background-color: #7367f0;
-}
+
 
 .dropdown-item:disabled {
     color: #b9b9c3;
@@ -588,25 +549,25 @@ button {
     background-color: transparent;
 }
 
-.badge {
-    display: inline-block;
-    font-size: 85%;
-    font-weight: 600;
-    line-height: 1;
-    color: #fff;
-    white-space: nowrap;
-    vertical-align: baseline;
-}
+/*.badge {*/
+/*    display: inline-block;*/
+/*    font-size: 85%;*/
+/*    font-weight: 600;*/
+/*    line-height: 1;*/
+/*    color: #fff;*/
+/*    white-space: nowrap;*/
+/*    vertical-align: baseline;*/
+/*}*/
 
-[dir] .badge {
-    padding: .3rem .5rem;
-    text-align: center;
-    border-radius: .358rem;
-}
+/*[dir] .badge {*/
+/*    padding: .3rem .5rem;*/
+/*    text-align: center;*/
+/*    border-radius: .358rem;*/
+/*}*/
 
-.badge:empty {
-    display: none;
-}
+/*.badge:empty {*/
+/*    display: none;*/
+/*}*/
 
 .list-group {
     display: flex;
@@ -631,25 +592,13 @@ button {
     text-align: inherit;
 }
 
-.list-group-item-action:focus,
-.list-group-item-action:hover {
-    z-index: 1;
-    color: #6e6b7b;
-    text-decoration: none;
-}
 
-[dir] .list-group-item-action:focus,
-[dir] .list-group-item-action:hover {
-    background-color: #f8f8f8;
-}
+
 
 .list-group-item-action:active {
     color: #fff;
 }
 
-[dir] .list-group-item-action:active {
-    background-color: #7367f0;
-}
 
 .list-group-item {
     position: relative;
@@ -687,10 +636,7 @@ button {
     color: #fff;
 }
 
-[dir] .list-group-item.active {
-    background-color: #7367f0;
-    border-color: #7367f0;
-}
+
 
 [dir] .list-group-item+.list-group-item {
     border-top-width: 0;
@@ -942,26 +888,17 @@ a:focus {
     cursor: pointer;
 }
 
-.bg-light-primary {
-    color: #7367f0 !important;
-}
+
 
 [dir] .bg-light-primary {
     background: rgba(115, 103, 240, .12) !important;
 }
 
-.avatar.bg-light-primary {
-    color: #7367f0 !important;
-}
 
 .btn-primary {
     color: #fff !important;
 }
 
-[dir] .btn-primary {
-    border-color: #7367f0 !important;
-    background-color: #7367f0 !important;
-}
 
 .btn-primary:active,
 .btn-primary:focus {
@@ -973,9 +910,6 @@ a:focus {
     background-color: #5e50ee !important;
 }
 
-[dir] .bullet.bullet-primary {
-    background-color: #7367f0;
-}
 
 .bg-light-success {
     color: #28c76f !important;
@@ -1201,21 +1135,14 @@ html .navbar-floating.footer-static .app-content .content-area-wrapper {
     border-left: 2px solid transparent;
 }
 
-.todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item.active,
-.todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item:focus,
-.todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item:hover {
-    color: #7367f0;
-}
 
 [dir] .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item.active,
 [dir] .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item:focus,
 [dir] .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item:hover {
-    background: transparent;
+
 }
 
-[dir] .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item.active {
-    border-color: #7367f0;
-}
+
 
 [dir=ltr] .todo-application .content-area-wrapper .content-right {
     border-left: 1px solid #ebe9f1;

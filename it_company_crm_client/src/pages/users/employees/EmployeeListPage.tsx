@@ -469,8 +469,9 @@ const EmployeeListPage = () => {
             />
 
             <CreateEditEmployeeModal
+                setOpen={() => {}}
                 onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}
-                onSubmit={handleCreateEditRow}
+                onSave={handleCreateEditRow}
                 open={createEditModalState.isOpen}
                 mode={createEditModalState.mode}
                 employee={selectedEmployee}

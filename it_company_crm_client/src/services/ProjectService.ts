@@ -7,7 +7,8 @@ import {PublicOrderInfo} from "../types/order";
 
 interface GetProjectResponse{
     project: Project,
-    projectRoles: ProjectRole[]
+    projectRoles: ProjectRole[],
+    orderInfo: PublicOrderInfo
 }
 
 interface ProjectMinMax {

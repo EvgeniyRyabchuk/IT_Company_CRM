@@ -80,10 +80,13 @@ class ProjectController extends Controller
     public function show(Request $request, $projectId) {
         $projectRoles = ProjectRole::take(20)->get();
         $project = Project::with('tags', 'employees.user',
-            'employees.position', 'employees.level', 'projectLinks'
-        )
-            ->findOrFail($projectId);
-        return response()->json(compact('project','projectRoles'), 201);
+            'employees.position', 'employees.level', 'projectLinks')
+        ->findOrFail($projectId);
+
+        $orderInfo = $this->getOrderInfo($project->id);
+
+
+        return response()->json(compact('project','projectRoles', 'orderInfo'), 201);
     }
 
     public static function save(Request $request, $mode) {
@@ -165,6 +168,8 @@ class ProjectController extends Controller
             'projectLinks',
             'tags',
             'employees.user',
+            'employees.position',
+            'employees.level',
             'projectLinks'
         )->findOrFail($project->id);
         return $project;
@@ -231,11 +236,12 @@ class ProjectController extends Controller
         $history = ProjectHistory::with('employee.user', 'employee.position')
             ->where('project_id', $project->id)
             ->where('action', 'LIKE', "%$search%")
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage);
         return response()->json($history);
     }
 
-    public function getOrderInfo(Request $request, $projectId) {
+    public function getOrderInfo($projectId) {
         $project = Project::findOrFail($projectId);
         $order = Order::where('project_id', $project->id)->first();
         if(!$order) {
@@ -246,7 +252,8 @@ class ProjectController extends Controller
             'deadline' => $order->deadline,
             'about' => $order->about
         ];
-        return response()->json($publicOrderInfo);
+        return $publicOrderInfo;
+//        return response()->json($publicOrderInfo);
     }
 
     public function getMembers(Request $request, $projectId) {

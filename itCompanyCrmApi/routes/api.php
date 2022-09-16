@@ -152,8 +152,8 @@ Route::prefix('orders')->group(function() {
     Route::delete('/{orderId}', [OrderController::class, 'destroy']);
 
 
-
-    Route::post('/{orderId}/status/undo/case/{caseId}', [OrderController::class, 'addUndoCaseEntry']);
+    Route::get('/statuses/undo/cases', [OrderController::class, 'getUndoReasonCases']);
+    Route::post('/{orderId}/statuses/undo/cases/{caseId}', [OrderController::class, 'addUndoCaseEntry']);
     Route::post('/{orderId}/create-customer-account', [OrderController::class, 'createCustomerAccount']);
 
 });

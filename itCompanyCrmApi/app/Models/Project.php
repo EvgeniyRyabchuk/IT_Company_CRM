@@ -14,7 +14,7 @@ class Project extends Model
             $this->belongsToMany(Employee::class)
             ->withPivot('project_role_id');
     }
-    
+
     public function tags() {
         return $this->belongsToMany(Tag::class);
     }

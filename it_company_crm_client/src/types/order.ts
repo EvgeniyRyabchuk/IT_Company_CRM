@@ -1,16 +1,20 @@
 import {Project} from "./project";
 import {Customer} from "./user";
 
+export interface UndoOrderCaseGrouped {
+    [x: string]: string[];
+}
 
 export interface UndoOrderCase {
-    id: number;
+    id?: number;
     type_name: string;
     reason: string;
 }
 
-export interface UndoOrder {
+export interface UndoOrderReason {
     extra_reason_text: string;
     orderUndoCase: UndoOrderCase;
+
     order_undo_case_id: number;
     order_id: number;
 }
@@ -66,4 +70,8 @@ export interface PublicOrderInfo {
     id: number;
     deadline: string;
     about: string;
+}
+
+export enum OrderStatusNameEnum {
+    UNDO = "Undo"
 }

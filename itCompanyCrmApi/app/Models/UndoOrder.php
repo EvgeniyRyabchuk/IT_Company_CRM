@@ -11,7 +11,8 @@ class UndoOrder extends Model
 
     protected $fillable = [
         'order_id',
-        'order_undo_case_id'
+        'order_undo_case_id',
+        'extra_reason_text'
     ];
 
     public function orderUndoCase() {
