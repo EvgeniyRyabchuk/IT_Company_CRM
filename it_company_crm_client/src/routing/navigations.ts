@@ -53,7 +53,7 @@ export const navigations : NavigationRoute[]  = [
 
   { name: 'Projects', path: '/projects', icon: 'devices' },
 
-  { name: 'Vacancies', path: '/vacancies', icon: 'border_color' },
+  { name: 'Vacancies', path: '/job-applications', icon: 'border_color' },
 
   { name: 'Statistic', path: '/statistic', icon: 'equalizer' },
 

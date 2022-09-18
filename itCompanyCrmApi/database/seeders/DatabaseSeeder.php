@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ProjectSeeder::class, false, ['developers' => $developers]);
 
-        $this->call(ProjectHistorySeeder::class);
+//        $this->call(ProjectHistorySeeder::class);
 
         $this->call(ProjectRoleSeeder::class);
 
@@ -118,7 +118,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(VacancySeeder::class);
 
-        $this->call(VacancyStatusesSeeder::class);
+        $this->call(JobApplicationStatusesSeeder::class);
 
         $this->call(JobApplicationsSeeder::class);
 

@@ -211,7 +211,8 @@ const ProjectPage = () => {
                             project={project}
                             className={`members-list`}
                             style={{
-                                maxWidth: '100%'
+                                maxWidth: '100%',
+                                minHeight: '300px'
                             }}
                         />
                 }
@@ -227,6 +228,7 @@ const ProjectPage = () => {
                                 payload.members = JSON.stringify(newMembers.map(m => m.pivot));
                                 payload.tags = project.tags.map(t => t.name).join(',');
                                 payload.order_id = orderInfo.id;
+                                payload.links = JSON.stringify(project.project_links);
 
                                 const { data: updatedProject } =
                                     await ProjectService.updateProject(project.id, payload);

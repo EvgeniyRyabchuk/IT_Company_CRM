@@ -37,7 +37,7 @@ class OrderController extends Controller
         $sort = $request->input('sort') ?? 'created_at';
         $sortOrder = $request->input('order') ?? 'desc';
 
-        $orderStatus = json_decode($request->input('orderStatuses') ?? '[]');
+        $orderStatuses = json_decode($request->input('orderStatuses') ?? '[]');
         $deadlineRange = json_decode($request->input('deadlineRange') ?? '[]');
         $createdAtOrderRange = json_decode($request->input('createdAtOrderRange') ?? '[]');
 
@@ -63,10 +63,10 @@ class OrderController extends Controller
                 break;
         }
 
-        if(count($orderStatus) > 0) {
+        if(count($orderStatuses) > 0) {
             $query->select('orders.*');
             $query->join('statuses', 'orders.status_id', 'statuses.id')
-                ->whereIn('statuses.id', $orderStatus);
+                ->whereIn('statuses.id', $orderStatuses);
         }
 
 

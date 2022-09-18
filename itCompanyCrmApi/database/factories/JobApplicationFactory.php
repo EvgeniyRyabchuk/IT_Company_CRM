@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\JobApplication;
 use App\Models\Project;
 use App\Models\Vacancy;
-use App\Models\VacancyStatus;
+use App\Models\JobApplicationStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -20,14 +22,19 @@ class JobApplicationFactory extends Factory
     public function definition()
     {
         $vacancy = Vacancy::inRandomOrder()->first();
-        $vacancyStatus = VacancyStatus::inRandomOrder()->first();
+        $vacancyStatus = JobApplicationStatus::inRandomOrder()->first();
+
+        $resume_path = 'static/files/jobApplications/resumeExample.doc';
 
         return [
             'name' => $this->faker->firstName,
             'email' => $this->faker->email,
             'vacancy_id' => $vacancy->id,
-            'resume_path' => $this->faker->filePath(),
-            'vacancy_status_id' => $vacancyStatus->id
+            'resume_path' => $resume_path,
+            'job_application_status_id' => $vacancyStatus->id
         ];
     }
+
+
+
 }

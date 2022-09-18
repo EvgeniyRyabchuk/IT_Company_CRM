@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('vacancy_statuses', function (Blueprint $table) {
+        Schema::create('job_application_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
+            $table->unsignedTinyInteger('index');
+            $table->string('bgColor', 20);
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vacancy_statuses');
+        Schema::dropIfExists('job_application_statuses');
     }
 };

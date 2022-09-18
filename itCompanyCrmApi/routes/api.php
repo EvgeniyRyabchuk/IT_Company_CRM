@@ -238,11 +238,16 @@ Route::prefix('vacancies')->group(function () {
 
 Route::prefix('job-applications')->group(function () {
     Route::get('/', [JobApplicationController::class, 'index']);
-    Route::get('{jobApplicationId}', [JobApplicationController::class, 'show']);
+    Route::get('/statuses',  [JobApplicationController::class, 'getStatuses']);
 
     Route::post('/', [JobApplicationController::class, 'store']);
     Route::put('{jobApplicationId}', [JobApplicationController::class, 'update']);
     Route::delete('{jobApplicationId}', [JobApplicationController::class, 'destroy']);
+
+    Route::get('/min-max',  [JobApplicationController::class, 'getMinMaxValues']);
+
+    Route::get('{jobApplicationId}', [JobApplicationController::class, 'show']);
+
 });
 
 Route::prefix('excel')->group(function () {

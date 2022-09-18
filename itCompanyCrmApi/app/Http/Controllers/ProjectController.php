@@ -181,6 +181,7 @@ class ProjectController extends Controller
     }
 
     public function update(Request $request, $projectId) {
+
         $project = ProjectController::save($request, 'update');
         return response()->json($project, 201);
     }

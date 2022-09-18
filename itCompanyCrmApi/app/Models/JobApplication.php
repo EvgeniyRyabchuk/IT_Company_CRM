@@ -13,7 +13,7 @@ class JobApplication extends Model
         return $this->belongsTo(Vacancy::class);
     }
 
-    public function vacancyStatus() {
-        return $this->belongsTo(VacancyStatus::class);
+    public function jobApplicationStatus() {
+        return $this->belongsTo(JobApplicationStatus::class);
     }
 }
