@@ -1,4 +1,5 @@
 import {Customer, Employee, User} from "./user";
+import {PaginatedResponse} from "./global";
 
 export interface Chat {
     id: number;
@@ -13,6 +14,7 @@ export interface Chat {
 
     created_at: string;
     updated_at: string;
+
 }
 export interface ChatMessage {
     id: number;
@@ -29,7 +31,6 @@ export interface ChatMessageContent {
     id: number;
     message?: string;
 }
-
 
 export interface ChatState {
     chats: Chat[];

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
-    Box,
+    Box, Button,
     Card,
     CardContent,
     CircularProgress,
@@ -21,7 +21,7 @@ import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
 import  {getSortOrderOptionValue} from "./sortOptions";
-import {SortOrderOptionType} from "../../types/global";
+import {ComponentMode, SortOrderOptionType} from "../../types/global";
 import {defLimit, defPage} from "../../utils/constant";
 import useDebounce from "../../hooks/useDebounce";
 import JobApplicationFilter, {JobApplicationFilterData} from "./JobApplicationFilter";
@@ -30,6 +30,7 @@ import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import {JobApplicationService} from "../../services/JobApplicationService";
 import {VacancyService} from "../../services/VacancyService";
 import defJobApplicationSortOrderData from "./sortOptions";
+import AddEditVacancyModal from "../../components/modals/AddVacancyModal/AddEditVacancyModal";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -143,11 +144,6 @@ const VacanciesListPage = () => {
         setLimit(defLimit);
     }, []);
 
-    useEffect(() => {
-        console.log(page, limit, totalPage, isLoading);
-    }, [page, limit, totalPage, isLoading]);
-
-
     const handleStatusChange =
         async (statusId: number,
                jobApplication: JobApplication,
@@ -179,6 +175,16 @@ const VacanciesListPage = () => {
         }
 
 
+    const [addVacancyModalOpen, setAddVacancyModalOpen] = useState<boolean>(false);
+
+    const onVacancyAddEditChange = async (newVacancy: Vacancy, mode: ComponentMode)  => {
+        if(mode === 'create') {
+            const { data } = await VacancyService.createVacancy(newVacancy);
+        } else if(mode === 'update') {
+            const { data } = await VacancyService.updateVacancy(newVacancy.id, newVacancy);
+        }
+    }
+
     return (
         <Container>
 
@@ -193,36 +199,46 @@ const VacanciesListPage = () => {
                             <small>Tables</small>
                             <h3>Job Applications</h3>
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <SearchInput>
-                                <TextField
-                                    id="outlined-search"
-                                    label="Search Project By Name"
-                                    type="search"
-                                    size='small'
-                                    fullWidth
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position='start'>
-                                                <Search />
-                                            </InputAdornment>
-                                        ),
-                                         style: {
-                                             paddingRight: '0'
-                                         }
-                                    }}
-                                    onChange={(e) =>
-                                        setSearch(e.target.value)
-                                    }
-                                />
-                            </SearchInput>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
+                            <div style={{display: 'flex'}}>
+                                <SearchInput style={{padding: 0, width: '300px'}}>
+                                    <TextField
+                                        id="outlined-search"
+                                        label="Search By Name Or Email"
+                                        type="search"
+                                        size='small'
+                                        fullWidth
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position='start'>
+                                                    <Search />
+                                                </InputAdornment>
+                                            ),
+                                             style: {
+                                                 paddingRight: '0'
+                                             }
+                                        }}
+                                        onChange={(e) =>
+                                            setSearch(e.target.value)
+                                        }
+                                    />
+                                </SearchInput>
+
+                                <Button
+                                    variant='outlined'
+                                    onClick={() => setAddVacancyModalOpen(true)}
+                                    style={{width: '100xp', maxHeight: '40px', padding: '0 15px' }}
+                                >
+                                    Add Vacancy
+                                </Button>
+                            </div>
+
                             <Box
                                 className="card-header--actions"
                                 style={{
                                     display: 'flex',
                                     height: '40px',
-                                }}
-                            >
+                                }}>
                                 <Select
                                     size='small'
                                     style={{
@@ -401,6 +417,12 @@ const VacanciesListPage = () => {
             </div>
 
 
+            <AddEditVacancyModal
+                open={addVacancyModalOpen}
+                setOpen={setAddVacancyModalOpen}
+                onClose={() => setAddVacancyModalOpen(false)}
+                onSave={onVacancyAddEditChange}
+            />
 
 
         </Container>

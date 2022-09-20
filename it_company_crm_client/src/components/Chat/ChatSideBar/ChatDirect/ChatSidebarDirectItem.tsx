@@ -7,13 +7,13 @@ import useAuth from "../../../../hooks/useAuth";
 
 export const apiUrl = `http://127.0.0.1:8000/api/`;
 
-const ChatSidebarDirectItem = ({chat}: any) => {
+const ChatSidebarDirectItem = ({chat, ...props}: any) => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const { setCurrentChatId } = useAction();
     const { currentChat, currentChatId } = useTypeSelector(state => state.chat)
 
-    const { fetchMessageByChat } = useAction();
+    const { fetchMessageByChat, setMessagePage } = useAction();
 
     const withUser = useMemo(() => {
         return chat.users.filter((e: any) => e.id != user!.id)[0];
@@ -27,20 +27,21 @@ const ChatSidebarDirectItem = ({chat}: any) => {
         const newCurrentChat = { ...chat }
         setCurrentChatId(newCurrentChat.id);
         if(!newCurrentChat.messages || newCurrentChat.messages.length === 0) {
-            fetchMessageByChat(
-                user!.id,
-                newCurrentChat.id,
-                DEFAULT_LIMIT,
-                DEFAULT_PAGE,
-                true
-            );
+            // fetchMessageByChat(
+            //     user!.id,
+            //     newCurrentChat.id,
+            //     DEFAULT_LIMIT,
+            //     DEFAULT_PAGE,
+            //     true
+            // );
+            // setMessagePage(newCurrentChat.messagePage)
         }
         navigate(`/chats/${withUser.id}`);
     }
 
 
     return (
-        <li className={currentChat && currentChatId == chat.id ? 'nv chat-selected' : 'nv'}>
+        <li {...props} className={currentChat && currentChatId == chat.id ? 'nv chat-selected' : 'nv'}>
             <button
                 style={{backgroundColor: 'transparent'}}
                 className={chat.newCount > 0 ? "flex items-center fe ou dx rounded hl" : "flex items-center fe ou dx rounded"}

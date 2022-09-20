@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
-    public function showChats(Request $request, $userId) { 
+    public function showChats(Request $request, $userId) {
         $user = User::findOrFail($userId);
         $chats = Chat::with('users.roles')
             ->whereIn('id', $user->chats->pluck('id')->toArray())
@@ -45,6 +45,7 @@ class ChatController extends Controller
         $messages = ChatMessage::where('chat_id', $chat->id)
             ->with("content", "toUser", "fromUser")
             ->orderBy('created_at', 'desc')
+//        dd($messages->paginate(10));
             ->paginate(10);
         return response()->json($messages, 201);
     }

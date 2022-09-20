@@ -8,11 +8,11 @@ import useAuth from "../../../hooks/useAuth";
 
 type CharMessageProbs = { message: ChatMessage; }
 
-const CharMessage = ({message} : CharMessageProbs) => {
+const CharMessage = ({message, ...props} : CharMessageProbs) => {
     const { user } = useAuth();
 
     return (
-        <div className="flex aj ri ww chat-message">
+        <div id={`${message.id}`} key={message.id} {...props} className="flex aj ri ww chat-message" >
             <img className="rounded-full mr-4" src={`${apiUrl}storage/${message.from_user.avatar}`} width="40" height="40" alt="User 02" />
                 <div>
                     <div className={user!.id === message.from_user.id ? "text-sm ho ye dk lw ct border cp shadow-md rt" : "text-sm bg-white text-slate-800 dk lw ct border border-slate-200 shadow-md rt"}>

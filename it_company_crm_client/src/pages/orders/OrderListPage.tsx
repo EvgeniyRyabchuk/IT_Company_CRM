@@ -92,10 +92,10 @@ const ProjectsListPage = () => {
         const total = getPageCount(data.total, limit);
 
         setTotalPage(total);
-        if(page > 1) {
+        if(data.current_page > 1) {
             setOrders([...orders, ...data.data]);
         }
-        else if(page === 1) {
+        else if(data.current_page === 1) {
             setOrders([...data.data]);
         }
         else {
@@ -118,6 +118,7 @@ const ProjectsListPage = () => {
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
+        console.log("useObserver", page, totalPage)
         setPage(page + 1);
     });
 
@@ -343,6 +344,7 @@ const ProjectsListPage = () => {
                                 <tbody>
                                 { orders.map((e: Order) =>
                                     <tr
+                                        id={`${e.id}`}
                                         key={e.id}>
                                         <td>
                                             <div

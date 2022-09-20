@@ -10,6 +10,8 @@ const AuthGuard = ({ children, allowRoles }) => {
 
     const { pathname } = useLocation();
 
+    console.log('fetch role guard', allowRoles)
+
     //
     // console.log('role', allowRoles)
     // console.log('exist', user, isAuthenticated)
@@ -20,7 +22,7 @@ const AuthGuard = ({ children, allowRoles }) => {
         for (let userRole of user?.roles) {
             for (let role of allowRoles) {
                 if (userRole.name == role) {
-                    // console.log('match');
+                    console.log('match');
                 }
             }
         }

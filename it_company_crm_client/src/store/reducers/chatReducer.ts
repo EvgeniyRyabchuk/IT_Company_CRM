@@ -47,20 +47,32 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
             const newMessages = action.payload.data;
 
             const newCurrentChat = state.chats.filter((e: Chat) => e.id === state.currentChatId)[0];
+            newCurrentChat.messagePage = action.payload.current_page;
 
+            const newChats = state.chats.map((e: Chat) => {
+                if(e.id === newCurrentChat.id) {
+                    return newCurrentChat;
+                } else {
+                    return e;
+                }
+            });
+            // console.log('new', newMessages)
+            // if(newMessages.length === 0) return { ...state }
             if (newCurrentChat.messages) {
-                newCurrentChat.messages = [...newMessages, ...newCurrentChat.messages].sort((a, b) => a['created_at'].localeCompare(b['created_at']));
+                newCurrentChat.messages = [...newMessages, ...newCurrentChat.messages]
+                    .sort((a, b) => a['created_at'].localeCompare(b['created_at']));
             } else {
-                newCurrentChat.messages = [...newMessages].sort((a, b) => a['created_at'].localeCompare(b['created_at']));
+                newCurrentChat.messages = [...newMessages]
+                    .sort((a, b) => a['created_at'].localeCompare(b['created_at']));
             }
 
-            const newChats = state.chats.map((e: Chat) => e.id === newCurrentChat.id ? newCurrentChat : e);
 
             return {
                 ...state,
                 loadingMessages: false,
                 chats: [...newChats],
-                currentChat: {...newCurrentChat}
+                currentChat: {...newCurrentChat},
+                messagePage: newCurrentChat.messagePage
             }
         }
         case ChatActionTypes.FETCH_CHATS_MESSAGES_ERROR:
@@ -70,13 +82,27 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
             const newCurrentChatId = action.payload;
             const newCurrentChat = state.chats.filter((e: Chat) => e.id === newCurrentChatId)[0];
             const totalMessagePages = getPageCount(newCurrentChat.totalMessages, DEFAULT_LIMIT);
-            console.log('message page SET CURRENT CHAT = ', newCurrentChat.messagePage)
+
+            const newChats = state.chats.map((e: Chat) => {
+                if(e.id === newCurrentChat.id) {
+                    return newCurrentChat;
+                } else {
+                    return e;
+                }
+            });
+
+            console.log('message page SET CURRENT CHAT = ', newCurrentChat.messagePage, totalMessagePages)
+
+
+            const newPage = newCurrentChat.messagePage ?? 1;
 
             return {
                 ...state,
                 currentChatId: newCurrentChatId,
                 currentChat: { ...newCurrentChat },
                 totalMessagePages: totalMessagePages,
+                messagePage: newPage
+
             }
 
         }
@@ -128,13 +154,16 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
 
         case ChatActionTypes.SET_MESSAGE_PAGE: {
             if(state.currentChat) {
+                console.log('set message page')
                 const newCurrentChat = {...state.currentChat};
                 newCurrentChat.messagePage = action.payload;
                 const newChats = state.chats.map((e: Chat) => e.id === newCurrentChat.id ? newCurrentChat : e);
+                const newPage = newCurrentChat.messagePage;
+
                 return {...state,
                     currentChat: newCurrentChat,
                     chats: [...newChats],
-                    messagePage: action.payload
+                    messagePage: newPage,
                 }
             }
             return { ...state }

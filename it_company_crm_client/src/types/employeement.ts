@@ -2,9 +2,11 @@
 export interface Vacancy {
     id: number;
     title: string;
-    describe: string;
+    text: string;
     required: boolean;
     created_at: string;
+
+    job_applications?: JobApplication[];
 }
 
 export interface JobApplication {

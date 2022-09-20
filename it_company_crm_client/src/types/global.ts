@@ -54,3 +54,8 @@ export interface ModalProps {
     onClose: () => void;
     onSave: (...args: any[]) => any
 }
+
+export enum SimpleItemAlignment {
+    COLUMN = 'column',
+    ROW = 'row'
+}

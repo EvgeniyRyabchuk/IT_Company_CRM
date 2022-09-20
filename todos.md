@@ -1,23 +1,12 @@
 
---- History 
-
---- Todos on front 
 
 Scrollbar fix 
 
-Add hirizontal scrollbar
+Add horizontal scrollbar
 
 --- Project statuses 
 
---- Client FeedBack
-
 Project types disable if not match the queryString 
-Order data for project 
-
-
-Online Chat:  
-- send message from customer to manager 
-- infinity scrolling and change chat large loading 
 
 
 Refact stylying 
@@ -26,15 +15,25 @@ Perfect scroll mobile
 Alert system 
 Pdf-export 
 
-Order status history and order index 
 Order more seeding 
 
+
+Search by guest name + 
+
+Online Chat:  
+- send message from customer to manager 
+- infinity scrolling and change chat large loading 
+
+Role Guard 
+
 if sort and filter too fast app work is wrong  
-Search by guest name 
+
+
 customers visibility on others pc 
 user tags autocomplite 
 link icon types 
-group by problem 
+
+query string for saved state of page 
 
 --- DB 
 
@@ -46,3 +45,6 @@ group by problem
 
 
 
+
+
+if change chat new messages no loading 

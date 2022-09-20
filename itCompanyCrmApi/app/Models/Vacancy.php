@@ -9,4 +9,7 @@ class Vacancy extends Model
 {
     use HasFactory;
 
+    public function jobApplications() {
+        return $this->hasMany(JobApplication::class);
+    }
 }

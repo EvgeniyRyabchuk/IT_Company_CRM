@@ -25,27 +25,25 @@ export class VacancyService {
     }
 
     static async createVacancy(payload: Vacancy)
-        : Promise<AxiosResponse<string>> {
-        return $api.post<string>(`/vacancies`, {
+        : Promise<AxiosResponse<Vacancy>> {
+        return $api.post<Vacancy>(`/vacancies`, {
             ...payload
         });
     }
 
 
-    static async updateVacancy(projectId: number, newProject: any): Promise<AxiosResponse<Project>> {
-        return $api.put<Project>(`/vacancies/${projectId}`, { ...newProject});
+    static async updateVacancy(vacancyId: number, newVacancy: Vacancy):
+        Promise<AxiosResponse<Vacancy>> {
+        return $api.put<Vacancy>(`/vacancies/${vacancyId}`,
+            { ...newVacancy});
     }
 
-    static async deleteVacancy(projectId: number): Promise<AxiosResponse<string>> {
-        return $api.delete<string>(`/vacancies/${projectId}`);
+    static async deleteVacancy(vacancyId: number):
+        Promise<AxiosResponse<string>> {
+        return $api.delete<string>(`/vacancies/${vacancyId}`);
     }
 
 
-
-    static async getProjectRoles():
-        Promise<AxiosResponse<ProjectRole[]>> {
-        return $api.get<ProjectType[]>(`/projects/roles`);
-    }
 
 }
 

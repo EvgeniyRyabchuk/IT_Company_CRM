@@ -12,12 +12,29 @@ const ChatContent = ({ lastElement }: any) => {
     const wrapper = useRef<any>();
     const contentDiv = useRef<null | HTMLDivElement>(null);
 
+    const firstElement = useRef<HTMLDivElement | null>(null);
+
     const scrollToBottom = () => {
-        console.log('scroll')
-        // wrapper.current?.scrollTo(0, 9999);
+        if(firstElement.current) {
+            console.log('scroll')
+
+            // firstElement.current?.scrollIntoView({ behavior: 'auto' });
+            // wrapper.current.scrollTo(0, 9999);
+            wrapper.current.scrollTo({
+                top: wrapper.current.scrollHeight,
+                behavior: 'auto',
+            });
+        // firstElement.current?.style = { top: '0' };
+
+        }
+
+
     }
 
     useEffect(() => {
+
+        console.log(currentChat?.messages)
+
         if(currentChat && currentChat.messages
             && currentChat.messages.length > 0
             && currentChat.messages.length < 11)
@@ -44,6 +61,14 @@ const ChatContent = ({ lastElement }: any) => {
                     :
                 <h1>Select chat</h1>
             }
+            <div
+                style={{
+                    height: '30px',
+                    background: 'yellow'
+                }}
+                ref={firstElement}>
+
+            </div>
 
         </div>
     );

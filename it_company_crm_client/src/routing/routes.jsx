@@ -15,6 +15,7 @@ import statisticRoute from "../pages/statistic/StatisticRoute";
 import customerRoutes from "../pages/users/customers/CustomerRoutes";
 import ordersRoutes from "../pages/orders/OrdersRoutes";
 import jobApplicationsRoutes from "../pages/vacancies/JobApplicationsRoutes";
+import newsRoutes from "../pages/news/NewsRoutes";
 
 const children = [
   ...dashboardRoutes,
@@ -26,16 +27,15 @@ const children = [
   ...employeeRoutes,
   ...customerRoutes,
   ...ordersRoutes,
-  ...jobApplicationsRoutes
+  ...jobApplicationsRoutes,
+  ...newsRoutes
 ];
 
 
 const getChildRoutesWithRoleContext = () => {
-
   children.map((e) => {
     return e.element = (<RoleGuard allowRoles={e.allowForRole}>{e.element}</RoleGuard>)
   })
-  console.log('children', children);
   return children;
 }
 

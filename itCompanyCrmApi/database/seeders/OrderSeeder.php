@@ -36,7 +36,10 @@ class OrderSeeder extends Seeder
                 'status_id' => $status->id,
                 'order_contact_id' => $c->id,
                 'about' => fake()->sentence(10),
-                'extra_file' => $reqPath
+                'extra_file' => $reqPath,
+                'created_at' => fake()->dateTimeBetween(
+                    '+1 week',
+                    '+3 month'),
             ]);
             OrderStatusHistory::create([
                 'order_id' => $order->id,

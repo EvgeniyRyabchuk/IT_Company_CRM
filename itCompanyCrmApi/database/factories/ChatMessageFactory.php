@@ -26,7 +26,10 @@ class ChatMessageFactory extends Factory
             'from_id' => 1,
             "to_id" => 1,
             'isSeen' => rand(0, 1),
-            "content_id" => $content->id
+            "content_id" => $content->id,
+            'created_at' => $this->faker->dateTimeBetween(
+                '+1 week',
+                '+3 month'),
         ];
     }
 }

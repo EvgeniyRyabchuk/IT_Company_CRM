@@ -16,7 +16,9 @@ import useAuth from "../../hooks/useAuth";
 import AddUserChatModal from "../../components/modals/AddUserChatModal/AddUserChatModal";
 
 
-const ChatPage = () => {
+const ChatPage = ({...props}) => {
+
+    const [chatLoadingFirstTime, setChatLoadingFirstTime] = useState<boolean>(true);
 
     const { withUserId } = useParams();
     const { user } = useAuth();
@@ -58,7 +60,6 @@ const ChatPage = () => {
                     const withUserExist = e.users.find((user: User) => user.id == withUserId);
                     if(withUserExist) return e;
                 });
-
                 if(existChat) {
                     console.log('exist');
                     const newCurrentChat = { ...existChat }
@@ -71,10 +72,11 @@ const ChatPage = () => {
                             DEFAULT_PAGE,
                             true
                         );
+
                     }
                 }
-
             }
+            setChatLoadingFirstTime(false)
         }
         fetchChatsAndMessages();
 
@@ -100,15 +102,33 @@ const ChatPage = () => {
     });
 
     useEffect(() => {
+        console.log('changed messagepage')
         if(currentChatId && currentChat != null) {
-            console.log("use effect " + messagePage)
+            console.log("===================== use effect ======================= " + messagePage)
             // console.log('length', currentChat.messages.length ?? 0)
-            // if(messagePage === DEFAULT_PAGE) setMessagePage(DEFAULT_PAGE+1);
-
-            fetchMessageByChat(user!.id, currentChat.id, messageLimit, currentChat.messagePage);
+            // if(currentChat.messagePage !== DEFAULT_PAGE)
+            if(!currentChat.messages) return;
+            if(currentChat.totalMessages === currentChat.messages.length) return;
+                fetchMessageByChat(user!.id, currentChat.id, messageLimit, currentChat.messagePage);
 
         }
     }, [messagePage])
+
+    useEffect(() => {
+        if(chatLoadingFirstTime) return;
+        console.log(currentChatId, currentChat, currentChat?.messages)
+        if(currentChatId && currentChat != null) {
+            if(!currentChat.messages) {
+                fetchMessageByChat(
+                    user!.id,
+                    currentChatId,
+                    DEFAULT_LIMIT,
+                    DEFAULT_PAGE,
+                    true
+                );
+            }
+        }
+    }, [currentChatId])
 
     const [userModalOpen, setUserModalOpen] = useState(false);
 

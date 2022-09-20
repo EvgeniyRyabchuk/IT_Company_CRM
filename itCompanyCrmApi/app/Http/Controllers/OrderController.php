@@ -64,7 +64,6 @@ class OrderController extends Controller
         }
 
         if(count($orderStatuses) > 0) {
-            $query->select('orders.*');
             $query->join('statuses', 'orders.status_id', 'statuses.id')
                 ->whereIn('statuses.id', $orderStatuses);
         }
@@ -89,36 +88,55 @@ class OrderController extends Controller
             $query->whereBetween('orders.created_at', [$from, $to]);
         }
 
-        if($search && $search !== '') {
-            $query
-                ->leftJoin('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
-                ->join('customers', 'orders.customer_id', 'customers.id')
-                ->join('users', 'customers.user_id', 'users.id')
-                ->join('phones', 'users.id', 'phones.user_id')
-                ->where('full_name', 'LIKE', "%$search%")
-                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
-
-                ->orWhere('order_contacts.name', 'LIKE', "%$search%")
-                ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
-            ;
-        }
 
         switch ($sort) {
             case "status":
-                $query->select('orders.*');
                 $query->join('statuses as statuses_table',
                     'orders.status_id',
                     '=', 'statuses_table.id')
                 ->orderBy('statuses_table.index', $sortOrder);
                 break;
             case "deadline":
-                $query->select('orders.*');
                 $query->join('projects', 'orders.project_id', 'projects.id')
                 ->orderBy('projects.deadline', $sortOrder);
                 break;
             default:
                 $query = $query->orderBy("orders.$sort", $sortOrder);
                 break;
+        }
+        $query->select('orders.*');
+        if($search && $search !== '') {
+            $queryForAuth = clone $query;
+            $queryForGuest = clone $query;
+
+            $queryForAuth
+                ->leftJoin('customers', 'orders.customer_id', 'customers.id')
+                ->leftJoin('users', 'customers.user_id', 'users.id')
+                ->leftJoin('phones', 'users.id', 'phones.user_id')
+                ->where('full_name', 'LIKE', "%$search%")
+                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
+                ->orWhere('users.email', 'LIKE', "%$search%")
+            ;
+            $queryForGuest
+                ->leftJoin('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
+                ->orWhere('order_contacts.name', 'LIKE', "%$search%")
+                ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
+                ->orWhere('order_contacts.email', 'LIKE', "%$search%")
+            ;
+//            $query
+//                ->join('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
+//                ->join('customers', 'orders.customer_id', 'customers.id')
+//                ->join('users', 'customers.user_id', 'users.id')
+//                ->join('phones', 'users.id', 'phones.user_id')
+//                ->where('full_name', 'LIKE', "%$search%")
+//                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
+//
+//                ->orWhere('order_contacts.name', 'LIKE', "%$search%")
+//                ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
+            ;
+
+            $query = $queryForAuth->unionAll($queryForGuest);
+//            return response()->json($query->toSql(), 201);
         }
 
         $orders = $query->paginate($perPage);
