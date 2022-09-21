@@ -23,14 +23,16 @@ class ProjectFactory extends Factory
         $budget = random_int(500, 3000);
         $paid = random_int(500, $budget);
 
+        $created_at = $this->faker->dateTimeBetween('+1 day', '+2 day');
+        $deadline =  $this->faker->dateTimeBetween('+1 week', '+3 month');
+
         return [
             'name' => $projectType->name,
             'project_type_id' => $projectType->id,
-            'deadline' => $this->faker->dateTimeBetween(
-                '+1 week',
-                '+3 month'),
+            'deadline' => $deadline,
             'budget' => random_int(500, 3000),
-            'paid' => $paid
+            'paid' => $paid,
+            'created_at' => $created_at
         ];
     }
 }

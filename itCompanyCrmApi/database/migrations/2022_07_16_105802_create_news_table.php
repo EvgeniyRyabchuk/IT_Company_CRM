@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('news', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 300);
+            $table->string('title', 5000);
             $table->text('text');
             $table->foreignId('employee_id')->constrained('employees')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('img', 255)->default('/static/images/news/newsIconDefault.png');
             $table->timestamps();
         });
     }

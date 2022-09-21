@@ -5,6 +5,7 @@ export interface News {
 
     title: string;
     text: string;
+    img: string;
     employee: Employee;
 
     employee_id: number;

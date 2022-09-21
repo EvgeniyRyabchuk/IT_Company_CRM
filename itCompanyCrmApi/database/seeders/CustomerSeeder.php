@@ -18,11 +18,18 @@ class CustomerSeeder extends Seeder
     {
         $users = \App\Models\User::factory($count)->create()
             ->each(function ($user) use ($roleId, $isVip) {
+                $created_at = fake()->dateTimeBetween(
+                    '-2 year',
+                    '-1 year');
                 $user->roles()->attach($roleId);
+                $user->created_at = $created_at;
+                $user->save();
+
                 Customer::create(
                     [
                         'user_id' => $user->id,
-                        'vip' => rand(0, 1)
+                        'vip' => rand(0, 1),
+                        'created_at' => $created_at
                     ]
                 );
 

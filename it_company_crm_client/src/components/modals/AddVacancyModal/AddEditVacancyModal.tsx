@@ -63,8 +63,6 @@ const AddEditVacancyModal : React.FC<ModalProps> = ({open, setOpen, onClose, onS
     }, [open])
 
 
-    console.log(Boolean(editableVacancy?.required));
-
     return (
         <div>
             <Modal

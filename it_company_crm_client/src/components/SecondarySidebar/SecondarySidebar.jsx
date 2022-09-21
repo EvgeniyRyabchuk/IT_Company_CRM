@@ -9,10 +9,10 @@ const SecondarySidebar = () => {
   const secondarySidebarTheme = settings.themes[settings.secondarySidebar.theme];
 
   return (
-    <SecondarySidenavTheme theme={secondarySidebarTheme}>
-      {settings.secondarySidebar.open && <SecondarySidebarContent />}
-      <SecondarySidebarToggle />
-    </SecondarySidenavTheme>
+        <SecondarySidenavTheme  theme={secondarySidebarTheme}>
+          {settings.secondarySidebar.open && <SecondarySidebarContent />}
+          <SecondarySidebarToggle />
+        </SecondarySidenavTheme>
   );
 };
 

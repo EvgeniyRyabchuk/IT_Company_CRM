@@ -32,34 +32,51 @@ class OrderSeeder extends Seeder
         $contacts = OrderContact::factory()->count(10)->create()
         ->each(function ($c) use($reqPath) {
             $status = Status::inRandomOrder()->first();
+            $created_at = fake()->dateTimeBetween(
+                '+1 day',
+                '+2 day');
+
             $order = Order::create([
                 'status_id' => $status->id,
                 'order_contact_id' => $c->id,
                 'about' => fake()->sentence(10),
                 'extra_file' => $reqPath,
-                'created_at' => fake()->dateTimeBetween(
-                    '+1 week',
-                    '+3 month'),
+                'created_at' => $created_at
             ]);
+            $c->created_at = $created_at;
+            $c->save();
+
             OrderStatusHistory::create([
                 'order_id' => $order->id,
                 'status_id' => $status->id,
+                'created_at' => $created_at
             ]);
         });
 
         for ($i = 0; $i < 10; $i++) {
             $status = Status::where('name', 'Finished')->first();
+            $project = $projects[$i];
+            $project->created_at = fake()->dateTimeBetween(
+                '+1 week',
+                '+3 month');
+            $project->save();
+
+            $created_at = fake()->dateTimeBetween(
+                '+1 day',
+                '+2 day');
 
             $order = Order::create([
-                'project_id' => $projects[$i]->id,
+                'project_id' => $project->id,
                 'status_id' => $status->id,
                 'customer_id' => $customers[$i]->id,
                 'about' => fake()->sentence(10),
-                'extra_file' => $reqPath
+                'extra_file' => $reqPath,
+                'created_at' => $created_at
             ]);
             OrderStatusHistory::create([
                 'order_id' => $order->id,
                 'status_id' => $status->id,
+                'created_at' => $created_at
             ]);
         }
 

@@ -19,12 +19,21 @@ class EmployeeSeeder extends Seeder
     {
         $users = \App\Models\User::factory($count)->create()
         ->each(function ($user) use ($roleId) {
+            $created_at = fake()->dateTimeBetween(
+                '-2 year',
+                '-1 year');
+
             $user->roles()->attach($roleId);
+            $user->created_at = $created_at;
+
+            $user->save();
+
             Employee::create(
                 [
                     'user_id' => $user->id,
                     'position_id' => 1,
-                    'level_id' => 1
+                    'level_id' => 1,
+                    'created_at' => $created_at
                 ]
             );
         });

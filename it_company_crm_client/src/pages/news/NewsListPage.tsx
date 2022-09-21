@@ -4,7 +4,6 @@ import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
 import {Container} from "../../assets/components/breadcrumb";
 import {styled} from '@mui/material/styles';
-import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -21,7 +20,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {Delete, Edit, GridOn, ViewHeadline} from "@mui/icons-material";
-import {SimpleItemAlignment} from "../../types/global";
+import {ComponentMode, SimpleItemAlignment} from "../../types/global";
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import MenuList from '@mui/material/MenuList';
@@ -30,8 +29,10 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import {NewsService} from "../../services/NewsService";
 import {News} from "../../types/news";
-import theme from "echarts/types/src/theme/dark";
 import {NewsItem, NewsList} from "../../assets/components/News";
+import exp from "constants";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
+import AddEditNewsModal from "../../components/modals/AddEditNewsModal/AddEditNewsModal";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -50,7 +51,9 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 
-
+// TODO: delete
+// TODO: image reduce when screen is small
+//TODO: why loaded style
 
 const ProjectsListPage = () => {
 
@@ -71,6 +74,9 @@ const ProjectsListPage = () => {
         event: React.MouseEvent<HTMLElement>,
         newAlignment: SimpleItemAlignment,
     ) => {
+        if(newAlignment === SimpleItemAlignment.ROW && expanded) {
+            setExpanded({...expanded, expand: false});
+        }
         setAlignment(newAlignment);
     };
 
@@ -82,6 +88,23 @@ const ProjectsListPage = () => {
         fetchNews();
     }, []);
 
+
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [mode, setMode] = useState<ComponentMode>('create');
+    const [selectedNews, setSelectedNews] = useState<News | null>(null);
+
+    const onNewsCreateHandle = async (newsFromModal: News, mode: ComponentMode) => {
+        if(mode === 'create') {
+            const { data } = await NewsService.createNews(newsFromModal);
+            setNews([data, ...news]);
+        }
+        else if(mode === 'update') {
+            const { data } = await NewsService.updateNews(newsFromModal.id, newsFromModal);
+            const newNewsList = news.map(n => n.id === data.id ? data : n);
+            setNews(newNewsList);
+        }
+        console.log(newsFromModal, mode);
+    }
 
     // @ts-ignore
     // @ts-ignore
@@ -121,7 +144,7 @@ const ProjectsListPage = () => {
                 <Button
                     style={{ height: '40px'}}
                     variant='contained'
-                    onClick={() => {}}
+                    onClick={() => setModalOpen(true)}
                 >
                     Create News
                 </Button>
@@ -141,13 +164,17 @@ const ProjectsListPage = () => {
                             }}
                             key={n.id}
                             /*
-                            // @ts-ignore */
+                             // @ts-ignore */
                             alignment={alignment}
                         >
                             <CardHeader
                                 avatar={
-                                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                        R
+                                    <Avatar
+                                        sx={{ bgcolor: red[500] }}
+                                        aria-label="recipe"
+                                        src={`${API_URL_WITH_PUBLIC_STORAGE}/${n.employee.user.avatar}`}
+                                    >
+
                                     </Avatar>
                                 }
                                 action={
@@ -166,7 +193,7 @@ const ProjectsListPage = () => {
                             <CardMedia
                                 component="img"
                                 height="194"
-                                image="https://mui.com/static/images/cards/paella.jpg"
+                                image={`${API_URL_WITH_PUBLIC_STORAGE}/${n.img}`}
                                 alt="Paella dish"
                             />
                             <CardContent>
@@ -189,16 +216,14 @@ const ProjectsListPage = () => {
                                                 expand = !expanded.expand;
                                             }
                                         }
-                                        console.log(n.id, expand)
                                         handleExpandClick(n.id, expand);
+                                        setAlignment(SimpleItemAlignment.COLUMN);
                                     }}
-                                    expand={
-                                        expanded
+                                    expand={expanded
                                         && expanded.id === n.id
                                             ? expanded.expand : false
                                     }
-                                    aria-expanded={
-                                        expanded
+                                    aria-expanded={expanded
                                         && expanded.id === n.id
                                             ? expanded.expand : false
                                     }
@@ -216,13 +241,17 @@ const ProjectsListPage = () => {
                                         right: 0
                                     }}>
                                         <MenuList>
-                                            <MenuItem>
+                                            <MenuItem
+                                                onClick={() => {
+                                                    setSelectedNews(n);
+                                                    setModalOpen(true);
+                                                    setMode('update');
+                                                }}
+                                            >
                                                 <ListItemIcon>
                                                     <Edit fontSize="small" />
                                                 </ListItemIcon>
                                                 <ListItemText>Edit</ListItemText>
-                                                {/*<Typography variant="body2" color="text.secondary">*/}
-                                                {/*</Typography>*/}
                                             </MenuItem>
                                             <Divider />
                                             <MenuItem>
@@ -239,36 +268,34 @@ const ProjectsListPage = () => {
                             && expanded.id === n.id
                                 ? expanded.expand : false} timeout="auto" unmountOnExit>
                                 <CardContent>
-                                    <Typography paragraph>Method:</Typography>
                                     <Typography paragraph>
-                                        Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                                        aside for 10 minutes.
-                                    </Typography>
-                                    <Typography paragraph>
-                                        {n.text}
-                                    </Typography>
-                                    <Typography paragraph>
-                                        Add rice and stir very gently to distribute. Top with artichokes and
-                                        peppers, and cook without stirring, until most of the liquid is absorbed,
-                                        15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-                                        mussels, tucking them down into the rice, and cook again without
-                                        stirring, until mussels have opened and rice is just tender, 5 to 7
-                                        minutes more. (Discard any mussels that don&apos;t open.)
-                                    </Typography>
-                                    <Typography>
-                                        Set aside off of the heat to let rest for 10 minutes, and then serve.
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: n.text
+                                            }}>
+                                        </div>
+
                                     </Typography>
                                 </CardContent>
                             </Collapse>
                         </NewsItem>
-
-
                     )
                 }
 
 
            </NewsList>
 
+            {
+                modalOpen &&
+                <AddEditNewsModal
+                    open={modalOpen}
+                    setOpen={setModalOpen}
+                    onClose={() => setModalOpen(false)}
+                    onSave={onNewsCreateHandle}
+                    mode={mode}
+                    selectedNews={selectedNews}
+                />
+            }
 
 
         </Container>
