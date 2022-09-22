@@ -1,0 +1,8 @@
+
+
+.tab-text-start button {
+    -webkit-align-items: flex-start !important;
+     -webkit-box-align: start !important;;
+    -ms-flex-align: start !important;;
+    align-items: start !important;;
+}

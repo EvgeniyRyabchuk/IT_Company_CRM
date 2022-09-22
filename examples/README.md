@@ -92,6 +92,8 @@ https://demo.uifort.com/carolina-react-admin-dashboard-material-ui-free-demo/Das
 
 https://pixinvent.com/materialize-material-design-admin-template/html/ltr/vertical-modern-menu-template/app-contacts.html
 
+https://demo.uifort.com/carolina-react-admin-dashboard-material-ui-pro-demo/DashboardDefault
+
 
 # Developnent Front Examples 
 

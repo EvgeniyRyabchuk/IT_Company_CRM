@@ -10,8 +10,14 @@ use Illuminate\Http\Request;
 class NewsController extends Controller
 {
     public function index(Request $request) {
+
+        $order = $request->input('order');
+        $page = $request->input('page');
+        $perPage = $request->input('limit');
+
         $news = News::with('employee.user')
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
         return response()->json($news, 201);
     }
 

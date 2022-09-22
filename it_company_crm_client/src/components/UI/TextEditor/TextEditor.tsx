@@ -75,7 +75,7 @@ const TextEditor : React.FC<{
 
     return (
         <ReactQuill
-            style={{ width: width ?? 'auto', height: height ?? 'auto' }}
+            style={{ width: width ?? 'auto', height: height ?? 'auto', border: '2px dashed gray' }}
             // theme={theme}
             theme='snow'
             onChange={handleChange}

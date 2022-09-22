@@ -53,11 +53,11 @@ const RowCards = () => {
               <Checkbox />
               <Hidden smDown>
                 {id % 2 === 1 ? (
-                  <StarOutline size="small">
+                  <StarOutline size="small" sx={{zIndex: '1'}}>
                     <Icon>star_outline</Icon>
                   </StarOutline>
                 ) : (
-                  <DateRange size="small">
+                  <DateRange size="small" sx={{zIndex: '1'}}>
                     <Icon>date_range</Icon>
                   </DateRange>
                 )}

@@ -12,17 +12,19 @@ export class JobApplicationService {
 
     static async getJobApplications(queryParams?: string):
         Promise<AxiosResponse<PaginatedResponse<JobApplication>>> {
-        return $api.get<PaginatedResponse<JobApplication>>(`/job-applications${queryParams ?? ''}`);
+        return $api.get<PaginatedResponse<JobApplication>>(
+            `/job-applications${queryParams ?? ''}`);
     }
 
 
-    static async updateJobApplications(projectId: number, newProject: any):
+    static async updateJobApplications(jobApplicationId: number, newJobApplication: any):
         Promise<AxiosResponse<JobApplication>> {
-        return $api.put<JobApplication>(`/job-applications/${projectId}`, { ...newProject});
+        return $api.put<JobApplication>(`/job-applications/${jobApplicationId}`,
+            { ...newJobApplication});
     }
 
-    static async deleteJobApplication(projectId: number): Promise<AxiosResponse<string>> {
-        return $api.delete<string>(`/job-applications/${projectId}`);
+    static async deleteJobApplication(jobApplicationId: number): Promise<AxiosResponse<string>> {
+        return $api.delete<string>(`/job-applications/${jobApplicationId}`);
     }
 
 

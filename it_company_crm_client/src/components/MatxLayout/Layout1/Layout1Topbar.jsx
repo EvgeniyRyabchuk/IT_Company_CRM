@@ -124,7 +124,7 @@ const Layout1Topbar = () => {
             <NotificationBar />
           </NotificationProvider>
 
-          <ShoppingCart />
+          {/*<ShoppingCart />*/}
 
           <MatxMenu
             menuButton={
@@ -146,15 +146,17 @@ const Layout1Topbar = () => {
             </StyledItem>
 
             <StyledItem>
-              <Link to="/page-layouts/user-profile">
+              <Link to="/profile">
                 <Icon> person </Icon>
                 <Span> Profile </Span>
               </Link>
             </StyledItem>
 
             <StyledItem>
-              <Icon> settings </Icon>
-              <Span> Settings </Span>
+              <Link to="/setting">
+                <Icon> settings </Icon>
+                <Span> Settings </Span>
+              </Link>
             </StyledItem>
 
             <StyledItem onClick={logout}>

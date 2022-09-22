@@ -117,7 +117,7 @@ const VacanciesListPage = () => {
         setPage(page + 1);
     });
 
-    const onSortOrderHandleChange = (event: any) => {
+    const onSortJobApplicationsHandleChange = (event: any) => {
         const value = event.target.value;
         const option = defJobApplicationSortOrderData.find((e: SortOrderOptionType) => e.id == value);
         if(option) {
@@ -148,30 +148,18 @@ const VacanciesListPage = () => {
         async (statusId: number,
                jobApplication: JobApplication,
         ) => {
-            // const status = statuses.find(s => s.id === statusId);
-            // if(status) {
-            //     if(status.name === OrderStatusNameEnum.UNDO) {
-            //         if(!undoReason) {
-            //
-            //             setUndoModalOpen(true);
-            //             setSelectedOrder(order)
-            //             return;
-            //         }
-            //         // const { data } = await OrderService.undoOrder(order.id, undoReason);
-            //         // setUndoModalOpen(false);
-            //         // console.log(data);
-            //     }
-            // }
-            //
-            // const { data } = await OrderService.updateOrder(order.id, {
-            //     'order_status_id': oldStatusId,
-            //     'new_order_status_id': statusId,
-            //     'undoReason': undoReason ?? null
-            // });
-            // const newOrders = [ ...orders ];
-            // const findIndex = newOrders.findIndex(e => e.id === data.id);
-            // newOrders.splice(findIndex, 1, data);
-            // setOrders(newOrders);
+            const status = statuses.find(s => s.id === statusId);
+            if(!status) return;
+
+            jobApplication.job_application_status = status;
+            const { data } =
+                await JobApplicationService.updateJobApplications(jobApplication.id, jobApplication);
+
+            const newJobApplications = [ ...jobApplications ];
+            const findIndex = newJobApplications.findIndex(e => e.id === data.id);
+            newJobApplications.splice(findIndex, 1, data);
+            console.log(newJobApplications)
+            setJobApplications(newJobApplications);
         }
 
 
@@ -248,7 +236,7 @@ const VacanciesListPage = () => {
                                     id="demo-select-small"
                                     defaultValue='1'
                                     label="Sort"
-                                    onChange={(e: any) => onSortOrderHandleChange(e)}
+                                    onChange={(e: any) => onSortJobApplicationsHandleChange(e)}
                                 >
                                     {
                                         defJobApplicationSortOrderData.map((e: SortOrderOptionType) =>

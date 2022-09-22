@@ -16,6 +16,8 @@ import customerRoutes from "../pages/users/customers/CustomerRoutes";
 import ordersRoutes from "../pages/orders/OrdersRoutes";
 import jobApplicationsRoutes from "../pages/vacancies/JobApplicationsRoutes";
 import newsRoutes from "../pages/news/NewsRoutes";
+import profileRoutes from "../pages/profile/ProfileRoutes";
+import settingRoutes from "../pages/setting/SettingRoutes";
 
 const children = [
   ...dashboardRoutes,
@@ -28,7 +30,9 @@ const children = [
   ...customerRoutes,
   ...ordersRoutes,
   ...jobApplicationsRoutes,
-  ...newsRoutes
+  ...newsRoutes,
+  ...profileRoutes,
+  ...settingRoutes
 ];
 
 

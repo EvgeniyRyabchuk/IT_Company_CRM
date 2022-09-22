@@ -2,10 +2,12 @@ import {useEffect, useRef} from "react";
 
 
 export const useObserver = (ref, canLoad, isLoading, callback) => {
+
     const observer = useRef();
 
     useEffect(() =>
     {
+        if(!ref) return;
         if(isLoading) return;
         if(observer.current) observer.current.disconnect(); 
         var cb = function(entries, observer) {

@@ -115,26 +115,16 @@ class JobApplicationController extends Controller
 
     public function update(Request $request, $jobApplicationId) {
 
-        $vacancyId = $request->input('vacancy_id');
-        $vacancyStatusId = $request->input('vacancy_status_id');
-
-        $vacancy = Vacancy::findOrFail($vacancyId);
-        $vacancyStatus = JobApplicationStatus::findOrFail($vacancyStatusId);
+        $jobApplicationStatusId = $request->input('job_application_status.id');
+        $status = JobApplicationStatus::findOrFail($jobApplicationStatusId);
 
         $jobApplication = JobApplication::findOrFail($jobApplicationId);
-        $jobApplication->name = $request->input('name');
-        $jobApplication->email = $request->input('email');
-        $jobApplication->vacancy()->associate($vacancy);
-        $jobApplication->vacancyStatus()->associate($vacancyStatus);
-        //TODO: delete old file
-        $extension = $request->file('resume_path')->getClientOriginalExtension();
-        $path = $request->file('resume_path')
-            ->storeAs("jobApplication/$jobApplication->id", 'resume_path_'. time() . '.' . $extension);
-        $jobApplication->resume_path = $path;
 
+        $jobApplication->jobApplicationStatus()->associate($status);
         $jobApplication->save();
-
-        return response()->json(JobApplication::all(), 201);
+        $jobApplication->load('vacancy', 'jobApplicationStatus');
+ 
+        return response()->json($jobApplication, 201);
     }
 
     public function destroy(Request $request, $jobApplicationId) {

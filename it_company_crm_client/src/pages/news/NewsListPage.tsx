@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Button,} from "@mui/material";
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Box, Button, CircularProgress,} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
 import {Container} from "../../assets/components/breadcrumb";
@@ -30,14 +30,19 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import {NewsService} from "../../services/NewsService";
 import {News} from "../../types/news";
 import {NewsItem, NewsList} from "../../assets/components/News";
-import exp from "constants";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
-import AddEditNewsModal from "../../components/modals/AddEditNewsModal/AddEditNewsModal";
+import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
+import {useFetching} from "../../hooks/useFetching";
+import {useObserver} from "../../hooks/useObserver";
+import {DEFAULT_LIMIT} from "../../store/reducers/chatReducer";
+import {defLimit, defPage} from "../../utils/constant";
+import AddEditNewsModal from '../../components/modals/AddEditNewsModal/AddEditNewsModal';
+import NewsItemSkeleton from "./NewsItemSkeleton";
+import moment from "moment/moment";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
 }
-
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
     const { expand, ...other } = props;
@@ -51,13 +56,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 
-// TODO: delete
-// TODO: image reduce when screen is small
+//TODO: image reduce when screen is small
 //TODO: why loaded style
 
-const ProjectsListPage = () => {
+const NewsListPage = () => {
 
     const [news, setNews] = useState<News[]>([]);
+    const lastElementRef = useRef<any>(null);
 
     const navigator = useNavigate();
     const [expanded, setExpanded] = useState<{id: number, expand: boolean } | null>(null);
@@ -67,8 +72,21 @@ const ProjectsListPage = () => {
         setExpanded({id: targetId, expand: expand});
     };
 
-
     const [alignment, setAlignment] = useState<SimpleItemAlignment>(SimpleItemAlignment.COLUMN);
+
+    useEffect(() => {
+        const storedAlignment = localStorage.getItem('newsAlignment');
+        if(storedAlignment) { // @ts-ignore
+            setAlignment(storedAlignment);
+        }
+        // console.log(storedAlignment);
+        fetchNews();
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('newsAlignment', alignment);
+    }, [alignment])
+
 
     const handleChange = (
         event: React.MouseEvent<HTMLElement>,
@@ -79,15 +97,6 @@ const ProjectsListPage = () => {
         }
         setAlignment(newAlignment);
     };
-
-    useEffect(() => {
-        const fetchNews = async () => {
-            const { data } = await NewsService.getNews();
-            setNews(data);
-        }
-        fetchNews();
-    }, []);
-
 
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [mode, setMode] = useState<ComponentMode>('create');
@@ -105,6 +114,54 @@ const ProjectsListPage = () => {
         }
         console.log(newsFromModal, mode);
     }
+
+    const deleteNews = async (newsId: number) => {
+        const { data } = await NewsService.deleteNews(newsId);
+        const deleteItem = news.findIndex(n => n.id === newsId);
+        news.splice(deleteItem, 1);
+        setNews([...news]);
+    }
+
+    const [page, setPage] = useState<number>(defPage);
+    const [totalPage, setTotalPage] = useState<number>(0);
+    const [limit, setLimit] = useState<number>(defLimit);
+    const [order, setOrder] = useState<string>('desc');
+
+    const urlParamsStr = useMemo<string>( () => {
+        const params = [
+            { key: 'page', value: page },
+            { key: 'limit', value: DEFAULT_LIMIT },
+            { key: 'order', value: order },
+        ];
+        return getQueryVarsInStringFormat(params);
+    }, [order, page, limit]);
+
+    const [fetchNews, isLoading, error ] = useFetching(async () => {
+        const { data } = await NewsService.getNews(urlParamsStr);
+        const total = getPageCount(data.total, limit);
+
+        setTotalPage(total);
+        if(page > 1) {
+            setNews([...news, ...data.data]);
+        }
+        else if(page === 1) {
+            setNews([...data.data]);
+        }
+        else {
+            setNews([]);
+        }
+    });
+
+    useEffect(() => {
+        fetchNews();
+    }, [page, limit, order]);
+
+
+    useObserver(lastElementRef,page < totalPage, isLoading, () => {
+        console.log('-' , page, totalPage, '-');
+        setPage(page + 1);
+    });
+
 
     // @ts-ignore
     // @ts-ignore
@@ -152,138 +209,157 @@ const ProjectsListPage = () => {
 
             <h1>News</h1>
 
-            {/*
-            // @ts-ignore */}
-           <NewsList alignment={alignment}>
+            <NewsList style={{height: isLoading && news.length === 0 ? '1000px' : 'auto'}}>
                 {
-                    news.map((n: News) =>
-                        <NewsItem
-                            sx={{
-                                py: 3,
-                                px: 1,
-                            }}
-                            key={n.id}
-                            /*
-                             // @ts-ignore */
-                            alignment={alignment}
-                        >
-                            <CardHeader
-                                avatar={
-                                    <Avatar
-                                        sx={{ bgcolor: red[500] }}
-                                        aria-label="recipe"
-                                        src={`${API_URL_WITH_PUBLIC_STORAGE}/${n.employee.user.avatar}`}
-                                    >
-
-                                    </Avatar>
-                                }
-                                action={
-                                    <IconButton
-                                        onClick={(e: any) => {
-                                            e.stopPropagation();
-                                            setContextMenu({id: n.id, open: true})
-                                        }}
-                                        aria-label="settings">
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                }
-                                title="Shrimp and Chorizo Paella"
-                                subheader="September 14, 2016"
-                            />
-                            <CardMedia
-                                component="img"
-                                height="194"
-                                image={`${API_URL_WITH_PUBLIC_STORAGE}/${n.img}`}
-                                alt="Paella dish"
-                            />
-                            <CardContent>
-                                <Typography variant="body2" color="text.secondary">
-                                    {n.title}
-                                </Typography>
-                            </CardContent>
-                            <CardActions disableSpacing>
-                                <IconButton aria-label="add to favorites">
-                                    <FavoriteIcon />
-                                </IconButton>
-                                <IconButton aria-label="share">
-                                    <ShareIcon />
-                                </IconButton>
-                                <ExpandMore
-                                    onClickCapture={() => {
-                                        let expand = true;
-                                        if(expanded) {
-                                            if(n.id === expanded.id) {
-                                                expand = !expanded.expand;
-                                            }
-                                        }
-                                        handleExpandClick(n.id, expand);
-                                        setAlignment(SimpleItemAlignment.COLUMN);
-                                    }}
-                                    expand={expanded
-                                        && expanded.id === n.id
-                                            ? expanded.expand : false
+                    isLoading && news.length === 0 ?
+                        Array.from(Array(10).keys()).map(e =>
+                            <NewsItemSkeleton alignment={alignment} key={e}/>
+                        )
+                        :
+                        news.map((n: News) =>
+                            <NewsItem
+                                sx={{
+                                    py: 3,
+                                    px: 1,
+                                }}
+                                key={n.id}
+                                /*
+                                 // @ts-ignore */
+                                alignment={alignment}
+                            >
+                                <CardHeader
+                                    avatar={
+                                        <Avatar
+                                            sx={{bgcolor: red[500]}}
+                                            aria-label="recipe"
+                                            src={`${API_URL_WITH_PUBLIC_STORAGE}/${n.employee.user.avatar}`}
+                                        >
+                                        </Avatar>
                                     }
-                                    aria-expanded={expanded
-                                        && expanded.id === n.id
-                                            ? expanded.expand : false
+                                    action={
+                                        <IconButton
+                                            onClick={(e: any) => {
+                                                e.stopPropagation();
+                                                setContextMenu({id: n.id, open: true})
+                                            }}
+                                            aria-label="settings">
+                                            <MoreVertIcon/>
+                                        </IconButton>
                                     }
-                                    aria-label="show more"
-                                >
-                                    <ExpandMoreIcon />
-                                </ExpandMore>
-                                {
-                                    contextMenu?.open && contextMenu?.id === n.id &&
-                                    <Paper sx={{
-                                        width: 200,
-                                        maxWidth: '100%',
-                                        position: 'absolute',
-                                        top: 90,
-                                        right: 0
-                                    }}>
-                                        <MenuList>
-                                            <MenuItem
-                                                onClick={() => {
-                                                    setSelectedNews(n);
-                                                    setModalOpen(true);
-                                                    setMode('update');
-                                                }}
-                                            >
-                                                <ListItemIcon>
-                                                    <Edit fontSize="small" />
-                                                </ListItemIcon>
-                                                <ListItemText>Edit</ListItemText>
-                                            </MenuItem>
-                                            <Divider />
-                                            <MenuItem>
-                                                <ListItemIcon>
-                                                    <Delete fontSize="small" />
-                                                </ListItemIcon>
-                                                <ListItemText>Delete</ListItemText>
-                                            </MenuItem>
-                                        </MenuList>
-                                    </Paper>
-                                }
-                            </CardActions>
-                            <Collapse in={expanded
-                            && expanded.id === n.id
-                                ? expanded.expand : false} timeout="auto" unmountOnExit>
+                                    title={n.employee.user.full_name}
+                                    subheader={ moment(n.created_at).format('DD.MM.YYYY') }
+                                />
+                                <CardMedia
+                                    component="img"
+                                    height="194"
+                                    image={`${API_URL_WITH_PUBLIC_STORAGE}/${n.img}`}
+                                    alt="Paella dish"
+                                />
                                 <CardContent>
-                                    <Typography paragraph>
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: n.text
-                                            }}>
-                                        </div>
-
+                                    <hr/>
+                                    <Typography sx={{pt: 1}} variant={alignment === 'column' ? "h5" : "h6"} color="text.primary">
+                                        {n.title}
                                     </Typography>
                                 </CardContent>
-                            </Collapse>
-                        </NewsItem>
-                    )
+                                <CardActions disableSpacing>
+                                    <IconButton aria-label="add to favorites">
+                                        <FavoriteIcon/>
+                                    </IconButton>
+                                    <IconButton aria-label="share">
+                                        <ShareIcon/>
+                                    </IconButton>
+                                    <ExpandMore
+                                        onClickCapture={() => {
+                                            let expand = true;
+                                            if (expanded) {
+                                                if (n.id === expanded.id) {
+                                                    expand = !expanded.expand;
+                                                }
+                                            }
+                                            handleExpandClick(n.id, expand);
+                                            setAlignment(SimpleItemAlignment.COLUMN);
+                                        }}
+                                        expand={expanded
+                                        && expanded.id === n.id
+                                            ? expanded.expand : false
+                                        }
+                                        aria-expanded={expanded
+                                        && expanded.id === n.id
+                                            ? expanded.expand : false
+                                        }
+                                        aria-label="show more"
+                                    >
+                                        <ExpandMoreIcon/>
+                                    </ExpandMore>
+                                    {
+                                        contextMenu?.open && contextMenu?.id === n.id &&
+                                        <Paper sx={{
+                                            width: 200,
+                                            maxWidth: '100%',
+                                            position: 'absolute',
+                                            top: 90,
+                                            right: 0
+                                        }}>
+                                            <MenuList>
+                                                <MenuItem
+                                                    onClick={() => {
+                                                        setSelectedNews(n);
+                                                        setModalOpen(true);
+                                                        setMode('update');
+                                                    }}
+                                                >
+                                                    <ListItemIcon>
+                                                        <Edit fontSize="small"/>
+                                                    </ListItemIcon>
+                                                    <ListItemText>Edit</ListItemText>
+                                                </MenuItem>
+                                                <Divider/>
+                                                <MenuItem
+                                                    onClick={() => deleteNews(n.id)}
+                                                >
+                                                    <ListItemIcon>
+                                                        <Delete fontSize="small"/>
+                                                    </ListItemIcon>
+                                                    <ListItemText>Delete</ListItemText>
+                                                </MenuItem>
+                                            </MenuList>
+                                        </Paper>
+                                    }
+                                </CardActions>
+                                <Collapse in={expanded
+                                && expanded.id === n.id
+                                    ? expanded.expand : false} timeout="auto" unmountOnExit>
+                                    <CardContent>
+                                        <Typography paragraph>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: n.text
+                                                }}>
+                                            </div>
+
+                                        </Typography>
+                                    </CardContent>
+                                </Collapse>
+                            </NewsItem>
+                        )
                 }
+                <div
+                    ref={lastElementRef}
+                    style={{
+                        width: '100%',
+                        // height: 20,
+                        background: 'red',
+                    }}
+                ></div>
+                <div style={{ width: '100%', height: '30px', display: 'flex', justifyContent: 'center'}}>
+                    {
+                        isLoading && news.length > 0 && <CircularProgress />
+                    }
+                </div>
 
 
-           </NewsList>
+
+            </NewsList>
 
             {
                 modalOpen &&
@@ -303,4 +379,4 @@ const ProjectsListPage = () => {
 }
 
 
-export default ProjectsListPage;
+export default NewsListPage;
