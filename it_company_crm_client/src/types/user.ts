@@ -1,3 +1,5 @@
+import {RoleName} from "./auth";
+import {Project} from "./project";
 
 export interface UserTag {
     id: number;
@@ -19,6 +21,7 @@ export interface User {
     updated_at: string;
     email_verified_at: string;
     tags: UserTag[];
+    about: string;
 }
 
 export interface Skill {
@@ -27,7 +30,7 @@ export interface Skill {
 }
 export interface Role {
     id: number;
-    name: string;
+    name: RoleName;
 }
 export interface Phone {
     id: number;
@@ -55,6 +58,8 @@ export interface Employee {
 
     project_count: number;
     finished_project_count: number;
+
+    projects: Project[];
 }
 export interface Customer {
     id: number;

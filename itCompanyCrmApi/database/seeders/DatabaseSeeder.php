@@ -54,6 +54,7 @@ class DatabaseSeeder extends Seeder
             'full_name' => 'Ryabchuk Evgeniy Andreevich',
             'email' => 'jeka.rubchuk@gmail.com',
             'password' => Hash::make('123'),
+            'about' => fake()->sentence(100)
         ]);
 
         $testEmployeeAcoount->roles()->attach($adminRoleId);

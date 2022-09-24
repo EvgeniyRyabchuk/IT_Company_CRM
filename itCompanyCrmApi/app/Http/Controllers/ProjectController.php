@@ -157,10 +157,14 @@ class ProjectController extends Controller
 
         $project->save();
 
+        $initiator = Auth::user();
+        if(!$initiator) {
+            return response()->json(['message' => 'not authorized'], 401);
+        }
         if($mode === 'create')
-            ProjectHistoryHandler::commit($project, Auth::user(),"created project");
+            ProjectHistoryHandler::commit($project, $initiator,"created project");
         else if($mode === 'update')
-            ProjectHistoryHandler::commit($project, Auth::user(),"updated project");
+            ProjectHistoryHandler::commit($project, $initiator,"updated project");
 
         $project = Project::with(
             'projectType',

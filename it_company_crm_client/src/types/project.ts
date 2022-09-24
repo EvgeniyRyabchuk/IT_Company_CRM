@@ -73,7 +73,7 @@ export interface Project {
     project_type: ProjectType;
 
     tags: ProjectTag[],
-    order: Order;
+    order?: Order;
     lanes: KanbanLane[];
 
     project_links: ProjectLink[];

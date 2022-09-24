@@ -1,8 +1,23 @@
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import useAuth from "../../../../hooks/useAuth";
+import {
+    RoleEntity,
+    UserRoleEntity
+} from "../../../../types/auth";
+import {User} from "../../../../types/user";
+import {ChatMessage} from "../../../../types/chat";
+import moment from "moment/moment";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../../../http";
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
 
-const ProfileOverview = () => {
+const ProfileOverview : React.FC<{
+    userEntity: UserRoleEntity,
+    lastChatsContacts: { user: User, lastMessage: ChatMessage }[]
+}> = ({userEntity, lastChatsContacts}) => {
+
     const { user } = useAuth();
+
 
     return (
         <div className="MuiTabPanel-root css-1445d4x"
@@ -34,20 +49,12 @@ const ProfileOverview = () => {
                                     </button>
                                 </div>
                                 <p className=" MuiBox-root css-1eqx9kr">
-                                    The new iPad combines the power and
-                                    capability of a
-                                    computer with the ease of use and versatility you’d never expect from
-                                    one.<br/><br/>
-                                    And now it’s even more versatile, with a larger 10.2‑inch Retina
-                                    display, support he
-                                    new iPad combines the power and capability of a computer with the ease
-                                    of use and
-                                    versatility you’d never expect
+                                    {user?.about}
                                 </p>
                             </div>
                             <div className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
                                 <div className="MuiBox-root css-1gbbedy">
-                                    <h5 className=" MuiBox-root css-42oadk">Hobbies</h5>
+                                    <h5 className=" MuiBox-root css-42oadk">Skills</h5>
                                     <button
                                         className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1ln8k10"
                                         tabIndex={0} type="button">
@@ -62,253 +69,109 @@ const ProfileOverview = () => {
                                         <span className="MuiTouchRipple-root css-w0pj6f"></span></button>
                                 </div>
                                 <div className="css-p58oka">
-                                    <div className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                        <span className="MuiChip-label MuiChip-labelMedium css-9iedg7">Dota 2</span>
-                                    </div>
-                                    <div className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                        <span className="MuiChip-label MuiChip-labelMedium css-9iedg7">Dog</span>
-                                    </div>
-                                    <div className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                                <span
-                                                    className="MuiChip-label MuiChip-labelMedium css-9iedg7">Basketball</span>
-                                    </div>
-                                    <div
-                                        className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                                <span
-                                                    className="MuiChip-label MuiChip-labelMedium css-9iedg7">Football</span>
-                                    </div>
-                                    <div
-                                        className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                                <span
-                                                    className="MuiChip-label MuiChip-labelMedium css-9iedg7">Cricket</span>
-                                    </div>
-                                    <div
-                                        className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                                <span
-                                                    className="MuiChip-label MuiChip-labelMedium css-9iedg7">Skateboarding</span>
-                                    </div>
-                                    <div
-                                        className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                                <span
-                                                    className="MuiChip-label MuiChip-labelMedium css-9iedg7">Rock Climbing</span>
-                                    </div>
-                                    <div className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                                <span
-                                                    className="MuiChip-label MuiChip-labelMedium css-9iedg7">Painting</span>
-                                    </div>
-                                    <div className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                        <span className="MuiChip-label MuiChip-labelMedium css-9iedg7">Cars</span>
-                                    </div>
-                                    <div className="MuiChip-root MuiChip-filled MuiChip-sizeMedium MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
-                                        <span className="MuiChip-label MuiChip-labelMedium css-9iedg7">Video Games</span>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div
-                                className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
-                                <h5 className=" MuiBox-root css-1d2ltpw">Teams</h5>
-                                <div data-simplebar="init" className="css-6dpt1h">
-                                    <div className="simplebar-wrapper"
-                                         style={{margin: '0px'}}>
-                                        <div className="simplebar-height-auto-observer-wrapper">
-                                            <div className="simplebar-height-auto-observer"></div>
-                                        </div>
-                                        <div className="simplebar-mask">
-                                            <div className="simplebar-offset"
-                                                 style={{
-                                                     right: '0px',
-                                                     bottom: '0px'
-                                                 }}>
-                                                <div className="simplebar-content-wrapper"
-                                                     tabIndex={0}
-                                                     role="region"
-                                                     aria-label="scrollable content"
-                                                     style={{
-                                                         height: 'auto',
-                                                         overflow: 'hidden'
-                                                     }}>
-                                                    <div className="simplebar-content" style={{padding: '0px'}}>
-                                                        <table className="MuiTable-root css-wqyv36">
-                                                            <tbody className="MuiTableBody-root css-blw62a">
-                                                            <tr className="MuiTableRow-root css-i8cgtw">
-                                                                <td
-                                                                    className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <div className="css-1t62lt9">
-                                                                        <div className="MuiBox-root css-w1xgtm">
-                                                                            <svg
-                                                                                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-svogci"
-                                                                                focusable="false"
-                                                                                aria-hidden="true"
-                                                                                viewBox="0 0 24 24">
-                                                                                <path
-                                                                                    d="M10.67,3a2,2,0,0,1,1.42.59l7.62,7.62a1,1,0,0,1,.29.7v.18a1,1,0,0,1-.29.7l-7.62,7.62a2,2,0,0,1-1.42.59H4a1,1,0,0,1-1-1V18.51a1,1,0,0,1,.42-.81l3.32-2.37A3,3,0,0,0,8,12.88V11.12A3,3,0,0,0,6.74,8.67L3.42,6.3A1,1,0,0,1,3,5.49V4A1,1,0,0,1,4,3Z">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </div>
-                                                                        <div className="MuiBox-root css-0">
-                                                                            <h6 className=" MuiBox-root css-us4jxz">Ui
-                                                                                Lib</h6>
-                                                                            <p className=" MuiBox-root css-19w7ywv">
-                                                                                Software Engineers</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <small className=" MuiBox-root css-c1178r">Formed
-                                                                        Jan 12, 2021</small></td>
-                                                                <td
-                                                                    className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <div className="css-av3g5w">
-                                                                        <div
-                                                                            className="MuiAvatarGroup-root css-1xz63kp">
-                                                                            <div
-                                                                                className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault MuiAvatarGroup-avatar css-1aecrhr">
-                                                                                +3
-                                                                            </div>
-                                                                            <div className="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-bqtng4">
-                                                                                <img src="/static/avatar/002-girl.svg"
-                                                                                     className="MuiAvatar-img css-1hy9t21"/>
-                                                                            </div>
-                                                                            <div
-                                                                                className="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-bqtng4">
-                                                                                <img
-                                                                                    src="/static/avatar/001-man.svg"
-                                                                                    className="MuiAvatar-img css-1hy9t21"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr className="MuiTableRow-root css-i8cgtw">
-                                                                <td
-                                                                    className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <div className="css-1t62lt9">
-                                                                        <div className="MuiBox-root css-1sz5b37">
-                                                                            <svg
-                                                                                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-fhllnu"
-                                                                                focusable="false"
-                                                                                aria-hidden="true"
-                                                                                viewBox="0 0 24 24">
-                                                                                <path
-                                                                                    d="M16,5c0.1,0,0.2,0,0.3,0.1l1.7,1.7c1.3,1.3,2.1,3.1,2.1,4.9V13c0,3.3-2.7,6-6,6h-4c-3.3,0-6-2.7-6-6v-1 c0-1.3,0.6-2.4,1.6-3.2C6.3,8.3,7.1,8,8,8h1.3c0.5,0,1,0.2,1.4,0.6l0.1,0.1c0.6,0.6,1.3,0.9,2.1,0.9c1.7,0,3-1.3,3-3L16,5L16,5 M16,3L16,3c-1.1,0-2,0.9-2,2v1.6c0,0.6-0.5,1-1,1c-0.2,0-0.5-0.1-0.7-0.3l-0.1-0.1C11.4,6.4,10.4,6,9.3,6H8C6.7,6,5.4,6.4,4.4,7.2 h0C2.9,8.3,2,10.1,2,12v1c0,4.4,3.6,8,8,8h4c4.4,0,8-3.6,8-8v-1.3c0-2.4-0.9-4.7-2.6-6.4l-1.7-1.7C17.3,3.3,16.6,3,16,3L16,3z M7.5,13C6.7,13,6,12.3,6,11.5S6.7,10,7.5,10S9,10.7,9,11.5S8.3,13,7.5,13z M9.5,17C8.7,17,8,16.3,8,15.5S8.7,14,9.5,14 s1.5,0.7,1.5,1.5S10.3,17,9.5,17z M14.5,17c-0.8,0-1.5-0.7-1.5-1.5s0.7-1.5,1.5-1.5s1.5,0.7,1.5,1.5S15.3,17,14.5,17z M16.5,13 c-0.8,0-1.5-0.7-1.5-1.5s0.7-1.5,1.5-1.5s1.5,0.7,1.5,1.5S17.3,13,16.5,13z">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </div>
-                                                                        <div className="MuiBox-root css-0">
-                                                                            <h6 className=" MuiBox-root css-us4jxz">Team Uko</h6>
-                                                                            <p className=" MuiBox-root css-19w7ywv">Visual Designers</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td
-                                                                    className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <small className=" MuiBox-root css-c1178r">Formed Jan 22, 2021</small></td>
-                                                                <td className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <div className="css-av3g5w">
-                                                                        <div
-                                                                            className="MuiAvatarGroup-root css-1xz63kp">
-                                                                            <div
-                                                                                className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault MuiAvatarGroup-avatar css-1aecrhr">
-                                                                                +3
-                                                                            </div>
-                                                                            <div
-                                                                                className="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-bqtng4">
-                                                                                <img
-                                                                                    src="/static/avatar/002-girl.svg"
-                                                                                    className="MuiAvatar-img css-1hy9t21"/>
-                                                                            </div>
-                                                                            <div
-                                                                                className="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-bqtng4">
-                                                                                <img
-                                                                                    src="/static/avatar/001-man.svg"
-                                                                                    className="MuiAvatar-img css-1hy9t21"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr className="MuiTableRow-root css-i8cgtw">
-                                                                <td
-                                                                    className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <div className="css-1t62lt9">
-                                                                        <div className="MuiBox-root css-ctp3u4">
-                                                                            <svg
-                                                                                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-gy8yp"
-                                                                                focusable="false"
-                                                                                aria-hidden="true"
-                                                                                viewBox="0 0 24 24">
-                                                                                <path
-                                                                                    d="M12,20a6,6,0,0,1-6-6c0-2.47,1.61-5.28,4.91-8.59L12,4.33Zm.15-18h-.3a.75.75,0,0,0-.53.22L9.5,4C6.86,6.64,4,10.19,4,14a8,8,0,0,0,16,0c0-3.81-2.86-7.36-5.5-10L12.68,2.18A.75.75,0,0,0,12.15,2Z">
-                                                                                </path>
-                                                                            </svg>
-                                                                        </div>
-                                                                        <div className="MuiBox-root css-0">
-                                                                            <h6 className=" MuiBox-root css-us4jxz">Team
-                                                                                Olly</h6>
-                                                                            <p className=" MuiBox-root css-19w7ywv">Web
-                                                                                Developers</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td
-                                                                    className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <small className=" MuiBox-root css-c1178r">Formed
-                                                                        Jan 12, 2021</small></td>
-                                                                <td
-                                                                    className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
-                                                                    <div className="css-av3g5w">
-                                                                        <div
-                                                                            className="MuiAvatarGroup-root css-1xz63kp">
-                                                                            <div
-                                                                                className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault MuiAvatarGroup-avatar css-1aecrhr">
-                                                                                +3
-                                                                            </div>
-                                                                            <div
-                                                                                className="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-bqtng4">
-                                                                                <img
-                                                                                    src="/static/avatar/002-girl.svg"
-                                                                                    className="MuiAvatar-img css-1hy9t21"/>
-                                                                            </div>
-                                                                            <div className="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-bqtng4">
-                                                                                <img
-                                                                                    src="/static/avatar/001-man.svg"
-                                                                                    className="MuiAvatar-img css-1hy9t21"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
+                                    {
+                                         userEntity?.skills.map(skill =>
+                                            <div key={skill.id}
+                                                 className="MuiChip-root MuiChip-filled MuiChip-sizeMedium
+                                             MuiChip-colorDefault MuiChip-filledDefault css-1uxsrdt">
+                                                <span className="MuiChip-label MuiChip-labelMedium css-9iedg7">
+                                                    {skill.name}
+                                                </span>
                                             </div>
-                                        </div>
-                                        <div
-                                            className="simplebar-placeholder"
-                                            style={{width: 'auto', height: '163px'}}>
+                                        )
+                                    }
+                                    { userEntity?.skills.length === 0 && 'not skills yet' }
 
-                                        </div>
-                                    </div>
-                                    <div className="simplebar-track simplebar-horizontal"
-                                         style={{visibility: 'hidden'}}>
-                                        <div className="simplebar-scrollbar simplebar-visible"
-                                             style={{width: '0px', display: 'none'}}>
+                                </div>
+                            </div>
 
-                                        </div>
-                                    </div>
-                                    <div className="simplebar-track simplebar-vertical"
-                                         style={{visibility: 'hidden'}}>
-                                        <div className="simplebar-scrollbar simplebar-visible"
-                                             style={{height: '0px', display: 'none'}}>
+                            <div
+                                className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded
+                                MuiPaper-elevation1 MuiCard-root css-14lzsk6">
+                                <h5 className=" MuiBox-root css-1d2ltpw">Teams</h5>
+                                <div className="simplebar-content-wrapper"
+                                     tabIndex={0}
+                                     role="region"
+                                     aria-label="scrollable content"
+                                     style={{
+                                         height: 'auto',
+                                         overflow: 'hidden'
+                                     }}>
+                                    <div className="simplebar-content" style={{padding: '0px'}}>
+                                        <table className="MuiTable-root css-wqyv36">
+                                            <tbody className="MuiTableBody-root css-blw62a">
+                                            {
+                                                userEntity?.projects.slice(0, 5).map(project =>
+                                                    <tr key={project.id} className="MuiTableRow-root css-i8cgtw">
+                                                        <td
+                                                            className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
+                                                            <div className="css-1t62lt9">
+                                                                <div className="MuiBox-root css-w1xgtm">
+                                                                    <svg
+                                                                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-svogci"
+                                                                        focusable="false"
+                                                                        aria-hidden="true"
+                                                                        viewBox="0 0 24 24">
+                                                                        <path
+                                                                            d="M10.67,3a2,2,0,0,1,1.42.59l7.62,7.62a1,1,0,0,1,.29.7v.18a1,1,0,0,1-.29.7l-7.62,7.62a2,2,0,0,1-1.42.59H4a1,1,0,0,1-1-1V18.51a1,1,0,0,1,.42-.81l3.32-2.37A3,3,0,0,0,8,12.88V11.12A3,3,0,0,0,6.74,8.67L3.42,6.3A1,1,0,0,1,3,5.49V4A1,1,0,0,1,4,3Z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                                <div className="MuiBox-root css-0">
+                                                                    <h6 className=" MuiBox-root css-us4jxz">Ui
+                                                                        {project.name}
+                                                                    </h6>
+                                                                    <p className=" MuiBox-root css-19w7ywv">
+                                                                        {project.project_type.name}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-u38vlr">
+                                                            <small className=" MuiBox-root css-c1178r">
+                                                                Deadline:&nbsp;
+                                                                { project.deadline ? moment(project.deadline)
+                                                                        .format('DD-MM-YYYY') :
+                                                                    'no deadline yet'
+                                                                }
+                                                            </small></td>
+                                                        <td className="MuiTableCell-root MuiTableCell-body
+                                                                        MuiTableCell-sizeMedium css-u38vlr">
+                                                            <div className="css-av3g5w">
+                                                                <div className="MuiAvatarGroup-root css-1xz63kp">
+                                                                    <AvatarGroup max={4}>
+                                                                        {
+                                                                            project.employees
+                                                                                .map(employee =>
+                                                                                    <Avatar alt="Remy Sharp"
+                                                                                            src={`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`}
+                                                                                    />
+                                                                                )
+                                                                        }
+                                                                    </AvatarGroup>
+                                                                    <div className="MuiAvatar-root MuiAvatar-circular
+                                                                                     MuiAvatarGroup-avatar css-bqtng4">
+                                                                        <img
+                                                                            src="/static/avatar/001-man.svg"
+                                                                            className="MuiAvatar-img css-1hy9t21"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                        </div>
+                                                )
+                                            }
+
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
+                            {/*
+                               <div className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
                                 <div className="MuiBox-root css-mjbegz">
                                     <h5 className=" MuiBox-root css-42oadk">Post</h5>
                                     <div className="css-1f0z28c">
@@ -383,8 +246,7 @@ const ProfileOverview = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
+                            <div className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
                                 <div className="MuiBox-root css-1gbbedy">
                                     <h5 className=" MuiBox-root css-42oadk">Portfolio</h5>
                                     <button
@@ -514,6 +376,10 @@ const ProfileOverview = () => {
                                     </div>
                                 </div>
                             </div>
+                            */}
+
+
+
                         </div>
                     </div>
                     <div
@@ -525,45 +391,28 @@ const ProfileOverview = () => {
                                  MuiPaper-elevation1 MuiCard-root css-14lzsk6">
                                 <h5 className=" MuiBox-root css-42oadk">My Connections</h5>
                                 <div className="css-7kd3vg" style={{display: 'flex', flexDirection: 'column', alignContent: 'center'}}>
-                                    <div className="css-vb6e92">
-                                        <div className="MuiAvatar-root MuiAvatar-circular css-bqtng4">
-                                            <img src="https://uko-react.vercel.app/static/avatar/001-man.svg"
-                                                 className="MuiAvatar-img css-1hy9t21"/>
+                                    { lastChatsContacts.map(contact =>
+                                        <div key={contact.user.id} className="css-vb6e92">
+                                            <div className="MuiAvatar-root MuiAvatar-circular css-bqtng4">
+                                                <img src={`${API_URL_WITH_PUBLIC_STORAGE}/${contact.user.avatar}`}
+                                                     className="MuiAvatar-img css-1hy9t21"/>
+                                            </div>
+                                            <div className="css-1s4yypy">
+                                                <h5  style={{textAlign: 'left'}} className=" MuiBox-root css-snuja5">
+                                                    {contact.user.full_name}
+                                                </h5>
+                                                <p style={{textAlign: 'left'}} className=" MuiBox-root css-34ybk9">
+                                                    {contact.lastMessage ?
+                                                        moment(contact.lastMessage.created_at)
+                                                            .format('DD-MM-YYYY HH:mm')
+                                                        : 'no message yet'}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="css-1s4yypy">
-                                            <h5  style={{textAlign: 'left'}} className=" MuiBox-root css-snuja5">Martha Hawk</h5>
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-34ybk9">Developer</p>
-                                        </div>
-                                    </div>
-                                    <div className="css-vb6e92">
-                                        <div className="MuiAvatar-root MuiAvatar-circular css-bqtng4">
-                                            <img src="https://uko-react.vercel.app/static/avatar/001-man.svg"
-                                                 className="MuiAvatar-img css-1hy9t21"/>
-                                        </div>
-                                        <div className="css-1s4yypy">
-                                            <h5  style={{textAlign: 'left'}} className=" MuiBox-root css-snuja5">Smantha Hoopes</h5>
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-34ybk9">Developer</p>
-                                        </div>
-                                    </div>
-                                    <div className="css-vb6e92">
-                                        <div className="MuiAvatar-root MuiAvatar-circular css-bqtng4">
-                                            <img src="https://uko-react.vercel.app/static/avatar/001-man.svg"
-                                                 className="MuiAvatar-img css-1hy9t21"/>
-                                        </div>
-                                        <div className="css-1s4yypy">
-                                            <h5 style={{textAlign: 'left'}} className=" MuiBox-root css-snuja5">Chris Pine</h5>
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-34ybk9">Developer</p>
-                                        </div>
-                                    </div>
-                                    <div className="css-vb6e92">
-                                        <div className="MuiAvatar-root MuiAvatar-circular css-bqtng4">
-                                            <img src="https://uko-react.vercel.app/static/avatar/001-man.svg" className="MuiAvatar-img css-1hy9t21"/>
-                                        </div>
-                                        <div className="css-1s4yypy">
-                                            <h5 className=" MuiBox-root css-snuja5">Sun Myi</h5>
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-34ybk9">Developer</p>
-                                        </div>
-                                    </div>
+                                    )}
+
+
+
                                 </div>
                             </div>
                             <div
@@ -622,8 +471,13 @@ const ProfileOverview = () => {
                                             </svg>
                                         </div>
                                         <div className="MuiBox-root css-0">
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">Nickname</p>
-                                            <h6 style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">Pixy</h6>
+                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">Last Time Updated</p>
+                                            <h6 style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">
+                                                {
+                                                    moment(user?.updated_at)
+                                                        .format('DD-MM-YYYY HH:mm')
+                                                }
+                                            </h6>
                                         </div>
                                     </div>
                                     <div className="css-1iwoqsn">
@@ -650,10 +504,21 @@ const ProfileOverview = () => {
                                                 </path>
                                             </svg>
                                         </div>
-                                        <div className="MuiBox-root css-0">
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">Work History</p>
-                                            <h6 style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">Theme Forest</h6>
-                                        </div>
+                                        {
+                                            user?.phones.map((phone, index) =>
+                                                <div className="MuiBox-root css-0">
+                                                    <p style={{textAlign: 'left'}}
+                                                       className=" MuiBox-root css-1imspi1">
+                                                        Phone #{index+1}
+                                                    </p>
+                                                    <h6 style={{textAlign: 'left'}}
+                                                        className=" MuiBox-root css-11tyiws"
+                                                    >
+                                                        {phone.phone_number}
+                                                    </h6>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                     <div className="css-1iwoqsn">
                                         <div className="css-5d6cuf">

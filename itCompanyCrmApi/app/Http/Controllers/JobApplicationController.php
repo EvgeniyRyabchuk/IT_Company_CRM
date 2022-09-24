@@ -120,10 +120,10 @@ class JobApplicationController extends Controller
 
         $jobApplication = JobApplication::findOrFail($jobApplicationId);
 
-        $jobApplication->jobApplicationStatus()->associate($status);
+        $jobApplication->jobApplicationStatus()->associate($status); 
         $jobApplication->save();
         $jobApplication->load('vacancy', 'jobApplicationStatus');
- 
+
         return response()->json($jobApplication, 201);
     }
 

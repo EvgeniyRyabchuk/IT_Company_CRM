@@ -6,10 +6,14 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PersonalNotificationController;
 use App\Models\AccessToken;
+use App\Models\Chat;
+use App\Models\ChatMessage;
+use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\PersonalNotificationType;
 use App\Models\RefreshToken;
 use App\Models\Role;
+use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -29,10 +33,94 @@ class AuthController extends Controller
     public function getProfile(Request $request) {
         // check permissions
 //        $this->authorize('user_create');
-        $userId = Auth::user()->id;
-        $user = User::with('roles')->findOrFail($userId);
+        $detail = boolval($request->input('detail') ?? 'false');
 
-        return response()->json($user);
+        if($detail === false) {
+            $user = Auth::user()->load('roles', 'phones');
+            return response()->json(compact('user'));
+        }
+        else {
+            $user = Auth::user()->load('roles', 'phones');
+            $roleEntity = [];
+            foreach ($user->roles as $role) {
+                if($role->name == "developer"
+                    || $role->name == "manager"
+                    || $role->name === 'admin') {
+
+                    $activeStatus = Status::where('name', 'Processing')->first();
+                    $finishedStatus = Status::where('name', 'Finished')->first();
+
+                    $query = Employee::with(
+                'position',
+                        'level',
+                        'skills',
+                        'projects.order.status',
+                        'projects.projectType',
+                        'projects.employees.user'
+                    );
+
+                    $query->where('user_id', $user->id);
+                    $query->withCount([
+                        'projects as project_count',
+                        'projects as active_project_count' => function($q) use($activeStatus) {
+                            $q->join('orders as _orders', 'projects.id', '_orders.project_id')
+                            ->join('statuses as _statuses', '_orders.status_id', '_statuses.id')
+                            ->where('_statuses.id', $activeStatus->id);
+                        },
+                        'projects as finished_project_count' => function($q) use($finishedStatus) {
+                            $q->join('orders as _orders', 'projects.id', '_orders.project_id')
+                                ->join('statuses as _statuses', '_orders.status_id', '_statuses.id')
+                                ->where('_statuses.id', $finishedStatus->id);
+                        }
+                    ]);
+
+
+                    // sort projects by connected employee date
+                    $query
+                        ->leftJoin('employee_project', 'employees.id', 'employee_project.employee_id')
+                        ->leftJoin('projects', 'employee_project.project_id', 'projects.id')
+                        ->leftJoin('project_types', 'projects.project_type_id', 'project_types.id')
+                        ->orderBy('employee_project.created_at', 'desc');
+
+                    $employee = $query->first();
+
+    //                dd($employee);
+
+                    $roleEntity[] = [
+                        'role' => $role,
+                        'entity' => $employee
+                    ];
+                }
+                else if($role->name === 'customer') {
+                    $customer = Customer::with('orders.project')
+                        ->where('user_id', $user->id);
+
+                    $roleEntity[] = [
+                        'role' => $role,
+                        'entity' => $customer
+                    ];
+                }
+            }
+
+            $chatIds = $user->chats->pluck('id');
+            $lastChats = Chat::with('users')
+                ->whereIn('chats.id', $chatIds)
+                ->take(4)
+                ->get()
+                ->map(function ($item) {
+                    $last = ChatMessage::where('chat_id', $item->id)
+                        ->latest()
+                        ->first();
+                    if($last) $item->messages = [$last];
+                    else$item->messages = [];
+                   return $item;
+                });
+
+
+
+            return response()->json(compact('user', 'roleEntity', 'lastChats'));
+        }
+
 
 //        return response()->json(["message' => 'opened show page.
 //        User = $user->id has roles $roles", 201]);

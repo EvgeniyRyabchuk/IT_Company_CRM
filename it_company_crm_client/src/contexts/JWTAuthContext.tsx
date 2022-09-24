@@ -2,13 +2,16 @@ import React, { createContext, useEffect, useReducer } from 'react'
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
 import MatxLoading from '../components/MatxLoading'
-import {JWTAuthContextInitialState, LoginRequest, RegisterRequest} from "../types/auth";
+import {JWTAuthContextInitialState, LoginRequest, RegisterRequest, RoleEntity, RoleName} from "../types/auth";
 import AuthService from "../services/AuthService";
+import {Role} from "../types/user";
 
 const initialState : JWTAuthContextInitialState = {
     isAuthenticated: false,
     isInitialised: false,
     user: null,
+    rolesEntity: null,
+    lastChats: [],
 }
 
 const isValidToken = (accessToken: string) : any => {
@@ -35,13 +38,15 @@ const setSession = (accessToken: string | null) => {
 const reducer = (state: JWTAuthContextInitialState, action: any) => {
     switch (action.type) {
         case 'INIT': {
-            const { isAuthenticated, user } = action.payload
+            const { isAuthenticated, user, rolesEntity, lastChats} = action.payload
 
             return {
                 ...state,
                 isAuthenticated,
                 isInitialised: true,
                 user,
+                rolesEntity,
+                lastChats
             }
         }
         case 'LOGIN': {
@@ -84,12 +89,15 @@ const reducer = (state: JWTAuthContextInitialState, action: any) => {
     }
 }
 
+
 const AuthContext = createContext({
     ...initialState,
     method: 'JWT',
     login: (args: LoginRequest) => Promise.resolve(),
     logout: () => { },
     register: (args: RegisterRequest) => Promise.resolve(),
+    profileDetail: () => Promise.resolve(),
+    getUserEntityByRoleName: (roleName: RoleName | RoleName[], list: RoleEntity[]) => { }
 })
 
 export const AuthProvider = ({ children } : any) => {
@@ -133,27 +141,56 @@ export const AuthProvider = ({ children } : any) => {
         dispatch({ type: 'LOGOUT' })
     }
 
+    const profileDetail = async () => {
+        const response = await AuthService.profile(true);
+        const user = response.data.user;
+        const roleEntityList = response.data.roleEntity;
+        const lastChats = response.data.lastChats;
+
+        console.log(lastChats)
+        dispatch({
+            type: 'INIT',
+            payload: {
+                isAuthenticated: true,
+                user,
+                rolesEntity: roleEntityList,
+                lastChats
+            },
+        })
+    }
+
+    const getUserEntityByRoleName = (roleName: string | string[], list: RoleEntity[]) => {
+        if (!roleName || !list) return;
+        if(Array.isArray(roleName)) {
+            const resArray = [];
+            for (let name of roleName) {
+                for (let entity of list) {
+                    if(name === entity.role.name) {
+                        resArray.push(entity);
+                    }
+                }
+            }
+            return resArray;
+        } else {
+            return list.find((er: RoleEntity) =>
+                er.role.name === roleName && er.entity
+            )?.entity
+        }
+    }
+
+
 
 
     useEffect(() => {
         ; (async () => {
             try {
+                console.log(123);
                 const accessToken = window.localStorage.getItem('token')
 
                 if (accessToken) {
                     setSession(accessToken)
-
-                    const response = await AuthService.profile();
-                    const user = response.data;
-
-                    // const user = {
-                    //     avatar: "/assets/images/face-6.jpg",
-                    //     email: "jason@ui-lib.com",
-                    //     id: 1,
-                    //     name: "Jason Alexander",
-                    //     role: "SA"
-                    // }
-
+                    const response = await AuthService.profile(false);
+                    const user = response.data.user;
                     dispatch({
                         type: 'INIT',
                         payload: {
@@ -167,6 +204,7 @@ export const AuthProvider = ({ children } : any) => {
                         payload: {
                             isAuthenticated: false,
                             user: null,
+                            rolesEntity: null
                         },
                     })
                 }
@@ -177,6 +215,7 @@ export const AuthProvider = ({ children } : any) => {
                     payload: {
                         isAuthenticated: false,
                         user: null,
+                        rolesEntity: null
                     },
                 })
             }
@@ -195,6 +234,9 @@ export const AuthProvider = ({ children } : any) => {
                 login,
                 logout,
                 register,
+                profileDetail,
+                getUserEntityByRoleName,
+
             }}
         >
             {children}

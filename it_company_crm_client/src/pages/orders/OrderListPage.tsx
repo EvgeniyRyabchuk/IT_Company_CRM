@@ -231,13 +231,6 @@ const ProjectsListPage = () => {
                             justifyContent: 'space-between',
                             alignContent: 'center'}}
                         >
-                            <Button
-                                variant="outlined"
-                                onClick={() => {}}
-                                style={{width: '500px' ,height: "40px"}}
-                            >
-                                Create project for order
-                            </Button>
 
                             <SearchInput
                                 sx={{p: 0}}>

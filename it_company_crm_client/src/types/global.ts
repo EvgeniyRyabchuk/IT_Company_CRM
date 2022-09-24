@@ -59,3 +59,4 @@ export enum SimpleItemAlignment {
     COLUMN = 'column',
     ROW = 'row'
 }
+

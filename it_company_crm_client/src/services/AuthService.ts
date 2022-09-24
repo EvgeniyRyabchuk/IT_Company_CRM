@@ -1,7 +1,7 @@
 
 import $api from "../http";
 import {AxiosResponse} from 'axios';
-import {AuthorizedResponse, LoginRequest, RegisterRequest} from "../types/auth";
+import {AuthorizedResponse, LoginRequest, ProfileResponse, RegisterRequest, RoleEntity} from "../types/auth";
 import {Role, User} from "../types/user";
 
 export default class AuthService {
@@ -25,8 +25,13 @@ export default class AuthService {
         return $api.post('/auth/logout')
     }
 
-    static async profile(): Promise<AxiosResponse<User>> {
-        return $api.get<User>('/auth/profile');
+    static async profile(isDetail: boolean): Promise<AxiosResponse<ProfileResponse>> {
+        if(isDetail) {
+            return $api.get<ProfileResponse>('/auth/profile?detail=true');
+        }
+        else {
+            return $api.get<ProfileResponse>('/auth/profile');
+        }
     }
 
     static async getRoles(): Promise<AxiosResponse<Role[]>> {

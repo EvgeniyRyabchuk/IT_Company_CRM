@@ -15,6 +15,12 @@ class Project extends Model
             ->withPivot('project_role_id');
     }
 
+//    public function employeeCount() {
+//        return
+//            $this->belongsToMany(Employee::class)
+//                ->count();
+//    }
+
     public function tags() {
         return $this->belongsToMany(Tag::class);
     }

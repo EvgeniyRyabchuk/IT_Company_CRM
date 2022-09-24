@@ -1,10 +1,19 @@
-import {User} from "./user";
+import {Customer, Employee, Role, User} from "./user";
+import {Chat} from "./chat";
+
+export type RoleName =
+    'customer' |
+    'developer' |
+    'manager' |
+    'admin'
 
 
 export interface JWTAuthContextInitialState {
     isAuthenticated: boolean,
     isInitialised: boolean,
     user: User | null,
+    rolesEntity: RoleEntity[] | null;
+    lastChats: Chat[];
 }
 
 export interface LoginRequest {
@@ -30,7 +39,51 @@ export interface AuthorizedResponse {
     user: User;
 }
 
+export interface EmployeeProjectStatic {
+    project_count: number;
+    active_project_count: number;
+    finished_project_count: number;
+}
 
-export interface AuthRoleTypes {
 
+
+export interface DeveloperRoleEntity
+    extends
+        Employee,
+        EmployeeProjectStatic {
+    chats: Chat[];
+}
+
+
+
+export interface DeveloperRoleEntity
+    extends Employee, EmployeeProjectStatic{
+
+}
+
+export interface AdminRoleEntity
+    extends Employee, EmployeeProjectStatic {
+
+}
+
+export interface CustomerRoleEntity
+    extends Customer {
+
+}
+
+export type UserRoleEntity =
+    DeveloperRoleEntity |
+    DeveloperRoleEntity |
+    AdminRoleEntity;
+
+
+export interface RoleEntity {
+    role: Role;
+    entity: UserRoleEntity;
+}
+
+export interface ProfileResponse {
+    user: User,
+    roleEntity: RoleEntity[] | null | undefined;
+    lastChats: Chat[] | null | undefined;
 }

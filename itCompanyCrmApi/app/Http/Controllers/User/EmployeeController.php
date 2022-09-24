@@ -11,6 +11,7 @@ use App\Models\Skill;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -131,6 +132,8 @@ class EmployeeController extends Controller
         $employees = $query->paginate($perPage);
         return response()->json($employees);
     }
+
+
 
     protected function saveEmployee(Request $request, $mode) {
         if($mode === 'update')

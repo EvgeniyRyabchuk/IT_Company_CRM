@@ -30,6 +30,8 @@ return new class extends Migration
                 ->default('static/images/users/avatars/80x80/default-avatar.png');
 
 
+            $table->string('about', 1000)->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

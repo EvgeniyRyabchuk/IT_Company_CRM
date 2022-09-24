@@ -118,7 +118,7 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    label="Choose a country"
+                                    label="Choose a employee"
                                     inputProps={{
                                         ...params.inputProps,
                                         autoComplete: 'new-password', // disable autocomplete and autofill

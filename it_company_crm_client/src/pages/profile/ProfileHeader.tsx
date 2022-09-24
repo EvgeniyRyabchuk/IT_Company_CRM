@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Employee, User} from "../../types/user";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import useAuth from "../../hooks/useAuth";
 import {Camera} from "@mui/icons-material";
+import moment from "moment";
+import {UserRoleEntity} from "../../types/auth";
 
-const ProfileHeader : React.FC<{employee?: Employee}> = ({employee}) => {
+const ProfileHeader : React.FC<{userEntity: UserRoleEntity}>
+    = ({userEntity}) => {
+
     const { user } = useAuth();
 
     return (
@@ -12,6 +16,7 @@ const ProfileHeader : React.FC<{employee?: Employee}> = ({employee}) => {
             <div className="MuiBox-root css-1l4w6pd">
                 <span className="MuiBadge-root css-ws1fna">
                     <div className="MuiAvatar-root MuiAvatar-circular css-kmtz1r">
+
                         <img alt="Team Member"
                              src={`${API_URL_WITH_PUBLIC_STORAGE}/${user!.avatar}`}
                              className="MuiAvatar-img css-1hy9t21" />
@@ -37,11 +42,10 @@ const ProfileHeader : React.FC<{employee?: Employee}> = ({employee}) => {
                     <h4 className=" MuiBox-root css-1b1a75p">
                         {user!.full_name}
                     </h4>
-                    <div className="MuiBox-root css-kipwca">
-                        <div className="MuiBox-root css-70qvj9">
+                    <div  className="MuiBox-root css-kipwca">
+                        <div style={{margin: '0 10px'}} className="MuiBox-root css-70qvj9">
                             <svg
-                                className="MuiSvgIcon-root
-                                             MuiSvgIcon-fontSizeMedium css-oo74z7"
+                                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-oo74z7"
                                 focusable="false"
                                 aria-hidden="true"
                                 viewBox="0 0 24 24">
@@ -50,13 +54,12 @@ const ProfileHeader : React.FC<{employee?: Employee}> = ({employee}) => {
                                 </path>
                             </svg>
                             <p className=" MuiBox-root css-1imspi1">
-                                Position
+                                Position: {userEntity?.position.name}
                             </p>
                         </div>
-                        <div className="MuiBox-root css-70qvj9">
+                        <div style={{margin: '0 10px'}} className="MuiBox-root css-70qvj9">
                             <svg
-                                className="MuiSvgIcon-root
-                                             MuiSvgIcon-fontSizeMedium css-oo74z7"
+                                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-oo74z7"
                                 focusable="false"
                                 aria-hidden="true"
                                 viewBox="0 0 24 24">
@@ -65,11 +68,11 @@ const ProfileHeader : React.FC<{employee?: Employee}> = ({employee}) => {
                                 </path>
                             </svg>
                             <p className=" MuiBox-root css-1imspi1">
-                                Level
+                                Level: {userEntity?.level.name}
                             </p>
                         </div>
 
-                        <div className="MuiBox-root css-70qvj9">
+                        <div style={{margin: '0 10px'}} className="MuiBox-root css-70qvj9">
                             <svg
                                 className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-oo74z7" focusable="false"
                                 aria-hidden="true" viewBox="0 0 24 24" fill="none">
@@ -79,7 +82,7 @@ const ProfileHeader : React.FC<{employee?: Employee}> = ({employee}) => {
                             </svg>
                             <p className=" MuiBox-root css-1imspi1">New York</p>
                         </div>
-                        <div className="MuiBox-root css-70qvj9">
+                        <div style={{margin: '0 10px'}} className="MuiBox-root css-70qvj9">
                             <svg
                                 className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-oo74z7" focusable="false"
                                 aria-hidden="true" viewBox="0 0 24 24">
@@ -88,22 +91,25 @@ const ProfileHeader : React.FC<{employee?: Employee}> = ({employee}) => {
                                 </path>
                             </svg>
                             <p className=" MuiBox-root css-1imspi1">
-                                registration date
+                                Registration date:&nbsp;
+                                {
+                                    moment(user?.created_at).format('DD-MM-YYYY')
+                                }
                             </p>
                         </div>
                     </div>
                 </div>
                 <div className="MuiBox-root css-1fggd7d">
                     <div className="css-4ceid9">
-                        <h5 className=" MuiBox-root css-1noxpds">$4,550</h5>
+                        <h5 className=" MuiBox-root css-1noxpds">{userEntity?.active_project_count}</h5>
                         <p className=" MuiBox-root css-1imspi1">Active Project Count</p>
                     </div>
                     <div className="css-4ceid9">
-                        <h5 className=" MuiBox-root css-fhkckm">$60</h5>
+                        <h5 className=" MuiBox-root css-fhkckm">{userEntity?.project_count}</h5>
                         <p className=" MuiBox-root css-1imspi1">Project count</p>
                     </div>
                     <div className="css-4ceid9">
-                        <h5 className=" MuiBox-root css-1nast56">$2,800</h5>
+                        <h5 className=" MuiBox-root css-1nast56">{userEntity?.finished_project_count}</h5>
                         <p className=" MuiBox-root css-1imspi1">Success Finihed Projects</p>
                     </div>
                 </div>
