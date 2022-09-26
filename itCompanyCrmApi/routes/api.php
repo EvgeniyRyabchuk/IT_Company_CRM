@@ -75,13 +75,22 @@ Route::prefix('users')->group(function () {
             ->group(function() {
             Route::get('/', 'index');
             Route::post('/',  'store');
+
+
+            Route::put('/{employeeId}/info','updateInfo');
             Route::put('/{employeeId}','update');
+
             Route::delete('/{employeeId}','destroy');
 
             Route::get('positions','getPositions');
             Route::get('positions/{positionId}/levels','getLevels');
             Route::get('skills','getSkills');
-    });
+
+            Route::post('/{employeeId}/avatar', 'changeAvatar');
+
+
+
+            });
 
     Route::controller(CustomerController::class)
         ->prefix('customers')

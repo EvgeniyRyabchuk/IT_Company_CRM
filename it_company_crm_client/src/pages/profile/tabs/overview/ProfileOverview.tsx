@@ -118,7 +118,7 @@ const ProfileOverview : React.FC<{
                                                                     </svg>
                                                                 </div>
                                                                 <div className="MuiBox-root css-0">
-                                                                    <h6 className=" MuiBox-root css-us4jxz">Ui
+                                                                    <h6 className=" MuiBox-root css-us4jxz">
                                                                         {project.name}
                                                                     </h6>
                                                                     <p className=" MuiBox-root css-19w7ywv">

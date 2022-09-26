@@ -1,4 +1,4 @@
-//example of creating a mui dialog modal for creating new rows
+
 import React, {FC, useEffect, useMemo, useRef, useState} from "react";
 import {Employee, Level, Position, Role, Skill} from "../../../types/user";
 import {
@@ -436,7 +436,8 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                                 <Grid item sm={6} xs={12}>
                                                     <div style={{display: 'flex'}}>
                                                         <Autocomplete
-                                                            defaultValue={mode === 'update' && employee ? employee.position : null}
+                                                            defaultValue={mode === 'update' && employee
+                                                                ? employee.position : null}
                                                             size="small"
                                                             getOptionLabel={(option: Position) => option.name}
                                                             disablePortal
@@ -449,11 +450,13 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                                                     <TextField
                                                                         {...params}
                                                                         error={
-                                                                            Boolean(touched.position_id && errors.position_id)
+                                                                            Boolean(touched.position_id
+                                                                                && errors.position_id)
                                                                         }
                                                                         fullWidth
                                                                         helperText={
-                                                                            touched.position_id && errors.position_id
+                                                                            touched.position_id
+                                                                            && errors.position_id
                                                                         }
                                                                         label="Position"
                                                                         name="position_id"

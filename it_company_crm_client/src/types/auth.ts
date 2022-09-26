@@ -87,3 +87,13 @@ export interface ProfileResponse {
     roleEntity: RoleEntity[] | null | undefined;
     lastChats: Chat[] | null | undefined;
 }
+
+export enum SettingTabConstants {
+    ACCOUNT,
+    PASSWORD,
+    PREFERENCES,
+    VERIFICATION,
+    SOCIAL,
+    DELETE
+
+}

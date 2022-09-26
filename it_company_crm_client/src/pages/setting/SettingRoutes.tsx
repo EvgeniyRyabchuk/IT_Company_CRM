@@ -7,7 +7,12 @@ const SettingPage = Loadable(lazy(() => import('./SettingPage')));
 
 const projectRoutes = [
     {
-        path: '/setting',
+        path: '/setting/',
+        element: <SettingPage />,
+        allowForRole: authRoles.all,
+    },
+    {
+        path: '/setting/:tab',
         element: <SettingPage />,
         allowForRole: authRoles.all,
     },

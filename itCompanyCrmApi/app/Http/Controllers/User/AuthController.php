@@ -51,7 +51,7 @@ class AuthController extends Controller
                     $finishedStatus = Status::where('name', 'Finished')->first();
 
                     $query = Employee::with(
-                'position',
+                        'position',
                         'level',
                         'skills',
                         'projects.order.status',

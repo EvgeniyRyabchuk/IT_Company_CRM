@@ -96,6 +96,7 @@ const AuthContext = createContext({
     login: (args: LoginRequest) => Promise.resolve(),
     logout: () => { },
     register: (args: RegisterRequest) => Promise.resolve(),
+    profile: () => Promise.resolve(),
     profileDetail: () => Promise.resolve(),
     getUserEntityByRoleName: (roleName: RoleName | RoleName[], list: RoleEntity[]) => { }
 })
@@ -141,6 +142,45 @@ export const AuthProvider = ({ children } : any) => {
         dispatch({ type: 'LOGOUT' })
     }
 
+    const profile = async () => {
+        try {
+            console.log(123);
+            const accessToken = window.localStorage.getItem('token')
+
+            if (accessToken) {
+                setSession(accessToken)
+                const response = await AuthService.profile(false);
+                const user = response.data.user;
+                dispatch({
+                    type: 'INIT',
+                    payload: {
+                        isAuthenticated: true,
+                        user,
+                    },
+                })
+            } else {
+                dispatch({
+                    type: 'INIT',
+                    payload: {
+                        isAuthenticated: false,
+                        user: null,
+                        rolesEntity: null
+                    },
+                })
+            }
+        } catch (err) {
+            console.error(err)
+            dispatch({
+                type: 'INIT',
+                payload: {
+                    isAuthenticated: false,
+                    user: null,
+                    rolesEntity: null
+                },
+            })
+        }
+    }
+
     const profileDetail = async () => {
         const response = await AuthService.profile(true);
         const user = response.data.user;
@@ -182,44 +222,7 @@ export const AuthProvider = ({ children } : any) => {
 
 
     useEffect(() => {
-        ; (async () => {
-            try {
-                console.log(123);
-                const accessToken = window.localStorage.getItem('token')
-
-                if (accessToken) {
-                    setSession(accessToken)
-                    const response = await AuthService.profile(false);
-                    const user = response.data.user;
-                    dispatch({
-                        type: 'INIT',
-                        payload: {
-                            isAuthenticated: true,
-                            user,
-                        },
-                    })
-                } else {
-                    dispatch({
-                        type: 'INIT',
-                        payload: {
-                            isAuthenticated: false,
-                            user: null,
-                            rolesEntity: null
-                        },
-                    })
-                }
-            } catch (err) {
-                console.error(err)
-                dispatch({
-                    type: 'INIT',
-                    payload: {
-                        isAuthenticated: false,
-                        user: null,
-                        rolesEntity: null
-                    },
-                })
-            }
-        })()
+        profile();
     }, [])
 
     if (!state.isInitialised) {
@@ -234,6 +237,7 @@ export const AuthProvider = ({ children } : any) => {
                 login,
                 logout,
                 register,
+                profile,
                 profileDetail,
                 getUserEntityByRoleName,
 

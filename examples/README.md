@@ -3,6 +3,11 @@
 
 [Example 1](https://www.creative-tim.com/product/material-kit-react?AFFILIATE=128200)
 
+[Example 2](https://treact.owaiskhan.me/) 
+
+[Example 3](https://react-landing-page-template.herokuapp.com/) 
+
+
 ---
 
 # Employees frontend  

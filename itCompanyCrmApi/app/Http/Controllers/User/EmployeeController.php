@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -235,6 +236,39 @@ class EmployeeController extends Controller
         return response()->json($addedEmployee);
     }
 
+    public function updateInfo(Request $request, $employeeId) {
+        $user = Auth::user();
+
+
+        $email = $request->input('email');
+        $about = $request->input('about');
+
+        $skills = explode(',',
+            $request->input('skills') ?? []);
+
+
+
+        $employee = Employee::where('user_id', $user->id)->first();
+
+        if(!$employee) {
+            return response()->json(['message' => 'employee does not exist'], 404);
+        }
+
+        $user = $employee->user;
+        $user->email = $email;
+        $user->about = $about;
+        $user->save();
+       
+        $employee->skills()->detach();
+        foreach ($skills as $skill) {
+            $skillDb = Skill::firstOrCreate(['name' => strtoupper($skill)]);
+            $employee->skills()->attach($skillDb);
+        }
+
+        $employee->save();
+
+        return response()->json(['message' => 'success']);
+    }
 
     public function destroy(Request $request, $employeeId) {
 
@@ -271,5 +305,26 @@ class EmployeeController extends Controller
     }
 
 
+    public function changeAvatar(Request $request, $employeeId) {
+
+        $user = Auth::user();
+
+        $milliseconds = round(microtime(true) * 1000);
+        $ext = $request->file('file')->extension();
+        $imgName = $newName = "avatar_$milliseconds." . $ext;
+
+        $avatarUserFolder = "/users/$user->id/images/avatars";
+
+        //delete old avatar
+        $oldFile = Storage::allFiles($avatarUserFolder);
+        Storage::delete($oldFile);
+        // save new avatar
+        $imagePath = $request->file('file')
+            ->storeAs($avatarUserFolder, $imgName);
+        $user->avatar = $imagePath;
+        $user->save();
+
+        return response()->json($imagePath);
+    }
 
 }

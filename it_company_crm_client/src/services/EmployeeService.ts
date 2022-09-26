@@ -11,16 +11,33 @@ export class EmployeeService {
         return $api.get<PaginatedResponse<Employee>>(`/users/employees${queryParams}`);
     }
 
-    static async createEmployee(employee: Employee): Promise<AxiosResponse<Employee>> {
+    static async createEmployee(employee: Employee):
+        Promise<AxiosResponse<Employee>> {
         return $api.post<Employee>(`/users/employees`, { ...employee }, {
                 headers: { 'Content-Type': 'multipart/form-data' }
         });
     }
 
-    static async updateEmployee(employee: Employee): Promise<AxiosResponse<Employee>> {
+    static async updateEmployee(employee: Employee):
+        Promise<AxiosResponse<Employee>> {
         return $api.post<Employee>(`/users/employees/${employee.id}?_method=PUT`,
         { ...employee }, {
                 headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    }
+
+    static async updateEmployeeInfo(employeeId: number, payload: any):
+        Promise<AxiosResponse<Employee>> {
+        return $api.put<Employee>(`/users/employees/${employeeId}/info`,
+            { ...payload });
+    }
+
+    static async changeAvatar(employeeId: number, file: any):
+        Promise<AxiosResponse<string>> {
+        return $api.post<string>(`/users/employees/${employeeId}/avatar`, {
+            file
+        },{
+            headers: { 'Content-Type': 'multipart/form-data' }
         });
     }
 

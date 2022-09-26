@@ -65,17 +65,20 @@ const ProfilePage = () => {
         setValue(newValue);
     };
 
-    // for employee userEntity data will depend on the  role, like admin, manager, or developer
+    // for employee userEntity data will depend on the role, like admin, manager, or developer
     const [userEntity, setUserEntity] = useState<UserRoleEntity | null>(null);
-
 
     useEffect(() => {
         if(!user || !rolesEntity) return;
-        const userEntity = getUserEntityByRoleName('admin', rolesEntity);
+        // const userEntity = getUserEntityByRoleName('admin', rolesEntity);
         // @ts-ignore
         // const entity = userEntities.find(e => e.role.name === 'admin');
         // @ts-ignore
-        setUserEntity(userEntity);
+        const roleEntity = rolesEntity.find(e => e.role.name === 'admin');
+        if(roleEntity)
+            setUserEntity(roleEntity.entity);
+        else if(rolesEntity.length > 0)
+            setUserEntity(rolesEntity[0].entity);
     }, [user, rolesEntity])
 
     // @ts-ignore
@@ -102,17 +105,8 @@ const ProfilePage = () => {
             {
                 userEntity ?
                     <div className="MuiBox-root css-w49wrl ">
-                        <div className="MuiPaper-root MuiPaper-elevation
-                         MuiPaper-rounded MuiPaper-elevation1
-                          MuiCard-root css-dz6x05">
-                            <div className="MuiBox-root css-jz5wf9">
-                                <img width="100%" height="100%" alt="Team Member"
-                                     src={UserCoverImg}
-                                     className="object-fit: cover;"
-                                />
-                            </div>
 
-                            <ProfileHeader userEntity={userEntity}/>
+                            <ProfileHeader mode='view' userEntity={userEntity}/>
 
                             <div className="MuiTabs-root css-19uhhvs">
                                 <Tabs
@@ -147,7 +141,7 @@ const ProfilePage = () => {
                                     Info
                                 </TabPanel>
                             </div>
-                        </div>
+
 
                     </div>
                     :
