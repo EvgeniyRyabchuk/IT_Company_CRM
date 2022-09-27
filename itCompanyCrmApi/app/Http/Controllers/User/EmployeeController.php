@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Exports\EmployeeExport;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
+use App\Models\EmployeeLink;
 use App\Models\Position;
 use App\Models\Role;
 use App\Models\Skill;
@@ -239,14 +240,11 @@ class EmployeeController extends Controller
     public function updateInfo(Request $request, $employeeId) {
         $user = Auth::user();
 
-
         $email = $request->input('email');
         $about = $request->input('about');
 
         $skills = explode(',',
             $request->input('skills') ?? []);
-
-
 
         $employee = Employee::where('user_id', $user->id)->first();
 
@@ -254,11 +252,17 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'employee does not exist'], 404);
         }
 
+        $userExist = User::where('email', $email)->first();
+
+        if($userExist) {
+            return response()->json(['message' => 'user with such email already exist'], 405);
+        }
+
         $user = $employee->user;
         $user->email = $email;
         $user->about = $about;
         $user->save();
-       
+
         $employee->skills()->detach();
         foreach ($skills as $skill) {
             $skillDb = Skill::firstOrCreate(['name' => strtoupper($skill)]);
@@ -268,6 +272,29 @@ class EmployeeController extends Controller
         $employee->save();
 
         return response()->json(['message' => 'success']);
+    }
+
+    public function updateLinks(Request $request, $employeeId) {
+        $links = $request->input('links');
+
+        $userId = Auth::user()->id;
+        $employee = Employee::where('user_id', $userId)->first();
+        if(!$employee) {
+            return response()->json(['message' => 'employee does not exist'], 404);
+        }
+
+        $employee->employeeLinks()->delete();
+
+        foreach ($links as $link) {
+            $linkDB = new EmployeeLink();
+            $linkDB->title = $link["title"];
+            $linkDB->link = $link['link'];
+            $employee->employeeLinks()->save($linkDB);
+        }
+        $employee->save();
+        $employee->load('employeeLinks');
+
+        return response()->json($employee->employeeLinks);
     }
 
     public function destroy(Request $request, $employeeId) {

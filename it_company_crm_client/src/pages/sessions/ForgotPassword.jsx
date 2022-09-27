@@ -1,6 +1,6 @@
 import { Box, Button, Card, Grid, styled, TextField } from '@mui/material';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import forgotPasswordLogo from '../../assets/images/matx/illustrations/dreamer.svg';
 import AuthService from "../../services/AuthService";
 
@@ -20,7 +20,7 @@ const ContentBox = styled(Box)(({ theme }) => ({
 
 const ForgotPasswordRoot = styled(JustifyBox)(() => ({
   background: '#1A2038',
-  minHeight: '100vh !important',
+  // minHeight: '100vh !important',
   '& .card': {
     maxWidth: 800,
     margin: '1rem',
@@ -30,6 +30,7 @@ const ForgotPasswordRoot = styled(JustifyBox)(() => ({
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [email, setEmail] = useState('jeka.rubchuk@gmail.com');
 
   const handleFormSubmit = async (e) => {
@@ -37,7 +38,12 @@ const ForgotPassword = () => {
     console.log(email);
 
     const response = await AuthService.sendPasswordReset(email);
-    navigate('/session/forgot-password/sent');
+    searchParams.set('sent', 'true');
+    setSearchParams(searchParams);
+    // navigate({
+    //   pathname: '/session/password',
+    //   search: '?sent=true'
+    // });
   };
 
   return (

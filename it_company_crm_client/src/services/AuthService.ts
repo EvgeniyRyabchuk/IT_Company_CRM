@@ -13,7 +13,7 @@ export default class AuthService {
         });
     }
 
-    static async register({email, username, password, remember_me = false} : RegisterRequest):
+    static async register({email, username, password, remember_me = false}: RegisterRequest):
         Promise<AxiosResponse<AuthorizedResponse>> {
 
         return $api.post<AuthorizedResponse>('/auth/register', {
@@ -47,13 +47,23 @@ export default class AuthService {
     }
 
 
-    static async sendPasswordReset(email: string): Promise<AxiosResponse<User>> {
+    static async sendPasswordReset(email: string):
+        Promise<AxiosResponse<User>> {
         return $api.post<User>('/send-password-reset-email', { email} );
     }
 
-    static async passwordReset(userId: number, token: string, password: string): Promise<AxiosResponse<string>> {
-        return $api.post<string>(`/password-reset/${userId}/${token}`, { password });
+    static async passwordReset(userId: number, token: string, password: string):
+        Promise<AxiosResponse<string>> {
+        return $api.post<string>(`/password-reset/${userId}/${token}`,
+            { password });
     }
+
+
+    static async deleteAccount(userId: number): Promise<AxiosResponse<string>>
+    {
+        return $api.delete<string>(`/auth/users/${userId}`);
+    }
+
 
 
 }

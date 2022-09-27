@@ -63,6 +63,8 @@ const reducer = (state: JWTAuthContextInitialState, action: any) => {
                 ...state,
                 isAuthenticated: false,
                 user: null,
+                rolesEntity: null,
+                lastChats: []
             }
         }
         case 'REGISTER': {
@@ -137,7 +139,12 @@ export const AuthProvider = ({ children } : any) => {
     }
 
     const logout = async () => {
-        await AuthService.logout();
+        try {
+            await AuthService.logout();
+        }
+        catch (ex) {
+            console.error(ex);
+        }
         setSession(null)
         dispatch({ type: 'LOGOUT' })
     }

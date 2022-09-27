@@ -49,3 +49,6 @@ query string for saved state of page
 
 if change chat new messages no loading 
 load relationships by collection element 
+check if query is work  
+user entry 
+random id 

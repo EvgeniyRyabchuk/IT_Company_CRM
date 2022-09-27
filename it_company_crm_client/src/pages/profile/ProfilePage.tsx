@@ -79,7 +79,10 @@ const ProfilePage = () => {
             setUserEntity(roleEntity.entity);
         else if(rolesEntity.length > 0)
             setUserEntity(rolesEntity[0].entity);
+
+
     }, [user, rolesEntity])
+    console.log(userEntity, user);
 
     // @ts-ignore
     const lastChatsContacts = useMemo<{user: User, lastMessage: ChatMessage}[]>(() => {

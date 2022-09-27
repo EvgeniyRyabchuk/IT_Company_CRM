@@ -2,7 +2,7 @@ import React, {ReactNode, useMemo} from 'react';
 import {Link} from "@mui/icons-material";
 import moment from "moment";
 import {ProjectLink} from "../../../types/project";
-import {LinkIcon, SocialLinkTitle} from "../../../types/global";
+import {LinkIcon, ProjectSocialLinkTitle} from "../../../types/global";
 
 const LinkListItem : React.FC<{link: ProjectLink, iconList: LinkIcon[]}> =
     ({link, iconList}) => {
@@ -10,7 +10,7 @@ const LinkListItem : React.FC<{link: ProjectLink, iconList: LinkIcon[]}> =
     const linkIcon = useMemo<ReactNode>(() => {
         const item = iconList.find(e => e.title === link.title);
         if(!item) {
-            return iconList.find(e => e.title === SocialLinkTitle.EXTERNAL_LINK)!.icon;
+            return iconList.find(e => e.title === ProjectSocialLinkTitle.EXTERNAL_LINK)!.icon;
         }
         return item.icon;
     }, []);

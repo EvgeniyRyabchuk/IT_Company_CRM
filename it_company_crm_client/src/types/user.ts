@@ -49,6 +49,15 @@ export interface Position {
 
 }
 
+export interface EmployeeLink {
+    id: number;
+    title: string,
+    employee_id: number,
+    link: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
 export interface Employee {
     id: number;
     user: User;
@@ -60,7 +69,9 @@ export interface Employee {
     finished_project_count: number;
 
     projects: Project[];
+    employee_links: EmployeeLink[];
 }
+
 export interface Customer {
     id: number;
     user: User;

@@ -39,12 +39,17 @@ export interface LinkIcon {
     icon: ReactNode;
 }
 
-export enum SocialLinkTitle {
+export enum ProjectSocialLinkTitle {
     GITHUB = 'GitHub',
     JIRA = 'Jira',
     MAIL_SERVICE = 'Mail Service',
     HOST = 'Host',
     EXTERNAL_LINK = 'External Link',
+}
+
+export enum EmployeeSocialLinkTitle {
+    GITHUB = 'GitHub',
+    BITBUCKET = 'BitBucket',
 }
 
 

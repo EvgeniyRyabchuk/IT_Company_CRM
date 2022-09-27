@@ -56,7 +56,8 @@ class AuthController extends Controller
                         'skills',
                         'projects.order.status',
                         'projects.projectType',
-                        'projects.employees.user'
+                        'projects.employees.user',
+                        'employeeLinks'
                     );
 
                     $query->where('user_id', $user->id);
@@ -348,6 +349,13 @@ class AuthController extends Controller
     public function getRoles() {
         $roles = Role::all();
         return response()->json($roles);
+    }
+
+    public function deleteAccount(Request $request, $userId) {
+        $user = Auth::user();
+        $user->delete();
+
+        return response()->json(['message' => 'account deleted successfully']);
     }
 
 }

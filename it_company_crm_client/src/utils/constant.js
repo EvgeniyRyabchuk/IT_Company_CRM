@@ -1,10 +1,11 @@
 import {API_URL_WITH_PUBLIC_STORAGE} from "../http";
 import React, {useMemo} from "react";
-import {LinkIcon, SocialLinkTitle} from "../types/global";
+import {EmployeeSocialLinkTitle, LinkIcon, ProjectSocialLinkTitle} from "../types/global";
 import GitHubIcon from "../components/icons/GitHubIcon";
 import JiraIcon from "../components/icons/JiraIcon";
 import {AlternateEmail, Storage} from "@mui/icons-material";
 import DefaultSocialIcon from "../components/icons/DefaultSocialIcon";
+import BitBucketIcon from "../components/icons/BitBucketIcon";
 
 export const topBarHeight = 64
 export const sideNavWidth = 260
@@ -19,28 +20,43 @@ export const defPage = 1;
 export const defLimit = 15;
 
 
-export const linkTitleIcon = [
+export const projectLinkTitleIcon = [
         {
-            title: SocialLinkTitle.GITHUB,
+            title: ProjectSocialLinkTitle.GITHUB,
             icon: <GitHubIcon/>,
         },
         {
-            title: SocialLinkTitle.JIRA,
+            title: ProjectSocialLinkTitle.JIRA,
             icon: <JiraIcon/>,
         },
 
         {
-            title:  SocialLinkTitle.MAIL_SERVICE,
+            title:  ProjectSocialLinkTitle.MAIL_SERVICE,
             icon: <AlternateEmail />,
         },
         {
-            title:  SocialLinkTitle.HOST,
+            title:  ProjectSocialLinkTitle.HOST,
             icon: <Storage />,
         },
         {
-            title:  SocialLinkTitle.EXTERNAL_LINK,
+            title:  ProjectSocialLinkTitle.EXTERNAL_LINK,
+            icon: <DefaultSocialIcon />,
+        },
+        {
+            title:  ProjectSocialLinkTitle.EXTERNAL_LINK,
             icon: <DefaultSocialIcon />,
         },
 
+];
+
+export const employeeLinkTitleIcon = [
+    {
+        title: EmployeeSocialLinkTitle.GITHUB,
+        icon: <GitHubIcon/>,
+    },
+    {
+        title: EmployeeSocialLinkTitle.BITBUCKET,
+        icon: <BitBucketIcon />,
+    },
 
 ];

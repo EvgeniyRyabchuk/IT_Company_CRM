@@ -21,7 +21,7 @@ const ContentBox = styled(Box)(({ theme }) => ({
 
 const ForgotPasswordRoot = styled(JustifyBox)(() => ({
     background: '#1A2038',
-    minHeight: '100vh !important',
+    // minHeight: '100vh !important',
     '& .card': {
         maxWidth: 800,
         margin: '1rem',
@@ -29,7 +29,7 @@ const ForgotPasswordRoot = styled(JustifyBox)(() => ({
     },
 }));
 
-const EmailSentSuccessfully = () => {
+const EmailSentSuccessfully = ({ text }) => {
     const navigate = useNavigate();
 
 
@@ -52,7 +52,7 @@ const EmailSentSuccessfully = () => {
                         <ContentBox>
                             <form>
                                 <H5>
-                                    Check out your email
+                                    {text ?? 'Check out your email'}
                                 </H5>
 
                                 <Button

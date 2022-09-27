@@ -7,9 +7,9 @@ import {AlternateEmail, Link, Storage} from "@mui/icons-material";
 import GitHubIcon from "../../icons/GitHubIcon";
 import JiraIcon from "../../icons/JiraIcon";
 import LinkListItem from "./LinkListItem";
-import {LinkIcon, SocialLinkTitle} from "../../../types/global";
+import {LinkIcon, ProjectSocialLinkTitle} from "../../../types/global";
 import DefaultSocialIcon from "../../icons/DefaultSocialIcon";
-import {linkTitleIcon} from "../../../utils/constant";
+import {projectLinkTitleIcon} from "../../../utils/constant";
 
 const LinkList : React.FC<{list: ProjectLink[]}> = ({list}) => {
 
@@ -24,7 +24,7 @@ const LinkList : React.FC<{list: ProjectLink[]}> = ({list}) => {
                 <ul className="fw">
                     {
                         list.map(link =>
-                           <LinkListItem link={link} iconList={linkTitleIcon}/>
+                           <LinkListItem link={link} iconList={projectLinkTitleIcon}/>
                         )
                     }
 

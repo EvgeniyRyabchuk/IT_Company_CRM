@@ -47,7 +47,8 @@ Route::get('storage/private/{path}', [StorageController::class, 'showPrivate'])
 //    ->middleware('auth:api');
 
 
-Route::controller(AuthController::class)->prefix('auth')->group(function () {
+Route::controller(AuthController::class)
+    ->prefix('auth')->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
     Route::post('logout', 'logout');
@@ -56,6 +57,11 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('profile', 'getProfile');
 
     Route::get('roles', 'getRoles');
+
+    Route::post('login', 'login');
+
+    Route::delete('users/{userId}', 'deleteAccount');
+
 });
 
 
@@ -87,6 +93,8 @@ Route::prefix('users')->group(function () {
             Route::get('skills','getSkills');
 
             Route::post('/{employeeId}/avatar', 'changeAvatar');
+
+            Route::put('/{employeeId}/social-links', 'updateLinks');
 
 
 

@@ -20,7 +20,7 @@ const ContentBox = styled(Box)(({ theme }) => ({
 
 const ForgotPasswordRoot = styled(JustifyBox)(() => ({
     background: '#1A2038',
-    minHeight: '100vh !important',
+    minHeight: '100vh',
     '& .card': {
         maxWidth: 800,
         margin: '1rem',
@@ -28,19 +28,20 @@ const ForgotPasswordRoot = styled(JustifyBox)(() => ({
     },
 }));
 
-const ForgotPassword = () => {
+const ForgotPassword = (props) => {
     const navigate = useNavigate();
     const [newPassword, setNewPassword] = useState('');
     const {id, token} = useParams();
 
     const handleFormSubmit = async (e) => {
+        e.preventDefault();
         console.log(newPassword);
         const response = await AuthService.passwordReset(id, token,newPassword);
         navigate('/');
     };
 
     return (
-        <ForgotPasswordRoot>
+        <ForgotPasswordRoot {...props} >
             <Card className="card">
                 <Grid container>
                     <Grid item xs={12}>

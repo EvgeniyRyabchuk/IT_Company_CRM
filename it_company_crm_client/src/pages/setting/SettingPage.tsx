@@ -22,6 +22,13 @@ import {createSearchParams, useNavigate, useParams, useSearchParams} from "react
 import {SettingTabConstants, UserRoleEntity} from "../../types/auth";
 import {toLower} from "lodash";
 import AccountInformation from "./Tabs/AccountInformation";
+import PasswordReset from "../sessions/PasswordReset";
+import ForgotPassword from "../sessions/ForgotPassword";
+import PasswordTab from "./Tabs/PasswordTab";
+import Preferences from "./Tabs/Preferences";
+import Verification from "./Tabs/Verification";
+import SocialLinkTab from "./Tabs/SocialLinkTab";
+import DeleteAccount from "./Tabs/DeleteAccount";
 
 
 interface TabPanelProps {
@@ -176,19 +183,22 @@ const SettingPage = () => {
 
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    Password
+                    <PasswordTab />
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    Preferences
+                   <Preferences />
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                    Verification
+                    <Verification />
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                    Social Links
+                    {
+                        userEntity &&
+                        <SocialLinkTab userEntity={userEntity} />
+                    }
                 </TabPanel>
                 <TabPanel value={value} index={5}>
-                    Delete Account
+                    <DeleteAccount />
                 </TabPanel>
 
             </SettingContainer>

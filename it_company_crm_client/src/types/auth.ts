@@ -57,7 +57,7 @@ export interface DeveloperRoleEntity
 
 
 export interface DeveloperRoleEntity
-    extends Employee, EmployeeProjectStatic{
+    extends Employee, EmployeeProjectStatic {
 
 }
 

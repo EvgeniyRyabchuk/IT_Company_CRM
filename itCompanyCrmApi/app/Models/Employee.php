@@ -36,4 +36,8 @@ class Employee extends Model
         return $this->belongsTo(Level::class);
     }
 
+    public function employeeLinks() {
+        return $this->hasMany(EmployeeLink::class);
+    }
+
 }

@@ -10,6 +10,7 @@ import moment from "moment/moment";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../../http";
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import {employeeLinkTitleIcon} from "../../../../utils/constant";
 
 const ProfileOverview : React.FC<{
     userEntity: UserRoleEntity,
@@ -17,6 +18,7 @@ const ProfileOverview : React.FC<{
 }> = ({userEntity, lastChatsContacts}) => {
 
     const { user } = useAuth();
+
 
 
     return (
@@ -88,7 +90,7 @@ const ProfileOverview : React.FC<{
                             <div
                                 className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded
                                 MuiPaper-elevation1 MuiCard-root css-14lzsk6">
-                                <h5 className=" MuiBox-root css-1d2ltpw">Teams</h5>
+                                <h5 className=" MuiBox-root css-1d2ltpw">Recently added to Project</h5>
                                 <div className="simplebar-content-wrapper"
                                      tabIndex={0}
                                      role="region"
@@ -159,11 +161,8 @@ const ProfileOverview : React.FC<{
                                                             </div>
                                                         </td>
                                                     </tr>
-
                                                 )
                                             }
-
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -378,8 +377,6 @@ const ProfileOverview : React.FC<{
                             </div>
                             */}
 
-
-
                         </div>
                     </div>
                     <div
@@ -447,20 +444,46 @@ const ProfileOverview : React.FC<{
                                             <h6  style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">{user!.email}</h6>
                                         </div>
                                     </div>
-                                    <div className="css-1iwoqsn">
-                                        <div className="css-7ygi04">
-                                            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-fhllnu"
-                                                 focusable="false" aria-hidden="true" viewBox="0 0 24 24">
-                                                <path
-                                                    d="M12,3a9,9,0,1,0,9,9A9,9,0,0,0,12,3Zm6.92,8H16.35a14.12,14.12,0,0,0-1.18-5.23A7,7,0,0,1,18.92,11Zm-6.47,8L12,19l-.45,0c-.91-.57-2-2.76-2.14-6h5.18C14.41,16.22,13.36,18.41,12.45,19Zm-3-8c.18-3.22,1.23-5.41,2.14-6L12,5l.45,0c.91.57,2,2.76,2.14,6ZM8.83,5.77A14.12,14.12,0,0,0,7.65,11H5.08A7,7,0,0,1,8.83,5.77ZM5.08,13H7.65a14.12,14.12,0,0,0,1.18,5.23A7,7,0,0,1,5.08,13Zm10.09,5.23A14.12,14.12,0,0,0,16.35,13h2.57A7,7,0,0,1,15.17,18.23Z">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <div className="MuiBox-root css-0">
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">Language</p>
-                                            <h6 style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">English, Spanish</h6>
-                                        </div>
-                                    </div>
+
+                                    {
+                                        userEntity.employee_links.map(e =>
+                                            <div className="css-1iwoqsn" >
+                                                <div className="css-7ygi04" style={{
+                                                    minWidth: '30px',
+                                                    minHeight: '30px'
+                                                }}>
+                                                    {
+                                                        employeeLinkTitleIcon.find(icon =>
+                                                            e.title === icon.title
+                                                        )?.icon
+                                                        ??
+                                                        <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-fhllnu"
+                                                             focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+                                                            <path
+                                                                d="M12,3a9,9,0,1,0,9,9A9,9,0,0,0,12,3Zm6.92,8H16.35a14.12,14.12,0,0,0-1.18-5.23A7,7,0,0,1,18.92,11Zm-6.47,8L12,19l-.45,0c-.91-.57-2-2.76-2.14-6h5.18C14.41,16.22,13.36,18.41,12.45,19Zm-3-8c.18-3.22,1.23-5.41,2.14-6L12,5l.45,0c.91.57,2,2.76,2.14,6ZM8.83,5.77A14.12,14.12,0,0,0,7.65,11H5.08A7,7,0,0,1,8.83,5.77ZM5.08,13H7.65a14.12,14.12,0,0,0,1.18,5.23A7,7,0,0,1,5.08,13Zm10.09,5.23A14.12,14.12,0,0,0,16.35,13h2.57A7,7,0,0,1,15.17,18.23Z">
+                                                            </path>
+                                                        </svg>
+
+                                                    }
+                                                </div>
+                                                <div className="MuiBox-root css-0">
+                                                    <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">
+                                                        {e.title}
+                                                    </p>
+                                                    <a style={{
+                                                        textAlign: 'justify',
+                                                        overflowWrap: 'anywhere',
+                                                        display: 'block'
+                                                    }} href={e.link}>
+                                                        {e.link}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+
+
+
                                     <div className="css-1iwoqsn">
                                         <div className="css-1logtda">
                                             <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-gy8yp"
@@ -504,6 +527,8 @@ const ProfileOverview : React.FC<{
                                                 </path>
                                             </svg>
                                         </div>
+
+
                                         {
                                             user?.phones.map((phone, index) =>
                                                 <div className="MuiBox-root css-0">

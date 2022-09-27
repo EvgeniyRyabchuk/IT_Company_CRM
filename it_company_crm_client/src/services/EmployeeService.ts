@@ -1,6 +1,6 @@
 import $api from "../http";
 import {AxiosResponse} from "axios";
-import {Employee, Level, Position, Skill} from "../types/user";
+import {Employee, EmployeeLink, Level, Position, Skill} from "../types/user";
 import {PaginatedResponse} from "../types/global";
 
 
@@ -38,6 +38,13 @@ export class EmployeeService {
             file
         },{
             headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    }
+
+    static async updateSoicalLinks(employeeId: number, links: EmployeeLink[]):
+        Promise<AxiosResponse<EmployeeLink[]>> {
+        return $api.put<EmployeeLink[]>(`/users/employees/${employeeId}/social-links`, {
+            links
         });
     }
 

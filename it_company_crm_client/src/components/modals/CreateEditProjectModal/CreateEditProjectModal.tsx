@@ -34,8 +34,8 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
 import {random} from "lodash";
 import ProjectMemberList from "../../UI/ProjectMemberList";
-import {ComponentMode, LinkIcon, ModalProps, SocialLinkTitle} from "../../../types/global";
-import {linkTitleIcon} from "../../../utils/constant";
+import {ComponentMode, LinkIcon, ModalProps, ProjectSocialLinkTitle} from "../../../types/global";
+import {projectLinkTitleIcon} from "../../../utils/constant";
 
 // styled components
 const ButtonWrapper = styled(Box)(({ theme }) => ({
@@ -98,11 +98,11 @@ export const CreateEditProjectModal: FC<ModalProps & {
 
 
     const linkResourceOptions = [
-        SocialLinkTitle.GITHUB,
-        SocialLinkTitle.JIRA,
-        SocialLinkTitle.MAIL_SERVICE,
-        SocialLinkTitle.HOST,
-        SocialLinkTitle.EXTERNAL_LINK
+        ProjectSocialLinkTitle.GITHUB,
+        ProjectSocialLinkTitle.JIRA,
+        ProjectSocialLinkTitle.MAIL_SERVICE,
+        ProjectSocialLinkTitle.HOST,
+        ProjectSocialLinkTitle.EXTERNAL_LINK
     ];
     const formik = useRef<FormikProps<FormikValues>>(null);
     const innerForm = useRef<any>();
@@ -316,7 +316,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                                     <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                                                                         <div style={{width: '24px', height: '24px', marginRight: '10px'}}>
                                                                             {
-                                                                                linkTitleIcon.find((lti: LinkIcon) =>
+                                                                                projectLinkTitleIcon.find((lti: LinkIcon) =>
                                                                                     option === lti.title)!.icon
                                                                             }
                                                                         </div>
