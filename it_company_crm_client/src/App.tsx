@@ -10,6 +10,9 @@ import {useRoutes} from "react-router-dom";
 import routes from "./routing/routes";
 import {AuthProvider} from "./contexts/JWTAuthContext";
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
     const content = useRoutes(routes);
@@ -19,6 +22,7 @@ function App() {
           <SettingsProvider>
               <MatxTheme>
                 <div className="App">
+                    <ToastContainer position='bottom-left' autoClose={3000} />
                     <AuthProvider>{content}</AuthProvider>
                 </div>
               </MatxTheme>

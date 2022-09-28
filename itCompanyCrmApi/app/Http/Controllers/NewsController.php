@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\News;
 use App\Models\User;
+use App\Models\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
 {
@@ -64,4 +66,6 @@ class NewsController extends Controller
         $news->delete();
         return response()->json(News::all(), 201);
     }
+
+
 }

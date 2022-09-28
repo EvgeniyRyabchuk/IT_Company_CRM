@@ -9,6 +9,8 @@ import {Box} from "@mui/system";
 import useAuth from "../../../hooks/useAuth";
 import {EmployeeService} from "../../../services/EmployeeService";
 
+
+
 const validationSchema = Yup.object().shape({
     id: Yup.number().required(),
     email: Yup.string().email().required("Email is Required!"),
@@ -24,6 +26,7 @@ const AccountInformation : React.FC<{ userEntity: UserRoleEntity }> = ({userEnti
         console.log(values);
 
         const { data } = await EmployeeService.updateEmployeeInfo(values.id, values);
+
         profile();
 
         console.log(values);
@@ -31,7 +34,7 @@ const AccountInformation : React.FC<{ userEntity: UserRoleEntity }> = ({userEnti
 
     const defInitialValues = useMemo<any>(() => {
         if(!userEntity || !user) return {}
- 
+
         return {
             id: user.id,
             email: user.email,

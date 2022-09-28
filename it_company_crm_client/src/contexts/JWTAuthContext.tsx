@@ -5,6 +5,7 @@ import MatxLoading from '../components/MatxLoading'
 import {JWTAuthContextInitialState, LoginRequest, RegisterRequest, RoleEntity, RoleName} from "../types/auth";
 import AuthService from "../services/AuthService";
 import {Role} from "../types/user";
+import {ViewService} from "../services/ViewService";
 
 const initialState : JWTAuthContextInitialState = {
     isAuthenticated: false,
@@ -12,6 +13,13 @@ const initialState : JWTAuthContextInitialState = {
     user: null,
     rolesEntity: null,
     lastChats: [],
+    counter: {
+        newChatMessages: 0,
+        newNews: 0,
+        newOrders: 0,
+        newProjects: 0,
+        newVacancies: 0,
+    }
 }
 
 const isValidToken = (accessToken: string) : any => {
@@ -46,7 +54,14 @@ const reducer = (state: JWTAuthContextInitialState, action: any) => {
                 isInitialised: true,
                 user,
                 rolesEntity,
-                lastChats
+                lastChats,
+            }
+        }
+        case 'VIEW_COUNTER_INIT': {
+            const { counter } = action.payload
+            return {
+                ...state,
+                counter
             }
         }
         case 'LOGIN': {
@@ -64,7 +79,8 @@ const reducer = (state: JWTAuthContextInitialState, action: any) => {
                 isAuthenticated: false,
                 user: null,
                 rolesEntity: null,
-                lastChats: []
+                lastChats: [],
+                counter: null
             }
         }
         case 'REGISTER': {
@@ -100,6 +116,7 @@ const AuthContext = createContext({
     register: (args: RegisterRequest) => Promise.resolve(),
     profile: () => Promise.resolve(),
     profileDetail: () => Promise.resolve(),
+    getNewCounter: () => Promise.resolve(),
     getUserEntityByRoleName: (roleName: RoleName | RoleName[], list: RoleEntity[]) => { }
 })
 
@@ -151,13 +168,13 @@ export const AuthProvider = ({ children } : any) => {
 
     const profile = async () => {
         try {
-            console.log(123);
             const accessToken = window.localStorage.getItem('token')
 
             if (accessToken) {
                 setSession(accessToken)
                 const response = await AuthService.profile(false);
                 const user = response.data.user;
+
                 dispatch({
                     type: 'INIT',
                     payload: {
@@ -194,17 +211,30 @@ export const AuthProvider = ({ children } : any) => {
         const roleEntityList = response.data.roleEntity;
         const lastChats = response.data.lastChats;
 
-        console.log(lastChats)
         dispatch({
             type: 'INIT',
             payload: {
                 isAuthenticated: true,
                 user,
                 rolesEntity: roleEntityList,
-                lastChats
+                lastChats,
             },
         })
     }
+
+    const getViewCounter = async () => {
+        const response = await ViewService.getCounter();
+        const counter = response.data;
+
+        dispatch({
+            type: 'VIEW_COUNTER_INIT',
+            payload: {
+                counter
+            },
+        })
+    }
+
+
 
     const getUserEntityByRoleName = (roleName: string | string[], list: RoleEntity[]) => {
         if (!roleName || !list) return;
@@ -226,10 +256,10 @@ export const AuthProvider = ({ children } : any) => {
     }
 
 
-
-
     useEffect(() => {
         profile();
+        getViewCounter();
+
     }, [])
 
     if (!state.isInitialised) {
@@ -246,6 +276,7 @@ export const AuthProvider = ({ children } : any) => {
                 register,
                 profile,
                 profileDetail,
+                getNewCounter: getViewCounter,
                 getUserEntityByRoleName,
 
             }}

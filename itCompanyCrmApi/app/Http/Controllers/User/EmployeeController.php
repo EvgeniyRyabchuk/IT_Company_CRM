@@ -46,8 +46,6 @@ class EmployeeController extends Controller
             $sort = $sort[0];
         }
 //        dd($filters);
-
-
         //$doneStatus = OrderStatus::where('name', 'Finished')->first();
 
         $query = Employee::with('user.roles', 'user.phones', 'level', "position", 'skills')

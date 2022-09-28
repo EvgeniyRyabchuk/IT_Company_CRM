@@ -7,7 +7,6 @@ import {Role, User} from "../types/user";
 export default class AuthService {
     static async login({email, password, remember_me = false} : LoginRequest):
         Promise<AxiosResponse<AuthorizedResponse>> {
-        console.log(remember_me)
         return $api.post<AuthorizedResponse>('/auth/login', {
             email, password, remember_me
         });

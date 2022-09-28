@@ -12,7 +12,7 @@ export interface NavigationRoute {
     label?: string;
     type?: string;
 
-    badge?: { value: string, color: string};
+    badge?: { value: number, color: string};
 
 }
 

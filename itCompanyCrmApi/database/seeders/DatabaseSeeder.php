@@ -9,6 +9,7 @@ use App\Models\JobApplication;
 use App\Models\KanbanLane;
 use App\Models\KanbanPriority;
 use App\Models\Level;
+use App\Models\News;
 use App\Models\PersonalNotification;
 use App\Models\Project;
 use App\Models\ProjectLink;
@@ -17,6 +18,7 @@ use App\Models\Role;
 use App\Models\Skill;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\View;
 use Database\Factories\Creators\StaticCreator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -109,6 +111,15 @@ class DatabaseSeeder extends Seeder
         $this->call(ProjectLinkSeeder::class);
 
         $this->call(NewsSeeder::class);
+
+        $news = News::find(1);
+        $user = User::find(1);
+
+        $view = new View();
+        $view->user()->associate($user);
+        $view->viewable()->associate($news);
+        $view->save();
+
 
         $this->call(OrderStatusSeeder::class);
 

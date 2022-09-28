@@ -49,6 +49,8 @@ export const navigations : NavigationRoute[]  = [
 
   },
 
+
+
   { name: 'Orders', path: '/orders', icon: 'folder' },
 
   { name: 'Projects', path: '/projects', icon: 'devices' },
@@ -68,6 +70,7 @@ export const navigations : NavigationRoute[]  = [
     icon: 'chat_bubble_outline',
     type: 'extLink',
     path: 'https://www.tidio.com/panel',
+    // badge: { value: '3', color: 'white' }
   },
 
 ];

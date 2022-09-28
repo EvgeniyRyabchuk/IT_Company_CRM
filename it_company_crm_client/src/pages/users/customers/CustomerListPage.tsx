@@ -2,17 +2,8 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Container} from "../../../assets/components/breadcrumb";
 import MaterialReactTable from 'material-react-table';
 import MRT_Row, {MRT_ColumnDef} from 'material-react-table';
-import {Box, Button, Fab, IconButton, ListItemIcon, MenuItem, Typography} from '@mui/material';
-import {
-    AccountCircle,
-    Delete,
-    Edit,
-    FileDownload,
-    GroupAdd,
-    PictureAsPdf,
-    PictureAsPdfTwoTone,
-    Send
-} from '@mui/icons-material';
+import {Box, Button, Fab, ListItemIcon, MenuItem, Typography} from '@mui/material';
+import {AccountCircle, Delete, FileDownload, PictureAsPdf, Send} from '@mui/icons-material';
 import {Customer, Employee, Phone} from "../../../types/user";
 import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
@@ -27,6 +18,8 @@ import {useNavigate} from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import {CustomerService} from "../../../services/CustomerService";
 import JsPDF from 'jspdf';
+import {toast} from "react-toastify";
+import {PrimaryErrorAlertMessage, showAxiosErrorAlert} from "../../../utils/alert";
 
 const CustomerListPage = () => {
 
@@ -80,12 +73,12 @@ const CustomerListPage = () => {
             ])
             setIsLoading(true);
             const { data } = await CustomerService.getCustomer(queryParamString);
-
             setCustomers(data.data);
             setRowCount(data.total);
-        } catch (error) {
+            toast.success("Success fetch customers", { autoClose: 2000})
+        } catch (error: any) {
             setIsError(true);
-            console.error(error);
+            showAxiosErrorAlert({ primary: PrimaryErrorAlertMessage.FETCH_CUSTOMERS }, error);
             return;
         }
         setIsError(false);

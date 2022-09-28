@@ -65,3 +65,10 @@ export enum SimpleItemAlignment {
     ROW = 'row'
 }
 
+export interface ViewCounter {
+    newChatMessages: number;
+    newNews: number;
+    newOrders: number;
+    newProjects: number;
+    newVacancies: number;
+}

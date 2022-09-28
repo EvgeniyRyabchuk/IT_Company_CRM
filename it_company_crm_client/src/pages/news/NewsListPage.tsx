@@ -39,6 +39,7 @@ import {defLimit, defPage} from "../../utils/constant";
 import AddEditNewsModal from '../../components/modals/AddEditNewsModal/AddEditNewsModal';
 import NewsItemSkeleton from "./NewsItemSkeleton";
 import moment from "moment/moment";
+import {ViewService} from "../../services/ViewService";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -278,6 +279,7 @@ const NewsListPage = () => {
                                             }
                                             handleExpandClick(n.id, expand);
                                             setAlignment(SimpleItemAlignment.COLUMN);
+                                            ViewService.markAsSeen('news', [n.id]);
                                         }}
                                         expand={expanded
                                         && expanded.id === n.id

@@ -18,6 +18,7 @@ use App\Http\Controllers\User\ResetPasswordController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\VerifyEmailController;
 use App\Http\Controllers\VacancyController;
+use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -270,4 +271,12 @@ Route::prefix('job-applications')->group(function () {
 Route::prefix('excel')->group(function () {
     Route::get('employees', [EmployeeController::class, 'exportExcel']);
     Route::get('customers', [CustomerController::class, 'exportExcel']);
+});
+
+Route::prefix('views')
+    ->controller(ViewController::class)
+    ->group(function () {
+        Route::get('/', 'getCounter');
+//        Route::get('news', 'getNewsNotViewedCount');
+        Route::post('/{viewable}', 'markNewsAsSeen');
 });

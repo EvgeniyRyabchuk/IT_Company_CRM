@@ -12,4 +12,9 @@ class News extends Model
     public function employee() {
         return $this->belongsTo(Employee::class);
     }
+
+    public function views() {
+        return $this->morphMany(View::class, 'viewable');
+    }
 }
+

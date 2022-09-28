@@ -1,11 +1,11 @@
-import { Box, ButtonBase, Icon, styled } from '@mui/material';
+import {Box, ButtonBase, Icon, styled} from '@mui/material';
 import useSettings from "../../hooks/useSettings";
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import {Paragraph, Span} from "../../assets/typography/Typography";
 import MatxVerticalNavExpansionPanel from './MatxVerticalNavExpansionPanel';
-
-
+import Badge from '@mui/material/Badge';
+import {Mail} from "@mui/icons-material";
 
 const ListLabel = styled(Paragraph)(({ theme, mode }) => ({
   fontSize: '12px',
@@ -48,7 +48,6 @@ const ExternalLink = styled('a')(({ theme }) => ({
   ...ExtAndIntCommon,
   color: theme.palette.text.primary,
 }));
-
 const InternalLink = styled(Box)(({ theme }) => ({
   '& a': {
     ...ExtAndIntCommon,
@@ -58,9 +57,6 @@ const InternalLink = styled(Box)(({ theme }) => ({
     backgroundColor: 'rgba(255, 255, 255, 0.16)',
   },
 }));
-
-
-
 const BulletIcon = styled('div')(({ theme }) => ({
   padding: '2px',
   marginLeft: '24px',
@@ -69,7 +65,6 @@ const BulletIcon = styled('div')(({ theme }) => ({
   borderRadius: '300px',
   background: theme.palette.text.primary,
 }));
-
 const BadgeValue = styled('div')(() => ({
   padding: '1px 8px',
   overflow: 'hidden',
@@ -83,6 +78,7 @@ const MatxVerticalNav = ({ items }) => {
 
 
   const renderLevels = (data) => {
+    console.log(items);
 
     return data.map((item, index) => {
       if (item.type === 'label')
@@ -135,11 +131,18 @@ const MatxVerticalNav = ({ items }) => {
               }
             >
               <ButtonBase key={item.name} name="child" sx={{ width: '100%' }}>
-                {item?.icon ? (
-                  <Icon className="icon" sx={{ width: 36 }}>
-                    {item.icon}
-                  </Icon>
-                ) : (
+                {item?.icon ?
+                    item.badge ?
+                      <Badge badgeContent={item.badge.value} color="secondary">
+                        <Icon className="icon" sx={{ width: 36 }}>
+                          {item.icon}
+                        </Icon>
+                      </Badge>
+                        :
+                        <Icon className="icon" sx={{ width: 36 }}>
+                          {item.icon}
+                        </Icon>
+                :
                   <Fragment>
                     <BulletIcon
                       className={`nav-bullet`}
@@ -156,18 +159,15 @@ const MatxVerticalNav = ({ items }) => {
                       {item.iconText}
                     </Box>
                   </Fragment>
-                )}
+                }
                 <StyledText mode={mode} className="sidenavHoverShow">
                   {item.name}
                 </StyledText>
 
                 <Box mx="auto" />
-
-                {item.badge && (
-                  <BadgeValue className="sidenavHoverShow">{item.badge.value}</BadgeValue>
-                )}
               </ButtonBase>
             </NavLink>
+
           </InternalLink>
         );
       }

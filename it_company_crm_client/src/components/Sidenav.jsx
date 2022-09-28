@@ -2,9 +2,10 @@ import { styled } from '@mui/system';
 import MatxVerticalNav from "./MatxVerticalNav/MatxVerticalNav";
 import useSettings from '../hooks/useSettings';
 import { navigations } from '../routing/navigations';
-import { Fragment } from 'react';
+import {Fragment, useMemo} from 'react';
 import Scrollbar from 'react-perfect-scrollbar';
 import "react-perfect-scrollbar/dist/css/styles.css";
+import useAuth from "../hooks/useAuth";
 
 const StyledScrollBar = styled(Scrollbar)(() => ({
   paddingLeft: '1rem',
@@ -25,6 +26,9 @@ const SideNavMobile = styled('div')(({ theme }) => ({
 }));
 
 const Sidenav = ({ children }) => {
+
+  const { counter } = useAuth();
+
   const { settings, updateSettings } = useSettings();
 
   const updateSidebarMode = (sidebarSettings) => {
@@ -43,12 +47,28 @@ const Sidenav = ({ children }) => {
     });
   };
 
+  console.log(counter)
+
+  const navigationsWithBadge = useMemo(() => navigations.map(nav => {
+    switch (nav.name) {
+      case "Chat" :
+        nav.badge = {value: counter.newChatMessages, color: 'white'};
+        return nav;
+      case 'News':
+         nav.badge = {value: counter.newNews, color: 'white'};
+        return nav;
+      default:
+        return nav;
+    }
+  }), [navigations]);
+
+
   return (
     <Fragment>
 
       <StyledScrollBar options={{ suppressScrollX: true }} >
         {children}
-        <MatxVerticalNav items={navigations} />
+        <MatxVerticalNav items={navigationsWithBadge} />
       </StyledScrollBar>
 
       <SideNavMobile onClick={() => updateSidebarMode({ mode: 'close' })} />

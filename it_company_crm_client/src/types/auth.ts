@@ -1,5 +1,6 @@
 import {Customer, Employee, Role, User} from "./user";
 import {Chat} from "./chat";
+import {ViewCounter} from "./global";
 
 export type RoleName =
     'customer' |
@@ -14,6 +15,7 @@ export interface JWTAuthContextInitialState {
     user: User | null,
     rolesEntity: RoleEntity[] | null;
     lastChats: Chat[];
+    counter: ViewCounter;
 }
 
 export interface LoginRequest {
@@ -86,6 +88,7 @@ export interface ProfileResponse {
     user: User,
     roleEntity: RoleEntity[] | null | undefined;
     lastChats: Chat[] | null | undefined;
+    counter: ViewCounter;
 }
 
 export enum SettingTabConstants {

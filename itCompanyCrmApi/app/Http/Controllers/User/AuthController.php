@@ -16,6 +16,7 @@ use App\Models\Role;
 use App\Models\Status;
 use App\Models\User;
 use Carbon\Carbon;
+use http\Message;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,13 +35,14 @@ class AuthController extends Controller
         // check permissions
 //        $this->authorize('user_create');
         $detail = boolval($request->input('detail') ?? 'false');
+        $user = Auth::user()->load('roles', 'phones');
+
+
 
         if($detail === false) {
-            $user = Auth::user()->load('roles', 'phones');
             return response()->json(compact('user'));
         }
         else {
-            $user = Auth::user()->load('roles', 'phones');
             $roleEntity = [];
             foreach ($user->roles as $role) {
                 if($role->name == "developer"
