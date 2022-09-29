@@ -2,6 +2,7 @@ import $api from "../http";
 import {AxiosResponse} from "axios";
 import {PaginatedResponse} from "../types/global";
 import {Order, OrderStatus, UndoOrderCase, UndoOrderCaseGrouped, UndoOrderReason} from "../types/order";
+import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
 
 
 interface OrderMinMax {
@@ -22,10 +23,17 @@ export class OrderService {
         return $api.get<Order>(`/orders/${orderId}`);
     }
 
-
     static async updateOrder(orderId: number, payload: any):
         Promise<AxiosResponse<Order>> {
-        return $api.put<Order>(`/orders/${orderId}`, payload);
+        try {
+            const response = await $api.put<Order>(`/orders/${orderId}`, payload);
+            showAxiosSuccessAlert(PrimarySuccessAlert.UPDATED_ORDER);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.UPDATED_ORDER}, err);
+            throw err;
+        }
     }
 
     // static async undoOrder(orderId: number, reason: any) :
@@ -36,10 +44,16 @@ export class OrderService {
     //         , reason);
     // }
 
-
-
     static async deleteOrder(orderId: number): Promise<AxiosResponse<string>> {
-        return $api.delete<string>(`/orders/${orderId}`);
+        try {
+            const response = await $api.delete<string>(`/orders/${orderId}`);
+            showAxiosSuccessAlert(PrimarySuccessAlert.DELETED_ORDER);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.DELETED_ORDER}, err);
+            throw err;
+        }
     }
 
 

@@ -34,6 +34,7 @@ import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import CreateEditProjectModal from "../../components/modals/CreateEditProjectModal/CreateEditProjectModal";
 import {ProjectService} from "../../services/ProjectService";
 import UndoOrderModal from "../../components/modals/UndoOrderModal/UndoOrderModal";
+import {ViewService} from "../../services/ViewService";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -90,6 +91,9 @@ const ProjectsListPage = () => {
     const [fetchOrders, isLoading, error ] = useFetching(async () => {
         const { data } = await OrderService.getOrders(urlParamsStr);
         const total = getPageCount(data.total, limit);
+
+        // const onlyPending = data.data.filter(order => order.status.name === 'Pending' && order.id);
+        ViewService.markAsSeen('orders', data.data.map(order => order.id));
 
         setTotalPage(total);
         if(data.current_page > 1) {

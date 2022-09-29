@@ -3,13 +3,32 @@ import $api from "../http";
 import {AxiosResponse} from 'axios';
 import {AuthorizedResponse, LoginRequest, ProfileResponse, RegisterRequest, RoleEntity} from "../types/auth";
 import {Role, User} from "../types/user";
+import {toast} from "react-toastify";
+import {
+    PrimaryErrorAlert,
+    PrimarySuccessAlert,
+    PromiseAlert,
+    showAxiosErrorAlert,
+    showAxiosSuccessAlert
+} from "../utils/alert";
+import {News} from "../types/news";
 
 export default class AuthService {
     static async login({email, password, remember_me = false} : LoginRequest):
         Promise<AxiosResponse<AuthorizedResponse>> {
-        return $api.post<AuthorizedResponse>('/auth/login', {
+
+        const promise = $api.post<AuthorizedResponse>('/auth/login', {
             email, password, remember_me
         });
+
+        toast.promise(promise,
+            {
+                pending: PromiseAlert.FETCH_LOGIN_PENDING,
+                success: PromiseAlert.FETCH_LOGIN_SUCCESS,
+                error: PromiseAlert.FETCH_LOGIN_ERROR
+            }
+        )
+        return promise;
     }
 
     static async register({email, username, password, remember_me = false}: RegisterRequest):
@@ -38,7 +57,15 @@ export default class AuthService {
     }
 
     static async sendEmailVerification(): Promise<AxiosResponse<string>> {
-        return $api.post<string>('/email/verification-notification');
+        try {
+            const response = await $api.post<string>('/email/verification-notification');
+            showAxiosSuccessAlert(PrimarySuccessAlert.MAIL_SENT_SUCCESS);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.MAIL_SENT_SUCCESS}, err);
+            throw err;
+        }
     }
 
     static async emailVerify(token: string): Promise<AxiosResponse<User>> {
@@ -48,7 +75,15 @@ export default class AuthService {
 
     static async sendPasswordReset(email: string):
         Promise<AxiosResponse<User>> {
-        return $api.post<User>('/send-password-reset-email', { email} );
+        try {
+            const response = await $api.post<User>('/send-password-reset-email', { email} );
+            showAxiosSuccessAlert(PrimarySuccessAlert.MAIL_SENT_SUCCESS);
+            return response; 
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.MAIL_SENT_SUCCESS}, err);
+            throw err;
+        }
     }
 
     static async passwordReset(userId: number, token: string, password: string):

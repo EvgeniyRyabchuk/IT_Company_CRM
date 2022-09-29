@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 class NewsController extends Controller
 {
     public function index(Request $request) {
-
         $order = $request->input('order');
         $page = $request->input('page');
         $perPage = $request->input('limit');
@@ -45,6 +44,9 @@ class NewsController extends Controller
         if($mode === 'create')
             $news->employee()->associate($employee);
         $news->save();
+
+        ViewController::setView($news, Auth::user());
+
         $dbNews = News::with('employee.user')
             ->find($news->id);
         return $dbNews;
@@ -64,6 +66,9 @@ class NewsController extends Controller
     public function destroy(Request $request, $newsId) {
         $news = News::findOrFail($newsId);
         $news->delete();
+
+        ViewController::deleteAllViews($news);
+
         return response()->json(News::all(), 201);
     }
 

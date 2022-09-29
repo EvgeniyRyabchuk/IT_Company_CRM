@@ -112,13 +112,13 @@ class DatabaseSeeder extends Seeder
 
         $this->call(NewsSeeder::class);
 
-        $news = News::find(1);
-        $user = User::find(1);
-
-        $view = new View();
-        $view->user()->associate($user);
-        $view->viewable()->associate($news);
-        $view->save();
+//        $news = News::find(1);
+//        $user = User::find(1);
+//
+//        $view = new View();
+//        $view->user()->associate($user);
+//        $view->viewable()->associate($news);
+//        $view->save();
 
 
         $this->call(OrderStatusSeeder::class);

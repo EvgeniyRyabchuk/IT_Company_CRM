@@ -31,6 +31,9 @@ import {JobApplicationService} from "../../services/JobApplicationService";
 import {VacancyService} from "../../services/VacancyService";
 import defJobApplicationSortOrderData from "./sortOptions";
 import AddEditVacancyModal from "../../components/modals/AddVacancyModal/AddEditVacancyModal";
+import {ViewService} from "../../services/ViewService";
+import {toast} from "react-toastify";
+import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert} from "../../utils/alert";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -91,6 +94,8 @@ const VacanciesListPage = () => {
         const { data } = await JobApplicationService.getJobApplications(urlParamsStr);
         const total = getPageCount(data.total, limit);
 
+        ViewService.markAsSeen('jobApplications', data.data.map(e => e.id));
+
         setTotalPage(total);
         if(page > 1) {
             setJobApplications([...jobApplications, ...data.data]);
@@ -131,7 +136,7 @@ const VacanciesListPage = () => {
     }
 
 
-    const deleteJobApplication = (jobApplicationId: number) => {
+    const deleteJobApplication = async (jobApplicationId: number) => {
         const deleteIndex = jobApplications.findIndex((e: JobApplication) => e.id === jobApplicationId);
         jobApplications.splice(deleteIndex, 1);
         setJobApplications([...jobApplications]);
@@ -172,7 +177,9 @@ const VacanciesListPage = () => {
             const { data } = await VacancyService.updateVacancy(newVacancy.id, newVacancy);
         }
     }
-
+    const onVacancyDelete = async (vacancy: Vacancy,)  => {
+        const { data } = await VacancyService.deleteVacancy(vacancy.id); 
+    }
     return (
         <Container>
 
@@ -410,6 +417,7 @@ const VacanciesListPage = () => {
                 setOpen={setAddVacancyModalOpen}
                 onClose={() => setAddVacancyModalOpen(false)}
                 onSave={onVacancyAddEditChange}
+                onDelete={onVacancyDelete}
             />
 
 

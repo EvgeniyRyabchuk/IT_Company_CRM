@@ -2,6 +2,7 @@ import $api from "../http";
 import {AxiosResponse} from "axios";
 import {PaginatedResponse} from "../types/global";
 import {JobApplication, JobApplicationStatus} from "../types/employeement";
+import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
 
 interface JobApplicationMinMax {
     minMaxCreatedAtRange: string[];
@@ -19,15 +20,30 @@ export class JobApplicationService {
 
     static async updateJobApplications(jobApplicationId: number, newJobApplication: any):
         Promise<AxiosResponse<JobApplication>> {
-        return $api.put<JobApplication>(`/job-applications/${jobApplicationId}`,
-            { ...newJobApplication});
+        try {
+            const response = await $api.put<JobApplication>(`/job-applications/${jobApplicationId}`,
+                { ...newJobApplication});
+            showAxiosSuccessAlert(PrimarySuccessAlert.UPDATED_JOB_APPLICATION);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.UPDATED_JOB_APPLICATION}, err);
+            throw err;
+        }
+
     }
 
     static async deleteJobApplication(jobApplicationId: number): Promise<AxiosResponse<string>> {
-        return $api.delete<string>(`/job-applications/${jobApplicationId}`);
+        try {
+            const response = await $api.delete<string>(`/job-applications/${jobApplicationId}`);
+            showAxiosSuccessAlert(PrimarySuccessAlert.DELETED_JOB_APPLICATION);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.DELETED_JOB_APPLICATION}, err);
+            throw err;
+        }
     }
-
-
 
     static async getJobApplicationStatuses():
         Promise<AxiosResponse<JobApplicationStatus[]>> {

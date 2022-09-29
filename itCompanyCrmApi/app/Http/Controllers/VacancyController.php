@@ -42,7 +42,7 @@ class VacancyController extends Controller
 
     public function destroy(Request $request, $vacancyId) {
         $vacancy = Vacancy::findOrFail($vacancyId);
-        $vacancy->delete();
+        $vacancy->delete(); 
         return response()->json(Vacancy::all(), 201);
     }
 }

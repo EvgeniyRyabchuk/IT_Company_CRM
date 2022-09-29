@@ -70,5 +70,5 @@ export interface ViewCounter {
     newNews: number;
     newOrders: number;
     newProjects: number;
-    newVacancies: number;
+    newJobApplications: number;
 }

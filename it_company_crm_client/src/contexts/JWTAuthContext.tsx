@@ -18,7 +18,7 @@ const initialState : JWTAuthContextInitialState = {
         newNews: 0,
         newOrders: 0,
         newProjects: 0,
-        newVacancies: 0,
+        newJobApplications: 0,
     }
 }
 
@@ -116,7 +116,7 @@ const AuthContext = createContext({
     register: (args: RegisterRequest) => Promise.resolve(),
     profile: () => Promise.resolve(),
     profileDetail: () => Promise.resolve(),
-    getNewCounter: () => Promise.resolve(),
+    getViewCounter: () => Promise.resolve(),
     getUserEntityByRoleName: (roleName: RoleName | RoleName[], list: RoleEntity[]) => { }
 })
 
@@ -276,7 +276,7 @@ export const AuthProvider = ({ children } : any) => {
                 register,
                 profile,
                 profileDetail,
-                getNewCounter: getViewCounter,
+                getViewCounter,
                 getUserEntityByRoleName,
 
             }}

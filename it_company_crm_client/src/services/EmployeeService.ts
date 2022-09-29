@@ -2,6 +2,7 @@ import $api from "../http";
 import {AxiosResponse} from "axios";
 import {Employee, EmployeeLink, Level, Position, Skill} from "../types/user";
 import {PaginatedResponse} from "../types/global";
+import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
 
 
 export class EmployeeService {
@@ -14,39 +15,80 @@ export class EmployeeService {
 
     static async createEmployee(employee: Employee):
         Promise<AxiosResponse<Employee>> {
-        return $api.post<Employee>(`/users/employees`, { ...employee }, {
+        try {
+            const response = await $api.post<Employee>(`/users/employees`, { ...employee }, {
                 headers: { 'Content-Type': 'multipart/form-data' }
-        });
+            });
+            showAxiosSuccessAlert(PrimarySuccessAlert.CREATED_EMPLOYEE);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.CREATED_EMPLOYEE}, err);
+            throw err;
+        }
     }
 
     static async updateEmployee(employee: Employee):
         Promise<AxiosResponse<Employee>> {
-        return $api.post<Employee>(`/users/employees/${employee.id}?_method=PUT`,
-        { ...employee }, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        try {
+            const response = await $api.post<Employee>(`/users/employees/${employee.id}?_method=PUT`,
+                { ...employee }, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+            showAxiosSuccessAlert(PrimarySuccessAlert.UPDATED_EMPLOYEE);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.UPDATED_EMPLOYEE}, err);
+            throw err;
+        }
     }
 
     static async updateEmployeeInfo(employeeId: number, payload: any):
         Promise<AxiosResponse<Employee>> {
-        return $api.put<Employee>(`/users/employees/${employeeId}/info`,
-            { ...payload });
+        try {
+            const response = $api.put<Employee>(`/users/employees/${employeeId}/info`,
+                { ...payload });
+            showAxiosSuccessAlert(PrimarySuccessAlert.ACCOUNT_UPDATE);
+            return response;
+        } catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.ACCOUNT_UPDATE}, err);
+            throw err;
+        }
     }
 
     static async changeAvatar(employeeId: number, file: any):
         Promise<AxiosResponse<string>> {
-        return $api.post<string>(`/users/employees/${employeeId}/avatar`, {
-            file
-        },{
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+
+        try {
+            const response = await $api.post<string>(`/users/employees/${employeeId}/avatar`, {
+                file
+            },{
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            showAxiosSuccessAlert(PrimarySuccessAlert.ACCOUNT_AVATAR_UPDATE);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.ACCOUNT_AVATAR_UPDATE}, err);
+            throw err;
+        }
     }
 
     static async updateSoicalLinks(employeeId: number, links: EmployeeLink[]):
         Promise<AxiosResponse<EmployeeLink[]>> {
-        return $api.put<EmployeeLink[]>(`/users/employees/${employeeId}/social-links`, {
-            links
-        });
+
+        try {
+            const response = await $api.put<EmployeeLink[]>(`/users/employees/${employeeId}/social-links`, {
+                links
+            });
+            showAxiosSuccessAlert(PrimarySuccessAlert.UPDATED_EMPLOYEE);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.UPDATED_EMPLOYEE}, err);
+            throw err;
+        }
     }
 
     static async deleteEmployee(employeeId: number): Promise<AxiosResponse<Employee>> {

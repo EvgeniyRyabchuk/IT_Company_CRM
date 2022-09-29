@@ -120,7 +120,7 @@ class JobApplicationController extends Controller
 
         $jobApplication = JobApplication::findOrFail($jobApplicationId);
 
-        $jobApplication->jobApplicationStatus()->associate($status); 
+        $jobApplication->jobApplicationStatus()->associate($status);
         $jobApplication->save();
         $jobApplication->load('vacancy', 'jobApplicationStatus');
 
@@ -130,6 +130,7 @@ class JobApplicationController extends Controller
     public function destroy(Request $request, $jobApplicationId) {
         $jobApplication = JobApplication::findOrFail($jobApplicationId);
         $jobApplication->delete();
+        ViewController::deleteAllViews($jobApplication);
         return response()->json(JobApplication::all(), 201);
     }
 

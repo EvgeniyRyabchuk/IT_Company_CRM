@@ -29,6 +29,7 @@ import AddEmployeeToProjectModal from "../../components/modals/AddEmployeeToProj
 import {Employee} from "../../types/user";
 import ProjectFilter, {ProjectFilterData} from "./ProjectFilter";
 import useDebounce from "../../hooks/useDebounce";
+import {ViewService} from "../../services/ViewService";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -79,6 +80,8 @@ const ProjectsListPage = () => {
         const { data } = await ProjectService.getProjects(urlParamsStr);
         const total = getPageCount(data.total, limit);
 
+        ViewService.markAsSeen('projects', data.data.map(e => e.id));
+
         setTotalPage(total);
         if(page > 1) {
             setProjects([...projects, ...data.data]);
@@ -113,12 +116,12 @@ const ProjectsListPage = () => {
         console.log('sort', option)
     }
 
-    const addEmployeeToProjectHanle = async (employee: Employee) => {
+    const addEmployeeToProjectHandle = async (employee: Employee) => {
         console.log('===============================');
         console.log(employee.id, selectedProject!.id);
-        if(selectedProject)
-        {
-            const { data } = await ProjectService.addEmployeeToProject(employee.id, selectedProject.id);
+        if(selectedProject) {
+            const { data } =
+                await ProjectService.addEmployeeToProject(employee.id, selectedProject.id);
         }
     }
 
@@ -360,7 +363,7 @@ const ProjectsListPage = () => {
             <AddEmployeeToProjectModal
                 open={openEmployeeAddMoal}
                 onClose={() => setOpenEmployeeAddModal(false)}
-                onSave={addEmployeeToProjectHanle}
+                onSave={addEmployeeToProjectHandle}
                 setOpen={setOpenEmployeeAddModal}
                 project={selectedProject}
             />

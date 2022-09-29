@@ -57,13 +57,14 @@ const JwtLogin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login, getViewCounter } = useAuth();
 
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
       const args = { email: values.email, password: values.password,  remember_me: values.remember};
       await login(args);
+      await getViewCounter();
       navigate('/');
       setLoading(false);
     } catch (e) {

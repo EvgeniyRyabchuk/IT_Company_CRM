@@ -19,7 +19,7 @@ import useAuth from "../../../hooks/useAuth";
 import {CustomerService} from "../../../services/CustomerService";
 import JsPDF from 'jspdf';
 import {toast} from "react-toastify";
-import {PrimaryErrorAlertMessage, showAxiosErrorAlert} from "../../../utils/alert";
+import {PrimaryErrorAlert, showAxiosErrorAlert} from "../../../utils/alert";
 
 const CustomerListPage = () => {
 
@@ -78,7 +78,7 @@ const CustomerListPage = () => {
             toast.success("Success fetch customers", { autoClose: 2000})
         } catch (error: any) {
             setIsError(true);
-            showAxiosErrorAlert({ primary: PrimaryErrorAlertMessage.FETCH_CUSTOMERS }, error);
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.FETCH_CUSTOMERS }, error);
             return;
         }
         setIsError(false);

@@ -299,7 +299,9 @@ class OrderController extends Controller
     }
 
     public function destroy(Request $request, $orderId) {
-        Order::destroy($orderId);
+        $order = Order::findOrFail($orderId);
+        $order->delete();
+        ViewController::deleteAllViews($order);
         return response()->json(['message' => 'opened destroy page', 201]);
     }
 

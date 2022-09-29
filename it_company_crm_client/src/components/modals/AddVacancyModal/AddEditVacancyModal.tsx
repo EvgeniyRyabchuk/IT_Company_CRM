@@ -23,10 +23,11 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {ButtonItem} from "devextreme-react/form";
-import {Close, Edit} from "@mui/icons-material";
+import {Close, Delete, Edit} from "@mui/icons-material";
 
 
-const AddEditVacancyModal : React.FC<ModalProps> = ({open, setOpen, onClose, onSave}) => {
+const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy) => void}>
+    = ({open, setOpen, onClose, onSave, onDelete}) => {
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -211,8 +212,20 @@ const AddEditVacancyModal : React.FC<ModalProps> = ({open, setOpen, onClose, onS
                                                                     </IconButton>
                                                             }
                                                         </div>
+
                                                     </Box>
                                                     <hr/>
+                                                        <IconButton
+                                                            style={{ width: '100%', fontSize: '15px'}}
+                                                            onClick={() => {
+                                                                onDelete(vacancy)
+                                                                onClose();
+                                                            }}
+                                                        >
+                                                            <span>Remove</span> <Delete />
+                                                        </IconButton>
+
+
                                                 </AccordionDetails>
                                             </Accordion>
                                         )

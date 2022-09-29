@@ -4,6 +4,7 @@ import {PaginatedResponse} from "../types/global";
 import {Project, ProjectHistory, ProjectRole, ProjectTag, ProjectType} from "../types/project";
 import {PublicOrderInfo} from "../types/order";
 import {Vacancy} from "../types/employeement";
+import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
 
 interface GetVacancyResponse{
     vacancy: Vacancy,
@@ -16,8 +17,9 @@ interface VacancyMinMax {
     minMaxProjectDeadline: string[];
 }
 
-export class VacancyService {
 
+
+export class VacancyService {
 
     static async getVacancies(queryParams?: string):
         Promise<AxiosResponse<Vacancy[]>> {
@@ -26,21 +28,48 @@ export class VacancyService {
 
     static async createVacancy(payload: Vacancy)
         : Promise<AxiosResponse<Vacancy>> {
-        return $api.post<Vacancy>(`/vacancies`, {
-            ...payload
-        });
-    }
+        try {
+            const response = await $api.post<Vacancy>(`/vacancies`, {
+                ...payload
+            });
 
+            showAxiosSuccessAlert(PrimarySuccessAlert.CREATED_VACANCY);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.CREATED_VACANCY}, err);
+            throw err;
+        }
+    }
 
     static async updateVacancy(vacancyId: number, newVacancy: Vacancy):
         Promise<AxiosResponse<Vacancy>> {
-        return $api.put<Vacancy>(`/vacancies/${vacancyId}`,
-            { ...newVacancy});
+
+        try {
+            const response = await $api.put<Vacancy>(`/vacancies/${vacancyId}`,
+                { ...newVacancy});
+
+            showAxiosSuccessAlert(PrimarySuccessAlert.UPDATED_VACANCY);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.UPDATED_VACANCY}, err);
+            throw err;
+        }
     }
 
     static async deleteVacancy(vacancyId: number):
         Promise<AxiosResponse<string>> {
-        return $api.delete<string>(`/vacancies/${vacancyId}`);
+
+        try {
+            const response = await $api.delete<string>(`/vacancies/${vacancyId}`);
+            showAxiosSuccessAlert(PrimarySuccessAlert.DELETED_VACANCY);
+            return response;
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.DELETED_VACANCY}, err);
+            throw err;
+        }
     }
 
 

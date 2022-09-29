@@ -133,7 +133,7 @@ const MatxVerticalNav = ({ items }) => {
               <ButtonBase key={item.name} name="child" sx={{ width: '100%' }}>
                 {item?.icon ?
                     item.badge ?
-                      <Badge badgeContent={item.badge.value} color="secondary">
+                      <Badge badgeContent={item.badge.value} color='secondary'>
                         <Icon className="icon" sx={{ width: 36 }}>
                           {item.icon}
                         </Icon>

@@ -22,7 +22,7 @@ function App() {
           <SettingsProvider>
               <MatxTheme>
                 <div className="App">
-                    <ToastContainer position='bottom-left' autoClose={3000} />
+                    <ToastContainer position='bottom-left' autoClose={1500} />
                     <AuthProvider>{content}</AuthProvider>
                 </div>
               </MatxTheme>

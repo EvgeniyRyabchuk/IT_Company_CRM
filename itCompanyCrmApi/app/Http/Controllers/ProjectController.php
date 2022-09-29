@@ -578,6 +578,7 @@ class ProjectController extends Controller
     public function destroy(Request $request, $projectId) {
         $project = Project::findOrFail($projectId);
         $project->delete();
+        ViewController::deleteAllViews($project);
         return response()->json('project deleted success', 201);
     }
 

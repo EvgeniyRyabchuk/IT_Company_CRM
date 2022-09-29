@@ -47,7 +47,6 @@ const Sidenav = ({ children }) => {
     });
   };
 
-  console.log(counter)
 
   const navigationsWithBadge = useMemo(() => navigations.map(nav => {
     switch (nav.name) {
@@ -57,11 +56,21 @@ const Sidenav = ({ children }) => {
       case 'News':
          nav.badge = {value: counter.newNews, color: 'white'};
         return nav;
+      case 'Orders':
+        nav.badge = {value: counter.newOrders, color: 'white'};
+        return nav;
+      case 'Projects':
+        nav.badge = {value: counter.newProjects, color: 'white'};
+        return nav;
+      case 'Vacancies':
+        nav.badge = {value: counter.newJobApplications, color: 'white'};
+        return nav;
       default:
         return nav;
     }
-  }), [navigations]);
+  }), [counter]);
 
+  console.log(navigationsWithBadge)
 
   return (
     <Fragment>

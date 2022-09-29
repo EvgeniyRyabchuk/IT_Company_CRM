@@ -2,7 +2,8 @@ import $api from "../http";
 import {AuthorizedResponse} from "../types/auth";
 import {AxiosResponse} from "axios";
 import {Chat} from "../types/chat";
-import {User} from "../types/user";
+import {Employee, User} from "../types/user";
+import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
 
 
 export class ChatService {
@@ -12,9 +13,16 @@ export class ChatService {
     }
 
     static async createChat(userId: number, toUserId: number): Promise<AxiosResponse<Chat>> {
-        return $api.post<Chat>(`/users/${userId}/chats`, {
-            toUserId
-        })
+        try {
+            const response = $api.post<Chat>(`/users/${userId}/chats`, {
+                toUserId
+            });
+            showAxiosSuccessAlert(PrimarySuccessAlert.CREATE_CHAT);
+            return response;
+        } catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.CREATE_CHAT}, err);
+            throw err;
+        }
     }
 
     static async getUsersWithNonExistChat(userId: number): Promise<AxiosResponse<User[]>> {
@@ -35,7 +43,15 @@ export class ChatService {
     }
 
     static async deleteChat(userId: number, chatId: number): Promise<AxiosResponse<any>> {
-        return $api.delete<any>(`/users/${userId}/chats/${chatId}`);
+        try {
+            const response = $api.delete<any>(`/users/${userId}/chats/${chatId}`);
+            showAxiosSuccessAlert(PrimarySuccessAlert.DELETE_CHAT);
+            return response;
+        } catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.DELETE_CHAT}, err);
+            throw err;
+        }
+
     }
 
     static async sendMessage(userId: number, toUserId: number, chatId: number, message: string): Promise<AxiosResponse<any>> {

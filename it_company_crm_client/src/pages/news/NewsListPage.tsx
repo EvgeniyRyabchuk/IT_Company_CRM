@@ -34,12 +34,13 @@ import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
 import {useFetching} from "../../hooks/useFetching";
 import {useObserver} from "../../hooks/useObserver";
-import {DEFAULT_LIMIT} from "../../store/reducers/chatReducer";
 import {defLimit, defPage} from "../../utils/constant";
 import AddEditNewsModal from '../../components/modals/AddEditNewsModal/AddEditNewsModal';
 import NewsItemSkeleton from "./NewsItemSkeleton";
 import moment from "moment/moment";
 import {ViewService} from "../../services/ViewService";
+import {toast} from "react-toastify";
+import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert} from "../../utils/alert";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -69,20 +70,56 @@ const NewsListPage = () => {
     const [expanded, setExpanded] = useState<{id: number, expand: boolean } | null>(null);
     const [contextMenu, setContextMenu] = useState<{id: number, open: boolean } | null>(null);
 
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [mode, setMode] = useState<ComponentMode>('create');
+    const [selectedNews, setSelectedNews] = useState<News | null>(null);
+
+    const onNewsCreateHandle = async (newsFromModal: News, mode: ComponentMode) => {
+        if(mode === 'create') {
+            const { data } = await NewsService.createNews(newsFromModal);
+            setNews([data, ...news]);
+        }
+        else if(mode === 'update') {
+            const { data } = await NewsService.updateNews(newsFromModal.id, newsFromModal);
+            const newNewsList = news.map(n => n.id === data.id ? data : n);
+            setNews(newNewsList);
+        }
+
+    }
+
+    const deleteNews = async (newsId: number) => {
+        const { data } = await NewsService.deleteNews(newsId);
+        const deleteItem = news.findIndex(n => n.id === newsId);
+        news.splice(deleteItem, 1);
+        setNews([...news]);
+    }
+
+    const [page, setPage] = useState<number>(defPage);
+    const [totalPage, setTotalPage] = useState<number>(0);
+    const [limit, setLimit] = useState<number>(15);
+    const [order, setOrder] = useState<string>('desc');
+
+
     const handleExpandClick = (targetId: number, expand: boolean) => {
         setExpanded({id: targetId, expand: expand});
     };
 
     const [alignment, setAlignment] = useState<SimpleItemAlignment>(SimpleItemAlignment.COLUMN);
 
+    // TODO: why twice
     useEffect(() => {
         const storedAlignment = localStorage.getItem('newsAlignment');
         if(storedAlignment) { // @ts-ignore
             setAlignment(storedAlignment);
         }
         // console.log(storedAlignment);
-        fetchNews();
+        // fetchNews();
     }, []);
+
+    useEffect(() => {
+        fetchNews();
+    }, [page, limit, order]);
+
 
     useEffect(() => {
         localStorage.setItem('newsAlignment', alignment);
@@ -99,46 +136,18 @@ const NewsListPage = () => {
         setAlignment(newAlignment);
     };
 
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
-    const [mode, setMode] = useState<ComponentMode>('create');
-    const [selectedNews, setSelectedNews] = useState<News | null>(null);
-
-    const onNewsCreateHandle = async (newsFromModal: News, mode: ComponentMode) => {
-        if(mode === 'create') {
-            const { data } = await NewsService.createNews(newsFromModal);
-            setNews([data, ...news]);
-        }
-        else if(mode === 'update') {
-            const { data } = await NewsService.updateNews(newsFromModal.id, newsFromModal);
-            const newNewsList = news.map(n => n.id === data.id ? data : n);
-            setNews(newNewsList);
-        }
-        console.log(newsFromModal, mode);
-    }
-
-    const deleteNews = async (newsId: number) => {
-        const { data } = await NewsService.deleteNews(newsId);
-        const deleteItem = news.findIndex(n => n.id === newsId);
-        news.splice(deleteItem, 1);
-        setNews([...news]);
-    }
-
-    const [page, setPage] = useState<number>(defPage);
-    const [totalPage, setTotalPage] = useState<number>(0);
-    const [limit, setLimit] = useState<number>(defLimit);
-    const [order, setOrder] = useState<string>('desc');
 
     const urlParamsStr = useMemo<string>( () => {
         const params = [
             { key: 'page', value: page },
-            { key: 'limit', value: DEFAULT_LIMIT },
+            { key: 'limit', value: limit },
             { key: 'order', value: order },
         ];
         return getQueryVarsInStringFormat(params);
     }, [order, page, limit]);
 
     const [fetchNews, isLoading, error ] = useFetching(async () => {
-        const { data } = await NewsService.getNews(urlParamsStr);
+        const { data } = await NewsService.getNews(urlParamsStr, page === 1);
         const total = getPageCount(data.total, limit);
 
         setTotalPage(total);
@@ -153,9 +162,6 @@ const NewsListPage = () => {
         }
     });
 
-    useEffect(() => {
-        fetchNews();
-    }, [page, limit, order]);
 
 
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
