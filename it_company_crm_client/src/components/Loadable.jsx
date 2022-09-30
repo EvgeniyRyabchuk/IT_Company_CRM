@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import Loading from './MatxLoading';
 
 const Loadable = (Component) => (props) => {
-  return (
+  return ( 
     <Suspense fallback={<Loading />}>
       <Component {...props} />
     </Suspense>

@@ -47,7 +47,7 @@ const routes = [
   {
     element: (
       <AuthGuard>
-        <MatxLayout />
+        <MatxLayout /> 
       </AuthGuard>
     ),
     children: getChildRoutesWithRoleContext(),
