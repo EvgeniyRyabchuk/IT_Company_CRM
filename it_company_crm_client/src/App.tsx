@@ -21,7 +21,7 @@ function App() {
       <Provider store={store}>
           <SettingsProvider>
               <MatxTheme>
-                <div className="App">
+                <div className="App"> 
                     <ToastContainer position='bottom-left' autoClose={1500} />
                     <AuthProvider>{content}</AuthProvider>
                 </div>

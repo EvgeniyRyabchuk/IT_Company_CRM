@@ -57,7 +57,7 @@ export const DesktopNavLinks = tw.nav`
 `;
 
 export default ({ roundedHeaderButton = false, logoLink, links, className, collapseBreakpointClass = "lg" }) => {
-  /*
+  /* 
    * This header component accepts an optionals "links" prop that specifies the links to render in the navbar.
    * This links props should be an array of "NavLinks" components which is exported from this file.
    * Each "NavLinks" component can contain any amount of "NavLink" component, also exported from this file.

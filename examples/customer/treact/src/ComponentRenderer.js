@@ -101,7 +101,7 @@ import MiniCenteredFooter from "components/footers/MiniCenteredFooter.js";
 
 
 export const components = {
-  landingPages: {
+  landingPages: { 
     RestaurantLandingPage: {
       component: RestaurantLandingPage,
       imageSrc: RestaurantLandingPageImageSrc,

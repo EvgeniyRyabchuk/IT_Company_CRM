@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@mui/material": "^5.10.7",
-    "@emotion/styled": "^11.10.0",
     "@emotion/react": "^11.10.0",
-
+    "@emotion/styled": "^11.10.0",
+    "@mui/material": "^5.10.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -66,6 +65,9 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.186"
+    "@types/feather-icons": "^4.7.0",
+    "@types/lodash": "^4.14.186",
+    "@types/react-modal": "^3.13.1",
+    "@types/styled-components": "^5.1.26"
   }
 }

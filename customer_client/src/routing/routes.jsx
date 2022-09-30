@@ -1,15 +1,17 @@
 import AuthGuard from '../auth/AuthGuard';
 import sessionRoutes from '../pages/sessions/SessionRoutes';
 import SuspenseLayout from '../components/layout/LayoutSuspence';
-import NotFound from "../pages/NotFound";
-import Loadable from "../components/Loadable";
-import {lazy} from "react";
+import NotFound from "../pages/sessions/NotFound";
 import profileRoutes from "../pages/profile/ProfileRoutes";
 import indexRoutes from "../pages/index/IndexRoutes";
+import ContactUs from "../pages/ContactUs";
+import ThreeColContactDetails from "../components/cards/ThreeColContactDetails";
 
 const childrenPublic = [
     ...indexRoutes,
     ...sessionRoutes,
+    { path: 'contact-us', element: <ContactUs /> },
+
     { path: '*', element: <NotFound /> },
 ];
 

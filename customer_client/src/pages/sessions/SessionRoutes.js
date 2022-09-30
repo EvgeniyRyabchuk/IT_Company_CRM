@@ -1,6 +1,8 @@
 import Loadable from '../../components/Loadable';
 import { lazy } from 'react';
-import NotFound from "../NotFound";
+import NotFound from "./NotFound";
+import Login from "./Login";
+import Signup from "./Signup";
 // import EmailSentSuccessfully from "./EmailSentSuccessfully";
 // import PasswordReset from "./PasswordReset";
 //
@@ -10,12 +12,12 @@ import NotFound from "../NotFound";
 // const JwtRegister = Loadable(lazy(() => import('../sessions/JwtRegister')));
 
 const sessionRoutes = [
-  // { path: '/session/signup', element: <JwtRegister /> },
-  // { path: '/session/signin', element: <JwtLogin /> },
+  { path: '/session/signup', element: <Signup /> },
+  { path: '/session/login', element: <Login /> },
   // { path: '/session/forgot-password', element: <ForgotPassword /> },
   // { path: '/session/forgot-password/sent', element: <EmailSentSuccessfully /> },
   // { path: '/session/password-reset/:id/:token', element: <PasswordReset /> },
-  //
+
   { path: '/session/404', element: <NotFound /> },
 ];
 

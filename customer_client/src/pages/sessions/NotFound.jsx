@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom";
 import { Box, Button, styled } from '@mui/material';
 
 
-import notFound404Logo from '../assets/images/matx/illustrations/404.svg';
+import notFound404Logo from '../../assets/images/matx/illustrations/404.svg';
 
 
 const FlexBox = styled(Box)(() => ({
