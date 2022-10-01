@@ -55,7 +55,7 @@ const ProfilePage = () => {
     const { user, rolesEntity, getUserEntityByRoleName, lastChats, profileDetail } = useAuth();
 
     useEffect(() => {
-        profileDetail();
+        profileDetail(); 
     }, [])
 
 

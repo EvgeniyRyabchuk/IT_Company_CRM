@@ -5,7 +5,9 @@ import routes from "./routing/routes";
 import {AuthProvider} from "./context/JWTAuthContext";
 
 import GlobalStyles from "./assets/components/Global/GlobalStyles";
-import { css } from "styled-components/macro"; //eslint-disable-line
+import { css } from "styled-components/macro";
+import {MaterialUIControllerProvider} from "./context/MDContext"; //eslint-disable-line
+
 
 function App() {
 
@@ -15,9 +17,9 @@ function App() {
     <div className="App">
         <GlobalStyles />
 
-      <AuthProvider>
-        {content}
-      </AuthProvider>
+            <AuthProvider>
+                {content}
+            </AuthProvider>
 
     </div>
   );

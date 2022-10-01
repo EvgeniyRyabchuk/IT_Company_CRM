@@ -1,4 +1,8 @@
 
+* {
+  box-sizing: border-box;
+}
+
 
 html {
   scroll-behavior: smooth;
@@ -13,6 +17,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media screen and (max-width: 640px) {
+  body {
+    padding: 10px;
+  }
 }
 
 code {

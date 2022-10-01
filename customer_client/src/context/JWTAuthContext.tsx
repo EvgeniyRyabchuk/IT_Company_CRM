@@ -184,7 +184,7 @@ export const AuthProvider = ({ children } : any) => {
                 dispatch({
                     type: 'INIT',
                     payload: {
-                        isAuthenticated: false,
+                        isAuthenticated: true,
                         user: null,
                         rolesEntity: null
                     },

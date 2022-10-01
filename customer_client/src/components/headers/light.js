@@ -9,11 +9,23 @@ import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 import logo from "../../assets/images/logo.svg";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
+import useAuth from "../../hooks/useAuth";
 
 const Header = tw.header`
   flex justify-between items-center
   max-w-screen-xl mx-auto
+  px-5 py-2 rounded drop-shadow-xl
+
 `;
+
+const stickyStyle = {
+  top: '10px',
+  position: 'sticky',
+  zIndex: '99',
+  opacity: '0.9',
+  backgroundColor: 'white'
+};
+
 
 export const NavLinks = tw.div`inline-block`;
 
@@ -57,6 +69,7 @@ export const DesktopNavLinks = tw.nav`
 `;
 
 export default ({ roundedHeaderButton = false, logoLink, links, className, collapseBreakpointClass = "lg" }) => {
+
   /*
    * This header component accepts an optionals "links" prop that specifies the links to render in the navbar.
    * This links props should be an array of "NavLinks" components which is exported from this file.
@@ -70,6 +83,9 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
    * changing the defaultLinks variable below below.
    * If you manipulate links here, all the styling on the links is already done for you. If you pass links yourself though, you are responsible for styling the links or use the helper styled components that are defined here (NavLink)
    */
+
+  const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated);
   const defaultLinks = [
     <NavLinks key={1}>
       <NavLink href="/#services">Services</NavLink>
@@ -77,15 +93,36 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
       <NavLink href="/#pricing">Pricing</NavLink>
       <NavLink href="/#faqs">FAQS</NavLink>
       <NavLink href="/contact-us">Contact Us</NavLink>
-      <NavLink href="/session/signup" tw="lg:ml-12!">
-        Signup
-      </NavLink>
-      <PrimaryLink
-          css={roundedHeaderButton && tw`rounded-full`}
-          href="/session/login"
-      >
-        Log in
-      </PrimaryLink>
+      {
+        isAuthenticated &&
+          <PrimaryLink
+              css={roundedHeaderButton && tw`rounded-full`}
+              href="/profile"
+          >
+            Profile
+          </PrimaryLink>
+      }
+      {
+          !isAuthenticated &&
+          <NavLink onClick={() => {}} tw="lg:ml-12!">
+            Logout
+          </NavLink>
+      }
+      {
+          !isAuthenticated &&
+            <>
+              <NavLink href="/session/signup" tw="lg:ml-12!">
+                Signup
+              </NavLink>
+              <PrimaryLink
+                  css={roundedHeaderButton && tw`rounded-full`}
+                  href="/session/login"
+              >
+                Log in
+              </PrimaryLink>
+            </>
+      }
+
     </NavLinks>
   ];
 
@@ -103,8 +140,12 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
   links = links || defaultLinks;
 
   return (
-    <Header className={className || "header-light"}>
-      <DesktopNavLinks css={collapseBreakpointCss.desktopNavLinks}>
+    <Header
+        style={stickyStyle}
+        className={className || "header-light"}>
+      <DesktopNavLinks
+
+          css={collapseBreakpointCss.desktopNavLinks}>
         {logoLink}
         {links}
       </DesktopNavLinks>

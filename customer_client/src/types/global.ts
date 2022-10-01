@@ -72,3 +72,30 @@ export interface ViewCounter {
     newProjects: number;
     newJobApplications: number;
 }
+
+
+
+
+
+export interface Tab {
+    index: number,
+    name: string;
+}
+
+export interface TabComponent {
+    tabIndex: number;
+    currentIndex: number;
+    children: any;
+    [x: number]: any;
+}
+
+export enum ProfileTabName {
+    GENERAL = 'General',
+    ORDERS = 'Orders',
+    PAYMENT = 'Payment',
+    CHATS = 'Chats',
+
+
+}
+
+

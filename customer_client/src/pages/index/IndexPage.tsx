@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
-import ResponsiveVideoEmbed from "../../helpers/ResponsiveVideoEmbed";
 
 import styled from "styled-components";
 import tw from "twin.macro";
 //eslint-disable-next-line
-
 import ReactModalAdapter from "../../helpers/ReactModalAdapter.js";
 // @ts-ignore
 import {ReactComponent as PlayIcon} from "feather-icons/dist/icons/play-circle.svg";
@@ -17,11 +15,9 @@ import {ReactComponent as SvgDecoratorBlob2} from "../../assets/images/dot-patte
 // @ts-ignore
 import DesignIllustration from "../../assets/images/design-illustration.svg";
 import Services from "../../components/Services";
-import ProfileThreeColGrid from "../../components/cards/ProfileThreeColGrid";
+import OurTeam from "../../components/cards/ProfileThreeColGrid";
 import Pricing from "../../components/Pricing";
 import AnimationRevealPage from "../../helpers/AnimationRevealPage";
-import SingleCol from "../../components/faqs/SingleCol";
-import OurTeam from "../../components/cards/ProfileThreeColGrid";
 import FAQS from "../../components/faqs/SingleCol";
 
 const Container = tw.div`relative`;
@@ -127,9 +123,6 @@ const IndexPage = () => {
                 <CloseModalButton onClick={toggleModal}>
                     <CloseIcon tw="w-6 h-6" />
                 </CloseModalButton>
-                {/*<div className="content">*/}
-                {/*    <ResponsiveVideoEmbed url={watchVideoYoutubeUrl} tw="w-full" />*/}
-                {/*</div>*/}
             </StyledModal>
             <Services id='services' />
             <OurTeam id='ourteam'/>

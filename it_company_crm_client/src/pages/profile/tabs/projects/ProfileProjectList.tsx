@@ -12,9 +12,7 @@ import {useNavigate} from "react-router-dom";
 const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
 
     const navigate = useNavigate();
-
-    console.log(projects)
-
+    
     return (
         <div className="MuiBox-root css-1phy807">
             <Grid container spacing={10} className="MuiGrid-root MuiGrid-container css-1h77wgb">
@@ -33,7 +31,7 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                                 }}
                                 className="project-box MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
                                 <div className="MuiBox-root css-1lekzkb">
-                                    <div className="MuiBox-root css-1g86e6t">
+                                    <div className="MuiBox-root css-1g86e6t"> 
                                         <Computer />
                                     </div>
                                     <p
