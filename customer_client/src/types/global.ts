@@ -80,6 +80,7 @@ export interface ViewCounter {
 export interface Tab {
     index: number,
     name: string;
+    element: ReactNode;
 }
 
 export interface TabComponent {

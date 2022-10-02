@@ -56,20 +56,20 @@ const IllustrationImage = styled.div`
 export default ({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
-  headingText = "Sign Up For Treact",
+  headingText = "Sign UpIcon For Treact",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,
-      text: "Sign Up With Google",
+      text: "Sign UpIcon With Google",
       url: "https://google.com"
     },
     {
       iconImageSrc: twitterIconImageSrc,
-      text: "Sign Up With Twitter",
+      text: "Sign UpIcon With Twitter",
       url: "https://twitter.com"
     }
   ],
-  submitButtonText = "Sign Up",
+  submitButtonText = "Sign UpIcon",
   SubmitButtonIcon = SignUpIcon,
   tosUrl = "#",
   privacyPolicyUrl = "#",

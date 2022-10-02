@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Computer, Download} from "@mui/icons-material";
-import {Box, Button, Grid, IconButton} from "@mui/material";
+import {Box, Button, CircularProgress, Grid, IconButton} from "@mui/material";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http/index";
@@ -11,7 +11,9 @@ import '../../../assets/components/Profile/orders.css';
 import moment from 'moment';
 import {defaultUserAvatar} from "../../../utils/constant";
 import ModalWithTransition from "../../../components/modals/ModalWithTransition";
-import {DarkBackground} from "../../../components/layout/LayoutSuspence";
+import {DarkBackground, MyLoader} from "../../../components/layout/LayoutSuspence";
+import OrderDetail from "../../../components/modals/OrderDetail";
+import {useFetching} from "../../../hooks/useFetching";
 
 
 const Orders : React.FC<{}> = ({}) => {
@@ -20,14 +22,13 @@ const Orders : React.FC<{}> = ({}) => {
 
     const [orders, setOrders] = useState<Order[]>([]);
 
+    const [fetching, isLoading, error] = useFetching(async () => {
+        const { data } = await OrderService.getOrders();
+        setOrders(data.data);
+    })
 
     useEffect(() => {
-        const fetchOrders = async () => {
-            const { data } = await OrderService.getOrders();
-            setOrders(data.data);
-        }
-        fetchOrders();
-
+        fetching();
     }, []);
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -36,20 +37,10 @@ const Orders : React.FC<{}> = ({}) => {
         <div className="MuiBox-root css-1phy807">
 
 
-            <ModalWithTransition
-                type='two'
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-            >
-                <h2>I'm a Modal</h2>
-                <p>Hear me roar.</p>
 
-                <Button>
-                    asdfg
-                </Button>
-            </ModalWithTransition>
-
-
+            {
+                isLoading && <CircularProgress/>
+            }
 
             <Grid container spacing={10}
                   className="MuiGrid-root MuiGrid-container css-1h77wgb">
@@ -64,7 +55,10 @@ const Orders : React.FC<{}> = ({}) => {
                         >
                             <div
                                 onClick={() => {
-                                    setIsOpen(true);
+
+                                    navigate(`/orders/${order.id}`);
+                                    // setIsOpen(true);
+
                                 }}
                                 className="order-box MuiPaper-root
                                  MuiPaper-elevation MuiPaper-rounded

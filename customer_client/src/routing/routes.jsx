@@ -6,6 +6,7 @@ import profileRoutes from "../pages/profile/ProfileRoutes";
 import indexRoutes from "../pages/index/IndexRoutes";
 import ContactUs from "../pages/ContactUs";
 import ThreeColContactDetails from "../components/cards/ThreeColContactDetails";
+import orderRoutes from "../pages/order/OrderRoutes";
 
 const childrenPublic = [
     ...indexRoutes,
@@ -17,7 +18,8 @@ const childrenPublic = [
 
 
 const childrenPrivate = [
-    ...profileRoutes
+    ...profileRoutes,
+    ...orderRoutes
 
 ].map((e) => {
     e.element = (<AuthGuard>{e.element}</AuthGuard>)

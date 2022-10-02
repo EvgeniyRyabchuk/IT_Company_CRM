@@ -62,7 +62,7 @@ const rows = [
 const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     = ({ mode, setMode}) => {
 
-
+        
     const navigate = useNavigate();
 
     const { orderId } = useParams();
@@ -384,7 +384,7 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                             </TableRow>
                                         ))}
                                     </TableBody>
-                                </Table>
+                                </Table> 
                             </TableContainer>
                         </Box>
 

@@ -1,21 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import '../../assets/components/Profile/index.css';
 import tw from "twin.macro";
 import {Container as ContainerBase} from "../../components/misc/Layouts";
-import {Box} from '@mui/material';
+import {Box, CircularProgress} from '@mui/material';
 import {useSearchParams} from "react-router-dom";
-import General from "./Tabs/General";
-import Orders from "./Tabs/Orders";
 import {Settings} from "@mui/icons-material";
 import {ProfileTabName, Tab, TabComponent} from "../../types/global";
-import Payment from "./Tabs/billing/Payment";
-
+import {MyLoader} from "../../components/layout/LayoutSuspence";
+import { Suspense } from 'react';
 
 const Container = tw(ContainerBase)`min-h-screen text-white font-medium`;
 const Content = tw.div`max-w-screen-xl my-0 sm:my-8 bg-white text-gray-900 shadow sm:rounded-lg mx-auto`;
 
 //  Array.from(Array(2).keys()).map((tab: number)
 
+const General = React.lazy(() => import("./Tabs/General"));
+const Orders = React.lazy(() => import("./Tabs/Orders"));
+const Payment = React.lazy(() => import("./Tabs/payment/Payment"));
+const Chat = React.lazy(() => import("./Tabs/Chat"));
 
 export const TabPanel : React.FC<TabComponent> = ({tabIndex, currentIndex, children, ...props}) => {
     return (
@@ -32,48 +34,59 @@ const ProfilePage = () => {
     const tabs : Tab[] = [
         {
             index: 0,
-            name: ProfileTabName.GENERAL
+            name: ProfileTabName.GENERAL,
+            element: <General />
         },
         {
             index: 1,
-            name: ProfileTabName.ORDERS
+            name: ProfileTabName.ORDERS,
+            element: <Orders />
         },
         {
             index: 2,
-            name: ProfileTabName.PAYMENT
+            name: ProfileTabName.PAYMENT,
+            element: <Payment />
         },
         {
             index: 3,
-            name: ProfileTabName.CHATS
+            name: ProfileTabName.CHATS,
+            element: <Chat />
         }
     ]
 
     const [searchParams, setSearchPrams] = useSearchParams();
 
-    const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
+
+    const [currentTab, setCurrentTab] = useState<Tab>(tabs[0]);
+
+    const setCurrentTabByIndex = (index: number) => {
+        const tab = tabs.find(tab => tab.index === index)!;
+        setCurrentTab(tab);
+    }
+
 
     useEffect(() => {
         const tabName  = searchParams.get('tab');
         switch (tabName) {
-            case 'general':
-                setCurrentTabIndex(0)
+            case 'setCurrentTabByIndex':
+                setCurrentTabByIndex(0)
                 break;
             case 'orders':
-                setCurrentTabIndex(1)
+                setCurrentTabByIndex(1)
                 break;
             case 'payment':
-                setCurrentTabIndex(2)
+                setCurrentTabByIndex(2)
                 break;
             case 'chats':
-                setCurrentTabIndex(3)
+                setCurrentTabByIndex(3)
                 break;
             default:
-                setCurrentTabIndex(0);
+                setCurrentTabByIndex(0);
         }
     }, [searchParams])
 
     const onTabIndexChange = (index: number) => {
-        setCurrentTabIndex(index);
+        setCurrentTabByIndex(index);
 
         const tab = tabs.find(t => t.index === index);
         if(tab)
@@ -168,7 +181,7 @@ const ProfilePage = () => {
                                     >
                                         <a
                                             className={
-                                                currentTabIndex === tab.index ?
+                                                currentTab.index === tab.index ?
                                                     'block mg text-indigo-500 lm cu cx'
                                                     : 'block mg text-slate-500 hover--text-slate-600 lm'
                                             }
@@ -185,34 +198,17 @@ const ProfilePage = () => {
                         </ul>
                     </div>
 
-
                     <TabPanel
-                        currentIndex={currentTabIndex}
-                        tabIndex={0}
+                        currentIndex={currentTab.index}
+                        tabIndex={currentTab.index}
                     >
-                        <General />
+                        <Suspense fallback={<CircularProgress />}>
+                            {currentTab.element}
+                        </Suspense>
+
                     </TabPanel>
 
-                    <TabPanel
-                        currentIndex={currentTabIndex}
-                        tabIndex={1}
-                    >
-                        <Orders />
-                    </TabPanel>
 
-                    <TabPanel
-                        currentIndex={currentTabIndex}
-                        tabIndex={2}
-                    >
-                        <Payment />
-                    </TabPanel>
-
-                    <TabPanel
-                        currentIndex={currentTabIndex}
-                        tabIndex={3}
-                    >
-                        Chats
-                    </TabPanel>
 
 
                 </div>

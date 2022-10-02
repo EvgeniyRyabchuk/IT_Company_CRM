@@ -10,7 +10,7 @@ const General : React.FC<{}> = () => {
             <div className="fj rc tnc">
                 <div>
                     <h2 className="text-slate-800 gh ru">About Me</h2>
-                    <div className="text-sm fb">
+                    <div className="text-sm fb" style={{textAlign: 'justify'}}>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                             incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                             quis nostrud exercitation ullamco laboris nisi ut aliquip
