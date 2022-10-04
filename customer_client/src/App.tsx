@@ -5,8 +5,10 @@ import routes from "./routing/routes";
 import {AuthProvider} from "./context/JWTAuthContext";
 
 import GlobalStyles from "./assets/components/Global/GlobalStyles";
-import { css } from "styled-components/macro";
-import {MaterialUIControllerProvider} from "./context/MDContext"; //eslint-disable-line
+import PaymentComplete from "./components/statusCards/payment/PaymentComplete";
+import PaymentFail from "./components/statusCards/payment/PaymentFail";
+import ContactSuccess from "./components/statusCards/contactUs/ContactSuccess";
+import JobApplicationSentSuccess from "./components/statusCards/vacancy/JobApplicationSentSuccess"; //eslint-disable-line
 
 
 function App() {
@@ -15,6 +17,20 @@ function App() {
 
   return (
     <div className="App">
+
+        {/*
+
+         <PaymentComplete />
+
+        <PaymentFail />
+
+        <ContactSuccess />
+
+        <JobApplicationSentSuccess />
+
+        */}
+
+
         <GlobalStyles />
 
             <AuthProvider>

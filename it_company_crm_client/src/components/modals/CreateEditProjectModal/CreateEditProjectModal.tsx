@@ -458,6 +458,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                     />
                                                 </FormControl>
                                             </Grid>
+
                                             <Grid item sm={6} xs={12}>
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <Stack spacing={3}>

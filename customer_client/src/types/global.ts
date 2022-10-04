@@ -95,8 +95,12 @@ export enum ProfileTabName {
     ORDERS = 'Orders',
     PAYMENT = 'Payment',
     CHATS = 'Chats',
+}
 
-
+export enum SimpleFormStatus {
+    PENDING,
+    SUCCESS,
+    ERROR
 }
 
 

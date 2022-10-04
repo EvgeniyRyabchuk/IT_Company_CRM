@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import tw from "twin.macro";
 import ContactUsForm from "../components/forms/TwoColContactUsWithIllustrationFullForm.js";
-import ContactDetails from "../components/cards/ThreeColContactDetails.js";
+import {SimpleFormStatus} from "../types/global";
+import ContactSuccess from "../components/statusCards/contactUs/ContactSuccess";
+import {Box} from "@mui/material";
 
 const Address = tw.span`leading-relaxed`;
 const AddressLine = tw.span`block`;
@@ -9,9 +11,21 @@ const Email = tw.span`text-sm mt-6 block text-gray-500`;
 const Phone = tw.span`text-sm mt-0 block text-gray-500`;
 
 export default () => {
+
+    const [status, setStatus] = useState<SimpleFormStatus>(SimpleFormStatus.PENDING);
+
   return (
     <>
-      <ContactUsForm />
+        {
+            status === SimpleFormStatus.PENDING &&
+            <ContactUsForm setStatus={setStatus} />
+        }
+        {
+            status === SimpleFormStatus.SUCCESS &&
+            <Box sx={{ padding: '50px', marginBottom: '100px'}}>
+                <ContactSuccess />
+            </Box>
+        }
 
       {/*
 

@@ -1,5 +1,11 @@
 .App {
   text-align: center;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 1rem;
+  font-family: Inter,system-ui;
+  --tw-text-opacity: 1;
+  color: rgb(36 62 99 / var(--tw-text-opacity))
 }
 
 .App-logo {

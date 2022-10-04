@@ -85,7 +85,7 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
    */
 
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated);
+
   const defaultLinks = [
     <NavLinks key={1}>
       <NavLink href="/#services">Services</NavLink>
@@ -93,6 +93,7 @@ export default ({ roundedHeaderButton = false, logoLink, links, className, colla
       <NavLink href="/#pricing">Pricing</NavLink>
       <NavLink href="/#faqs">FAQS</NavLink>
       <NavLink href="/contact-us">Contact Us</NavLink>
+      <NavLink href="/vacancies">Vacancies</NavLink>
       {
         isAuthenticated &&
           <PrimaryLink

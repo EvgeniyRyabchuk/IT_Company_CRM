@@ -1,5 +1,4 @@
 import {Order} from "./order";
-import {KanbanLane} from "./kanban";
 import {Employee} from "./user";
 
 
@@ -74,7 +73,6 @@ export interface Project {
 
     tags: ProjectTag[],
     order?: Order;
-    lanes: KanbanLane[];
 
     project_links: ProjectLink[];
     project_history: ProjectHistory[];

@@ -11,7 +11,7 @@ import {
     showAxiosErrorAlert,
     showAxiosSuccessAlert
 } from "../utils/alert";
-import {News} from "../types/news";
+
 
 export default class AuthService {
     static async login({email, password, remember_me = false} : LoginRequest):

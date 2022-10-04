@@ -76,7 +76,7 @@ export default ({
   if (!faqs || faqs.length === 0) faqs = defaultFaqs;
 
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(null);
-
+  
   const toggleQuestion = questionIndex => {
     if (activeQuestionIndex === questionIndex) setActiveQuestionIndex(null);
     else setActiveQuestionIndex(questionIndex);
@@ -103,7 +103,7 @@ export default ({
                     }}
                     className="group"
                   >
-                    <Question>
+                    <Question> 
                       <QuestionText>{faq.question}</QuestionText>
                       <QuestionToggleIcon>
                         {activeQuestionIndex === index ? <MinusIcon /> : <PlusIcon />}

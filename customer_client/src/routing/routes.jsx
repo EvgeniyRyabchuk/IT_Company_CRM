@@ -5,14 +5,14 @@ import NotFound from "../pages/sessions/NotFound";
 import profileRoutes from "../pages/profile/ProfileRoutes";
 import indexRoutes from "../pages/index/IndexRoutes";
 import ContactUs from "../pages/ContactUs";
-import ThreeColContactDetails from "../components/cards/ThreeColContactDetails";
 import orderRoutes from "../pages/order/OrderRoutes";
+import vacanciesRoutes from "../pages/vacancies/VacanciesRoutes";
 
 const childrenPublic = [
     ...indexRoutes,
     ...sessionRoutes,
+    ...vacanciesRoutes,
     { path: 'contact-us', element: <ContactUs /> },
-
     { path: '*', element: <NotFound /> },
 ];
 

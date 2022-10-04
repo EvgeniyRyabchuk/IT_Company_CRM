@@ -83,8 +83,6 @@ https://stripe.com/docs/stripe-js/react#setup
 
 # Frontend examples  
 
-https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/landing/
-
 https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/apps/email
 
 https://cruip.com/demos/mosaic/

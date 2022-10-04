@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import useInView from "../helpers/useInView";
 
 const StyledDiv = tw.div` font-black min-h-screen text-gray-500 p-8 overflow-hidden`;
+
 function AnimationReveal({ disabled, children }) {
   if (disabled) {
     return <>{children}</>;
@@ -37,7 +38,7 @@ function AnimatedSlideInComponent({ direction = "left", offset = 30, children })
     <div ref={ref}>
       <motion.section
         initial={{ x: x.initial }}
-        animate={{ 
+        animate={{
           x: inView && x.target,
           transitionEnd:{
             x: inView && 0
