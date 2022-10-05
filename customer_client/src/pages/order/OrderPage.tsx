@@ -4,7 +4,7 @@ import OrderDetail from "../../components/modals/OrderDetail";
 import tw from "twin.macro";
 import {Container as ContainerBase} from "../../components/misc/Layouts";
 import {Button} from "@mui/material";
-import AddCreditCard from "../../components/modals/AddCreditCard";
+import CreditCardModal from "../../components/modals/CreditCardModal";
 
 const Container = tw(ContainerBase)`min-h-screen text-white font-medium`;
 const Content = tw.div`max-w-screen-xl my-0 sm:my-8 bg-white text-gray-900 shadow sm:rounded-lg mx-auto`;
@@ -16,7 +16,7 @@ const OrderPage = () => {
 
     return (
         <AnimationRevealPage>
-            <AddCreditCard
+            <CreditCardModal
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 withCards={true}

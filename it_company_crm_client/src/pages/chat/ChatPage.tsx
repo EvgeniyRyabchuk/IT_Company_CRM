@@ -22,7 +22,7 @@ const ChatPage = ({...props}) => {
 
     const { withUserId } = useParams();
     const { user } = useAuth();
-
+    
     const {
         chats,
         error,

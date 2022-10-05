@@ -175,6 +175,8 @@ const ProfilePage = () => {
                             {
                                 tabs.map(tab =>
                                     <li
+                                        style={{cursor: 'pointer'}}
+                                        key={tab.index}
                                         className={"is last--mr-0 wb qr ttx wj qi ttk"}
                                         onClick={() => onTabIndexChange(tab.index)}
                                         // style={{display: tabIndex === tab.index ? 'block' : 'none'}}

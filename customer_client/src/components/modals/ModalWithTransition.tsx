@@ -25,15 +25,25 @@ const ModalWithTransition : React.FC<Modal & {
     }
 
     return (
-        <div className={isOpen ? 'modal-active' : ''} onClick={modalContainerClick} >
+        <div className={isOpen ? 'modal-active' : ''}
+             onMouseDown={modalContainerClick} >
             <div id="modal-container"
+                 onMouseUp={(e => {
+                     console.log('up btn')
+                     e.stopPropagation();
+                 })}
                  className={isOpen && type ? type : ''}>
 
                 <div className="modal-background">
-                    <div className="modal" onClick={(e) => {
-                        e.stopPropagation();
-                        console.log(e.target, e.currentTarget);
-                    }}>
+                    <div className="modal"
+                         onMouseUp={(e) =>
+                             e.stopPropagation()}
+                         onMouseDown={(e) =>
+                             e.stopPropagation()}
+
+                         onClick={(e) => {
+                            e.stopPropagation();
+                         }}>
                         <div
                             style={{
                                 width: '100%',

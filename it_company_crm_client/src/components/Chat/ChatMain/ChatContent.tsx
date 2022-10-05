@@ -11,12 +11,12 @@ const ChatContent = ({ lastElement }: any) => {
     const [messages, setMessages] = useState<any>([]);
     const wrapper = useRef<any>();
     const contentDiv = useRef<null | HTMLDivElement>(null);
-
+    
     const firstElement = useRef<HTMLDivElement | null>(null);
 
     const scrollToBottom = () => {
         if(firstElement.current) {
-            console.log('scroll')
+            console.log('scroll') 
 
             // firstElement.current?.scrollIntoView({ behavior: 'auto' });
             // wrapper.current.scrollTo(0, 9999);

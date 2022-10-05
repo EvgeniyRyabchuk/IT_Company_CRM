@@ -8,10 +8,10 @@ const JobApplicationSentSuccess = () => {
     return (
         <div>
             <Grid container spacing={3}>
-                <Grid item xl={12} sm={12} md={6} lg={6}>
+                <Grid item  sm={12} md={6} lg={6} xl={6}>
                     <img src={resumeSent} alt="" />
                 </Grid>
-                <Grid item xl={12} sm={12} md={6} lg={6}>
+                <Grid item sm={12} md={6} lg={6} xl={6} >
                     <FlexBoxCenter>
                         <Box>
                             <Typography variant='h3'>Your resume has been sent. You'll get

@@ -1,4 +1,11 @@
-import { differenceInSeconds } from 'date-fns';
+// import { differenceInSeconds } from 'date-fns';
+
+export const getUniqId = (array) => {
+  if(array.length === 0) return 1;
+  const ids = array.map(e => e.id);
+  const maxId = Math.max(...ids);
+  return maxId + 1;
+}
 
 export const convertHexToRGB = (hex) => {
   // check if it's a rgba
@@ -124,16 +131,16 @@ export function scrollTo(scrollableElement, elmID) {
   return false;
 }
 
-export function getTimeDifference(date) {
-  let difference = differenceInSeconds(new Date(), date);
-
-  if (difference < 60) return `${Math.floor(difference)} sec`;
-  else if (difference < 3600) return `${Math.floor(difference / 60)} min`;
-  else if (difference < 86400) return `${Math.floor(difference / 3660)} h`;
-  else if (difference < 86400 * 30) return `${Math.floor(difference / 86400)} d`;
-  else if (difference < 86400 * 30 * 12) return `${Math.floor(difference / 86400 / 30)} mon`;
-  else return `${(difference / 86400 / 30 / 12).toFixed(1)} y`;
-}
+// export function getTimeDifference(date) {
+//   let difference = differenceInSeconds(new Date(), date);
+//
+//   if (difference < 60) return `${Math.floor(difference)} sec`;
+//   else if (difference < 3600) return `${Math.floor(difference / 60)} min`;
+//   else if (difference < 86400) return `${Math.floor(difference / 3660)} h`;
+//   else if (difference < 86400 * 30) return `${Math.floor(difference / 86400)} d`;
+//   else if (difference < 86400 * 30 * 12) return `${Math.floor(difference / 86400 / 30)} mon`;
+//   else return `${(difference / 86400 / 30 / 12).toFixed(1)} y`;
+// }
 
 export function generateRandomId() {
   let tempId = Math.random().toString();

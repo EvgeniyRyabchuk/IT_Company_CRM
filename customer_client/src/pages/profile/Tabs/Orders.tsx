@@ -112,7 +112,7 @@ const Orders : React.FC<{}> = ({}) => {
                                             order.project ?
                                                 order.project.employees
                                                     .map(employee =>
-                                                        <Avatar alt="Remy Sharp"
+                                                        <Avatar key={employee.id} alt="Remy Sharp"
                                                                 src={`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`}
                                                         />
                                                     )

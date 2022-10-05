@@ -8,7 +8,9 @@ import GlobalStyles from "./assets/components/Global/GlobalStyles";
 import PaymentComplete from "./components/statusCards/payment/PaymentComplete";
 import PaymentFail from "./components/statusCards/payment/PaymentFail";
 import ContactSuccess from "./components/statusCards/contactUs/ContactSuccess";
-import JobApplicationSentSuccess from "./components/statusCards/vacancy/JobApplicationSentSuccess"; //eslint-disable-line
+import JobApplicationSentSuccess from "./components/statusCards/vacancy/JobApplicationSentSuccess";
+import {Provider} from "react-redux";
+import {store} from "./store"; //eslint-disable-line
 
 
 function App() {
@@ -18,24 +20,14 @@ function App() {
   return (
     <div className="App">
 
-        {/*
-
-         <PaymentComplete />
-
-        <PaymentFail />
-
-        <ContactSuccess />
-
-        <JobApplicationSentSuccess />
-
-        */}
-
-
         <GlobalStyles />
 
+        <Provider store={store}>
             <AuthProvider>
                 {content}
             </AuthProvider>
+        </Provider>
+
 
     </div>
   );

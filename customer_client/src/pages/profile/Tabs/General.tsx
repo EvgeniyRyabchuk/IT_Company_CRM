@@ -23,8 +23,8 @@ const General : React.FC<{}> = () => {
                 <div>
                     <h2 className="text-slate-800 gh ru">Departments</h2>
                     <div className="sn tnj fs">
-                        {Array.from('x'.repeat(2)).map(e =>
-                            <div className="bg-white dw border border-slate-200 rounded-sm bv">
+                        { Array.from(Array(2).keys()).map(e =>
+                            <div key={e} className="bg-white dw border border-slate-200 rounded-sm bv">
                                 <div className="uw flex items-center ld ru">
                                     <div className="os sf ub flex items-center justify-center hx rounded-full mr-2">
                                         <img className="nz" src="https://preview.cruip.com/mosaic/images/icon-03.svg" width="14" height="14" alt="Icon 03" />
@@ -45,8 +45,8 @@ const General : React.FC<{}> = () => {
                                         }}
                                         total={24}>
                                         {
-                                            Array.from('x'.repeat(5)).map(e1 =>
-                                                <Avatar sx={{ height: '30px', width: '30px' }} alt="Remy Sharp" src="https://preview.cruip.com/mosaic/images/avatar-04.jpg" />
+                                            Array.from(Array(5).keys()).map(e1 =>
+                                                <Avatar key={e1} sx={{ height: '30px', width: '30px' }} alt="Remy Sharp" src="https://preview.cruip.com/mosaic/images/avatar-04.jpg" />
                                             )
                                         }
 

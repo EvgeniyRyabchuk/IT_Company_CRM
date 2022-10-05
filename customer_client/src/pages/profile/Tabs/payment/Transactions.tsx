@@ -41,7 +41,7 @@ const Transactions = () => {
 
                         {
                             Array.from(Array(10).keys()).map(e =>
-                                <tr>
+                                <tr key={e}>
                                     <td className="vi wy w_ vo lm of">
                                         <div className="flex items-center">
                                             <label className="inline-flex">

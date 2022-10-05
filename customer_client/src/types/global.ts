@@ -103,4 +103,3 @@ export enum SimpleFormStatus {
     ERROR
 }
 
-

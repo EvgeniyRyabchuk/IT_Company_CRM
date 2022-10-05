@@ -22,7 +22,9 @@ export default () => {
         }
         {
             status === SimpleFormStatus.SUCCESS &&
-            <Box sx={{ padding: '50px', marginBottom: '100px'}}>
+            <Box sx={{ padding: '200px 50px',
+                maxWidth: '1280px',
+                margin: '0 auto'}}>
                 <ContactSuccess />
             </Box>
         }
