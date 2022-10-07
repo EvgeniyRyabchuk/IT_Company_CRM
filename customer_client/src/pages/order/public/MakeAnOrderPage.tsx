@@ -1,35 +1,29 @@
-import React, {useState} from "react";
-import tw from "twin.macro";
-import ContactUsForm from "../components/forms/TwoColContactUsWithIllustrationFullForm.js";
-import {SimpleFormStatus} from "../types/global";
-import ContactSuccess from "../components/statusCards/contactUs/ContactSuccess";
+import React, {useState} from 'react';
+import {SimpleFormStatus} from "../../../types/global";
+import ContactUsForm from "../../../components/forms/TwoColContactUsWithIllustrationFullForm";
 import {Box} from "@mui/material";
+import ContactSuccess from "../../../components/statusCards/contactUs/ContactSuccess";
 
-const Address = tw.span`leading-relaxed`;
-const AddressLine = tw.span`block`;
-const Email = tw.span`text-sm mt-6 block text-gray-500`;
-const Phone = tw.span`text-sm mt-0 block text-gray-500`;
-
-export default () => {
+const MakeAnOrderPage = () => {
 
     const [status, setStatus] = useState<SimpleFormStatus>(SimpleFormStatus.PENDING);
 
-  return (
-    <>
-        {
-            status === SimpleFormStatus.PENDING &&
-            <ContactUsForm setStatus={setStatus} />
-        }
-        {
-            status === SimpleFormStatus.SUCCESS &&
-            <Box sx={{ padding: '200px 50px',
-                maxWidth: '1280px',
-                margin: '0 auto'}}>
-                <ContactSuccess />
-            </Box>
-        }
+    return (
+        <>
+            {
+                status === SimpleFormStatus.PENDING &&
+                <ContactUsForm setStatus={setStatus} />
+            }
+            {
+                status === SimpleFormStatus.SUCCESS &&
+                <Box sx={{ padding: '200px 50px',
+                    maxWidth: '1280px',
+                    margin: '0 auto'}}>
+                    <ContactSuccess />
+                </Box>
+            }
 
-      {/*
+            {/*
 
       <ContactDetails
         cards={[
@@ -116,6 +110,8 @@ export default () => {
       */}
 
 
-    </>
-  );
+        </>
+    );
 };
+
+export default MakeAnOrderPage;

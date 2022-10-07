@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -6,8 +6,9 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings.js";
 import { ReactComponent as PlusIcon } from "feather-icons/dist/icons/plus.svg";
 import { ReactComponent as MinusIcon } from "feather-icons/dist/icons/minus.svg";
+import {VacancyService} from "../../services/VacancyService";
 
-const Container = tw.div`relative`;
+const Container = tw.div`relative py-3`;
 const Content = tw.div`max-w-screen-xl mx-auto py-5 lg:py-5`;
 
 const TwoColumn = tw.div`flex`;
@@ -39,41 +40,41 @@ const Answer = motion(tw.dd`pointer-events-none text-sm sm:text-base leading-rel
 
 export default ({
   subheading = "",
-  heading = "Questions",
+  heading = "Vacancies",
   description = "Here are some frequently asked questions about our hotels from our loving customers. Should you have any other questions, feel free to reach out via the contact form below.",
   imageSrc = "https://images.unsplash.com/photo-1579427421635-a0015b804b2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80",
   imageContain = false,
   imageShadow = true,
-  faqs = null
+  vacancies = []
 }) => {
   /*
    * You can modify FAQs either by modifying the below defaultFaqs array or by passing a custom array of FAQs using
    * the faqs prop
    */
-  const defaultFaqs = [
-    {
-      question: "Is lunch provided free of cost ?",
-      answer:
-        "Yes, it is, if you have a membership with us. Otherwise it is charged as per the menu. Some limits do apply as to how much items can be included in your lunch. This limit is enough for any one person and merely exists to discourage abusal of the system."
-    },
-    {
-      question: "Do you have 2 Bedroom suites ?",
-      answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "Are Wi-Fi costs included in the price ?",
-      answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      question: "Where can I reach you for support ?",
-      answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    }
-  ];
+  // const defaultFaqs = [
+  //   {
+  //     question: "Is lunch provided free of cost ?",
+  //     answer:
+  //       "Yes, it is, if you have a membership with us. Otherwise it is charged as per the menu. Some limits do apply as to how much items can be included in your lunch. This limit is enough for any one person and merely exists to discourage abusal of the system."
+  //   },
+  //   {
+  //     question: "Do you have 2 Bedroom suites ?",
+  //     answer:
+  //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+  //   },
+  //   {
+  //     question: "Are Wi-Fi costs included in the price ?",
+  //     answer:
+  //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+  //   },
+  //   {
+  //     question: "Where can I reach you for support ?",
+  //     answer:
+  //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+  //   }
+  // ];
 
-  if (!faqs || faqs.length === 0) faqs = defaultFaqs;
+  // if (!faqs || faqs.length === 0) faqs = defaultFaqs;
 
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(null);
 
@@ -81,6 +82,8 @@ export default ({
     if (activeQuestionIndex === questionIndex) setActiveQuestionIndex(null);
     else setActiveQuestionIndex(questionIndex);
   };
+
+
 
   return (
     <Container>
@@ -95,16 +98,16 @@ export default ({
               <Heading>{heading}</Heading>
               <Description>{description}</Description>
               <FAQSContainer>
-                {faqs.map((faq, index) => (
+                {vacancies.map((vacancy, index) => (
                   <FAQ
-                    key={index}
+                    key={vacancy.id}
                     onClick={() => {
                       toggleQuestion(index);
                     }}
                     className="group"
                   >
                     <Question>
-                      <QuestionText>{faq.question}</QuestionText>
+                      <QuestionText>{vacancy.title}</QuestionText>
                       <QuestionToggleIcon>
                         {activeQuestionIndex === index ? <MinusIcon /> : <PlusIcon />}
                       </QuestionToggleIcon>
@@ -118,7 +121,7 @@ export default ({
                       animate={activeQuestionIndex === index ? "open" : "collapsed"}
                       transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
                     >
-                      {faq.answer}
+                      {vacancy.text}
                     </Answer>
                   </FAQ>
                 ))}

@@ -11,6 +11,7 @@ use App\Models\ChatMessage;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\PersonalNotificationType;
+use App\Models\Phone;
 use App\Models\RefreshToken;
 use App\Models\Role;
 use App\Models\Status;
@@ -208,25 +209,34 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'first_name' => $request->input('name'),
-            'last_name' => $request->input('name'),
-            'middle_name' => $request->input('name'),
-            'full_name' => $request->input('name'),
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'middle_name' => $request->input('middle_name'),
+            'full_name' => $request->input('full_name'),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
+
         $user->roles()->attach(
-            Role::where('name', 'developer')->first()->id
+            Role::where('name', 'customer')->first()->id
         );
 
         //TODO: temp
-        Employee::create([
-            'position_id' => 1,
-            'level_id' => 1,
+        Customer::create([
             'user_id' => $user->id,
         ]);
 
+        $phone = $request->input('phone');
+
+        $phoneModel = [
+            'code_1' => '98245',
+            'code_2' => '90424',
+            'number' => '4759374',
+            'phone_number' => $phone,
+            'user_id' => $user->id,
+        ];
+        Phone::create($phoneModel);
 
 
         $token = Auth::login($user);
@@ -277,7 +287,7 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ])
-            ->withCookie(cookie('refreshToken', $refreshToken, config('jwt.refresh_ttl')));;
+        ->withCookie(cookie('refreshToken', $refreshToken, config('jwt.refresh_ttl')));;
     }
 
     public function logout(Request $request)

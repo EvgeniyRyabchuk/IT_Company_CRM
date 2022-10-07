@@ -1,9 +1,8 @@
-import React, { createContext, useEffect, useReducer } from 'react'
+import React, {createContext, useEffect, useReducer} from 'react'
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
 import {JWTAuthContextInitialState, LoginRequest, RegisterRequest, RoleEntity, RoleName} from "../types/auth";
 import AuthService from "../services/AuthService";
-import {ViewService} from "../services/ViewService";
 import {MyLoader} from "../components/layout/LayoutSuspence";
 
 const initialState : JWTAuthContextInitialState = {
@@ -11,14 +10,6 @@ const initialState : JWTAuthContextInitialState = {
     isInitialised: false,
     user: null,
     rolesEntity: null,
-    lastChats: [],
-    counter: {
-        newChatMessages: 0,
-        newNews: 0,
-        newOrders: 0,
-        newProjects: 0,
-        newJobApplications: 0,
-    }
 }
 
 const isValidToken = (accessToken: string) : any => {
@@ -45,22 +36,14 @@ const setSession = (accessToken: string | null) => {
 const reducer = (state: JWTAuthContextInitialState, action: any) => {
     switch (action.type) {
         case 'INIT': {
-            const { isAuthenticated, user, rolesEntity, lastChats} = action.payload
-
+            const { isAuthenticated, user, rolesEntity} = action.payload
+            console.log(isAuthenticated, user, rolesEntity)
             return {
                 ...state,
                 isAuthenticated,
                 isInitialised: true,
                 user,
                 rolesEntity,
-                lastChats,
-            }
-        }
-        case 'VIEW_COUNTER_INIT': {
-            const { counter } = action.payload
-            return {
-                ...state,
-                counter
             }
         }
         case 'LOGIN': {
@@ -184,7 +167,7 @@ export const AuthProvider = ({ children } : any) => {
                 dispatch({
                     type: 'INIT',
                     payload: {
-                        isAuthenticated: true,
+                        isAuthenticated: false,
                         user: null,
                         rolesEntity: null
                     },
@@ -220,20 +203,6 @@ export const AuthProvider = ({ children } : any) => {
         })
     }
 
-    // const getViewCounter = async () => {
-    //     const response = await ViewService.getCounter();
-    //     const counter = response.data;
-    //
-    //     dispatch({
-    //         type: 'VIEW_COUNTER_INIT',
-    //         payload: {
-    //             counter
-    //         },
-    //     })
-    // }
-
-
-
     const getUserEntityByRoleName = (roleName: string | string[], list: RoleEntity[]) => {
         if (!roleName || !list) return;
         if(Array.isArray(roleName)) {
@@ -255,9 +224,8 @@ export const AuthProvider = ({ children } : any) => {
 
 
     useEffect(() => {
+        console.log(123);
         profile();
-        // getViewCounter();
-
     }, [])
 
     if (!state.isInitialised) {

@@ -10,6 +10,14 @@ interface OrderMinMax {
     minMaxOrderCreatedDate: string[];
 }
 
+export interface OrderForm {
+    name: string;
+    phone: string;
+    email: string;
+    about: string;
+    type_id: number;
+}
+
 export class OrderService {
 
 
@@ -21,6 +29,15 @@ export class OrderService {
     static async getOrder(orderId: number | string):
         Promise<AxiosResponse<Order>> {
         return $api.get<Order>(`/orders/${orderId}`);
+    }
+
+    static async createOrder(data: OrderForm, file: any) : Promise<AxiosResponse<Order>> {
+        return $api.post<Order>(`/orders`, {
+            ...data,
+            extra_file: file
+        }, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
     }
 
     static async updateOrder(orderId: number, payload: any):

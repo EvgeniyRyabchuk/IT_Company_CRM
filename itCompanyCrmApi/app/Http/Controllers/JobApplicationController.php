@@ -91,8 +91,8 @@ class JobApplicationController extends Controller
         $nextId = DbHelper::nextId('job_applications');
         $vacancyId = $request->input('vacancy_id');
 
-        $vacancyStatus = JobApplicationStatus::where('name', 'pending')->first();
-        if(is_null($vacancyStatus))
+        $jobApplicationStatus = JobApplicationStatus::where('name', 'pending')->first();
+        if(is_null($jobApplicationStatus))
             return response()->json(["message" => 'status not found'], 201);
 
         $vacancy = Vacancy::findOrFail($vacancyId);
@@ -101,11 +101,13 @@ class JobApplicationController extends Controller
         $jobApplication->name = $request->input('name');
         $jobApplication->email = $request->input('email');
         $jobApplication->vacancy()->associate($vacancy);
-        $jobApplication->vacancyStatus()->associate($vacancyStatus);
+        $jobApplication->jobApplicationStatus()->associate($jobApplicationStatus);
         //TODO: check if file exist
-        $extension = $request->file('resume_path')->getClientOriginalExtension();
+        $extension = $request->file('resume_path')
+            ->getClientOriginalExtension();
         $path = $request->file('resume_path')
-            ->storeAs("jobApplication/$nextId", 'resume_path_'. time() . '.' . $extension);
+            ->storeAs("jobApplication/$nextId",
+                'resume_path_'. time() . '.' . $extension);
         $jobApplication->resume_path = $path;
 
         $jobApplication->save();

@@ -104,7 +104,8 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                             autoHighlight
                             getOptionLabel={(option: Employee) => option.user.full_name}
                             renderOption={(props, option: Employee) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                                     {...props}>
 
                                     <img
                                         loading="lazy"

@@ -1,4 +1,4 @@
-import Loadable from '../../components/Loadable';
+import Loadable from '../../../components/Loadable';
 import { lazy } from 'react';
 
 
@@ -9,6 +9,7 @@ const orderRoutes = [
         path: '/orders/:orderId',
         element: <OrderPage />,
     },
+
 ];
 
 export default orderRoutes;

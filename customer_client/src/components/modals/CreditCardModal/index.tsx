@@ -1,15 +1,21 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Creditcard from "../../Payment/Creditcard";
 import ModalWithTransition from "../ModalWithTransition";
 import {Grid} from "@mui/material";
-import {Card as CardType} from "../../../types/card";
+import {Card as CardType, PaymentDetail} from "../../../types/card";
 import {useAction} from "../../../hooks/useAction";
+import {useTypeSelector} from "../../../hooks/useTypedSelector";
+import CardManagment from "../../../pages/profile/Tabs/payment/CardManagment";
+import {TransactionService} from "../../../services/TransactionService";
+import {Order} from "../../../types/order";
+import {useNavigate} from "react-router-dom";
 
 interface Modal {
     isOpen: boolean,
     onClose: () => void,
     mode?: 'create' | 'update' | 'pay';
-    cardForUpdate?: CardType | null | undefined;
+    transferCard?: CardType | null | undefined;
+    order: Order | null;
 }
 
 const CreditCardModal : React.FC<Modal & {withCards?: boolean}> = ({
@@ -17,16 +23,49 @@ const CreditCardModal : React.FC<Modal & {withCards?: boolean}> = ({
            onClose,
            withCards = false,
            mode = 'create',
-           cardForUpdate
+           transferCard,
+           order
 }) => {
 
     const { setCards } = useAction();
 
-    const handleCardSave = (card: CardType) => {
+    const { cards } = useTypeSelector(state => state.card);
+
+    const { setLastTransaction } = useAction();
+
+    const [selectedCard, setSelectedCard] =
+        useState<CardType | null | undefined>(transferCard);
+
+    useEffect(() => {
+        if(transferCard) {
+            setSelectedCard(transferCard);
+        }
+    }, [transferCard]);
+
+
+    const navigate = useNavigate();
+
+    console.log(selectedCard);
+
+    const handleCardFormSubmit = async (card: CardType, paymentDetail?: PaymentDetail) => {
 
         console.log(123);
 
-        if(mode === 'pay') {
+        if(mode === 'pay' && paymentDetail) {
+            const { summa, payAndSave, orderId } = paymentDetail;
+            // paying
+            if(summa) {
+                card.number = card.number.replace(/\s/g, '');
+                const { data } = await TransactionService.pay(card, summa, orderId)
+
+                if(payAndSave) {
+                    setCards([...cards, card]);
+                }
+
+                setLastTransaction(data);
+
+                navigate('/messages/statuses/payment-success');
+            }
 
         } else if(mode === 'create' || mode === 'update') {
             const lsCards = localStorage.getItem('cards');
@@ -57,22 +96,36 @@ const CreditCardModal : React.FC<Modal & {withCards?: boolean}> = ({
         <ModalWithTransition isOpen={isOpen} type='two' onClose={onClose}>
             {
                 withCards ?
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} sx={{ height: '600px', overflowY: 'auto'}}>
                         <Grid item md={6}>
-                            <Creditcard mode='pay' />
+                            <Creditcard
+                                mode='pay'
+                                transferCard={selectedCard}
+                                onSubmit={(card, paymentDetail?: PaymentDetail) => {
+                                    handleCardFormSubmit(card, paymentDetail);
+                                    onClose();
+                                }}
+                                order={order}
+                            />
                         </Grid>
                         <Grid item md={6}>
-                            zlksdfgjlksdfjg
+                            <CardManagment
+                                viewMode='mini'
+                                onCardSelected={(card) => {
+                                    setSelectedCard(card)
+                                }}
+                            />
                         </Grid>
                     </Grid>
                     :
                 <Creditcard
                     mode={mode}
-                    onSave={(card) => {
-                        handleCardSave(card);
+                    onSubmit={(card, payAndSave) => {
+                        handleCardFormSubmit(card, payAndSave);
                         onClose();
                     }}
-                    cardForUpdate={cardForUpdate}
+                    transferCard={selectedCard}
+                    order={null}
                 />
             }
 

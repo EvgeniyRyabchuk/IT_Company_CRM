@@ -14,8 +14,6 @@ export interface JWTAuthContextInitialState {
     isInitialised: boolean,
     user: User | null,
     rolesEntity: RoleEntity[] | null;
-    lastChats: Chat[];
-    counter: ViewCounter;
 }
 
 export interface LoginRequest {
@@ -25,9 +23,16 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
+    first_name: string;
+    last_name: string;
+    middle_name: string;
+
     email: string,
-    username: string
+    phone: string;
+
     password: string;
+    password_repetition: string;
+
     remember_me: boolean;
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../../../assets/components/Profile/payment.css'
-import CardForm from "./CardForm";
+import CardManagment from "./CardManagment";
 import Transactions from "./Transactions";
 import Creditcard from "../../../../components/Payment/Creditcard";
 
@@ -9,7 +9,7 @@ const Payment = () => {
     return (
         <div>
 
-            <CardForm/>
+            <CardManagment onCardSelected={() => {}}/>
             <Transactions />
 
         </div>

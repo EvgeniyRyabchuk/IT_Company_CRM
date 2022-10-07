@@ -31,11 +31,16 @@ export default class AuthService {
         return promise;
     }
 
-    static async register({email, username, password, remember_me = false}: RegisterRequest):
+    static async register(payload: RegisterRequest):
         Promise<AxiosResponse<AuthorizedResponse>> {
 
+        const { first_name, last_name, middle_name } = payload;
+
+        const full_name = `${last_name} ${first_name} ${middle_name}`
+
         return $api.post<AuthorizedResponse>('/auth/register', {
-                email, password, name: username, remember_me
+            ...payload,
+            full_name
         });
     }
 

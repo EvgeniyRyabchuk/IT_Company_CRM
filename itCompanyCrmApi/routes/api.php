@@ -20,7 +20,7 @@ use App\Http\Controllers\User\VerifyEmailController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\TransactionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -104,13 +104,17 @@ Route::prefix('users')->group(function () {
     Route::controller(CustomerController::class)
         ->prefix('customers')
             ->group(function() {
-        Route::get('/', 'index');
-        Route::post('/', 'store');
-        Route::put('/{customerId}', 'update');
-        Route::delete('/{customerId}', 'destroy');
 
-        Route::put('/{customerId}/favorite', 'changeFavorite');
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::put('/{customerId}', 'update');
+                Route::delete('/{customerId}', 'destroy');
+
+                Route::put('/{customerId}/favorite', 'changeFavorite');
+
     });
+
+
 
 
     Route::get('/', [UserController::class, 'index']);
@@ -279,4 +283,20 @@ Route::prefix('views')
         Route::get('/', 'getCounter');
 //        Route::get('news', 'getNewsNotViewedCount');
         Route::post('/{viewable}', 'markNewsAsSeen');
+});
+
+
+
+
+Route::controller(TransactionController::class)
+    ->group(function () {
+        Route::get('/customers/{customerId}/transactions','getByCustomer');
+        Route::get('/orders/{orderId}/transactions','getByOrder');
+    });
+
+Route::controller(TransactionController::class)
+    ->prefix('transactions')
+    ->group(function() {
+        Route::get('/', 'index');
+        Route::post('/', 'pay');
 });

@@ -151,7 +151,8 @@ class OrderController extends Controller
             'orderContact',
             'statusHistory.status',
             'customer.user.tags',
-            'project.tags'
+            'project.tags',
+            'project.employees.user'
         )
             ->find($orderId);
 
@@ -159,7 +160,7 @@ class OrderController extends Controller
     }
 
     public function store(Request $request) {
-//TODO: check if customer already registered
+        //TODO: check if customer already registered
         $email = $request->input('email');
         // if customer with such email already exist
         $customer = Customer::whereHas('user', function ($q) use($email) {
@@ -177,42 +178,37 @@ class OrderController extends Controller
                       Please log in to make order');
             }
 
-            $order->status()->associate($orderStatus);
             $order->customer()->associate($customer);
-            $order->about = $request->input('about') ?? '';
-            $order->save();
+        }
+        else {
+            $contact = OrderContact::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+            ]);
 
-            return response()->json(
-                ['message' =>
-                    "opened create page. With exist customer = $customer"
-                    , 201]);
+            $order->orderContact()->associate($contact);
         }
 
-        $contact = OrderContact::create([
-            'name' => $email,
-            'email' => $request->email,
-            'phone' => $request->phone,
-        ]);
-
-        $order->orderContact()->associate($contact);
         $order->status()->associate($orderStatus);
-
         $order->about = $request->input('about') ?? '';
         $order->save();
 
-        OrderStatusHistory::create(['order_id' => $order->id, 'status_id' => $orderStatus->id]);
-//        $extension = $request->file('extra_file')->getClientOriginalExtension();
-//        $path = $request->file('extra_file')
-//            ->storeAs("orders/$order->id", 'extra_file_'. time() . '.' . $extension);
+        OrderStatusHistory::create([
+            'order_id' => $order->id,
+            'status_id' => $orderStatus->id
+        ]);
 
-        $path = FileManager::save($request, "extra_file",
-            "extra_file_", "orders/$order->id");
+        // save file if exist
 
-        $order->extra_file = $path;
-        $order->save();
+        if($request->hasFile('extra_file')) {
+            $path = FileManager::save($request, "extra_file",
+                "extra_file_", "orders/$order->id");
+            $order->extra_file = $path;
+            $order->save();
+        }
 
-        return response()->json(
-            ['message' => "opened create page. With does not exist customer = $customer", 201]);
+        return response()->json($order);
     }
 
     //TODO: create project if order status is Processing

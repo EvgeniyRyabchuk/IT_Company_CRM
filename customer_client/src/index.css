@@ -29,3 +29,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+button, [type='button'], [type='reset'], [type='submit'] {
+  /*-webkit-appearance: button;*/
+  background-color: initial;
+  /*background-image: none;*/
+}
+
+
+/*button, [type='button'], [type='reset'], [type='submit'] {*/
+/*  -webkit-appearance: button;*/
+/*  !*background-color: inherit !important;*!*/
+/*  background-image: none;*/
+/*}*/

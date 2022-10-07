@@ -11,6 +11,7 @@ import {Autocomplete, Box, Button, TextField} from "@mui/material";
 import * as Yup from "yup";
 import {Formik, FormikProps, FormikValues} from 'formik';
 import PhoneInputField from "../PhoneInputField/PhoneInputField";
+import {OrderService} from "../../services/OrderService";
 
 const Container = tw.div`relative`;
 
@@ -44,9 +45,9 @@ const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Project Name is required!'),
-  email: Yup.string().required('Deadline is required!'),
+  email: Yup.string().required('Email is required!'),
   phone: Yup.string().required('Phone number is require'),
-  about:  Yup.string().required('Deadline is required!'),
+  about:  Yup.string().required('About Project Text is required!'),
   type_id: Yup.number().required('Project Type is required!'),
 });
 
@@ -61,7 +62,6 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
   textOnLeft = true,
   setStatus
 }) => {
-  // The textOnLeft boolean prop can be used to display either the text on left or right side of the image.
 
   const [files, setFiles] = useState(null);
 
@@ -92,9 +92,12 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 
 
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = async (values) => {
     console.log(values)
     console.log(files)
+
+    const { data } = await OrderService.createOrder(values, files[0]);
+
     setStatus(1);
   }
 
@@ -176,8 +179,6 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
                         />
 
                       </Box>
-
-                      {values.phone}
 
                       {/*<Input type="text" name="subject" placeholder="Subject" />*/}
 

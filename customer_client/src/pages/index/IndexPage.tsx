@@ -70,7 +70,7 @@ const IndexPage = () => {
     const heading = "Modern React Templates, Just For You";
     const description="Our templates are easy to setup, understand and customize. Fully modular components with a variety of pages and components.";
     const primaryButtonText="Make an Order";
-    const primaryButtonUrl="/contact-us";
+    const primaryButtonUrl="/make-an-order";
     const watchVideoButtonText="Watch Video";
     const watchVideoYoutubeUrl="https://www.youtube.com/embed/_GuOjXYl5ew";
     const imageSrc=DesignIllustration;
@@ -113,7 +113,8 @@ const IndexPage = () => {
 
                             /*
                             // @ts-ignore */
-                            as="a" href={primaryButtonUrl}>
+                            as="a"
+                            href={primaryButtonUrl}>
                             {primaryButtonText}
                         </PrimaryButton>
                         {/*<WatchVideoButton onClick={toggleModal}>*/}
@@ -151,7 +152,10 @@ const IndexPage = () => {
 
             <Pricing id='pricing' />
 
-            <FAQS id='faqs'/>
+            <AnimationRevealPage>
+                <FAQS id='faqs'/>
+            </AnimationRevealPage>
+
 
         </>
 

@@ -17,6 +17,7 @@ use App\Models\ProjectType;
 use App\Models\Role;
 use App\Models\Skill;
 use App\Models\Tag;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\View;
 use Database\Factories\Creators\StaticCreator;
@@ -145,5 +146,12 @@ class DatabaseSeeder extends Seeder
 //        $this->call(ChatMessageSeeder::class, false, compact('users'));
 
         $this->call(PersonalNotificationSeeder::class);
+
+
+
+        $this->call(TransactionSeeder::class);
+
+
+
     }
 }

@@ -1,15 +1,29 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import AnimationRevealPage from "../../helpers/AnimationRevealPage";
 import SimpleWithSideImage from "../../components/faqs/SimpleWithSideImage";
 import SimpleContactUs from "../../components/forms/SimpleContactUs";
 import {SimpleFormStatus} from "../../types/global";
 import {Box} from "@mui/material";
 import JobApplicationSentSuccess from "../../components/statusCards/vacancy/JobApplicationSentSuccess";
+import {VacancyService} from "../../services/VacancyService";
+import {Vacancy} from "../../types/employeement";
 
 
 const IndexPage = () => {
 
     const [status, setStatus] = useState<SimpleFormStatus>(SimpleFormStatus.PENDING);
+
+    const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+
+    useEffect(() => {
+
+        const fetchVacancies = async () => {
+            const { data } = await VacancyService.getVacancies();
+            setVacancies(data);
+        }
+        fetchVacancies();
+
+    }, [])
 
 
     return (
@@ -17,8 +31,8 @@ const IndexPage = () => {
             {
                 status === SimpleFormStatus.PENDING &&
                 <AnimationRevealPage>
-                    <SimpleWithSideImage/>
-                    <SimpleContactUs setStatus={setStatus} />
+                    <SimpleWithSideImage vacancies={vacancies} />
+                    <SimpleContactUs vacancies={vacancies} setStatus={setStatus} />
                 </AnimationRevealPage>
             }
             {

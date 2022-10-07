@@ -21,6 +21,7 @@ import {OrderService} from "../../../services/OrderService";
 import {Order, OrderStatus} from "../../../types/order";
 import {PageMode} from "../../../types/global";
 import {useParams} from "react-router-dom";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 
 interface Modal {
     isOpen: boolean,
@@ -29,31 +30,20 @@ interface Modal {
 
 
 
-const OrderDetail : React.FC<{}>
-    = () => {
-
-    const orderId = 1;
-    const [order, setOrder] = useState<Order>();
+const OrderDetail : React.FC<{order: Order}>
+    = ({order}) => {
 
     const [statuses, setStatuses] = useState<OrderStatus[]>([]);
     const [orderPageMode, setOrderPageMode] = useState<PageMode>(PageMode.SELECT);
 
     useEffect(() => {
-
-        const fetchOrder = async () => {
-            const { data } = await OrderService.getOrder(orderId!);
-            setOrder(data);
-        }
         const fetchOrderStatuses = async () => {
             const { data } = await OrderService.getOrderStatuses();
             setStatuses(data);
         }
-        fetchOrder();
         fetchOrderStatuses();
-
-
-
     }, []);
+
 
 
     return (
@@ -62,18 +52,25 @@ const OrderDetail : React.FC<{}>
                 <Grid item md={6} xl={6}>
                     <Grid container spacing={3}>
                         <Grid item md={12}>
-                            <Typography sx={{pb: 1}} variant='h2'>Project Nightfall</Typography>
+                            <Typography sx={{pb: 1}} variant='h2'>
+                                {
+                                    order.project ? order.project.name
+                                        : 'No Created Project Yet'
+                                }
+                            </Typography>
 
-                            <Typography sx={{pb: 1}}
-                                        variant='h6'
+                            <Typography
+                                sx={{pb: 1}}
+                                variant='h6'
                             >
-                                Project type
+                                {
+                                    order.project &&
+                                    `Project type: ${order.project.project_type.name}`
+                                }
                             </Typography>
 
                             <Typography  align='justify'>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit, sed do eiusmod tempor ut labore et dolore magna aliqua. elit, sed
-                                do eiusmod tempor ut labore et dolore magna aliqua. sed do eiusmod tempor ut labore
+                                { order.about }
                             </Typography>
                         </Grid>
 
@@ -85,16 +82,23 @@ const OrderDetail : React.FC<{}>
                                             <Typography>
                                                 Your Order Extra File
                                             </Typography>
-                                            <IconButton>
+                                            <IconButton
+                                                onClick={() => {
+                                                    window.location.href
+                                                        = `${API_URL_WITH_PUBLIC_STORAGE}/${order.extra_file}`
+                                                }}
+                                            >
                                                 <Typography>
-                                                    somedoc.doc
+                                                    {
+                                                        order.extra_file.split('/').at(-1)
+                                                    }
+                                                    {/*somedoc.doc*/}
                                                 </Typography>
 
                                                 <Download sx={{mx: 1}}/>
                                             </IconButton>
                                         </Box>
                                     </FlexBoxCenter>
-
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={6} xl={6}>
                                     <Box sx={{my: 2}}>
@@ -102,12 +106,20 @@ const OrderDetail : React.FC<{}>
                                             Team
                                         </Typography>
                                         <FlexBoxCenter>
-                                            <AvatarGroup total={24}>
-                                                <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
-                                                <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
-                                                <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
-                                                <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/1.jpg" />
-                                            </AvatarGroup>
+                                            {
+                                                order.project &&
+                                                <AvatarGroup
+                                                    total={order.project.employees.length}>
+                                                    {
+                                                        order.project.employees.map(employee =>
+                                                            <Avatar alt="Remy Sharp"
+                                                                    src={`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`}
+                                                            />
+                                                        )
+                                                    }
+                                                </AvatarGroup>
+                                            }
+
                                         </FlexBoxCenter>
                                     </Box>
 
@@ -125,36 +137,42 @@ const OrderDetail : React.FC<{}>
                                 </Grid>
                             </Grid>
                         </Grid>
+                        {
+                            order.project &&
+                            <Grid item xs={12} sm={12} md={12}>
+                                <FlexBoxCenter>
+                                    <Box sx={{ m: 3}}>
+                                        <Typography sx={{mb: 1}}>
+                                            Budget
+                                        </Typography>
+                                        <Typography>
+                                            { order.project.budget }
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ m: 3}}>
+                                        <Typography sx={{mb: 1}}>
+                                            Paid
+                                        </Typography>
+                                        <Typography>
+                                            { order.project.paid }
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ m: 3}}>
+                                        <Typography sx={{mb: 1}}>
+                                            Deadline
+                                        </Typography>
+                                        <Typography>
+                                            {
+                                                moment(order.project.deadline)
+                                                    .format('DD-MM-YYYY')
+                                            }
+                                        </Typography>
+                                    </Box>
+                                </FlexBoxCenter>
 
-                        <Grid item xs={12} sm={12} md={12}>
-                            <FlexBoxCenter>
-                                <Box sx={{ m: 3}}>
-                                    <Typography sx={{mb: 1}}>
-                                        Budget
-                                    </Typography>
-                                    <Typography>
-                                        $1000
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ m: 3}}>
-                                    <Typography sx={{mb: 1}}>
-                                        Paid
-                                    </Typography>
-                                    <Typography>
-                                        $300
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ m: 3}}>
-                                    <Typography sx={{mb: 1}}>
-                                        Deadline
-                                    </Typography>
-                                    <Typography>
-                                        10-10-1000
-                                    </Typography>
-                                </Box>
-                            </FlexBoxCenter>
+                            </Grid>
+                        }
 
-                        </Grid>
                     </Grid>
 
                 </Grid>
@@ -190,7 +208,7 @@ const OrderDetail : React.FC<{}>
             </Grid>
             <Grid container spacing={3}>
                 <Grid item md={21}>
-                    123
+
                 </Grid>
             </Grid>
         </OrderDetailWrapper>

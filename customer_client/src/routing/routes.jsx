@@ -5,13 +5,18 @@ import NotFound from "../pages/sessions/NotFound";
 import profileRoutes from "../pages/profile/ProfileRoutes";
 import indexRoutes from "../pages/index/IndexRoutes";
 import ContactUs from "../pages/ContactUs";
-import orderRoutes from "../pages/order/OrderRoutes";
+import orderRoutes from "../pages/order/private/OrderRoutes";
 import vacanciesRoutes from "../pages/vacancies/VacanciesRoutes";
+import statusesRoutes from "../pages/statuses/IndexRoutes";
+import makeAnOrderRoutes from "../pages/order/public/makeAnOrderRoutes";
 
 const childrenPublic = [
     ...indexRoutes,
     ...sessionRoutes,
     ...vacanciesRoutes,
+    ...makeAnOrderRoutes,
+
+    ...statusesRoutes,
     { path: 'contact-us', element: <ContactUs /> },
     { path: '*', element: <NotFound /> },
 ];

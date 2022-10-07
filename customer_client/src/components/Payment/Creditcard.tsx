@@ -1,14 +1,20 @@
 import React, {useEffect, useRef, useState} from "react";
-// @ts-ignore
-import Card from 'react-credit-cards-2';
+
+import {Card as CardType, PaymentDetail} from '../../types/card';
+
 import "react-credit-cards-2/es/styles-compiled.css";
 import '../../assets/components/CreditCard/global.scss'
-import {Card as CardType} from "../../types/card";
+
 
 import {formatCreditCardNumber, formatCVC, formatExpirationDate, formatFormData} from "../../utils/card";
 import {Box, Button} from "@mui/material";
 import {getUniqId} from "../../utils/utils";
 import {useTypeSelector} from "../../hooks/useTypedSelector";
+import _ from "lodash";
+
+// @ts-ignore
+import Card from "react-credit-cards-2";
+import {Order} from "../../types/order";
 
 // const defCardData : CardType = {
 //     id: 999999,
@@ -30,43 +36,40 @@ const defCardData : CardType = {
 
 
 export interface CreditCardComponentProps {
-    onSave?: (card: CardType) => void;
+    onSubmit?: (card: CardType, paymentDetail?: PaymentDetail) => void;
     mode: 'create' | 'update' | 'pay';
-    cardForUpdate?: CardType | null | undefined;
+    transferCard?: CardType | null | undefined;
+    order: Order | null;
 }
 
 const Creditcard : React.FC<CreditCardComponentProps>
-    = ({onSave, mode, cardForUpdate}) => {
+    = ({onSubmit, mode, transferCard, order}) => {
+
 
     const [isSave, setIsSave] = useState<boolean>(true);
+    const [summa, setSumma] = useState<number>(0);
 
-    const [card, setCard] = useState<CardType>(cardForUpdate ?? defCardData);
+    const [card, setCard] = useState<CardType>(transferCard ?? defCardData);
 
-    // const [issuer, setIssuer] = useState<string>('');
+    useEffect(() => {
+        if(transferCard) {
+            setCard(transferCard);
+        }
+    }, [transferCard]);
+
+    // console.log(order)
+
     const [focused, setFocused] = useState<string>('');
     const [formData, setFormData] = useState<any>(null);
     const { cards } = useTypeSelector(state => state.card);
 
-
-    // const updateFormData = () => {
-    //     const formData = [...formRef.current.elements]
-    //         .filter(d => d.name)
-    //         .reduce((acc, d) => {
-    //             acc[d.name] = d.value;
-    //             return acc;
-    //         }, {});
-    //     setFormData(formData);
-    // }
+    console.log('==========================');
+    console.log(transferCard, card);
+    console.log('==========================');
 
     useEffect(() => {
-        const newCard = cardForUpdate ?? defCardData;
-        setCard(newCard);
-
-    }, [cardForUpdate])
-
-    useEffect(() => {
-        if(mode === 'update' && cardForUpdate) {
-            setCard(cardForUpdate);
+        if(mode === 'update' && transferCard) {
+            setCard(transferCard);
         }
         return () => {
             setCard(defCardData);
@@ -87,6 +90,7 @@ const Creditcard : React.FC<CreditCardComponentProps>
         console.log(target.name);
         if (target.name === "number") {
             target.value = formatCreditCardNumber(target.value);
+            // target.value = target.value.replace(/\s/g, '');
         } else if (target.name === "expiry") {
             target.value = formatExpirationDate(target.value);
         } else if (target.name === "cvc") {
@@ -111,14 +115,35 @@ const Creditcard : React.FC<CreditCardComponentProps>
         setFormData(formData);
         formRef.current.reset();
 
-        console.log(formData);
-        if(typeof onSave === 'function') {
+        if(typeof onSubmit === 'function') {
             const newCard = {
                 ...card,
-                id: mode === 'create' ? getUniqId(cards) : card.id,
-                number: card.number.replace(/\s/g, ''),
+                id: mode === 'create' ? getUniqId(cards) :
+                    mode === 'update' ? card.id
+                        : 999999,
+                // number: card.number.replace(/\s/g, ''),
             };
-            onSave(newCard);
+
+            if(mode === 'pay') {
+                if(!order) return;
+                if(_.isEqual(transferCard, card)) {
+                    onSubmit(newCard, {
+                        summa,
+                        payAndSave: false,
+                        orderId: order.id
+                    });
+                }
+                else {
+                    onSubmit(newCard,{
+                        summa,
+                        payAndSave: isSave,
+                        orderId: order.id
+                    });
+                }
+            }
+            else {
+                onSubmit(newCard);
+            }
         }
         setCard(defCardData);
     };
@@ -126,8 +151,8 @@ const Creditcard : React.FC<CreditCardComponentProps>
     return (
         <div key="Payment">
             <div className="App-payment">
-                <h1>React Credit Cards</h1>
-                <h4>Beautiful credit cards for your payment forms</h4>
+                {/*<h1>React Credit Cards</h1>*/}
+                {/*<h4>Beautiful credit cards for your payment forms</h4>*/}
                 <Card
                     number={card.number}
                     name={card.name}
@@ -191,10 +216,46 @@ const Creditcard : React.FC<CreditCardComponentProps>
                             />
                         </div>
                     </div>
+                    <div className="row justify-center">
+                        <Box sx={{width: '300px', my: 2}}>
+
+                            <label
+                                htmlFor='summa'>
+
+                                Summa
+                                {/*{*/}
+                                {/*    order && order.project &&*/}
+                                {/*    <>*/}
+                                {/*        {order.project.paid} / {order.project.budget}*/}
+                                {/*    </>*/}
+                                {/*}*/}
+                            </label>
+
+                            {
+                                mode === 'pay' &&
+                                <input
+                                    style={{marginBottom: '10px'}}
+                                    id='summa'
+                                    type="number"
+                                    name="summa"
+                                    value={summa}
+                                    className="form-control"
+                                    placeholder="Summa"
+                                    required
+                                    onChange={(e) => setSumma(parseInt(e.target.value))}
+                                    // onFocus={handleInputFocus}
+                                />
+                            }
+
+                        </Box>
+
+                    </div>
                     <input type="hidden" name="issuer" value={card.issuer} />
 
                     {
                         mode === 'pay' &&
+                        !_.isEqual(transferCard, card) &&
+
                         <Box sx={{mt: 3, fontSize: '18px'}}>
                             <div className=" form-check">
                                 <label
@@ -224,8 +285,7 @@ const Creditcard : React.FC<CreditCardComponentProps>
                         <Button type='submit' variant='contained'>
                             { mode === 'create' && 'Add'}
                             { mode === 'update' && 'Update'}
-                            { mode === 'pay' && 'PAY'}
-
+                            { mode === 'pay' ? isSave ? 'PAY AND SAVE CARD' : "PAY" : ''}
                         </Button>
                     </Box>
 

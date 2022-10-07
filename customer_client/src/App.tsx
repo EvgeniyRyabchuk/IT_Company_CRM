@@ -5,22 +5,22 @@ import routes from "./routing/routes";
 import {AuthProvider} from "./context/JWTAuthContext";
 
 import GlobalStyles from "./assets/components/Global/GlobalStyles";
-import PaymentComplete from "./components/statusCards/payment/PaymentComplete";
-import PaymentFail from "./components/statusCards/payment/PaymentFail";
-import ContactSuccess from "./components/statusCards/contactUs/ContactSuccess";
-import JobApplicationSentSuccess from "./components/statusCards/vacancy/JobApplicationSentSuccess";
 import {Provider} from "react-redux";
-import {store} from "./store"; //eslint-disable-line
+import {store} from "./store";
+import {ToastContainer} from "react-toastify"; //eslint-disable-line
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
 
   const content = useRoutes(routes);
-
+    console.log('app')
   return (
     <div className="App">
 
         <GlobalStyles />
+
+        <ToastContainer position='bottom-left' autoClose={1500} />
 
         <Provider store={store}>
             <AuthProvider>

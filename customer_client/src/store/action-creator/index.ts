@@ -7,9 +7,10 @@ import * as EcommerceActionsCreators from './matx/EcommerceActions'
 import * as NotificationActionsCreators from './matx/NotificationActions'
 
 export default {
+    ...CardActionCreators,
     ...UserActionCreators,
     ...ChatActionCreators,
-    ...CardActionCreators,
+
 
     ...NavigationActionCreators,
     ...EcommerceActionsCreators,

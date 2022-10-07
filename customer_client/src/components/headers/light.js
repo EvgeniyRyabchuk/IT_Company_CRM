@@ -10,6 +10,7 @@ import logo from "../../assets/images/logo.svg";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
 import useAuth from "../../hooks/useAuth";
+import {useNavigate} from "react-router-dom";
 
 const Header = tw.header`
   flex justify-between items-center
@@ -68,62 +69,70 @@ export const DesktopNavLinks = tw.nav`
   hidden lg:flex flex-1 justify-between items-center
 `;
 
-export default ({ roundedHeaderButton = false, logoLink, links, className, collapseBreakpointClass = "lg" }) => {
+export default ({
+                  roundedHeaderButton = false,
+                  logoLink,
+                  links,
+                  className,
+                  collapseBreakpointClass = "lg"
+}) => {
 
-  /*
-   * This header component accepts an optionals "links" prop that specifies the links to render in the navbar.
-   * This links props should be an array of "NavLinks" components which is exported from this file.
-   * Each "NavLinks" component can contain any amount of "NavLink" component, also exported from this file.
-   * This allows this Header to be multi column.
-   * So If you pass only a single item in the array with only one NavLinks component as root, you will get 2 column header.
-   * Left part will be LogoLink, and the right part will be the the NavLinks component you
-   * supplied.
-   * Similarly if you pass 2 items in the links array, then you will get 3 columns, the left will be "LogoLink", the center will be the first "NavLinks" component in the array and the right will be the second "NavLinks" component in the links array.
-   * You can also choose to directly modify the links here by not passing any links from the parent component and
-   * changing the defaultLinks variable below below.
-   * If you manipulate links here, all the styling on the links is already done for you. If you pass links yourself though, you are responsible for styling the links or use the helper styled components that are defined here (NavLink)
-   */
+
+  const navigate = useNavigate();
+
+  const { logout } = useAuth();
 
   const { isAuthenticated } = useAuth();
 
+  console.log(isAuthenticated)
+
+
   const defaultLinks = [
     <NavLinks key={1}>
+      <NavLink href="/make-an-order">Make an Order</NavLink>
+
       <NavLink href="/#services">Services</NavLink>
       <NavLink href="/#ourteam">Our Team</NavLink>
       <NavLink href="/#pricing">Pricing</NavLink>
       <NavLink href="/#faqs">FAQS</NavLink>
       <NavLink href="/contact-us">Contact Us</NavLink>
       <NavLink href="/vacancies">Vacancies</NavLink>
+
       {
         isAuthenticated &&
-          <PrimaryLink
-              css={roundedHeaderButton && tw`rounded-full`}
-              href="/profile"
-          >
-            Profile
-          </PrimaryLink>
-      }
-      {
-          !isAuthenticated &&
-          <NavLink onClick={() => {}} tw="lg:ml-12!">
-            Logout
-          </NavLink>
-      }
-      {
-          !isAuthenticated &&
-            <>
-              <NavLink href="/session/signup" tw="lg:ml-12!">
-                Signup
-              </NavLink>
-              <PrimaryLink
-                  css={roundedHeaderButton && tw`rounded-full`}
-                  href="/session/login"
-              >
-                Log in
-              </PrimaryLink>
-            </>
+          <>
+            <NavLink
+                style={{cursor: 'pointer'}}
+                onClick={() => {
+                  logout();
+                  navigate('/session/login');
+                }}
+                tw="lg:ml-12!">
+              Logout
+            </NavLink>
+            <PrimaryLink
+                css={roundedHeaderButton && tw`rounded-full`}
+                href="/profile"
+            >
+              Profile
+            </PrimaryLink>
+          </>
       }
 
+      {
+          !isAuthenticated &&
+          <>
+            <NavLink href="/session/signup" tw="lg:ml-12!">
+              Signup
+            </NavLink>
+            <PrimaryLink
+                css={roundedHeaderButton && tw`rounded-full`}
+                href="/session/login">
+              Log in
+            </PrimaryLink>
+          </>
+
+      }
     </NavLinks>
   ];
 

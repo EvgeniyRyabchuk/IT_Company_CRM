@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
+
 //eslint-disable-next-line
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { SectionHeading, Subheading as SubheadingBase } from "../../components/misc/Headings";
-import { SectionDescription } from "../../components/misc/Typography.js";
+import { SectionDescription } from "../misc/Typography";
 
 import { ReactComponent as SvgDecoratorBlob3 } from "../../assets/images/svg-decorator-blob-3.svg";
 
