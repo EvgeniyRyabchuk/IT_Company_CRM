@@ -139,6 +139,25 @@ class OrderController extends Controller
 //            return response()->json($query->toSql(), 201);
         }
 
+        $userId = $request->input('userId');
+        $user = Auth::user();
+
+        if($user->customer) {
+            if($userId) {
+                $customer = Customer::where('user_id', $userId)->first();
+
+                if(!$customer) {
+                    return response()->json
+                    (['alertMessage' => 'no such customer'],404);
+                }
+                $query->where('customer_id', $customer->id);
+            } else {
+                return response()->json
+                (['alertMessage' => 'no user id in query'],404);
+            }
+        }
+
+
         $orders = $query->paginate($perPage);
 
         return response()->json($orders, 201);
@@ -163,28 +182,39 @@ class OrderController extends Controller
         //TODO: check if customer already registered
         $email = $request->input('email');
         // if customer with such email already exist
-        $customer = Customer::whereHas('user', function ($q) use($email) {
-            $q->where('email', $email);
-        })->first();
+        $dbUser = User::where('email', $email)->first();
 
         $orderStatus = Status::where(['name' => 'pending'])->first();
         $order = new Order();
 
-        // if account exist redirect to log in page
-        if($customer) {
+
+        if($dbUser) {
+            // if account exist redirect to log in page
             if (!Auth::check()) {
-                return response()->json('401',
-                    'Account with such email already exist.
-                      Please log in to make order');
+                return response()->json(['alertMessage' => 'Account with such email already exist.
+                      Please log in to make order'], 401);
+            }
+
+            $user = Auth::user();
+            $customer = Customer::where('user_id', $user->id)->first();
+
+            if(!$customer) {
+                return response()->json(
+                    ['alertMessage' => 'Such customer does not exist'],
+                    404);
             }
 
             $order->customer()->associate($customer);
         }
         else {
+            $phoneDecode = json_decode($request->input('phone'), true);
+            $phoneNumber = $phoneDecode['number'];
+
+//            return response()->json(, 404);
             $contact = OrderContact::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'phone' => $request->phone,
+                'phone' => $phoneNumber,
             ]);
 
             $order->orderContact()->associate($contact);

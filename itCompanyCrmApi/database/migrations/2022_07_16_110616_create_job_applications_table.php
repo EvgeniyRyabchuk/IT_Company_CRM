@@ -25,6 +25,8 @@ return new class extends Migration
 
             $table->string('resume_path', 4096);
 
+            $table->string('phone', 17);
+
             $table->foreignId('job_application_status_id')
                 ->constrained('job_application_statuses')
                 ->onUpdate('cascade')

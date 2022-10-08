@@ -100,15 +100,23 @@ class JobApplicationController extends Controller
         $jobApplication = new JobApplication();
         $jobApplication->name = $request->input('name');
         $jobApplication->email = $request->input('email');
+
+        $phoneDecode = json_decode($request->input('phone'), true);
+        $phoneNumber = $phoneDecode['number'];
+        $jobApplication->phone = $phoneNumber;
+
         $jobApplication->vacancy()->associate($vacancy);
         $jobApplication->jobApplicationStatus()->associate($jobApplicationStatus);
-        //TODO: check if file exist
-        $extension = $request->file('resume_path')
-            ->getClientOriginalExtension();
-        $path = $request->file('resume_path')
-            ->storeAs("jobApplication/$nextId",
-                'resume_path_'. time() . '.' . $extension);
-        $jobApplication->resume_path = $path;
+
+
+        if($request->hasFile('resume_path')) {
+            $extension = $request->file('resume_path')
+                ->getClientOriginalExtension();
+            $path = $request->file('resume_path')
+                ->storeAs("jobApplication/$nextId",
+                    'resume_path_'. time() . '.' . $extension);
+            $jobApplication->resume_path = $path;
+        }
 
         $jobApplication->save();
 

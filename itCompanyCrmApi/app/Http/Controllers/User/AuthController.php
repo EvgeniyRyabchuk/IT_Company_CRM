@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 
+use App\_Sl\Utils;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PersonalNotificationController;
 use App\Models\AccessToken;
@@ -36,9 +37,9 @@ class AuthController extends Controller
         // check permissions
 //        $this->authorize('user_create');
         $detail = boolval($request->input('detail') ?? 'false');
-        $user = Auth::user()->load('roles', 'phones');
 
-
+        $user = Auth::user();
+        $user->load('roles', 'phones');
 
         if($detail === false) {
             return response()->json(compact('user'));
@@ -97,7 +98,8 @@ class AuthController extends Controller
                 }
                 else if($role->name === 'customer') {
                     $customer = Customer::with('orders.project')
-                        ->where('user_id', $user->id);
+                        ->where('user_id', $user->id)
+                        ->first();
 
                     $roleEntity[] = [
                         'role' => $role,
@@ -153,7 +155,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = User::with('roles')->findOrFail(Auth::user()->id);
+        $user = User::with('roles', 'phones')->findOrFail(Auth::user()->id);
 
         if($rememberMe) {
             $refreshToken = Auth::guard()->refresh();
@@ -191,12 +193,16 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
-
 //        $request->validate([
 //            'name' => 'required|string|max:255',
 //            'email' => 'required|string|email|max:255|unique:users',
 //            'password' => 'required|string|min:6',
 //        ]);
+
+//        $phoneNumber = $request->input('phone.number');
+//        $countryCode = $request->input('phone.countryData.countryCode');
+//        $phoneParts = Utils::getNumberParts($phoneNumber, $countryCode);
+//        dd($phoneParts);
 
         $isExistWithSuchEmail = User::where('email', $request->input('email'))->first() ?? false;
 
@@ -227,13 +233,19 @@ class AuthController extends Controller
             'user_id' => $user->id,
         ]);
 
-        $phone = $request->input('phone');
+        $phoneNumber = $request->input('phone.number');
+        $countryCode = $request->input('phone.countryData.countryCode');
+        $phoneParts = Utils::getNumberParts($phoneNumber, $countryCode);
+
+        if(count($phoneParts) !== 3) {
+            $phoneParts = ['000', '000', '000'];
+        }
 
         $phoneModel = [
-            'code_1' => '98245',
-            'code_2' => '90424',
-            'number' => '4759374',
-            'phone_number' => $phone,
+            'code_1' => $phoneParts[0],
+            'code_2' => $phoneParts[1],
+            'number' => $phoneParts[2],
+            'phone_number' => $phoneNumber,
             'user_id' => $user->id,
         ];
         Phone::create($phoneModel);

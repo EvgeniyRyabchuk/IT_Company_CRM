@@ -7,7 +7,7 @@ use App\Models\PersonalNotificationType;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\_SL\Uttils;
+use App\_SL\Utils;
 use Illuminate\Support\Facades\Auth;
 
 class PersonalNotificationController extends Controller
@@ -41,7 +41,7 @@ class PersonalNotificationController extends Controller
         $notification->timestamp =  Carbon::now()->timestamp;
         $notification->title = $payload['title'];
         $notification->subtitle = $payload['subtitle'];
-        $notification->path =  Uttils::getNotificationPath($type, $user->id);
+        $notification->path =  Utils::getNotificationPath($type, $user->id);
         $notification->save();
 
         return redirect()

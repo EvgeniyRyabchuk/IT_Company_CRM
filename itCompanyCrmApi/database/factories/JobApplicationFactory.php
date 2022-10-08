@@ -29,6 +29,7 @@ class JobApplicationFactory extends Factory
         return [
             'name' => $this->faker->firstName,
             'email' => $this->faker->email,
+            'phone' => fake()->e164PhoneNumber(),
             'vacancy_id' => $vacancy->id,
             'resume_path' => $resume_path,
             'job_application_status_id' => $vacancyStatus->id

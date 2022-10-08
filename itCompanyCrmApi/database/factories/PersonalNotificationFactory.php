@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\_Sl\Uttils;
+use App\_Sl\Utils;
 use App\Models\PersonalNotificationType;
 use App\Models\User;
 use Carbon\Carbon;
@@ -36,7 +36,7 @@ class PersonalNotificationFactory extends Factory
             'timestamp' => Carbon::now()->timestamp,
             'title' => $title,
             'subtitle' => $this->faker->sentence(3),
-            'path' => Uttils::getNotificationPath($type, $user->id)
+            'path' => Utils::getNotificationPath($type, $user->id)
         ];
     }
 }

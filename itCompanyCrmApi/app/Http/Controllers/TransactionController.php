@@ -22,11 +22,20 @@ class TransactionController extends Controller
         return response()->json($transactions, 201);
     }
 
-    public function getByCustomer(Request $request, $customerId) {
+    public function getByCustomer(Request $request) {
+
+        $user = Auth::user();
+        $customer = Customer::where('user_id', $user->id)->first();
+
+        if(!$customer) {
+            return response()->json
+            (['alertMessage' => 'no such customer'],404);
+        }
+
         $transactions =
             Transaction::with('order')
-            ->whereHas('order', function ($q) use($customerId) {
-                  $q->where('customer_id', $customerId);
+            ->whereHas('order', function ($q) use($customer) {
+                  $q->where('customer_id', $customer->id);
             })
             ->orderBy('created_at', 'desc')
             ->get();

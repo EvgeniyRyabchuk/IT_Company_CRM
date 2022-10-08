@@ -290,7 +290,7 @@ Route::prefix('views')
 
 Route::controller(TransactionController::class)
     ->group(function () {
-        Route::get('/customers/{customerId}/transactions','getByCustomer');
+        Route::get('/customers/transactions','getByCustomer');
         Route::get('/orders/{orderId}/transactions','getByOrder');
     });
 
