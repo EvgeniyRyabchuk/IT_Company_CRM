@@ -2,7 +2,7 @@
 
 namespace App\_Sl;
 
-
+use Illuminate\Support\Str;
 
 use App\Models\PersonalNotificationType;
 
@@ -19,6 +19,16 @@ class Utils
 
         }
     }
+
+    public static function getModelByTableName($tableName) {
+        $folderName = 'App\\Models';
+        $name =  $folderName . '\\' . Str::studly(strtolower(STR::singular($tableName)));
+
+        $clearStr = str_replace('"', "", $name);
+        $_class = new $clearStr();
+        return $_class;
+    }
+
 
     public static function getNumberParts($number, $countryCode) {
         $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();

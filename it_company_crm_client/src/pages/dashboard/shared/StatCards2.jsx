@@ -1,4 +1,8 @@
 import { Card, Fab, Grid, Icon, lighten, styled, useTheme } from '@mui/material';
+import Skeleton from "@mui/material/Skeleton";
+import React from "react";
+import {Box} from "@mui/system";
+
 
 const ContentBox = styled('div')(() => ({
   display: 'flex',
@@ -42,52 +46,105 @@ const IconBox = styled('div')(() => ({
   '& .icon': { fontSize: '14px' },
 }));
 
-const StatCards2 = () => {
+
+
+
+const CardHeader = styled(Box)(() => ({
+  display: 'flex',
+  paddingLeft: '24px',
+  paddingRight: '24px',
+  marginBottom: '12px',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+}));
+
+const Title = styled('span')(() => ({
+  fontSize: '1rem',
+  fontWeight: '500',
+  textTransform: 'capitalize',
+}));
+
+
+export const PersentSpan = ({ value }) => {
+  const { palette } = useTheme();
+
+  const textSuccess = palette.success.main;
+  const textError = palette.error.main;
+
+  const bgSuccess = lighten(palette.success.main, 0.85);
+  const bgError = lighten(palette.error.main, 0.85);
+
+  return (
+      <>
+        <IconBox sx={{ background: value >= 0 ? bgSuccess : bgError }}> 
+          <Icon className="icon">{value >= 0 ? 'expand_less' : 'expand_more' }</Icon>
+        </IconBox>
+        <Span
+            textcolor={value >= 0 ? textSuccess : textError}
+        >
+          {value > 0 && '+'}
+          ({value.toFixed(2)}%)
+        </Span>
+      </>
+
+  )
+}
+
+
+
+const StatCards2 = ({ newCustomers, transactins}) => {
   const { palette } = useTheme();
   const textError = palette.error.main;
   const bgError = lighten(palette.error.main, 0.85);
 
+  const conditionText = '(last week compare before last)'
+
   return (
-    <Grid container spacing={3} sx={{ mb: 3 }}>
-      <Grid item xs={12} md={6}>
-        <Card elevation={3} sx={{ p: 2 }}>
-          <ContentBox>
-            <FabIcon size="medium" sx={{ background: 'rgba(9, 182, 109, 0.15)', zIndex: '1' }}>
-              <Icon sx={{ color: '#08ad6c' }}>trending_up</Icon>
-            </FabIcon>
-            <H3 textcolor={'#08ad6c'}>Active Users</H3>
-          </ContentBox>
+      <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
+        <CardHeader>
+          <Title>
+            Dynamic {conditionText}
+          </Title>
+        </CardHeader>
+            <Grid container spacing={3} sx={{ mb: 3 }}>
+              <Grid item xs={12} md={6}>
+                <Card elevation={3} sx={{ p: 2 }}>
+                  <ContentBox>
+                    <FabIcon size="medium" sx={{ background: 'rgba(9, 182, 109, 0.15)', zIndex: '1' }}>
+                      <Icon sx={{ color: '#08ad6c' }}>trending_up</Icon>
+                    </FabIcon>
+                    <H3 textcolor={'#08ad6c'}>New Customers</H3>
+                    &nbsp;
+                    {/*<small>{conditionText}</small>*/}
+                  </ContentBox>
 
-          <ContentBox sx={{ pt: 2 }}>
-            <H1>10.8k</H1>
-            <IconBox sx={{ background: 'rgba(9, 182, 109, 0.15)'}}>
-              <Icon className="icon">expand_less</Icon>
-            </IconBox>
-            <Span textcolor={'#08ad6c'}>(+21%)</Span>
-          </ContentBox>
-        </Card>
-      </Grid>
+                  <ContentBox sx={{ pt: 2 }}>
+                    <H1>{newCustomers.absolute}</H1>
+                    <PersentSpan value={newCustomers.percent}/>
+                  </ContentBox>
+                </Card>
+              </Grid>
 
-      <Grid item xs={12} md={6}>
-        <Card elevation={3} sx={{ p: 2 }}>
-          <ContentBox>
-            <FabIcon size="medium" sx={{ background: bgError, overflow: 'hidden', zIndex: '1' }}>
-              <Icon sx={{ color: textError }}>star_outline</Icon>
-            </FabIcon>
-            <H3 textcolor={textError}>Transactions</H3>
-          </ContentBox>
+              <Grid item xs={12} md={6}>
+                <Card elevation={3} sx={{ p: 2 }}>
+                  <ContentBox>
+                    <FabIcon size="medium" sx={{ background: bgError, overflow: 'hidden', zIndex: '1' }}>
+                      <Icon sx={{ color: textError }}>star_outline</Icon>
+                    </FabIcon>
+                    <H3 textcolor={textError}>Transactions</H3>
+                    &nbsp;
+                    {/*<small>{conditionText}</small>*/}
+                  </ContentBox>
 
-          <ContentBox sx={{ pt: 2 }}>
-            <H1>$2.8M</H1>
-            <IconBox sx={{ background: bgError }}>
-              <Icon className="icon">expand_less</Icon>
-            </IconBox>
-            <Span textcolor={textError}>(+21%)</Span>
-          </ContentBox>
-        </Card>
-      </Grid>
+                  <ContentBox sx={{ pt: 2 }}>
+                    <H1>${transactins.absolute}</H1>
+                    <PersentSpan value={transactins.percent}/>
+                  </ContentBox>
+                </Card>
+              </Grid>
 
-    </Grid>
+            </Grid>
+      </Card>
   );
 };
 

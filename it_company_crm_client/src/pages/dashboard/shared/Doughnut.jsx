@@ -2,7 +2,7 @@ import React from 'react'
 import { useTheme } from '@mui/system'
 import ReactEcharts from 'echarts-for-react'
 
-const DoughnutChart = ({ height, color = [] }) => {
+const DoughnutChart = ({ height, color = [], data }) => {
     const theme = useTheme()
 
     const option = {
@@ -45,10 +45,10 @@ const DoughnutChart = ({ height, color = [] }) => {
 
         series: [
             {
-                name: 'Traffic Rate',
+                name: 'Project Types',
                 type: 'pie',
                 radius: ['45%', '72.55%'],
-                center: ['50%', '50%'],
+                center: ['50%', '40%'],
                 avoidLabelOverlap: false,
                 hoverOffset: 5,
                 stillShowZeroSum: false,
@@ -78,17 +78,7 @@ const DoughnutChart = ({ height, color = [] }) => {
                         show: false,
                     },
                 },
-                data: [
-                    {
-                        value: 65,
-                        name: 'Google',
-                    },
-                    {
-                        value: 20,
-                        name: 'Facebook',
-                    },
-                    { value: 15, name: 'Others' },
-                ],
+                data: data,
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,

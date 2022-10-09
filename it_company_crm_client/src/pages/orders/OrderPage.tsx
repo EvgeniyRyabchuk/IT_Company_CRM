@@ -344,7 +344,7 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                             </Grid>
                         </Grid>
                         <Box style={{marginTop: "50px"}}>
-                            Billing Data
+                            <h3>Transaction History</h3>
 
                             <TableContainer
                                 component={Paper}
@@ -354,33 +354,33 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                 }}
                             >
                                 <Table
-                                    sx={{ minWidth: 650}}
                                     // aria-label="simple table"
                                     stickyHeader aria-label="sticky table"
                                 >
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Dessert (100g serving)</TableCell>
-                                            <TableCell align="right">Calories</TableCell>
-                                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                                            <TableCell align="center">ID</TableCell>
+                                            <TableCell align="center">Card</TableCell>
+                                            <TableCell align="center">Summa</TableCell>
+                                            <TableCell align="center">Issuer</TableCell>
+                                            <TableCell align="center">Date</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {rows.map((row, index) => (
-                                            //TODO: fix index
+                                        {order?.transactions.map((transaction) => (
                                             <TableRow
-                                                key={index}
+                                                key={transaction.id}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                             >
-                                                <TableCell component="th" scope="row">
-                                                    {row.name}
+                                                <TableCell component="th" align="center">
+                                                    {transaction.id}
                                                 </TableCell>
-                                                <TableCell align="right">{row.calories}</TableCell>
-                                                <TableCell align="right">{row.fat}</TableCell>
-                                                <TableCell align="right">{row.carbs}</TableCell>
-                                                <TableCell align="right">{row.protein}</TableCell>
+                                                <TableCell align="center">****{transaction.last_card_digits}</TableCell>
+                                                <TableCell align="center">{transaction.summa}</TableCell>
+                                                <TableCell align="center">{transaction.issuer}</TableCell>
+                                                <TableCell align="center">{
+                                                    moment(transaction.created_at).format('DD/MM/YYYY')
+                                                }</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -414,17 +414,6 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                         </Stepper>
                     </Grid>
                 </Grid>
-
-
-                <p>Mode</p>
-                <span>{mode}</span>
-
-                {
-                    order?.status_id
-                }
-
-
-
             </Card>
         </Container>
     );

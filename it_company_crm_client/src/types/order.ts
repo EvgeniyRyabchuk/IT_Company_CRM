@@ -64,7 +64,19 @@ export interface Order {
     status_id: number;
     order_contact_id: number;
     project_id: number;
+    transactions: Transaction[];
 }
+
+export interface Transaction {
+    id: number,
+    order_id: number,
+    last_card_digits: number,
+    summa: number,
+    issuer: string,
+    created_at: string,
+    order: Order
+}
+
 
 export interface PublicOrderInfo {
     id: number;

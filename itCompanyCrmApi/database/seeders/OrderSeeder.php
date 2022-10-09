@@ -33,8 +33,8 @@ class OrderSeeder extends Seeder
         ->each(function ($c) use($reqPath) {
             $status = Status::inRandomOrder()->first();
             $created_at = fake()->dateTimeBetween(
-                '+1 day',
-                '+2 day');
+                '-1 month',
+                '-1 day');
 
             $order = Order::create([
                 'status_id' => $status->id,
@@ -57,13 +57,13 @@ class OrderSeeder extends Seeder
             $status = Status::where('name', 'Finished')->first();
             $project = $projects[$i];
             $project->created_at = fake()->dateTimeBetween(
-                '+1 week',
-                '+3 month');
+                '-1 month',
+                '-1 day');
             $project->save();
 
             $created_at = fake()->dateTimeBetween(
-                '+1 day',
-                '+2 day');
+                '-1 month',
+                '-1 day');
 
             $order = Order::create([
                 'project_id' => $project->id,

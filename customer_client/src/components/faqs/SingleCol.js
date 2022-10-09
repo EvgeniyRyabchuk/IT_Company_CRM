@@ -122,8 +122,10 @@ const FAQS = ({
           </FAQSContainer>
         </Column>
       </ContentWithPaddingXl>
-      <DecoratorBlob1/>
-      <DecoratorBlob2 />
+
+        <DecoratorBlob1/>
+        <DecoratorBlob2 />
+
     </Container>
   );
 };

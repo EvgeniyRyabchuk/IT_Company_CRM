@@ -78,10 +78,15 @@ const validationSchema = Yup.object().shape({
   middle_name: Yup.string().required('middle_name is required!'),
 
   email: Yup.string().required('Email is required!'),
-  phone: Yup.string().required('phone is required!'),
+  phone: Yup.object().shape({
+    number: Yup.string().required('phone is required!'),
+    countryData: Yup.object(),
+  }),
 
   password: Yup.string().required('password is required!'),
-  password_repetition: Yup.string().required().oneOf([Yup.ref('password'), null],
+  password_repetition: Yup.string()
+      .required()
+      .oneOf([Yup.ref('password'), null],
       'Passwords must match')
 });
 
@@ -113,7 +118,7 @@ export default ({
 
   const navigate = useNavigate();
 
-  const { register } = useAuth();
+  const { register, profile } = useAuth();
 
   const defInitialValues = useMemo(() => {
     return {
@@ -122,7 +127,15 @@ export default ({
       middle_name: 'middle',
 
       email: 'sdfgkjsldfgi@gmail.com',
-      phone: '380984756384',
+      phone:  {
+        number: '380984756384',
+        countryData: {
+          countryCode: "UA",
+          dialCode: "380",
+          format: "+... (..) ... .. ..",
+          name: "Ukraine",
+        },
+      },
 
       password: '123456789',
       password_repetition: '123456789',
@@ -132,10 +145,11 @@ export default ({
   const submit = async (values) => {
     console.log(values)
     await register(values);
-
+    // await profile();
     navigate('/session/login');
 
   }
+
 
 
   return (
@@ -261,12 +275,11 @@ export default ({
                                 <PhoneInputField
                                     id="phone"
                                     style={{color: 'black'}}
+                                    name="phone.number"
 
-                                    name="phone"
-
-                                    value={values.phone}
-                                    onChange={(phone) => {
-                                      setFieldValue('phone', phone);
+                                    value={values.phone.number}
+                                    onChange={(data) => {
+                                      setFieldValue('phone', data);
                                     }}
 
                                     touched={touched.phone}

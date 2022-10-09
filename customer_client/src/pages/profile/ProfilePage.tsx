@@ -8,6 +8,11 @@ import {Settings} from "@mui/icons-material";
 import {ProfileTabName, Tab, TabComponent} from "../../types/global";
 import {MyLoader} from "../../components/layout/LayoutSuspence";
 import { Suspense } from 'react';
+import useAuth from "../../hooks/useAuth";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
+
+//@ts-ignore
+import UserCover from '../../assets/images/user-cover-pic.png';
 
 const Container = tw(ContainerBase)`min-h-screen text-white font-medium`;
 const Content = tw.div`max-w-screen-xl my-0 sm:my-8 bg-white text-gray-900 shadow sm:rounded-lg mx-auto`;
@@ -30,6 +35,13 @@ export const TabPanel : React.FC<TabComponent> = ({tabIndex, currentIndex, child
 }
 
 const ProfilePage = () => {
+
+    const { profileDetail, user } = useAuth();
+
+
+    useEffect(() => {
+        profileDetail();
+    }, []);
 
     const tabs : Tab[] = [
         {
@@ -103,7 +115,12 @@ const ProfilePage = () => {
                     <div className="uw flex ak wn wo wu">
 
                     <div className="y sb hu">
-                        <img className="dy sh ou" src="https://preview.cruip.com/mosaic/images/profile-bg.jpg" width="979" height="220" alt="Profile background" />
+                        <img className="dy sh ou"
+                             src={UserCover}
+                             width="979"
+                             height="220"
+                             alt="Profile background"
+                        />
 
                             <button className="qz g ty tf _u ye bl xj" >
                             <span className="d">Close sidebar</span>
@@ -118,7 +135,12 @@ const ProfilePage = () => {
                     <div className="ib rh _x">
                         <div className="flex ak items-center ja jd jl">
                             <div className="inline-flex rj rq ri _y">
-                                <img className="rounded-full ci cc" src="https://preview.cruip.com/mosaic/images/user-128-01.jpg" width="128" height="128" alt="Avatar" />
+                                <img className="rounded-full ci cc"
+                                     src={`${API_URL_WITH_PUBLIC_STORAGE}/${user!.avatar}`}
+                                     width="128"
+                                     height="128"
+                                     alt="Avatar"
+                                />
                             </div>
                             <div className="flex fc _k">
                                 <button className="ve ub rounded border border-slate-200 hover--border-slate-300 bv">
@@ -145,12 +167,14 @@ const ProfilePage = () => {
 
                     <header className="gn qe rh">
                         <div className="inline-flex aj ru">
-                            <h1 className="gu text-slate-800 font-bold">Carolyn McNeail</h1>
+                            <h1 className="gu text-slate-800 font-bold">{user!.full_name}</h1>
                             <svg className="oo sl du ub yn nq" viewBox="0 0 16 16">
                                 <path d="M13 6a.75.75 0 0 1-.75-.75 1.5 1.5 0 0 0-1.5-1.5.75.75 0 1 1 0-1.5 1.5 1.5 0 0 0 1.5-1.5.75.75 0 1 1 1.5 0 1.5 1.5 0 0 0 1.5 1.5.75.75 0 1 1 0 1.5 1.5 1.5 0 0 0-1.5 1.5A.75.75 0 0 1 13 6ZM6 16a1 1 0 0 1-1-1 4 4 0 0 0-4-4 1 1 0 0 1 0-2 4 4 0 0 0 4-4 1 1 0 1 1 2 0 4 4 0 0 0 4 4 1 1 0 0 1 0 2 4 4 0 0 0-4 4 1 1 0 0 1-1 1Z"></path>
                             </svg>
                         </div>
-                        <div className="text-sm ro">Fitness Fanatic, Design Enthusiast, Mentor, Meetup Organizer &amp; PHP Lover.</div>
+                        <div className="text-sm ro">
+                            {user!.email}
+                        </div>
                         <div className="flex flex-wrap justify-center jh fy">
                             <div className="flex items-center">
                                 <svg className="oo sl du ub gq" viewBox="0 0 16 16">

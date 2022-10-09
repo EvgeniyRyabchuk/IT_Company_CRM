@@ -21,22 +21,29 @@ export interface OrderForm {
 export class OrderService {
 
 
-    static async getOrders(queryParams?: string):
-        Promise<AxiosResponse<PaginatedResponse<Order>>> {
-        return $api.get<PaginatedResponse<Order>>(`/orders${queryParams ?? ''}`);
-    }
-
     static async getOrder(orderId: number | string):
         Promise<AxiosResponse<Order>> {
         return $api.get<Order>(`/orders/${orderId}`);
     }
 
-    static async createOrder(data: OrderForm, file: any) : Promise<AxiosResponse<Order>> {
-        return $api.post<Order>(`/orders`, {
+    static async getOrders(userId: number):
+        Promise<AxiosResponse<PaginatedResponse<Order>>> {
+        return $api.get<PaginatedResponse<Order>>(`/orders?userId=${userId}`);
+    }
+
+    static async createOrder(data: OrderForm, extra_file: any | null | undefined) : Promise<AxiosResponse<any>> {
+
+        console.log('service')
+        const phone = JSON.stringify(data.phone);
+
+        return $api.post<any>(`/orders`, {
             ...data,
-            extra_file: file
+            phone,
+            extra_file
         }, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
         });
     }
 
@@ -90,3 +97,4 @@ export class OrderService {
     }
 
 }
+

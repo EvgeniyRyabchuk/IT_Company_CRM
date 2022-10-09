@@ -21,6 +21,7 @@ use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -64,6 +65,14 @@ Route::controller(AuthController::class)
     Route::delete('users/{userId}', 'deleteAccount');
 
 });
+
+Route::controller(DashboardController::class)
+    ->prefix('dashboard')->group(function () {
+
+    Route::get('analytics', 'analytics');
+
+});
+
 
 
 Route::middleware("auth:api")->group(function () {

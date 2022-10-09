@@ -41,6 +41,10 @@ import moment from "moment/moment";
 import {ViewService} from "../../services/ViewService";
 import {toast} from "react-toastify";
 import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert} from "../../utils/alert";
+import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.bubble.css';
+// import 'react-quill/dist/quill.core.css';
+// import 'react-quill/dist/react-quill';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -339,11 +343,15 @@ const NewsListPage = () => {
                                     ? expanded.expand : false} timeout="auto" unmountOnExit>
                                     <CardContent>
                                         <Typography paragraph>
-                                            <div
+                                            <Box
+                                                sx={{ '& a ': {
+                                                     color: 'blue'
+                                                }}}
+                                                className='ql-editor '
                                                 dangerouslySetInnerHTML={{
                                                     __html: n.text
                                                 }}>
-                                            </div>
+                                            </Box>
 
                                         </Typography>
                                     </CardContent>

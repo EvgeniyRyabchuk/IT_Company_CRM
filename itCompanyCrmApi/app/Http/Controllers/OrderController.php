@@ -171,7 +171,8 @@ class OrderController extends Controller
             'statusHistory.status',
             'customer.user.tags',
             'project.tags',
-            'project.employees.user'
+            'project.employees.user',
+            'transactions'
         )
             ->find($orderId);
 

@@ -17,9 +17,9 @@ export class TransactionService {
         return $api.get<Transaction[]>(`/orders/${orderId}/transactions`);
     }
 
-    static async getTransactionsByCustomerId(customerId: number):
+    static async getTransactionsByCustomerId():
         Promise<AxiosResponse<Transaction[]>> {
-        return $api.get<Transaction[]>(`/customers/${customerId}/transactions`);
+        return $api.get<Transaction[]>(`/customers/transactions`);
     }
 
     static async pay(card: Card, summa: number, orderId: number):

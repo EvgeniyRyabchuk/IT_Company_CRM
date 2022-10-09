@@ -42,7 +42,6 @@ const LayoutSuspence = () => {
     return (
         <Suspense fallback={<MyLoader disappear />}>
             <Layout />
-
         </Suspense>
     );
 };

@@ -3,6 +3,7 @@ import {AxiosResponse} from "axios";
 import {PaginatedResponse} from "../types/global";
 import {JobApplication, JobApplicationStatus, Vacancy} from "../types/employeement";
 import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
+import {DetailPhone} from "../types/auth";
 
 interface JobApplicationMinMax {
     minMaxCreatedAtRange: string[];
@@ -12,6 +13,7 @@ interface JobApplicationForm {
     name: string,
     email: string,
     vacancy_id: number,
+    phone: DetailPhone
 }
 
 export class JobApplicationService {
@@ -22,12 +24,14 @@ export class JobApplicationService {
             `/job-applications${queryParams ?? ''}`);
     }
 
-    static async createJobApplications(payload: JobApplicationForm, file: any)
-        : Promise<AxiosResponse<JobApplicationForm>> {
+    static async createJobApplications(payload: JobApplicationForm, file: any | null | undefined)
+        : Promise<AxiosResponse<JobApplication>> {
         try {
+            const phone = JSON.stringify(payload.phone);
             const response =
                 await $api.post<JobApplication>(`/job-applications`, {
-                ...payload,
+                    ...payload,
+                    phone,
                 resume_path: file
             },{headers: { 'Content-Type': 'multipart/form-data' }});
 

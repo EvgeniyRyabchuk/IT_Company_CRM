@@ -70,11 +70,11 @@ export const DesktopNavLinks = tw.nav`
 `;
 
 export default ({
-                  roundedHeaderButton = false,
-                  logoLink,
-                  links,
-                  className,
-                  collapseBreakpointClass = "lg"
+      roundedHeaderButton = false,
+      logoLink,
+      links,
+      className,
+      collapseBreakpointClass = "lg"
 }) => {
 
 
@@ -89,14 +89,35 @@ export default ({
 
   const defaultLinks = [
     <NavLinks key={1}>
-      <NavLink href="/make-an-order">Make an Order</NavLink>
+      <NavLink onClick={(e) => {
+        e.preventDefault()
+        navigate('/make-an-order')
+      }} href="/make-an-order">Make an Order</NavLink>
 
-      <NavLink href="/#services">Services</NavLink>
-      <NavLink href="/#ourteam">Our Team</NavLink>
-      <NavLink href="/#pricing">Pricing</NavLink>
-      <NavLink href="/#faqs">FAQS</NavLink>
-      <NavLink href="/contact-us">Contact Us</NavLink>
-      <NavLink href="/vacancies">Vacancies</NavLink>
+      <NavLink onClick={(e) => {
+        e.preventDefault()
+        navigate('/#services')
+      }} href="/#services">Services</NavLink>
+      <NavLink onClick={(e) => {
+        e.preventDefault()
+        navigate('/#ourteam')
+      }} href="/#ourteam">Our Team</NavLink>
+      <NavLink onClick={(e) => {
+        e.preventDefault()
+        navigate('/#pricing')
+      }} href="/#pricing">Pricing</NavLink>
+      <NavLink onClick={(e) => {
+        e.preventDefault()
+        navigate('/#faqs')
+      }} href="/#faqs">FAQS</NavLink>
+      <NavLink onClick={(e) => {
+        e.preventDefault()
+        navigate('/contact-us')
+      }} href="/contact-us">Contact Us</NavLink>
+      <NavLink onClick={(e) => {
+        e.preventDefault()
+        navigate('/vacancies')
+      }} href="/vacancies">Vacancies</NavLink>
 
       {
         isAuthenticated &&
@@ -113,6 +134,10 @@ export default ({
             <PrimaryLink
                 css={roundedHeaderButton && tw`rounded-full`}
                 href="/profile"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/profile')
+                }}
             >
               Profile
             </PrimaryLink>
@@ -122,10 +147,19 @@ export default ({
       {
           !isAuthenticated &&
           <>
-            <NavLink href="/session/signup" tw="lg:ml-12!">
+            <NavLink
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/session/signup')
+                }}
+                href="/session/signup" tw="lg:ml-12!">
               Signup
             </NavLink>
             <PrimaryLink
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate('/session/login')
+                }}
                 css={roundedHeaderButton && tw`rounded-full`}
                 href="/session/login">
               Log in
@@ -140,7 +174,11 @@ export default ({
   const collapseBreakpointCss = collapseBreakPointCssMap[collapseBreakpointClass];
 
   const defaultLogoLink = (
-    <LogoLink href="/">
+    <LogoLink  onClick={(e) => {
+      e.preventDefault()
+      navigate('/')
+    }}
+     href="/">
       <img src={logo} alt="logo" />
       Treact
     </LogoLink>

@@ -1,9 +1,14 @@
 import React from 'react';
 import {AvatarGroup, Box} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import useAuth from "../../../hooks/useAuth";
+import moment from "moment";
 
 
 const General : React.FC<{}> = () => {
+
+    const { user } = useAuth();
+
     return (
         <Box
             className="flex ak tnq trn">
@@ -21,7 +26,7 @@ const General : React.FC<{}> = () => {
                 </div>
 
                 <div>
-                    <h2 className="text-slate-800 gh ru">Departments</h2>
+                    <h2 className="text-slate-800 gh ru">Orders</h2>
                     <div className="sn tnj fs">
                         { Array.from(Array(2).keys()).map(e =>
                             <div key={e} className="bg-white dw border border-slate-200 rounded-sm bv">
@@ -169,24 +174,24 @@ const General : React.FC<{}> = () => {
 
             <aside className="tnx tnw fw text-left">
                 <div className="text-sm">
-                    <h3 className="gp text-slate-800">Title</h3>
-                    <div>Senior Product Designer</div>
+                    <h3 className="gp text-slate-800">Role</h3>
+                    <div>Customer</div>
                 </div>
                 <div className="text-sm">
-                    <h3 className="gp text-slate-800">Location</h3>
-                    <div>Milan, IT - Remote</div>
+                    <h3 className="gp text-slate-800">Phone</h3>
+                    <div>{user!.phones[0].phone_number}</div>
                 </div>
                 <div className="text-sm">
                     <h3 className="gp text-slate-800">Email</h3>
-                    <div>carolinmcneail@acme.com</div>
+                    <div>{user!.email}</div>
                 </div>
                 <div className="text-sm">
                     <h3 className="gp text-slate-800">Birthdate</h3>
                     <div>4 April, 1987</div>
                 </div>
                 <div className="text-sm">
-                    <h3 className="gp text-slate-800">Joined Acme</h3>
-                    <div>7 April, 2017</div>
+                    <h3 className="gp text-slate-800">Account Created At</h3>
+                    <div>{moment(user!.created_at).format('DD/MM/YYYY')}</div>
                 </div>
             </aside>
 

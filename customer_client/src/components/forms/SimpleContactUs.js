@@ -12,6 +12,7 @@ import {Formik} from "formik";
 import * as Yup from "yup";
 import {Autocomplete, Box, Stack, TextField} from "@mui/material";
 import {JobApplicationService} from "../../services/JobApplicationService";
+import {showAxiosErrorAlert} from "../../utils/alert";
 
 
 const Container = tw.div`relative`;
@@ -47,7 +48,12 @@ const SvgDotPattern1 = tw(SvgDotPatternIcon)`absolute bottom-0 right-0 transform
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required!'),
-  phone: Yup.string().required('Phone number is require'),
+
+  phone: Yup.object().shape({
+    number: Yup.string().required('phone is required!'),
+    countryData: Yup.object(),
+  }),
+
   email: Yup.string().required('Email is required!'),
   message: Yup.string().optional(),
   vacancy_id: Yup.number().required('Vacancy Type is required!'),
@@ -64,7 +70,15 @@ export default ({setStatus, vacancies}) => {
   const defInitialValues = useMemo(() => {
     return {
       name: 'dssdfg',
-      phone: '380242342342',
+      phone:  {
+        number: '380984756384',
+        countyData: {
+          countryCode: "UA",
+          dialCode: "380",
+          format: "+... (..) ... .. ..",
+          name: "Ukraine",
+        },
+      },
       email: 'jeka.rubchuk@gmail.com',
       message: 'sdfhdfhdfghdfghdfghdfghdfghdfgh',
       vacancy_id: null,
@@ -74,8 +88,12 @@ export default ({setStatus, vacancies}) => {
 
   const handleSubmit = async (values) => {
     console.log(values);
-    const { data } = await JobApplicationService.createJobApplications
-      (values, files[0]);
+    const file = files && files.length > 0 && files[0];
+    if(!file) {
+      showAxiosErrorAlert({ primary: 'Resume file required'}, null);
+    }
+
+    const { data } = await JobApplicationService.createJobApplications(values, file);
     setStatus(1);
   };
 
@@ -143,7 +161,7 @@ export default ({setStatus, vacancies}) => {
                               style={{color: 'black'}}
                               name="phone"
 
-                              value={values.phone}
+                              value={values.phone.number}
                               onChange={(phone) => {
                                 setFieldValue('phone', phone);
                               }}

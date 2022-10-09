@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('project_type_id')->constrained('project_types')->onUpdate('cascade')->onDelete('cascade');
             $table->date('deadline');
             $table->unsignedDecimal('budget', 9, 2);
-            $table->unsignedDecimal('paid', 9, 2);
+            $table->unsignedDecimal('paid', 9, 2)->default(0);
             $table->timestamps();
         });
     }

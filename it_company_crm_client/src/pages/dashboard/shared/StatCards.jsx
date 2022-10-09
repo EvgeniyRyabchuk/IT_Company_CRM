@@ -1,5 +1,7 @@
 import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
 import { Small } from '../../../assets/typography/Typography';
+import {useMemo} from "react";
+import {useNavigate} from "react-router-dom";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -27,13 +29,19 @@ const Heading = styled('h6')(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const StatCards = () => {
-  const cardList = [
-    { name: 'New Leads', amount: 3050, icon: 'group' },
-    { name: 'This week Sales', amount: '$80,500', icon: 'attach_money' },
-    { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store' },
-    { name: 'Orders to deliver', amount: '305 Orders', icon: 'shopping_cart' },
-  ];
+const StatCards = ({ counter }) => {
+
+  const cardList = useMemo(() => {
+    return [
+      { name: 'Total Customer', amount: counter.customers, icon: 'group', path: '/customers' },
+      { name: 'Total Employees', amount: counter.employees, icon: 'badge', path: '/employees' },
+      { name: 'Weekly Revenue', amount: `$${counter.weeklyRevenue}` , icon: 'attach_money', path: '/statistic' },
+      { name: 'Total Orders',amount: counter.orders, icon: 'shopping_cart', path: '/orders' },
+    ];
+  }, [counter]);
+
+
+  const navigate = useNavigate();
 
   return (
     <Grid container spacing={3} sx={{ mb: '24px' }}>
@@ -49,7 +57,11 @@ const StatCards = () => {
             </ContentBox>
 
             <Tooltip title="View Details" placement="top">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  navigate(item.path);
+                }}
+              >
                 <Icon>arrow_right_alt</Icon>
               </IconButton>
             </Tooltip>

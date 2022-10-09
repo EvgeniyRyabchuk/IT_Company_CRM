@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import {Formik, FormikProps, FormikValues} from 'formik';
 import PhoneInputField from "../PhoneInputField/PhoneInputField";
 import {OrderService} from "../../services/OrderService";
+import useAuth from "../../hooks/useAuth";
 
 const Container = tw.div`relative`;
 
@@ -46,7 +47,11 @@ const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Project Name is required!'),
   email: Yup.string().required('Email is required!'),
-  phone: Yup.string().required('Phone number is require'),
+  phone: Yup.object().shape({
+    number: Yup.string().required('phone is required!'),
+    countryData: Yup.object(),
+  }),
+
   about:  Yup.string().required('About Project Text is required!'),
   type_id: Yup.number().required('Project Type is required!'),
 });
@@ -54,20 +59,22 @@ const validationSchema = Yup.object().shape({
 
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 
- const TwoColContactUsWithIllustrationFullForm = ({
-  subheading = "Contact Us",
-  heading = <>Feel free to <span tw="text-primary-500">get in touch</span><wbr/> with us.</>,
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  submitButtonText = "Send",
-  textOnLeft = true,
-  setStatus
-}) => {
+const TwoColContactUsWithIllustrationFullForm = ({
+   subheading = "Contact Us",
+   heading = <>Feel free to <span tw="text-primary-500">get in touch</span><wbr/> with us.</>,
+   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+   submitButtonText = "Send",
+   textOnLeft = true,
+   setStatus
+  }) => {
 
   const [files, setFiles] = useState(null);
 
   const updateUploadedFiles = (files) => {
     setFiles(files);
   }
+
+  const { user } = useAuth();
 
   const [projectTypes, setProjectTypes] = useState([]);
 
@@ -82,10 +89,18 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 
   const defInitialValues = useMemo(() => {
     return {
-      name: 'dssdfg',
-      phone: '380242342342',
-      email: 'jeka.rubchuk@gmail.com',
-      about: 'dsgsdfg',
+      name: user ? user.full_name : 'empty',
+      phone:  {
+        number: '380984756384',
+        countyData: {
+          countryCode: "UA",
+          dialCode: "380",
+          format: "+... (..) ... .. ..",
+          name: "Ukraine",
+        },
+      },
+      email: user ? user.email : 'empty@gmail.com',
+      about: 'empty',
       type_id: null,
     }
   }, []);
@@ -95,14 +110,15 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
   const handleFormSubmit = async (values) => {
     console.log(values)
     console.log(files)
+    const file = files && files.length > 0 && files[0];
 
-    const { data } = await OrderService.createOrder(values, files[0]);
+    const { data } = await OrderService.createOrder(values, file);
 
     setStatus(1);
   }
 
   return (
-    <Container>
+      <Container>
 
         <TwoColumn>
           <ImageColumn>
@@ -130,56 +146,61 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
                   }) => (
 
                     <Form id="inner-form" onSubmit={handleSubmit}>
-                      <Input
-                          type="text"
-                          name="name"
-                          placeholder="Full Name"
-                          value={values.name}
-                          onChange={handleChange}
-                          helperText={touched.name && errors.name}
-                          error={Boolean(errors.name && touched.name)}
-                      />
-                      {touched.name && errors.name &&
-                          <p style={{color:'red'}}
-                             className="MuiFormHelperText-root MuiFormHelperText-contained Mui-error MuiFormHelperText-filled MuiFormHelperText-marginDense">
-                            {errors.name}
-                          </p>
-                      }
-
-                      <Box sx={{ my: 3, display: 'flex', justifyContent: 'center'}}>
+                      <Box sx={{
+                        opacity: user ? '0.5' : '1',
+                        backgroundColor: 'white',
+                        pointerEvents: user ? "none" : 'auto'
+                      }}>
                         <Input
-                            style={{width: '50%'}}
-                            type="email"
-                            name="email"
-                            placeholder="Your Email Address"
-                            value={values.email}
+                            type="text"
+                            name="name"
+                            placeholder="Full Name"
+                            value={values.name}
                             onChange={handleChange}
-                            helperText={touched.email && errors.email}
-                            error={Boolean(errors.email && touched.email)}
+                            helperText={touched.name && errors.name}
+                            error={Boolean(errors.name && touched.name)}
                         />
-                        {touched.email && errors.email &&
+                        {touched.name && errors.name &&
                             <p style={{color:'red'}}
                                className="MuiFormHelperText-root MuiFormHelperText-contained Mui-error MuiFormHelperText-filled MuiFormHelperText-marginDense">
-                              {errors.email}
+                              {errors.name}
                             </p>
                         }
 
-                        <PhoneInputField
-                            style={{color: 'black', width: '50%'}}
+                        <Box sx={{ my: 3, display: 'flex', justifyContent: 'center'}}>
+                          <Input
+                              style={{width: '50%'}}
+                              type="email"
+                              name="email"
+                              placeholder="Your Email Address"
+                              value={values.email}
+                              onChange={handleChange}
+                              helperText={touched.email && errors.email}
+                              error={Boolean(errors.email && touched.email)}
+                          />
+                          {touched.email && errors.email &&
+                              <p style={{color:'red'}}
+                                 className="MuiFormHelperText-root MuiFormHelperText-contained Mui-error MuiFormHelperText-filled MuiFormHelperText-marginDense">
+                                {errors.email}
+                              </p>
+                          }
 
-                            name="phone"
+                          <PhoneInputField
+                              style={{color: 'black', width: '50%'}}
 
-                            value={values.phone}
-                            onChange={(phone) => {
-                              setFieldValue('phone', phone);
-                            }}
+                              name="phone"
 
-                            touched={touched.phone}
-                            error={errors.phone}
-                        />
+                              value={values.phone.number}
+                              onChange={(phone) => {
+                                setFieldValue('phone', phone);
+                              }}
 
+                              touched={touched.phone}
+                              error={errors.phone}
+                          />
+
+                        </Box>
                       </Box>
-
                       {/*<Input type="text" name="subject" placeholder="Subject" />*/}
 
                       <Box sx={{ mt: 3}}>
@@ -253,7 +274,7 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
         </TwoColumn>
 
 
-    </Container>
+      </Container>
   );
 };
 

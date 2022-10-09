@@ -4,6 +4,7 @@ import {ArrowDropDown, ArrowDropUp} from "@mui/icons-material";
 import {TransactionService} from "../../../../services/TransactionService";
 import {Transaction} from "../../../../types/card";
 import moment from "moment";
+import useAuth from "../../../../hooks/useAuth";
 
 const TransactionList = tw.div`my-10`;
 
@@ -11,12 +12,14 @@ const TransactionList = tw.div`my-10`;
 const Transactions = () => {
 
 
+    const { user } = useAuth();
+
     const [transactions, setTransactions] = useState<Transaction[]>([]);
 
     useEffect(() => {
 
         const fetchTransactions = async () => {
-            const { data } = await TransactionService.getTransactionsByCustomerId(7);
+            const { data } = await TransactionService.getTransactionsByCustomerId();
             setTransactions([...data]);
         }
         fetchTransactions();

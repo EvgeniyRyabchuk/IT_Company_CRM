@@ -29,7 +29,8 @@ export class VacancyService {
     static async createVacancy(payload: Vacancy)
         : Promise<AxiosResponse<Vacancy>> {
         try {
-            const response = await $api.post<Vacancy>(`/vacancies`, {
+            const response =
+                await $api.post<Vacancy>(`/vacancies`, {
                 ...payload
             });
 

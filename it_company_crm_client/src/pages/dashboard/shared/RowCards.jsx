@@ -12,8 +12,11 @@ import {
   useTheme,
 } from '@mui/material';
 import { Span } from '../../../assets/typography/Typography';
-import { format } from 'date-fns';
+
 import { Fragment } from 'react';
+import AvatarGroup from "@mui/material/AvatarGroup";
+import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
+import moment from "moment";
 
 const ProjectName = styled(Span)(({ theme }) => ({
   marginLeft: 24,
@@ -40,44 +43,50 @@ const StyledAvatar = styled(Avatar)(() => ({
   height: '32px !important',
 }));
 
-const RowCards = () => {
+const RowCards = ({projects}) => {
   const { palette } = useTheme();
   const textMuted = palette.text.secondary;
 
-  return [1, 2, 3, 4].map((id) => (
-    <Fragment key={id}>
-      <Card sx={{ py: 1, px: 2 }} className="project-card">
+  return projects.map((project, index) => (
+    <Fragment key={project.id}>
+      <Card sx={{ py: 1, px: 2 }}
+            className="project-card"
+      >
         <Grid container alignItems="center">
           <Grid item md={5} xs={7}>
             <Box display="flex" alignItems="center">
               <Checkbox />
               <Hidden smDown>
-                {id % 2 === 1 ? (
-                  <StarOutline size="small" sx={{zIndex: '1'}}>
-                    <Icon>star_outline</Icon>
+                {index % 2 === 1 ? (
+                  <StarOutline style={{minWidth: '40px', minHeight: '40px'}} size="small" sx={{zIndex: '1'}}>
+                    <Icon >star_outline</Icon>
                   </StarOutline>
                 ) : (
-                  <DateRange size="small" sx={{zIndex: '1'}}>
-                    <Icon>date_range</Icon>
+                  <DateRange style={{minWidth: '40px', minHeight: '40px'}} size="small" sx={{zIndex: '1'}}>
+                    <Icon >date_range</Icon>
                   </DateRange>
                 )}
               </Hidden>
-              <ProjectName>Project {id}</ProjectName>
+              <ProjectName>Project {project.id} ({project.project_type.name})</ProjectName>
             </Box>
           </Grid>
 
           <Grid item md={3} xs={4}>
-            <Box color={textMuted}>{format(new Date().getTime(), 'MM/dd/yyyy hh:mma')}</Box>
+            <Box color={textMuted}>
+              {moment(project.created_at).format('MM/dd/yyyy')}
+            </Box>
           </Grid>
 
           <Hidden smDown>
             <Grid item xs={3}>
-              <Box display="flex" position="relative" marginLeft="-0.875rem !important">
-                <StyledAvatar src="/assets/images/face-4.jpg" />
-                <StyledAvatar src="/assets/images/face-4.jpg" />
-                <StyledAvatar src="/assets/images/face-4.jpg" />
-                <StyledAvatar sx={{ fontSize: '14px' }}>+3</StyledAvatar>
-              </Box>
+              <AvatarGroup max={4} display="flex" justifyContent='right' position="relative" >
+                {
+                  project.employees.map(employee =>
+                      <Avatar src={`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`}/>
+                  )
+                }
+
+              </AvatarGroup>
             </Grid>
           </Hidden>
 

@@ -1,6 +1,7 @@
 import {Customer, Employee, Role, User} from "./user";
 import {Chat} from "./chat";
 import {ViewCounter} from "./global";
+import exp from "constants";
 
 export type RoleName =
     'customer' |
@@ -22,14 +23,25 @@ export interface LoginRequest {
     remember_me: boolean;
 }
 
+export interface PhoneCountryData {
+    countryCode: string;
+    dialCode: string;
+    format: string;
+    name: string;
+}
+
+export interface DetailPhone {
+    countryData: PhoneCountryData;
+    number: string;
+}
+
 export interface RegisterRequest {
     first_name: string;
     last_name: string;
     middle_name: string;
 
     email: string,
-    phone: string;
-
+    phone: DetailPhone,
     password: string;
     password_repetition: string;
 

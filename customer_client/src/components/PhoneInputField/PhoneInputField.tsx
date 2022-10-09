@@ -8,7 +8,8 @@ import {Box, createStyles, makeStyles, styled, Theme} from "@mui/material";
 import classes from './st.module.scss';
 
 // @ts-ignore
-import PhoneInput from 'react-phone-input-2'
+import PhoneInput, {CountryData} from 'react-phone-input-2'
+import {toUpper} from "lodash";
 
 
 const PhoneInputField : React.FC<any>
@@ -20,7 +21,10 @@ const PhoneInputField : React.FC<any>
         <Box className={classes.BoxInline} >
             <Box>
                 <PhoneInput
-                    onChange={onChange}
+                    onChange={(number, data: CountryData) => {
+                        data.countryCode = toUpper(data.countryCode);
+                        onChange({number, countryData: data})
+                    }}
                     value={value}
 
                     specialLabel={''}

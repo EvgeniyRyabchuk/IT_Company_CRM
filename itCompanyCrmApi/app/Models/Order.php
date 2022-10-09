@@ -28,4 +28,8 @@ class Order extends Model
     public function statusHistory() {
         return $this->hasMany(OrderStatusHistory::class);
     }
+
+    public function transactions() {
+        return $this->hasMany(Transaction::class);
+    }
 }

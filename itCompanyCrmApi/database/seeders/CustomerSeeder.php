@@ -18,9 +18,9 @@ class CustomerSeeder extends Seeder
     {
         $users = \App\Models\User::factory($count)->create()
             ->each(function ($user) use ($roleId, $isVip) {
-                $created_at = fake()->dateTimeBetween(
-                    '-2 year',
-                    '-1 year');
+                $created_at =
+                    fake()->dateTimeBetween('-3 week', '-1 day');
+
                 $user->roles()->attach($roleId);
                 $user->created_at = $created_at;
                 $user->save();

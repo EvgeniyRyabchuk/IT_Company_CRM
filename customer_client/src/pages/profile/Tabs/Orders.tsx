@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Computer, Download} from "@mui/icons-material";
-import {Box, Button, CircularProgress, Grid, IconButton} from "@mui/material";
+import {Box, CircularProgress, Grid, IconButton} from "@mui/material";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http/index";
@@ -10,20 +10,20 @@ import {OrderService} from "../../../services/OrderService";
 import '../../../assets/components/Profile/orders.css';
 import moment from 'moment';
 import {defaultUserAvatar} from "../../../utils/constant";
-import ModalWithTransition from "../../../components/modals/ModalWithTransition";
-import {DarkBackground, MyLoader} from "../../../components/layout/LayoutSuspence";
-import OrderDetail from "../../../components/modals/OrderDetail";
 import {useFetching} from "../../../hooks/useFetching";
+import useAuth from "../../../hooks/useAuth";
 
 
 const Orders : React.FC<{}> = ({}) => {
 
     const navigate = useNavigate();
 
+    const { user } = useAuth();
+
     const [orders, setOrders] = useState<Order[]>([]);
 
     const [fetching, isLoading, error] = useFetching(async () => {
-        const { data } = await OrderService.getOrders();
+        const { data } = await OrderService.getOrders(user!.id);
         setOrders(data.data);
     })
 
@@ -35,9 +35,6 @@ const Orders : React.FC<{}> = ({}) => {
 
     return (
         <div className="MuiBox-root css-1phy807">
-
-
-
             {
                 isLoading && <CircularProgress/>
             }

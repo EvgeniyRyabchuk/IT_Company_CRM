@@ -102,9 +102,9 @@ export interface ErrorAlertMessage {
 }
 
 // show error message with addition alertMessage from server
-export const showAxiosErrorAlert = (message: ErrorAlertMessage, error: any) => {
+export const showAxiosErrorAlert = (message: ErrorAlertMessage, error: any | null) => {
     let submessage = '';
-    if(!message.secondary) {
+    if(!message.secondary && error) {
         if(error.response.data.alertMessage) {
             submessage = error.response.data.alertMessage
         }
