@@ -141,7 +141,12 @@ class OrderController extends Controller
 
         $userId = $request->input('userId');
         $user = Auth::user();
-
+        if(!$user) {
+            return response()->json
+            (['alertMessage' => 'please log in'],401);
+        }
+//        return response()->json
+//        ($user,404);
         if($user->customer) {
             if($userId) {
                 $customer = Customer::where('user_id', $userId)->first();

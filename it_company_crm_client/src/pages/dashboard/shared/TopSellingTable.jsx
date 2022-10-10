@@ -100,13 +100,11 @@ export const SkeletonOrderRow = () => (
   )
 
 
-const TopSellingTable = ({ orders, timeRangeList, setTimeRange, timeRange, isLoading }) => {
+const TopSellingTable = ({ orders, timeRangeList, timeRange, isLoading, onTimeRangeChange }) => {
   const { palette } = useTheme();
   const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
-
-  console.log(timeRangeList)
 
   return (
     <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
@@ -124,7 +122,7 @@ const TopSellingTable = ({ orders, timeRangeList, setTimeRange, timeRange, isLoa
               <MenuItem
                   key={index}
                   onClick={() => {
-                    setTimeRange(trl)
+                    onTimeRangeChange(trl)
                   }}
                   selected={timeRange.value === trl.value}
                   value={trl.value}

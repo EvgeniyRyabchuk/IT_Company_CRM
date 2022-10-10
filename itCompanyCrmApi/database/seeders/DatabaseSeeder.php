@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
 
          $adminRoleId = Role::where('name', 'admin')->first()->id;
          $developerRoleId = Role::where('name', 'developer')->first()->id;
-         $manageRoleId = Role::where('name', 'manager')->first()->id;
+         $managerRoleId = Role::where('name', 'manager')->first()->id;
          $customerRoleId = Role::where('name', 'customer')->first()->id;
 
          $this->call([LevelSeeder::class]);
@@ -47,8 +47,9 @@ class DatabaseSeeder extends Seeder
 
 
          $this->call([EmployeeSeeder::class], false, ['count' => 10, 'roleId' => $developerRoleId]);
-         $this->call([EmployeeSeeder::class], false, ['count' => 3, 'roleId' => $manageRoleId]);
-         $this->call([CustomerSeeder::class], false, ['count' => 10, 'roleId' => $customerRoleId]);
+         $this->call([EmployeeSeeder::class], false, ['count' => 3, 'roleId' => $managerRoleId]);
+         $this->call([CustomerSeeder::class],
+             false, ['count' => 100, 'roleId' => $customerRoleId]);
 
         $testEmployeeAcoount = User::create([
             'first_name' => 'Evgeniy',
@@ -89,7 +90,7 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        $this->call(TagSeeder::class);
+//        $this->call(TagSeeder::class);
 
 
         $users = User::all();
@@ -135,7 +136,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(JobApplicationsSeeder::class);
 
-        $this->call(EventSeeder::class);
+//        $this->call(EventSeeder::class);
 
         $this->call(KanbanPrioritySeeder::class);
 

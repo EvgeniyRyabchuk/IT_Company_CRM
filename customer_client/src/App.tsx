@@ -9,6 +9,7 @@ import {Provider} from "react-redux";
 import {store} from "./store";
 import {ToastContainer} from "react-toastify"; //eslint-disable-line
 import 'react-toastify/dist/ReactToastify.css';
+import GoogleAnalytic from "./components/GoogleAnalytic";
 
 
 
@@ -18,6 +19,7 @@ function App() {
     console.log('app')
   return (
     <div className="App">
+        {/*<GoogleAnalytic/>*/}
 
         <GlobalStyles />
 
@@ -27,9 +29,8 @@ function App() {
             <AuthProvider>
                 {content}
             </AuthProvider>
+
         </Provider>
-
-
     </div>
   );
 }

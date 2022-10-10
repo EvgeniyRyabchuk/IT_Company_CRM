@@ -1,5 +1,5 @@
 import {Project, ProjectTag, ProjectType} from "./project";
-import {Order} from "./order";
+import {Order, OrderStatus} from "./order";
 
 
 export interface DashBoardAnalyticCounter {
@@ -30,3 +30,34 @@ export interface DashBoardAnalytic {
     lastProjects: Project[],
     increases: EntityIncrease<Project | any>[]
 }
+
+export interface SimpleLineChartData {
+    titles: any,
+    values: any
+}
+
+export interface OrderStatusesCounterData {
+    status: OrderStatus;
+    status_id: number;
+    total: number;
+}
+
+export interface SalesFunnelData {
+    status: OrderStatus;
+    count: number;
+    percent: number
+}
+
+export interface StatisticResponse {
+    ordersDynamicMetric: SimpleLineChartData[],
+    funnelSales: {
+        stack: SalesFunnelData,
+        total: number
+    }[],
+    orderStatusesCounter: OrderStatusesCounterData[],
+
+
+
+
+}
+

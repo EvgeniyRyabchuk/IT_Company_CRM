@@ -62,7 +62,7 @@ class DashboardController extends Controller
                     Order::with('project.projectType', 'status', 'customer.user')
                         ->whereBetween('created_at', [$start, $end])
                         ->orderBy('created_at',  'desc')
-                        ->get() 
+                        ->get()
                         ->take(5);
                 break;
             case 'lastMonth':

@@ -57,14 +57,15 @@ const Analytics = () => {
         value: 'lastMonth',
       },
   ];
-
-  const [ordersTimeRange, setOrdersTimeRange] = useState<TimeRange>(timeRangeList[0]);
+  const [ordersTimeRange, setOrdersTimeRange] = useState<TimeRange>({
+    name: 'This Month',
+    value: 'thisMonth',
+  });
 
   const [fetchData, isLoading, error] = useFetching(async () => {
     const { data } = await DashboardService.analytics();
     setData(data);
   });
-
   const [fetchDataWithTimeRange, isTimeRangeLoading, TimeRange] =
       useFetching(async (timeRange: TimeRange | undefined) => {
       const { data } = await DashboardService.analytics(timeRange);
@@ -72,9 +73,12 @@ const Analytics = () => {
   });
 
   useEffect(() => {
-    fetchDataWithTimeRange(ordersTimeRange);
-  }, [ordersTimeRange])
+    fetchData();
+  }, []);
 
+  const handleTimeRangeChange = (range: TimeRange) => {
+    fetchDataWithTimeRange(ordersTimeRange);
+  }
 
   return (
     <Fragment>
@@ -91,7 +95,7 @@ const Analytics = () => {
                     timeRangeList={timeRangeList}
 
                     timeRange={ordersTimeRange}
-                    setTimeRange={setOrdersTimeRange}
+                    onTimeRangeChange={handleTimeRangeChange}
                 />
 
                 <StatCards2
@@ -101,7 +105,7 @@ const Analytics = () => {
 
                 <H4>On going Projects</H4>
                 {/*
-            // @ts-ignore */}
+                // @ts-ignore */}
                 <div>
                   <RowCards projects={data.lastProjects} />
                 </div>
@@ -124,8 +128,6 @@ const Analytics = () => {
 
                 {/*<UpgradeCard />*/}
 
-
-
                 <Box sx={{ py: 2, mb: 3 }}>
                   <StatCards3 />
                 </Box>
@@ -139,8 +141,6 @@ const Analytics = () => {
                      alignContent='center'>
                   <EventCalendarWidget />
                 </Box>
-
-
 
                 {/*<Campaigns />*/}
               </Grid>

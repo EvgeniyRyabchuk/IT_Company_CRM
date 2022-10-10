@@ -22,6 +22,8 @@ use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StatisticController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -301,11 +303,17 @@ Route::controller(TransactionController::class)
     ->group(function () {
         Route::get('/customers/transactions','getByCustomer');
         Route::get('/orders/{orderId}/transactions','getByOrder');
-    });
+});
 
 Route::controller(TransactionController::class)
     ->prefix('transactions')
     ->group(function() {
         Route::get('/', 'index');
         Route::post('/', 'pay');
+});
+
+Route::controller(StatisticController::class)
+    ->prefix('statistic')
+    ->group(function() {
+        Route::get('/', 'index');
 });

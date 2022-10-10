@@ -13,7 +13,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-
 function App() {
     const content = useRoutes(routes);
     console.log('route: ', content);
@@ -23,7 +22,10 @@ function App() {
               <MatxTheme>
                 <div className="App"> 
                     <ToastContainer position='bottom-left' autoClose={1500} />
-                    <AuthProvider>{content}</AuthProvider>
+                    <AuthProvider>
+                        {content}
+                    </AuthProvider>
+
                 </div>
               </MatxTheme>
           </SettingsProvider>
