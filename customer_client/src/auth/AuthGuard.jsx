@@ -32,7 +32,7 @@ const AuthGuard = ({ children }) => {
   // // AND COMMENT OUT BELOW authenticated VARIABLE
 
   let authenticated = isAuthenticated;
-  console.log(authenticated)
+  // console.log(authenticated)
   return (
     <>
       {authenticated ? (

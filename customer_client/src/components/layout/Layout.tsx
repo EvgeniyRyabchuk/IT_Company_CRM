@@ -18,11 +18,8 @@ const Layout = () => {
         window.scrollTo(0, 0);
     }, [location]);
 
-    console.log(123);
-
     return (
         <>
-
             <Header logoLink={undefined} links={undefined} className={undefined} />
 
             <Container style={{ minHeight: '80vh', overflow: 'hidden'}}>
@@ -30,8 +27,6 @@ const Layout = () => {
             </Container>
 
             <MiniCenteredFooter />
-
-
         </>
     );
 };

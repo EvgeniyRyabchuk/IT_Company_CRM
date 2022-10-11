@@ -54,6 +54,7 @@ const ChatContent = ({ lastElement }: any) => {
                     display: currentChat ? 'block' : "none"
                 }}>
 
+
             </div>
             {
                 currentChat && currentChat.messages ? currentChat.messages.map((e: any) =>

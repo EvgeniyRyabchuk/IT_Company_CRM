@@ -48,7 +48,7 @@ const DoughnutChart = ({ height, color = [], data }) => {
                 name: 'Project Types',
                 type: 'pie',
                 radius: ['45%', '72.55%'],
-                center: ['50%', '40%'],
+                center: ['50%', '38%'],
                 avoidLabelOverlap: false,
                 hoverOffset: 5,
                 stillShowZeroSum: false,

@@ -29,15 +29,6 @@ import ReactEcharts from "echarts-for-react";
 
 const BarRace = ({ height, color = [], data}) => {
 
-    console.log(
-        data.map(e => ({
-                value: e.total,
-                itemStyle: {
-                    color: e.status.bgColor
-                }
-            })
-        ),
-    )
         const option = {
             grid: {
                 top: 10,
@@ -68,8 +59,6 @@ const BarRace = ({ height, color = [], data}) => {
                     show: true,
                     fontSize: 14,
                     formatter: function (e) {
-                        // console.log(e);
-
                         return e;
                     },
                     rich: {

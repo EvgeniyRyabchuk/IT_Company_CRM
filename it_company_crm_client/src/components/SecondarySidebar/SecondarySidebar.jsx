@@ -8,6 +8,8 @@ const SecondarySidebar = () => {
   const { settings } = useSettings();
   const secondarySidebarTheme = settings.themes[settings.secondarySidebar.theme];
 
+    // console.log(secondarySidebarTheme);
+
   return (
         <SecondarySidenavTheme  theme={secondarySidebarTheme}>
           {settings.secondarySidebar.open && <SecondarySidebarContent />}

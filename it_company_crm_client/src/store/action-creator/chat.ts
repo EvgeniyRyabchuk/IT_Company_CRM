@@ -1,5 +1,5 @@
 import {Dispatch} from "react";
-import {Chat, ChatAction, ChatActionTypes} from "../../types/chat";
+import {Chat, ChatAction, ChatActionTypes, ChatMessage} from "../../types/chat";
 import {ChatService} from "../../services/ChatService";
 
 
@@ -94,6 +94,12 @@ export const setCurrentChatId = (chatId: number) => {
     return { type: ChatActionTypes.SET_CURRENT_CHAT, payload: chatId };
 }
 
+export const setChatMessages = (chatId: number, messages: ChatMessage[]) => {
+    return { type: ChatActionTypes.SET_CHAT_MESSAGES, payload: {
+        chatId,
+        messages
+    }};
+}
 
 
 export const setMessagePage = (page: number): ChatAction => {

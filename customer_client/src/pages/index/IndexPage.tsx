@@ -19,7 +19,7 @@ import OurTeam from "../../components/cards/ProfileThreeColGrid";
 import Pricing from "../../components/Pricing";
 import AnimationRevealPage from "../../helpers/AnimationRevealPage";
 import FAQS from "../../components/faqs/SingleCol";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col lg:flex-row md:items-center max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -67,8 +67,9 @@ const CloseModalButton = tw.button`absolute top-0 right-0 mt-8 mr-8 hocus:text-p
 
 const IndexPage = () => {
 
-    const heading = "Modern React Templates, Just For You";
-    const description="Our templates are easy to setup, understand and customize. Fully modular components with a variety of pages and components.";
+    const heading = "Effective websites for your business";
+    const description="Our team of professionals develop stylish websites with exclusive designs that " +
+        "really boost your business and generate profit. Contact us now for more details.";
     const primaryButtonText="Make an Order";
     const primaryButtonUrl="/make-an-order";
     const watchVideoButtonText="Watch Video";
@@ -81,6 +82,7 @@ const IndexPage = () => {
 
     const toggleModal = () => setModalIsOpen(!modalIsOpen);
 
+    const navigate = useNavigate();
 
     const { pathname, hash, key } = useLocation();
 
@@ -92,6 +94,7 @@ const IndexPage = () => {
         // else scroll to id
         else {
             setTimeout(() => {
+                // console.log(hash);
                 const id = hash.replace('#', '');
                 const element = document.getElementById(id);
                 if (element) {
@@ -108,13 +111,17 @@ const IndexPage = () => {
                     <Heading>{heading}</Heading>
                     <Paragraph>{description}</Paragraph>
                     <Actions>
-
                         <PrimaryButton
-
                             /*
                             // @ts-ignore */
                             as="a"
-                            href={primaryButtonUrl}>
+                            href={primaryButtonUrl}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/make-an-order`)
+                            }}
+
+                        >
                             {primaryButtonText}
                         </PrimaryButton>
                         {/*<WatchVideoButton onClick={toggleModal}>*/}

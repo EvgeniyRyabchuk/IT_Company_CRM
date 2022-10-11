@@ -19,6 +19,7 @@ import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import {defaultUserAvatar} from "../../../utils/constant";
 import Skeleton from "@mui/material/Skeleton";
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 const CardHeader = styled(Box)(() => ({
   display: 'flex',
@@ -105,6 +106,7 @@ const TopSellingTable = ({ orders, timeRangeList, timeRange, isLoading, onTimeRa
   const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
+  const navigate = useNavigate();
 
   return (
     <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
@@ -138,16 +140,16 @@ const TopSellingTable = ({ orders, timeRangeList, timeRange, isLoading, onTimeRa
         <ProductTable>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ px: 3 }} colSpan={4}>
+              <TableCell sx={{ px: 3 }} colSpan={3}>
                 Customer / Project Type
               </TableCell>
-              <TableCell sx={{ px: 0 }} colSpan={2}>
+              <TableCell sx={{ px: 1 }} colSpan={2}>
                 Revenue
               </TableCell>
-              <TableCell sx={{ px: 0 }} colSpan={2}>
+              <TableCell sx={{ px: 1 }} colSpan={3}>
                 Status
               </TableCell>
-              <TableCell sx={{ px: 0 }} colSpan={1}>
+              <TableCell sx={{ px: 1 }} colSpan={1}>
                 Action
               </TableCell>
             </TableRow>
@@ -159,33 +161,33 @@ const TopSellingTable = ({ orders, timeRangeList, timeRange, isLoading, onTimeRa
               isLoading ? <SkeletonOrderRow />  :
                   orders.map((order) => (
                         <TableRow key={order.id} hover>
-                          <TableCell colSpan={4} align="left" sx={{ px: 0, textTransform: 'capitalize' }}>
+                          <TableCell colSpan={3} align="left" sx={{ px: 1, textTransform: 'capitalize' }}>
                             <Box display="flex" alignItems="center">
-                              <Avatar src={ order.customer ?
-                                  `${API_URL_WITH_PUBLIC_STORAGE}/${order.customer.user.avatar}`
-                                  : `${defaultUserAvatar}`
-                              } />
-                              <Paragraph sx={{ m: 0, ml: 4 }}>
+                              {/*<Avatar src={ order.customer ?*/}
+                              {/*    `${API_URL_WITH_PUBLIC_STORAGE}/${order.customer.user.avatar}`*/}
+                              {/*    : `${defaultUserAvatar}`*/}
+                              {/*} />*/}
+                              <Paragraph sx={{ m: 0, mx: 2 }}>
                                 {order.project ? order.project.project_type.name : 'no project yet'}
                               </Paragraph>
                             </Box>
                           </TableCell>
 
-                          <TableCell align="left" colSpan={2} sx={{ px: 0, textTransform: 'capitalize' }}>
+                          <TableCell align="left" colSpan={2} sx={{ px: 1, textTransform: 'capitalize' }}>
                             {/*${product.price > 999 */}
                             {/*  ? (product.price / 1000).toFixed(1)*/}
                             {/*  + 'k' : product.price}*/}
                             {order.project ? order.project.paid : 0}
                           </TableCell>
 
-                          <TableCell sx={{ px: 0 }} align="left" colSpan={2}>
+                          <TableCell sx={{ px: 1 }} align="left" colSpan={3}>
                             {
                               <Small bgcolor={order.status.bgColor}>{order.status.name}</Small>
                             }
                           </TableCell>
 
-                          <TableCell sx={{ px: 0 }} colSpan={1}>
-                            <IconButton>
+                          <TableCell sx={{ px: 1 }} colSpan={1}>
+                            <IconButton onClick={() => navigate('/orders')}>
                               <Icon color="primary">edit</Icon>
                             </IconButton>
                           </TableCell>

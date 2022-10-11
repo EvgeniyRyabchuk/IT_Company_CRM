@@ -77,14 +77,13 @@ export default ({
       collapseBreakpointClass = "lg"
 }) => {
 
+  const logoName = 'DEV.WEEK';
 
   const navigate = useNavigate();
 
   const { logout } = useAuth();
 
   const { isAuthenticated } = useAuth();
-
-  console.log(isAuthenticated)
 
 
   const defaultLinks = [
@@ -180,7 +179,7 @@ export default ({
     }}
      href="/">
       <img src={logo} alt="logo" />
-      Treact
+      {logoName}
     </LogoLink>
   );
 

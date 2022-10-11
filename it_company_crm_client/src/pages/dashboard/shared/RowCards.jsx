@@ -17,6 +17,7 @@ import { Fragment } from 'react';
 import AvatarGroup from "@mui/material/AvatarGroup";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
+import {useNavigate} from "react-router-dom";
 
 const ProjectName = styled(Span)(({ theme }) => ({
   marginLeft: 24,
@@ -46,6 +47,7 @@ const StyledAvatar = styled(Avatar)(() => ({
 const RowCards = ({projects}) => {
   const { palette } = useTheme();
   const textMuted = palette.text.secondary;
+  const navigate = useNavigate();
 
   return projects.map((project, index) => (
     <Fragment key={project.id}>
@@ -79,10 +81,10 @@ const RowCards = ({projects}) => {
 
           <Hidden smDown>
             <Grid item xs={3}>
-              <AvatarGroup max={4} display="flex" justifyContent='right' position="relative" >
+              <AvatarGroup max={4} display="flex" position="relative" >
                 {
                   project.employees.map(employee =>
-                      <Avatar src={`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`}/>
+                      <Avatar key={employee.id} src={`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`}/>
                   )
                 }
 
@@ -92,7 +94,7 @@ const RowCards = ({projects}) => {
 
           <Grid item xs={1}>
             <Box display="flex" justifyContent="flex-end">
-              <IconButton>
+              <IconButton  onClick={() => navigate('/projects')}>
                 <Icon>more_vert</Icon>
               </IconButton>
             </Box>

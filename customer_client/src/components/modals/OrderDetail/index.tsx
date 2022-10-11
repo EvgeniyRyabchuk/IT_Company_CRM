@@ -54,7 +54,7 @@ const OrderDetail : React.FC<{order: Order}>
                         <Grid item md={12}>
                             <Typography sx={{pb: 1}} variant='h2'>
                                 {
-                                    order.project ? order.project.name
+                                    order.project ? `Project Name: ${order.project.name}`
                                         : 'No Created Project Yet'
                                 }
                             </Typography>
@@ -69,9 +69,14 @@ const OrderDetail : React.FC<{order: Order}>
                                 }
                             </Typography>
 
-                            <Typography  align='justify'>
-                                { order.about }
-                            </Typography>
+                            <Box sx={{ my: 3, textAlign: 'jusify'}}>
+                                <h2>Your short description</h2>
+                                <Typography
+                                    align='justify'>
+                                    { order.about }
+                                </Typography>
+                            </Box>
+
                         </Grid>
 
                         <Grid item xs={12} sm={12} md={12}>
@@ -82,28 +87,30 @@ const OrderDetail : React.FC<{order: Order}>
                                             <Typography>
                                                 Your Order Extra File
                                             </Typography>
-                                            <IconButton
-                                                onClick={() => {
-                                                    window.location.href
-                                                        = `${API_URL_WITH_PUBLIC_STORAGE}/${order.extra_file}`
-                                                }}
-                                            >
-                                                <Typography>
-                                                    {
-                                                        order.extra_file.split('/').at(-1)
-                                                    }
-                                                    {/*somedoc.doc*/}
-                                                </Typography>
+                                            {
+                                                order.extra_file ?
 
-                                                <Download sx={{mx: 1}}/>
-                                            </IconButton>
+                                                <IconButton
+                                                    onClick={() => {
+                                                        window.location.href
+                                                            = `${API_URL_WITH_PUBLIC_STORAGE}/${order.extra_file}`
+                                                    }}
+                                                >
+                                                    <Typography>
+                                                        { order.extra_file.split('/').at(-1) }
+                                                        {/*somedoc.doc*/}
+                                                    </Typography>
+
+                                                    <Download sx={{mx: 1}}/>
+                                                </IconButton> : 'No Extra File'
+                                            }
                                         </Box>
                                     </FlexBoxCenter>
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={6} xl={6}>
                                     <Box sx={{my: 2}}>
                                         <Typography variant={'caption'} align='center'>
-                                            Team
+                                            Progress
                                         </Typography>
                                         <FlexBoxCenter>
                                             {

@@ -16,7 +16,7 @@ import GoogleAnalytic from "./components/GoogleAnalytic";
 function App() {
 
   const content = useRoutes(routes);
-    console.log('app')
+
   return (
     <div className="App">
         {/*<GoogleAnalytic/>*/}

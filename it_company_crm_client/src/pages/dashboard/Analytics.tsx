@@ -77,7 +77,7 @@ const Analytics = () => {
   }, []);
 
   const handleTimeRangeChange = (range: TimeRange) => {
-    fetchDataWithTimeRange(ordersTimeRange);
+    fetchDataWithTimeRange(range);
   }
 
   return (

@@ -9,7 +9,7 @@ import BarRace from "./BarRace";
 import FunnelSales from "./FunnelSales";
 import UndoOrdersPie from "./UndoOrdersPie";
 import UndoCasesTreemap from "./UndoCasesTreemap";
-import BiggestProjects from "./BiggestProjects";
+import BiggestProjectsTreemap from "./BiggestProjects";
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -26,18 +26,28 @@ const Container = styled('div')(({ theme }) => ({
 
 const AppEchart = () => {
 
-    const formatMetrics = (data) => {
-        const orderTitles = data.ordersDynamicMetric.map(e => moment(e.title).format('MMMM'));
-        const orderValues = data.ordersDynamicMetric.map(e => e.value);
+    const simpleLineChartFormat = (data) => {
+        const orderTitles = data.map(e => moment(e.title).format('MMMM'));
+        const orderValues = data.map(e => e.value);
+        return { titles: orderTitles,  values: orderValues }
+    }
 
-        data.ordersDynamicMetric = {
-            titles: orderTitles,
-            values: orderValues
-        }
+    const formatMetrics = (data) => {
+        data.ordersDynamicMetric = simpleLineChartFormat(data.ordersDynamicMetric);
+        data.customerDynamicMetric = simpleLineChartFormat(data.customerDynamicMetric);
+
 
         data.orderStatusesCounter = data.orderStatusesCounter.sort((e1, e2) => e1.status.index - e2.status.index);
-
         const orderSum = data.ordersDynamicMetric.values.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+
+        data.undoCasesGrouped = data.undoCasesGrouped.map(e => {
+            const name = `${e.order_undo_case.type_name} ${e.order_undo_case.reason}}`;
+            return { value: e.total, name, path: name };
+        });
+
+        data.biggestProjects = data.biggestProjects.map(e =>
+            ({ value: [e.budget, null, e.paid, e.paid], name: e.name, id: e.id, discretion: '123'})
+        )
 
         return data;
     }
@@ -48,7 +58,6 @@ const AppEchart = () => {
         const fetchStatistic = async () => {
             const { data } = await StatiscticService.index();
             const formatedData = formatMetrics(data);
-            console.log(formatedData);
             setData(formatedData);
         }
         fetchStatistic();
@@ -56,9 +65,7 @@ const AppEchart = () => {
     }, [])
 
     const theme = useTheme();
-    console.log('==============');
-    console.log(data);
-    console.log('==============');
+
   return (
     <Container>
       <Box className="breadcrumb">
@@ -70,36 +77,34 @@ const AppEchart = () => {
         {
             data &&
             <>
-                <SimpleCard title="Order Dynamic (last months)">
+                <SimpleCard title="New Orders Dynamic (last months)">
                     <SimpleLineChart
-                        data={data?.ordersDynamicMetric ?? []}
+                        data={data.ordersDynamicMetric ?? []}
                         height="350px"
                         color={[theme.palette.primary.main, theme.palette.primary.light]}
                     />
                 </SimpleCard>
 
-                <SimpleCard title="Customer Dynamic (last months)">
+                <SimpleCard title="New Customers Dynamic (last months)">
                     <SimpleLineChart
-                        data={data?.ordersDynamicMetric ?? []}
+                        data={data.customerDynamicMetric ?? []}
                         height="350px"
                         color={[theme.palette.primary.main, theme.palette.primary.light]}
                     />
                 </SimpleCard>
 
                 <SimpleCard title="Sales funnel (for order statuses)">
-
                     <FunnelSales
                         data={data.funnelSales}
                         height="600px"
                         color={[theme.palette.primary.main, theme.palette.primary.light]}
                     />
 
-
                 </SimpleCard>
 
                 <SimpleCard title="Sorted statuses by number of orders">
                     <BarRace
-                        data={data?.orderStatusesCounter ?? []}
+                        data={data.orderStatusesCounter ?? []}
                         height="400px"
                         color={[theme.palette.primary.main, theme.palette.primary.light]}
                     />
@@ -109,14 +114,14 @@ const AppEchart = () => {
                     <Grid container>
                         <Grid item xs={12} sm={12} md={9} xl={9}>
                             <UndoCasesTreemap
-                                data={data?.orderStatusesCounter ?? []}
+                                data={data.undoCasesGrouped ?? []}
                                 height="400px"
                                 color={[theme.palette.primary.main, theme.palette.primary.light]}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={3} xl={3}>
                             <UndoOrdersPie
-                                data={data?.orderStatusesCounter ?? []}
+                                data={data.orderRatio ?? []}
                                 height="400px"
                                 color={[theme.palette.primary.main, theme.palette.primary.light]}
                             />
@@ -126,14 +131,17 @@ const AppEchart = () => {
                 </SimpleCard>
 
 
+                <Box sx={{ m: 5, boxShadow: 1}}>
 
-                <SimpleCard title="Biggest Projects">
-                    <BiggestProjects
-                        data={data?.orderStatusesCounter ?? []}
-                        height="1000px"
-                        color={[theme.palette.primary.main, theme.palette.primary.light]}
-                    />
-                </SimpleCard>
+                    <SimpleCard title="Biggest Projects">
+                        <BiggestProjectsTreemap
+                            data={data.biggestProjects ?? []}
+                            height="1000px"
+                            color={[theme.palette.primary.main, theme.palette.primary.light]}
+                        />
+                    </SimpleCard>
+                </Box>
+
 
             </>
 

@@ -37,7 +37,6 @@ const reducer = (state: JWTAuthContextInitialState, action: any) => {
     switch (action.type) {
         case 'INIT': {
             const { isAuthenticated, user, rolesEntity} = action.payload
-            console.log(isAuthenticated, user, rolesEntity)
             return {
                 ...state,
                 isAuthenticated,
@@ -224,7 +223,6 @@ export const AuthProvider = ({ children } : any) => {
 
 
     useEffect(() => {
-        console.log(123);
         profile();
     }, [])
 
@@ -232,7 +230,6 @@ export const AuthProvider = ({ children } : any) => {
         return <MyLoader />;
     }
 
-    console.log('123')
 
     return (
         <AuthContext.Provider

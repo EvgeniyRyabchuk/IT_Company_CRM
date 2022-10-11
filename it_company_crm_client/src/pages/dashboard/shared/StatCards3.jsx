@@ -22,7 +22,7 @@ const StatCards3 = () => {
   return (
       <Grid container>
         {cardList.map((item, index) => (
-            <Grid xs={12} sm={12} md={12} lg={12} xl={6} sx={{ p: 1}}>
+            <Grid key={index} item xs={12} sm={12} md={12} lg={12} xl={6} sx={{ p: 1}}>
               <Card sx={{ p: 1}}>
                 <IconButton>
                   <Icon className="icon">{item.icon}</Icon>

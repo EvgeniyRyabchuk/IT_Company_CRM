@@ -7,7 +7,7 @@ import {values} from "lodash";
 const UndoOrdersPie = ({ height, color = [], data}) => {
 
     const option = {
-        backgroundColor: '#2c343c',
+        // backgroundColor: '#2c343c',
         title: {
             text: 'Customized Pie',
             left: 'center',
@@ -21,28 +21,22 @@ const UndoOrdersPie = ({ height, color = [], data}) => {
         },
         visualMap: {
             show: false,
-            min: 80,
-            max: 600,
+            min: 0,
+            max: data.total,
             inRange: {
                 colorLightness: [0, 1]
             }
         },
         series: [
             {
-                name: 'Access From',
+                name: 'Active/Undo Ratio',
                 type: 'pie',
-                radius: '55%',
+                radius: '80%',
                 center: ['50%', '50%'],
-                data: [
-                    { value: 335, name: 'Direct' },
-                    { value: 310, name: 'Email' },
-                    { value: 274, name: 'Union Ads' },
-                    { value: 235, name: 'Video Ads' },
-                    { value: 400, name: 'Search Engine' }
-                ].sort(function (a, b) {
+                data: data.payload.sort(function (a, b) {
                     return a.value - b.value;
                 }),
-                roseType: 'radius',
+                // roseType: 'radius',
                 label: {
                     color: 'rgba(255, 255, 255, 0.3)'
                 },
@@ -56,8 +50,8 @@ const UndoOrdersPie = ({ height, color = [], data}) => {
                 },
                 itemStyle: {
                     color: '#c23531',
-                    shadowBlur: 200,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    // shadowBlur: 200,
+                    // shadowColor: 'rgba(0, 0, 0, 0.5)'
                 },
                 animationType: 'scale',
                 animationEasing: 'elasticOut',

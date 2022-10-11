@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactEcharts from "echarts-for-react";
-import obama_budget_2012 from './data1.json';
-
+// import obama_budget_2012 from './data1.json';
+import {numberWithCommas} from '../../../utils/utils';
 
 import diskData from './data.json';
 
@@ -24,7 +24,7 @@ const BiggestProjects = ({ height, color = [], data}) => {
                     out[i] = newNode;
                     let value = newNode.value;
                     // Calculate amount per household.
-                    value[3] = value[0] / household_america_2012;
+                    // value[3] = value[0] / household_america_2012;
                     // if mode === 0 and mode === 2 do nothing
                     if (mode === 1) {
                         // Set 'Change from 2010' to value[0].
@@ -82,9 +82,7 @@ const BiggestProjects = ({ height, color = [], data}) => {
                 ];
             }
 
-            function numberWithCommas(x) {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
+
 
             function isValidNumber(num) {
                 return num != null && isFinite(num);
@@ -97,24 +95,24 @@ const BiggestProjects = ({ height, color = [], data}) => {
                     let value = info.value;
                     let amount = value[amountIndex];
                     amount = isValidNumber(amount)
-                        ? numberWithCommas(amount * 1000) + '$'
+                        ? numberWithCommas(amount) + '$'
                         : '-';
                     let amount2011 = value[amountIndex2011];
                     amount2011 = isValidNumber(amount2011)
-                        ? numberWithCommas(amount2011 * 1000) + '$'
+                        ? numberWithCommas(amount2011) + '$'
                         : '-';
-                    let perHousehold = value[3];
-                    perHousehold = isValidNumber(perHousehold)
-                        ? numberWithCommas(+perHousehold.toFixed(4) * 1000) + '$'
-                        : '-';
-                    let change = value[2];
+                    // let perHousehold = value[3];
+                    // perHousehold = isValidNumber(perHousehold)
+                    //     ? numberWithCommas(+perHousehold.toFixed(4)) + '$'
+                    //     : '-';
+                    let change = parseFloat(value[2]);
                     change = isValidNumber(change) ? change.toFixed(2) + '%' : '-';
                     return [
                         '<div class="tooltip-title">' +
-                        ReactEcharts.format.encodeHTML(info.name) +
+                        // ReactEcharts.format.encodeHTML(info.name) +
                         '</div>',
                         '2012 Amount: &nbsp;&nbsp;' + amount + '<br>',
-                        'Per Household: &nbsp;&nbsp;' + perHousehold + '<br>',
+                        'Per 123 Household: &nbsp;&nbsp;' + value[2] + '<br>',
                         '2011 Amount: &nbsp;&nbsp;' + amount2011 + '<br>',
                         'Change From 2011: &nbsp;&nbsp;' + change
                     ].join('');
@@ -134,14 +132,14 @@ const BiggestProjects = ({ height, color = [], data}) => {
                                 '{name|' + params.name + '}',
                                 '{hr|}',
                                 '{budget|$ ' +
-                                numberWithCommas(params.value[0]) +
+                                numberWithCommas(parseFloat(params.value[0])) +
                                 '} {label|budget}'
                             ];
                             mode !== 1 &&
                             arr.push(
                                 '{household|$ ' +
-                                numberWithCommas(+params.value[3].toFixed(4) * 1000) +
-                                '} {label|per household}'
+                                numberWithCommas(parseFloat(params.value[2]).toFixed(2)) +
+                                '} {label|per househol d}'
                             );
                             return arr.join('\n');
                         },
@@ -205,14 +203,13 @@ const BiggestProjects = ({ height, color = [], data}) => {
                     seriesOpt.name = mode;
                     seriesOpt.top = 80;
                     seriesOpt.visualDimension = idx === 2 ? 2 : undefined;
-                    seriesOpt.data = buildData(idx, obama_budget_2012);
+                    seriesOpt.data = buildData(idx, data);
                     seriesOpt.levels = getLevelOption(idx);
                     return seriesOpt;
                 })
         };
 
 
-    console.log(option);
 
 
     return <ReactEcharts style={{ height: height }} option={option} />;

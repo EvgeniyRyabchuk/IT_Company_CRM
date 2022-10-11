@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
+use App\Models\Project;
 use App\Models\Status;
+use App\Models\UndoOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,37 +19,80 @@ class StatisticController extends Controller
     public function index(Request $request)
     {
 
-        $ordersDynamicMetric = StatisticController::getOrdersDynamicMetric(9);
+        $ordersDynamicMetric =
+            StatisticController::getDynamicMetric(9, Order::class);
+        $customerDynamicMetric =
+            StatisticController::getDynamicMetric(9, Customer::class);
+
         $funnelSales = StatisticController::getFunnelSalesByOrderStatuses();
         $orderStatusesCounter = StatisticController::getOrderStatusesCountByOrders();
 
+        $orderRatio = StatisticController::getOrderRatio();
+
+
+        $undoCasesGrouped = UndoOrder::with('orderUndoCase')
+            ->select('order_undo_case_id', DB::raw('count(*) as total'))
+            ->join('undo_order_cases', 'undo_order_cases.id', 'undo_orders.order_undo_case_id')
+            ->groupBy('order_undo_case_id')
+            ->get();
+
+        $biggestProjects = Project::with('projectType')
+            ->orderBy('budget', 'desc')->get();
+
         return response()->json(compact(
        'ordersDynamicMetric',
-       'funnelSales',
-                'orderStatusesCounter'
+       'customerDynamicMetric',
+                 'funnelSales',
+                'orderStatusesCounter',
+                'orderRatio',
+                'undoCasesGrouped',
+                'biggestProjects'
         ));
     }
 
-    public static function getOrdersDynamicMetric($lastMonthCount = 9) {
+
+
+
+    public static function getOrderRatio() {
+        $undoStatus = Status::where('name', 'Undo')->first();
+        $finishedStatus = Status::where('name', 'Finished')->first();
+        $totalOrderCount = Order::count();
+        $activeOrderCount = Order::where('status_id', '!=', $undoStatus->id)
+            ->where('status_id', '!=', $finishedStatus->id)
+            ->count();
+        $undoOrderCount = Order::where('status_id', $undoStatus->id)->count();
+        $finishedOrderCount = Order::where('status_id', $finishedStatus->id)->count();
+
+        return [
+            'total'=> $totalOrderCount,
+            'payload' => [
+                ['name' => 'Undo', 'value' => $undoOrderCount],
+                ['name' => 'Active', 'value' => $activeOrderCount],
+                ['name' => 'Finished', 'value' => $finishedOrderCount],
+            ]
+        ];
+    }
+
+    public static function getDynamicMetric($lastMonthCount = 9, $model) {
         $currentMonth = Carbon::now()->startOfMonth();
-        $ordersDynamicMetric = [];
+        $DynamicMetric = [];
 
         for ($i = $lastMonthCount; $i >= 0; $i--) {
             $date =  $i === 0 ? $currentMonth : Carbon::now()->subMonth($i);
             $dateStart = $date->copy()->startOfMonth();
             $dateEnd = $date->copy()->endOfMonth();
 
-            $count = Order::whereBetween('created_at', [
+            $count = $model::whereBetween('created_at', [
                 $dateStart,
                 $dateEnd,
             ])->count();
-            $ordersDynamicMetric[] = [
+            $DynamicMetric[] = [
                 'value' => $count,
                 "title" => $dateStart->toString()
             ];
         }
 
-        return $ordersDynamicMetric;
+        return $DynamicMetric;
     }
 
     public static function getFunnelSalesByOrderStatuses($lastMonthCount = null) {

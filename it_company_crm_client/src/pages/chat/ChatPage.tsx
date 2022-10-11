@@ -1,6 +1,6 @@
 import '../../assets/components/Chat/index.css';
 import React, {useEffect, useRef, useState} from 'react';
-import {Box} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import {Breadcrumb} from "../../components";
 import {Container} from "../../assets/components/breadcrumb";
 import {useTypeSelector} from "../../hooks/useTypedSelector";
@@ -14,6 +14,8 @@ import {DEFAULT_LIMIT, DEFAULT_PAGE} from "../../store/reducers/chatReducer";
 import {User} from "../../types/user";
 import useAuth from "../../hooks/useAuth";
 import AddUserChatModal from "../../components/modals/AddUserChatModal/AddUserChatModal";
+import useTimer from "../../hooks/useTimer";
+import {ChatService} from "../../services/ChatService";
 
 
 const ChatPage = ({...props}) => {
@@ -45,11 +47,30 @@ const ChatPage = ({...props}) => {
         setMessagePage,
         setMessageLimit,
         setCurrentChatId,
-        clean
+        clean,
+        setChatMessages
     } = useAction();
 
-    useEffect(() => {
 
+    const { timer, setTimer, loop } = useTimer(() => {
+        // console.log('check');
+        checkNewMessages();
+    }, 5000);
+
+    useEffect(() => {
+        if(!chatLoadingFirstTime) {
+            loop();
+        }
+    }, [chatLoadingFirstTime])
+
+
+
+    const killNewMessageChecker = () => {
+        if(timer)
+            clearTimeout(timer);
+    }
+
+    useEffect(() => {
         console.log('chatId', withUserId);
         const fetchChatsAndMessages = async () => {
             const receivedChats = await fetchChats(user!.id);
@@ -88,7 +109,7 @@ const ChatPage = ({...props}) => {
 
 
     const lastElement = useRef<any>();
-
+    // observe on top element
     useObserver(lastElement,
         currentChat ? currentChat.messagePage < totalMessagePages :
             messagePage < totalMessagePages,
@@ -101,8 +122,9 @@ const ChatPage = ({...props}) => {
             }
     });
 
+    // if page is change
     useEffect(() => {
-        console.log('changed messagepage')
+        console.log('changed message page')
         if(currentChatId && currentChat != null) {
             console.log("===================== use effect ======================= " + messagePage)
             // console.log('length', currentChat.messages.length ?? 0)
@@ -114,8 +136,12 @@ const ChatPage = ({...props}) => {
         }
     }, [messagePage])
 
+
+    // if current chat change
     useEffect(() => {
-        if(chatLoadingFirstTime) return;
+        if(chatLoadingFirstTime) {
+            return;
+        }
         console.log(currentChatId, currentChat, currentChat?.messages)
         if(currentChatId && currentChat != null) {
             if(!currentChat.messages) {
@@ -132,8 +158,31 @@ const ChatPage = ({...props}) => {
 
     const [userModalOpen, setUserModalOpen] = useState(false);
 
+    const checkNewMessages = async () => {
+
+        const { data } = await ChatService.getNew(user!.id, 'messages');
+
+        for (let _new of data) {
+            setChatMessages(_new.chat_id, _new.newMessages);
+        }
+
+        //TODO: scroll to down
+
+        // const msg = currentChat?.messages[0];
+        // if(msg && currentChatId)
+        //     setChatMessages(currentChatId, [msg]);
+    }
+
+    const checkNewChat = () => {
+
+    }
+
     return (
         <Container>
+
+            <Button onClick={checkNewMessages}>
+                Check
+            </Button>
 
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "Chats" }]} />

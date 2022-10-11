@@ -1,5 +1,10 @@
 // import { differenceInSeconds } from 'date-fns';
 
+export function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
 export const convertHexToRGB = (hex) => {
   // check if it's a rgba
   if (hex.match('rgba')) {

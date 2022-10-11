@@ -1,7 +1,7 @@
 import $api from "../http";
 import {AuthorizedResponse} from "../types/auth";
 import {AxiosResponse} from "axios";
-import {Chat} from "../types/chat";
+import {Chat, GetNewChatData} from "../types/chat";
 import {Employee, User} from "../types/user";
 import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
 
@@ -60,5 +60,14 @@ export class ChatService {
             message
         });
     }
+
+    static async getNew(userId: number, target: 'messages' | 'chats'):
+        Promise<AxiosResponse<GetNewChatData[]>> {
+
+        return $api.get<GetNewChatData[]>(
+            `/users/${userId}/chats/new/${target}`);
+
+    }
+
 
 }

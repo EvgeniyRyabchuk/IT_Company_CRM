@@ -33,7 +33,8 @@ const ChatComponent = () => {
         fetchMessageByChat,
         setMessagePage,
         setMessageLimit,
-        setCurrentChatId
+        setCurrentChatId,
+        setChatMessages
     } = useAction();
 
     const chatId = 1;

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactEcharts from "echarts-for-react";
+import {numberWithCommas} from '../../../utils/utils';
 
-
-import diskData from './data.json';
+// import diskData from './data.json';
 
 
 const UndoCasesTreemap = ({ height, color = [], data}) => {
@@ -46,9 +46,9 @@ const UndoCasesTreemap = ({ height, color = [], data}) => {
                 }
                 return [
                     '<div class="tooltip-title">' +
-                    formatUtil.encodeHTML(treePath.join('/')) +
+                    // formatUtil.encodeHTML(treePath.join('/')) +
                     '</div>',
-                    'Disk Usage: ' + formatUtil.addCommas(value) + ' KB'
+                     value + ' orders'
                 ].join('');
             }
         },
@@ -65,12 +65,12 @@ const UndoCasesTreemap = ({ height, color = [], data}) => {
                     borderColor: '#fff',
                 },
                 levels: getLevelOption(),
-                data: diskData
-            }
+                data: data
+            },
+
         ]
     };
 
-    console.log(option);
 
 
     return <ReactEcharts style={{ height: height }} option={option} />;

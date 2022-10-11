@@ -144,6 +144,9 @@ Route::prefix('users')->group(function () {
 
 
     Route::prefix('{userId}/chats')->group(function ($e) {
+
+        Route::get('new/{target}',  [ChatController::class, 'getNew']);
+
         Route::get('/', [ChatController::class, 'showChats']);
         Route::post('/', [ChatController::class, 'createChat']);
         Route::delete('/{chatId}', [ChatController::class, 'deleteChat']);
@@ -155,6 +158,8 @@ Route::prefix('users')->group(function () {
         Route::post('{chatId}/messages', [ChatController::class, 'sendMessage']);
         Route::put('{chatId}/messages/{messageId}', [ChatController::class, 'updateMessage']);
         Route::delete('{chatId}/messages/{messageId}', [ChatController::class, 'deleteMessage']);
+
+
     });
 
 

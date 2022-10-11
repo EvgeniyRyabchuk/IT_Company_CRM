@@ -19,8 +19,6 @@ import 'react-calendar/dist/Calendar.css';
  const EventCalendarWidget = () => {
      const [value, onChange] = useState(new Date());
 
-     console.log(value)
-
      return (
          <Calendar  onChange={onChange} value={value} />
      )

@@ -8,6 +8,7 @@ use App\Models\ChatMessageContent;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
@@ -144,4 +145,39 @@ class ChatController extends Controller
         return response()->json($chat);
     }
 
+    public function getNew(Request $request, $userId, $target) {
+
+        $user = Auth::user();
+
+
+        switch ($target) {
+            case 'messages':
+
+                 $query = ChatMessage::with('content', 'toUser', 'fromUser')
+                    ->where('isSeen', false)
+                    ->where('to_id', $user->id);
+
+                $newMessages = $query
+                    ->get()
+                    ->groupBy('chat_id', true);
+
+                $query->update(['isSeen' => true]);
+
+                $newChatMessages = [];
+                foreach ($newMessages as $key => $item) {
+                    $newChatMessages[] = [
+                        'chat_id' => $key,
+                        'newMessages' => $item
+                    ];
+                }
+
+                return response()->json($newChatMessages);
+
+            case 'chats':
+
+                break;
+            default:
+                return response()->json(['alertMessage' => 'no target in url'], 404);
+        }
+    }
 }
