@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -6,11 +6,14 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 
 import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 
-import logo from "../../assets/images/logo.svg";
+// import logos from "../../assets/images/logos.svg";
+import logo from "../../assets/logos/logo_64_64.png";
+
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
 import useAuth from "../../hooks/useAuth";
 import {useNavigate} from "react-router-dom";
+import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 const Header = tw.header`
   flex justify-between items-center
@@ -22,7 +25,7 @@ const Header = tw.header`
 const stickyStyle = {
   top: '10px',
   position: 'sticky',
-  zIndex: '99',
+  zIndex: '999',
   opacity: '0.9',
   backgroundColor: 'white'
 };
@@ -85,30 +88,75 @@ export default ({
 
   const { isAuthenticated } = useAuth();
 
+  const indexNavs = [
+    {
+      id: 'services',
+      name: 'services',
+      title: 'Services',
+      link: '/#services'
+    },
+    {
+      id: 'ourteam',
+      name: 'ourteam',
+      title: 'Our Team',
+      link: '/#ourteam'
+    },
+    {
+      id: 'pricing',
+      name: 'pricing',
+      title: 'Pricing',
+      link: '/#pricing'
+    },
+    {
+      id: 'faqs',
+      name: 'faqs',
+      title: 'Faqs',
+      link: '/#faqs'
+    },
+  ]
+
+  const [activeIndexLink, setActiveIndexLink] = useState(null);
+  const handleSetActive = (to) => {
+    setActiveIndexLink(to);
+  }
+  const handleSetInactive = (to) => {
+    setActiveIndexLink(null);
+  }
+
 
   const defaultLinks = [
-    <NavLinks key={1}>
+    <NavLinks key={1} >
       <NavLink onClick={(e) => {
         e.preventDefault()
         navigate('/make-an-order')
       }} href="/make-an-order">Make an Order</NavLink>
 
-      <NavLink onClick={(e) => {
-        e.preventDefault()
-        navigate('/#services')
-      }} href="/#services">Services</NavLink>
-      <NavLink onClick={(e) => {
-        e.preventDefault()
-        navigate('/#ourteam')
-      }} href="/#ourteam">Our Team</NavLink>
-      <NavLink onClick={(e) => {
-        e.preventDefault()
-        navigate('/#pricing')
-      }} href="/#pricing">Pricing</NavLink>
-      <NavLink onClick={(e) => {
-        e.preventDefault()
-        navigate('/#faqs')
-      }} href="/#faqs">FAQS</NavLink>
+      {
+        indexNavs.map((indexNav, index) =>
+            <NavLink key={index}>
+                  <Link
+                      onMouseUp={(e) =>{
+                        console.log('click')
+                        navigate(indexNav.link)
+                        // setTimeout(() => navigate(indexNav.link), 1000);
+
+                      }}
+                      onSetActive={handleSetActive}
+                      activeClass="active"
+                      style={{
+                        cursor: 'pointer',
+                        color: activeIndexLink && activeIndexLink === indexNav.id ? '#742DFF' : 'inherit'
+                      }}
+                      to={indexNav.name}
+                      spy={true}
+                      duration={300}
+                      href={indexNav.link}>
+                    {indexNav.title}
+                  </Link>
+            </NavLink>
+        )
+      }
+
       <NavLink onClick={(e) => {
         e.preventDefault()
         navigate('/contact-us')
@@ -188,6 +236,7 @@ export default ({
 
   return (
     <Header
+
         style={stickyStyle}
         className={className || "header-light"}>
       <DesktopNavLinks

@@ -20,6 +20,10 @@ import Pricing from "../../components/Pricing";
 import AnimationRevealPage from "../../helpers/AnimationRevealPage";
 import FAQS from "../../components/faqs/SingleCol";
 import {useLocation, useNavigate} from "react-router-dom";
+//@ts-ignore
+import {Element, scroller} from "react-scroll";
+import {Button} from "@mui/material";
+
 
 const Container = tw.div`relative`;
 const TwoColumn = tw.div`flex flex-col lg:flex-row md:items-center max-w-screen-xl mx-auto py-20 md:py-24`;
@@ -86,23 +90,32 @@ const IndexPage = () => {
 
     const { pathname, hash, key } = useLocation();
 
+    const scrollToHashElement = () => {
+        const id = hash.replace('#', '');
+        scroller.scrollTo(id, {});
+    }
+
     useEffect(() => {
-        // if not a hash link, scroll to top
-        if (hash === '') {
-            window.scrollTo(0, 0);
-        }
-        // else scroll to id
-        else {
-            setTimeout(() => {
-                // console.log(hash);
-                const id = hash.replace('#', '');
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView();
-                }
-            }, 0);
-        }
-    }, [pathname, hash, key]); // do this on route change
+        setTimeout(() => scrollToHashElement(), 100)
+    }, [])
+
+    // useEffect(() => {
+    //     // if not a hash link, scroll to top
+    //     if (hash === '') {
+    //         window.scrollTo(0, 0);
+    //     }
+    //     // else scroll to id
+    //     else {
+    //         setTimeout(() => {
+    //             // console.log(hash);
+    //             const id = hash.replace('#', '');
+    //             const element = document.getElementById(id);
+    //             if (element) {
+    //                 element.scrollIntoView();
+    //             }
+    //         }, 0);
+    //     }
+    // }, [pathname, hash, key]); // do this on route change
 
     return (
         <>
@@ -154,14 +167,30 @@ const IndexPage = () => {
                     <CloseIcon tw="w-6 h-6" />
                 </CloseModalButton>
             </StyledModal>
-            <Services id='services' />
-            <OurTeam id='ourteam'/>
 
-            <Pricing id='pricing' />
+            <Element id='services' name={'services'}>
+                <Services />
+            </Element>
 
-            <AnimationRevealPage>
-                <FAQS id='faqs'/>
-            </AnimationRevealPage>
+            <Element id='ourteam' name={'ourteam'}>
+                <OurTeam id='ourteam' name={'ourteam'}/>
+            </Element>
+
+            <Element id='pricing' name={'pricing'}>
+                <Pricing id='pricing' name={'pricing'}/>
+            </Element>
+
+            <Element id='faqs' name={'faqs'}>
+                <AnimationRevealPage>
+                    <FAQS id='faqs' name={'faqs'}/>
+                </AnimationRevealPage>
+            </Element>
+
+
+
+
+
+
 
 
         </>

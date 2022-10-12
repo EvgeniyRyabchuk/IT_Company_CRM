@@ -168,13 +168,13 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
                     </HeaderContainer>
                     <PlansContainer >
 
-                        {projectTypesPlans.map((plan) => (
+                        {projectTypesPlans.map((plan, index) => (
                             <Plan key={plan.id}
-                                  featured={['1']}>
+                                  featured={[`${index}`]}>
                                 <PlanHeader>
                                     <span className="nameAndFeaturedContainer">
                                       <span className="name">{plan.name}</span>
-                                        {['1'] && <span className="featuredText">{['1']}</span>}
+                                        {[`${index}`] && <span className="featuredText">{[`${index+1}`]}</span>}
                                     </span>
                                     <div className="pricingContainer">
                                       <span className="currentPrice">
