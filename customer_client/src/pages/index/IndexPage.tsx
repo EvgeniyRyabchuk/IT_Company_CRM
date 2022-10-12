@@ -88,16 +88,6 @@ const IndexPage = () => {
 
     const navigate = useNavigate();
 
-    const { pathname, hash, key } = useLocation();
-
-    const scrollToHashElement = () => {
-        const id = hash.replace('#', '');
-        scroller.scrollTo(id, {});
-    }
-
-    useEffect(() => {
-        setTimeout(() => scrollToHashElement(), 100)
-    }, [])
 
     // useEffect(() => {
     //     // if not a hash link, scroll to top

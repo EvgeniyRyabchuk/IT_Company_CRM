@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -12,7 +12,7 @@ import logo from "../../assets/logos/logo_64_64.png";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
 import useAuth from "../../hooks/useAuth";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 const Header = tw.header`
@@ -122,6 +122,18 @@ export default ({
   const handleSetInactive = (to) => {
     setActiveIndexLink(null);
   }
+
+
+  const { pathname, hash, key } = useLocation();
+
+  const scrollToHashElement = () => {
+    const id = hash.replace('#', '');
+    scroller.scrollTo(id, {});
+  }
+
+  useEffect(() => {
+    setTimeout(() => scrollToHashElement(), 100)
+  }, [])
 
 
   const defaultLinks = [
