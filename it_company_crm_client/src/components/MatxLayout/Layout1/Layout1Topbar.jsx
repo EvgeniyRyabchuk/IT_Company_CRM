@@ -103,17 +103,17 @@ const Layout1Topbar = () => {
           </StyledIconButton>
 
           <IconBox>
-            <StyledIconButton>
-              <Icon>mail_outline</Icon>
-            </StyledIconButton>
+            {/*<StyledIconButton>*/}
+            {/*  <Icon>mail_outline</Icon>*/}
+            {/*</StyledIconButton>*/}
 
-            <StyledIconButton>
-              <Icon>web_asset</Icon>
-            </StyledIconButton>
+            {/*<StyledIconButton>*/}
+            {/*  <Icon>web_asset</Icon>*/}
+            {/*</StyledIconButton>*/}
 
-            <StyledIconButton>
-              <Icon>star_outline</Icon>
-            </StyledIconButton>
+            {/*<StyledIconButton>*/}
+            {/*  <Icon>star_outline</Icon>*/}
+            {/*</StyledIconButton>*/}
           </IconBox>
         </Box>
 

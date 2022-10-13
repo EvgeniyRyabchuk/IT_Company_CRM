@@ -22,7 +22,7 @@ const Content = tw.div`max-w-screen-xl my-0 sm:my-8 bg-white text-gray-900 shado
 const General = React.lazy(() => import("./Tabs/General"));
 const Orders = React.lazy(() => import("./Tabs/Orders"));
 const Payment = React.lazy(() => import("./Tabs/payment/Payment"));
-const Chat = React.lazy(() => import("./Tabs/Chat"));
+const ChatTab = React.lazy(() => import("./Tabs/ChatTab"));
 
 export const TabPanel : React.FC<TabComponent> = ({tabIndex, currentIndex, children, ...props}) => {
     return (
@@ -62,7 +62,7 @@ const ProfilePage = () => {
         {
             index: 3,
             name: ProfileTabName.CHATS,
-            element: <Chat />
+            element: <ChatTab />
         }
     ]
 

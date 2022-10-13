@@ -262,6 +262,7 @@ const NewsListPage = () => {
                                 />
                                 <CardMedia
                                     component="img"
+                                    width='800'
                                     height="194"
                                     image={`${API_URL_WITH_PUBLIC_STORAGE}/${n.img}`}
                                     alt="Paella dish"

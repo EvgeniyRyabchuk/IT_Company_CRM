@@ -180,11 +180,18 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
         }
 
         case ChatActionTypes.SET_CHAT_MESSAGES: {
-
+            console.log(123);
             const { chatId, messages} = action.payload;
 
             const newChat = state.chats.find(c => c.id === chatId);
-            if(!newChat) return { ...state };
+
+            if(!newChat) {
+                const newChat = messages[0].chat;
+                newChat.messages = [...messages];
+                const newChats = [...state.chats, newChat];
+                return {...state, chats: newChats};
+            }
+
 
             newChat.messages = [...newChat.messages, ...messages];
             const newChats = state.chats.map(e => e.id === newChat.id ? newChat : e);
@@ -195,6 +202,11 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
             }
 
             return { ...state, currentChat, chats: newChats }
+        }
+
+        case ChatActionTypes.SET_CHATS: {
+
+            return { ...state, chats: [...action.payload] }
         }
 
         case ChatActionTypes.MARK_ALL_CHAT_MESSAGES_AS_SEEN: {

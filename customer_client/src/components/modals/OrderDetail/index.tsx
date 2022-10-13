@@ -22,6 +22,7 @@ import {Order, OrderStatus} from "../../../types/order";
 import {PageMode} from "../../../types/global";
 import {useParams} from "react-router-dom";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
+import Transactions from "../../../pages/profile/Tabs/payment/Transactions";
 
 interface Modal {
     isOpen: boolean,
@@ -49,7 +50,7 @@ const OrderDetail : React.FC<{order: Order}>
     return (
         <OrderDetailWrapper>
             <Grid container spacing={3}>
-                <Grid item md={6} xl={6}>
+                <Grid item md={9} xl={9} sx={{padding: '20px 50px !important'}}>
                     <Grid container spacing={3}>
                         <Grid item md={12}>
                             <Typography sx={{pb: 1}} variant='h2'>
@@ -176,17 +177,20 @@ const OrderDetail : React.FC<{order: Order}>
                                         </Typography>
                                     </Box>
                                 </FlexBoxCenter>
-
                             </Grid>
                         }
-
+                        <Grid item xs={12} sm={12} md={12}>
+                            <Transactions _for='order' orderId={order.id} />
+                        </Grid>
                     </Grid>
-
                 </Grid>
 
-                <Grid item md={6} xl={6}
-                      sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <Box sx={{ width: 300 }}>
+                <Grid item
+                      md={3}
+                      xl={3}
+                      sx={{p: 4}}
+                >
+                    <Box>
                         <Stepper activeStep={order?.status.index} orientation="vertical">
                             {statuses.map((status, index) => (
                                 <Step key={status.name}>

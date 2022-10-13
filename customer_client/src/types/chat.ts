@@ -50,6 +50,12 @@ export interface ChatState {
     totalMessagePages: number
 }
 
+export interface GetNewChatData {
+    chat_id: number;
+    newMessages: ChatMessage[];
+}
+
+
 export enum ChatActionTypes {
     FETCH_CHATS = 'FETCH_CHATS',
     FETCH_CHATS_SUCCESS = 'FETCH_CHATS_SUCCESS',
@@ -79,7 +85,10 @@ export enum ChatActionTypes {
     MARK_ALL_CHAT_MESSAGES_AS_SEEN = 'MARK_ALL_CHAT_MESSAGES_AS_SEEN',
 
     ADD_CHAT = 'ADD_CHAT',
-    CLEAN = 'CLEAN'
+    CLEAN = 'CLEAN',
+
+    SET_CHAT_MESSAGES = 'SET_CHAT_MESSAGES',
+    SET_CHATS = 'SET_CHATS'
 }
 
 interface FetchChatsAction {
@@ -174,6 +183,16 @@ interface CleanAction {
     type: ChatActionTypes.CLEAN,
 }
 
+interface SetChatMessagesAction {
+    type: ChatActionTypes.SET_CHAT_MESSAGES;
+    payload: { chatId: number, messages: ChatMessage[] }
+}
+
+interface SetChats {
+    type: ChatActionTypes.SET_CHATS;
+    payload: Chat[];
+}
+
 export type ChatAction =
     FetchChatsAction | FetchChatsSuccessAction | FetchChatsErrorAction |
     ChatSetPageAction | ChatSetLimitAction |
@@ -186,7 +205,10 @@ export type ChatAction =
     SetErrorAction |
     MarkAllMessagesAsSeenAction |
     AddChatAction |
-    CleanAction
+    CleanAction |
+    SetChatMessagesAction | SetChats
+
+
 
 
 

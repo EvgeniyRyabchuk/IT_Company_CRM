@@ -17,13 +17,17 @@ use App\Models\RefreshToken;
 use App\Models\Role;
 use App\Models\Status;
 use App\Models\User;
+use App\Notifications\AccountCreatedNotification;
 use Carbon\Carbon;
 use http\Message;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -43,8 +47,7 @@ class AuthController extends Controller
 
         if($detail === false) {
             return response()->json(compact('user'));
-        }
-        else {
+        } else {
             $roleEntity = [];
             foreach ($user->roles as $role) {
                 if($role->name == "developer"
@@ -381,5 +384,53 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'account deleted successfully']);
     }
+
+
+    public static function createCustomerAccount($contact)
+    {
+        $isExistWithSuchEmail = User::where('email', $contact->email)->first() ?? false;
+
+        if ($isExistWithSuchEmail) {
+            return null;
+        }
+
+        $randPassword = Str::random(15);
+
+        $user = User::create([
+            'first_name' => $contact->name,
+            'last_name' => $contact->name,
+            'middle_name' => $contact->name,
+            'full_name' => $contact->name,
+            'email' => $contact->email,
+            'password' => Hash::make($randPassword),
+        ]);
+
+        $user->roles()->attach(Role::where('name', 'customer')->first()->id);
+
+        $customer = Customer::create(['user_id' => $user->id,]);
+
+        $phoneNumber = $contact->phone;
+//        $countryCode = $request->input('phone.countryData.countryCode');
+//        $phoneParts = Utils::getNumberParts($phoneNumber, $countryCode);
+//
+//        if(count($phoneParts) !== 3) {
+//            $phoneParts = ['000', '000', '000'];
+//        }
+
+        $phoneModel = [
+            'code_1' => 333,
+            'code_2' => 333,
+            'number' => 333,
+            'phone_number' => $phoneNumber,
+            'user_id' => $user->id,
+        ];
+        Phone::create($phoneModel);
+
+        Notification::send($user, new AccountCreatedNotification($user, $randPassword));
+
+        return $customer;
+    }
+
+
 
 }

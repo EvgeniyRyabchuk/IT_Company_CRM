@@ -1,5 +1,39 @@
 // import { differenceInSeconds } from 'date-fns';
 
+
+export function getProjectProgress(order) {
+  const status = order.status;
+  const undoIndex = 7;
+  if(!status) { return 0; }
+
+  const totalOrderStatuses = 6;
+  const index = status.index + 1;
+  if(index === undoIndex) return 0;
+  // 100 -  6
+  // x   -  3
+
+  console.log(index, totalOrderStatuses)
+
+  return ((100 * index) / totalOrderStatuses).toFixed(0);
+}
+
+// export function getProjectProgress(project) {
+//   const status = project.order.status;
+//   const undoIndex = 7;
+//   if(!status) { return 0; }
+//
+//   const totalOrderStatuses = 6;
+//   const index = status.index + 1;
+//   if(index === undoIndex) return 0;
+//   // 100 -  6
+//   // x   -  3
+//
+//   console.log(index, totalOrderStatuses)
+//
+//   return ((100 * index) / totalOrderStatuses).toFixed(0);
+// }
+
+
 export const getUniqId = (array) => {
   if(array.length === 0) return 1;
   const ids = array.map(e => e.id);

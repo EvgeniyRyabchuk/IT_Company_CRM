@@ -3,20 +3,20 @@ import {NavigationRoute} from "../types/matx/navigations";
 export const navigations : NavigationRoute[]  = [
   { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
   { label: 'PAGES', type: 'label' },
-  {
-    name: 'Session/Auth',
-    icon: 'security',
-    children: [
-      { name: 'Sign in', iconText: 'SI', path: '/session/signin' },
-      { name: 'Sign up', iconText: 'SU', path: '/session/signup' },
-
-      { name: 'Forgot Password', iconText: 'FP', path: '/session/forgot-password' },
-      { name: 'EmailSentSuccessfully', iconText: 'SS', path: '/session/forgot-password/sent' },
-      { name: 'PasswordReset', iconText: 'PR', path: '/session/password-reset/:id/:token' },
-
-      { name: 'Error', iconText: '404', path: '/session/404' },
-    ],
-  },
+  // {
+  //   name: 'Session/Auth',
+  //   icon: 'security',
+  //   children: [
+  //     { name: 'Sign in', iconText: 'SI', path: '/session/signin' },
+  //     { name: 'Sign up', iconText: 'SU', path: '/session/signup' },
+  //
+  //     { name: 'Forgot Password', iconText: 'FP', path: '/session/forgot-password' },
+  //     { name: 'EmailSentSuccessfully', iconText: 'SS', path: '/session/forgot-password/sent' },
+  //     { name: 'PasswordReset', iconText: 'PR', path: '/session/password-reset/:id/:token' },
+  //
+  //     { name: 'Error', iconText: '404', path: '/session/404' },
+  //   ],
+  // },
   // { label: 'Components', type: 'label' },
   // {
   //   name: 'Components',

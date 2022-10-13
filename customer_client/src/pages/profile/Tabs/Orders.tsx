@@ -12,6 +12,7 @@ import moment from 'moment';
 import {defaultUserAvatar} from "../../../utils/constant";
 import {useFetching} from "../../../hooks/useFetching";
 import useAuth from "../../../hooks/useAuth";
+import {getProjectProgress} from "../../../utils/utils";
 
 
 const Orders : React.FC<{}> = ({}) => {
@@ -93,15 +94,27 @@ const Orders : React.FC<{}> = ({}) => {
                                     }
                                 </p>
                                 <div className="css-3de75">
-                            <span className="MuiLinearProgress-root
-                            MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-3bkacx"
-                                  role="progressbar" >
-                                <span className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary
-                                MuiLinearProgress-bar1Determinate css-17jm9ao"
-                                      style={{transform: 'translateX(-30%)'}}>
-                                </span>
-                            </span>
-                                    <h6 className=" MuiBox-root css-11tyiws">70%</h6>
+                                     <span className="
+                                    MuiLinearProgress-root
+                                    MuiLinearProgress-colorPrimary
+                                    MuiLinearProgress-determinate css-3bkacx"
+                                           role="progressbar">
+
+                                        <span
+                                            className="MuiLinearProgress-bar
+                                            MuiLinearProgress-barColorPrimary
+                                            MuiLinearProgress-bar1Determinate
+                                            css-17jm9ao"
+                                            style={{
+                                                transform: `translateX(-${100 - Number(getProjectProgress(order)) }%)`
+                                            }}>
+                                        </span>
+                                    </span>
+                                    <h6 className=" MuiBox-root css-11tyiws">
+                                        <>
+                                            {getProjectProgress(order)}%
+                                        </>
+                                    </h6>
                                 </div>
                                 <div className="MuiBox-root css-1lekzkb">
                                     <AvatarGroup max={4}>

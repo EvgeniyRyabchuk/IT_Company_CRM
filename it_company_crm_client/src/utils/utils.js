@@ -1,5 +1,22 @@
 // import { differenceInSeconds } from 'date-fns';
 
+
+export function getProjectProgress(project) {
+  const status = project.order.status;
+  const undoIndex = 7;
+  if(!status) { return 0; }
+
+  const totalOrderStatuses = 6;
+  const index = status.index + 1;
+  if(index === undoIndex) return 0;
+  // 100 -  6
+  // x   -  3
+
+  console.log(index, totalOrderStatuses)
+
+  return ((100 * index) / totalOrderStatuses).toFixed(0);
+}
+
 export function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

@@ -196,7 +196,14 @@ const ProjectsListPage = () => {
 
         if(mode === 'create') {
             const { data } = await ProjectService.createProjectForOrder(values);
-            fetchOrders();
+            const newOrders : Order[] = orders.map((order) => {
+                if(order.id === data.order!.id)
+                    return {...order, project: data, project_id: data.id };
+                return order;
+            });
+            console.log(newOrders)
+            setOrders([...newOrders]);
+            // fetchOrders();
         }
         else {
             const { data: updatedProject } = await ProjectService.updateProject(values.id, values);
@@ -275,7 +282,7 @@ const ProjectsListPage = () => {
                                     }}
                                     labelId="demo-select-small"
                                     id="demo-select-small"
-                                    defaultValue='1'
+                                    defaultValue='2'
                                     label="Sort"
                                     onChange={(e: any) => onSortOrderHandleChange(e)}
                                 >

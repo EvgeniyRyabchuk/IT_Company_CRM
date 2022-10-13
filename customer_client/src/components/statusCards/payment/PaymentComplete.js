@@ -64,7 +64,7 @@ const PaymentComplete = () => {
                             </button>
                             <button
                                 onClick={() => {
-
+                                    navigate(`/`);
                                 }}
                                 style={{backgroundColor: 'rgb(39, 206, 136)'}}
                                 className="MuiButton-root MuiButton-contained
@@ -76,11 +76,14 @@ const PaymentComplete = () => {
                                 <span
                                     className="MuiButton-startIcon
                                      MuiButton-iconSizeMedium css-1l6c7y9">
-                                    <DownloadIcon />
+                                    {/*<DownloadIcon />*/}
                                 </span>
-                                    Download as PDF
+                                    {/*Download as PDF*/}
+                                    Go To Landing Page
                                 <span className="MuiTouchRipple-root
-                                 css-w0pj6f"></span>
+                                 css-w0pj6f">
+
+                                </span>
                             </button>
                 </div>
             </div>

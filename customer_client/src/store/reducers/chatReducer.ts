@@ -24,7 +24,7 @@ const defaultState = {
 }
 
 const initialState: ChatState = {
-   ...defaultState
+    ...defaultState
 }
 
 
@@ -137,20 +137,20 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
             return { ...state, loadingSendedMessage: false, error: action.payload }
 
 
-/*
-        // case ChatActionTypes.SET_TOTLAL_CHAT_COUNT:
-        //     return { ...state, totalChatPages: action.payload }
-        //
-        // case ChatActionTypes.SET_TOTLAL_MESSAGE_COUNT:
-        //     return { ...state, totalMessagePages: action.payload }
-        //
+        /*
+                // case ChatActionTypes.SET_TOTLAL_CHAT_COUNT:
+                //     return { ...state, totalChatPages: action.payload }
+                //
+                // case ChatActionTypes.SET_TOTLAL_MESSAGE_COUNT:
+                //     return { ...state, totalMessagePages: action.payload }
+                //
 
-        // case ChatActionTypes.SET_CHAT_PAGE:
-        //     return {...state}
-        // case ChatActionTypes.SET_CHAT_LIMIT:
-        //     return {...state}
-        //
-*/
+                // case ChatActionTypes.SET_CHAT_PAGE:
+                //     return {...state}
+                // case ChatActionTypes.SET_CHAT_LIMIT:
+                //     return {...state}
+                //
+        */
 
         case ChatActionTypes.SET_MESSAGE_PAGE: {
             if(state.currentChat) {
@@ -179,6 +179,36 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
             return { ...state, error: action.payload }
         }
 
+        case ChatActionTypes.SET_CHAT_MESSAGES: {
+            console.log(123);
+            const { chatId, messages} = action.payload;
+
+            const newChat = state.chats.find(c => c.id === chatId);
+
+            if(!newChat) {
+                const newChat = messages[0].chat;
+                newChat.messages = [...messages];
+                const newChats = [...state.chats, newChat];
+                return {...state, chats: newChats};
+            }
+
+
+            newChat.messages = [...newChat.messages, ...messages];
+            const newChats = state.chats.map(e => e.id === newChat.id ? newChat : e);
+
+            const currentChat = state.currentChat;
+            if(state.currentChat && state.currentChatId === newChat.id) {
+                state.currentChat.messages = [...newChat.messages];
+            }
+
+            return { ...state, currentChat, chats: newChats }
+        }
+
+        case ChatActionTypes.SET_CHATS: {
+
+            return { ...state, chats: [...action.payload] }
+        }
+
         case ChatActionTypes.MARK_ALL_CHAT_MESSAGES_AS_SEEN: {
             console.log('mark')
             const newCurrentChat = { ...state.currentChat};
@@ -194,10 +224,10 @@ export const chatReducer = (state = initialState, action: ChatAction) : ChatStat
                 return e;
             });
             return <ChatState> {
-                    ...state,
-                    chats: [...newChats],
-                    currentChat: newCurrentChat
-                }
+                ...state,
+                chats: [...newChats],
+                currentChat: newCurrentChat
+            }
         }
 
         case ChatActionTypes.CLEAN:

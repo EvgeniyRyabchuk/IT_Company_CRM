@@ -30,6 +30,8 @@ import Paper from '@mui/material/Paper';
 import moment from "moment";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import '../../assets/components/ProjectPage/index.css';
+import {ChatService} from "../../services/ChatService";
+import useAuth from "../../hooks/useAuth";
 
 function createData(
     name: string,
@@ -62,7 +64,7 @@ const rows = [
 const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     = ({ mode, setMode}) => {
 
-        
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const { orderId } = useParams();
@@ -72,6 +74,8 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     const [orderPageMode, setOrderPageMode] = useState<PageMode>(PageMode.SELECT);
 
     console.log(order?.customer?.user.phones.map(t => t.phone_number));
+
+
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -308,6 +312,28 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                                 }
 
                                             </div>
+
+                                            {
+                                                order.customer &&
+                                                <div className='flex-row-column'>
+                                                    <div className='text-center'>
+                                                        Actions
+                                                    </div>
+                                                    <div>
+                                                        <Button
+                                                            variant='contained'
+                                                            onClick={ async () => {
+                                                            const toUser = order!.customer!.user;
+                                                            const { data } = await ChatService.createChat(user!.id, toUser.id);
+                                                            navigate(`/chats/${toUser.id}`);
+                                                        }}>
+                                                            Go to Chat With Customer
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            }
+
+
                                         </div>
                                         :
                                         <div className='flex-table' style={{height: '450px'}}>
@@ -389,6 +415,7 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                         </Box>
 
                     </Grid>
+
                     <Grid item md={3} xs={12}>
                         <Stepper activeStep={order?.status.index} orientation="vertical">
                             {statuses.map((status, index) => (
@@ -399,6 +426,8 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                                 Order status №{index+1}
                                                 <br/>
                                                 {
+                                                    order?.status_history
+                                                        .find(sh => sh.status_id === status?.id) &&
                                                     moment(order?.status_history
                                                         .find(sh => sh.status_id === status?.id)
                                                         ?.created_at ?? '')

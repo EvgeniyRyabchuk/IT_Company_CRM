@@ -9,8 +9,12 @@ use App\Models\Status;
 use App\Models\Position;
 use App\Models\Skill;
 use App\Models\User;
+use App\Notifications\AccountCreatedNotification;
+use App\Notifications\EmployeeAccountCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use function Symfony\Component\String\b;
@@ -22,7 +26,6 @@ class CustomerController extends Controller
         $filters = $request->input('filters') ?? null;
         $search = $request->input('search') ?? '';
         $sort = $request->input('sort') ?? null;
-
 
         if(!is_null($filters)) {
             $filters = json_decode($filters, true, 3);
@@ -153,10 +156,12 @@ class CustomerController extends Controller
             return response()->json(['message' => 'Such level does not exist on that position'], 404);
         }
 
+        $randPassword = Str::random(10);
+
         if($mode === 'create') {
             $user = new User();
             $customer= new Customer();
-            $user->password = Str::random(10);
+            $user->password = Hash::make($randPassword);
         } else {
             $customer = Customer::findOrFail($customerId);
             $user = $customer->user;
@@ -198,14 +203,19 @@ class CustomerController extends Controller
 //
 //        }
         $customer->save();
+
+
         return $customer;
     }
 
     public function store(Request $request) {
         $customer = $this->saveCustomers($request, 'create');
+
         $addedCustomer = Customer::with('user', 'position', 'level', 'skills')
             ->withCount(['projects as order_count'])
             ->findOrFail($customer->id);
+
+
         return response()->json($addedCustomer);
     }
 
@@ -245,4 +255,6 @@ class CustomerController extends Controller
         $customer->save();
         return response()->json(['message' => 'OK']);
     }
+
+
 }

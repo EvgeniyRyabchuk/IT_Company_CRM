@@ -9,7 +9,7 @@ const UndoOrdersPie = ({ height, color = [], data}) => {
     const option = {
         // backgroundColor: '#2c343c',
         title: {
-            text: 'Customized Pie',
+            text: 'Order Status Ratio',
             left: 'center',
             top: 20,
             textStyle: {
@@ -29,7 +29,7 @@ const UndoOrdersPie = ({ height, color = [], data}) => {
         },
         series: [
             {
-                name: 'Active/Undo Ratio',
+                name: 'Ratio',
                 type: 'pie',
                 radius: '80%',
                 center: ['50%', '50%'],

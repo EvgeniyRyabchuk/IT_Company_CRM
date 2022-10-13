@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\_SL\FileManager;
+use App\Http\Controllers\User\AuthController;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderContact;
@@ -26,8 +27,6 @@ use function GuzzleHttp\Promise\all;
 
 class OrderController extends Controller
 {
-
-    //TODO: fillter handler class
 
     public function index(Request $request) {
 
@@ -68,7 +67,6 @@ class OrderController extends Controller
                 ->whereIn('statuses.id', $orderStatuses);
         }
 
-
         if(count($deadlineRange) >= 2) {
             $deadlineRange = [
                 Carbon::parse($deadlineRange[0]),
@@ -86,8 +84,8 @@ class OrderController extends Controller
             $to->setTime(23, 59);
 
             $query->whereBetween('orders.created_at', [$from, $to]);
-        }
 
+        }
 
         switch ($sort) {
             case "status":
@@ -104,7 +102,9 @@ class OrderController extends Controller
                 $query = $query->orderBy("orders.$sort", $sortOrder);
                 break;
         }
+
         $query->select('orders.*');
+
         if($search && $search !== '') {
             $queryForAuth = clone $query;
             $queryForGuest = clone $query;
@@ -113,16 +113,20 @@ class OrderController extends Controller
                 ->leftJoin('customers', 'orders.customer_id', 'customers.id')
                 ->leftJoin('users', 'customers.user_id', 'users.id')
                 ->leftJoin('phones', 'users.id', 'phones.user_id')
-                ->where('full_name', 'LIKE', "%$search%")
+                ->where('users.full_name', 'LIKE', "%$search%")
                 ->orWhere('phones.phone_number', 'LIKE', "%$search%")
                 ->orWhere('users.email', 'LIKE', "%$search%")
             ;
+
+//            dd($queryForAuth->get()->map(function ($item) { return $item->id; }));
+
             $queryForGuest
                 ->leftJoin('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
                 ->orWhere('order_contacts.name', 'LIKE', "%$search%")
                 ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
                 ->orWhere('order_contacts.email', 'LIKE', "%$search%")
             ;
+
 //            $query
 //                ->join('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
 //                ->join('customers', 'orders.customer_id', 'customers.id')
@@ -133,11 +137,14 @@ class OrderController extends Controller
 //
 //                ->orWhere('order_contacts.name', 'LIKE', "%$search%")
 //                ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
-            ;
+//            ;
 
+//            $query = $queryForAuth;
             $query = $queryForAuth->unionAll($queryForGuest);
 //            return response()->json($query->toSql(), 201);
         }
+
+
 
         $userId = $request->input('userId');
         $user = Auth::user();
@@ -145,12 +152,9 @@ class OrderController extends Controller
             return response()->json
             (['alertMessage' => 'please log in'],401);
         }
-//        return response()->json
-//        ($user,404);
         if($user->customer) {
             if($userId) {
                 $customer = Customer::where('user_id', $userId)->first();
-
                 if(!$customer) {
                     return response()->json
                     (['alertMessage' => 'no such customer'],404);
@@ -162,9 +166,7 @@ class OrderController extends Controller
             }
         }
 
-
         $orders = $query->paginate($perPage);
-
         return response()->json($orders, 201);
     }
 
@@ -178,9 +180,7 @@ class OrderController extends Controller
             'project.tags',
             'project.employees.user',
             'transactions'
-        )
-            ->find($orderId);
-
+        )->find($orderId);
         return response()->json($order, 201);
     }
 
@@ -256,7 +256,21 @@ class OrderController extends Controller
         $oldStatus = Status::findOrFail($request->input('order_status_id'));
         $newStatus = Status::findOrFail($request->input('new_order_status_id'));
 
-        // if order status already does not undo, then remove entry in undo_order table
+        // check if user has account, if not then create
+        if($newStatus->name !== 'Undo' && !$order->customer && $order->order_contact_id) {
+            $createdCustomer = AuthController::createCustomerAccount($order->orderContact);
+            $createdCustomer->load('user.phones');
+
+            if($createdCustomer) {
+                $order->customer()->associate($createdCustomer);
+                $order->orderContact()->dissociate();
+            }
+            else {
+                return response()->json(['alertMessage' => 'Fail to create employee'], 404);
+            }
+        }
+
+        // if order status already does not undo, then remove entry from undo_order table
         if($oldStatus->name == 'Undo' && $newStatus->id != $oldStatus->id) {
             $undoOrderEntry = UndoOrder::where("order_id", $order->id)->first();
             $undoOrderEntry->delete();
@@ -286,7 +300,7 @@ class OrderController extends Controller
         $resOrder = Order::with(
     'project.projectType',
             'status',
-            'customer.user',
+            'customer.user.phones',
             'orderContact')
             ->findOrFail($order->id);
         return response()->json($resOrder, 201);

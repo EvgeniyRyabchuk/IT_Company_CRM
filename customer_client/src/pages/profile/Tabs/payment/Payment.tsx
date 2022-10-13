@@ -10,7 +10,7 @@ const Payment = () => {
         <div>
 
             <CardManagment onCardSelected={() => {}}/>
-            <Transactions />
+            <Transactions _for='customer' />
 
         </div>
     );

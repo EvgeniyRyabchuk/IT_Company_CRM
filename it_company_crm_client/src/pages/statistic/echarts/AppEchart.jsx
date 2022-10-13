@@ -46,7 +46,7 @@ const AppEchart = () => {
         });
 
         data.biggestProjects = data.biggestProjects.map(e =>
-            ({ value: [e.budget, null, e.paid, e.paid], name: e.name, id: e.id, discretion: '123'})
+            ({ value: [e.paid, null, e.budget, e.budget], name: e.name, id: e.id, description: '123'})
         )
 
         return data;
@@ -93,7 +93,7 @@ const AppEchart = () => {
                     />
                 </SimpleCard>
 
-                <SimpleCard title="Sales funnel (for order statuses)">
+                <SimpleCard title="">
                     <FunnelSales
                         data={data.funnelSales}
                         height="600px"
@@ -102,7 +102,7 @@ const AppEchart = () => {
 
                 </SimpleCard>
 
-                <SimpleCard title="Sorted statuses by number of orders">
+                <SimpleCard title="Current Order Count With Status">
                     <BarRace
                         data={data.orderStatusesCounter ?? []}
                         height="400px"
@@ -110,30 +110,30 @@ const AppEchart = () => {
                     />
                 </SimpleCard>
 
-                <SimpleCard title="Sorted statuses by number of orders">
-                    <Grid container>
-                        <Grid item xs={12} sm={12} md={9} xl={9}>
-                            <UndoCasesTreemap
-                                data={data.undoCasesGrouped ?? []}
-                                height="400px"
-                                color={[theme.palette.primary.main, theme.palette.primary.light]}
-                            />
+                <Box sx={{ my: 5, boxShadow: 1}}>
+                    <SimpleCard title="">
+                        <Grid container>
+                            <Grid item xs={12} sm={12} md={9} xl={9}>
+                                <UndoCasesTreemap
+                                    data={data.undoCasesGrouped ?? []}
+                                    height="400px"
+                                    color={[theme.palette.primary.main, theme.palette.primary.light]}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={3} xl={3}>
+                                <UndoOrdersPie
+                                    data={data.orderRatio ?? []}
+                                    height="400px"
+                                    color={[theme.palette.primary.main, theme.palette.primary.light]}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} sm={12} md={3} xl={3}>
-                            <UndoOrdersPie
-                                data={data.orderRatio ?? []}
-                                height="400px"
-                                color={[theme.palette.primary.main, theme.palette.primary.light]}
-                            />
-                        </Grid>
-                    </Grid>
 
-                </SimpleCard>
+                    </SimpleCard>
+                </Box>
 
-
-                <Box sx={{ m: 5, boxShadow: 1}}>
-
-                    <SimpleCard title="Biggest Projects">
+                <Box sx={{ my: 5, boxShadow: 1}}>
+                    <SimpleCard title="">
                         <BiggestProjectsTreemap
                             data={data.biggestProjects ?? []}
                             height="1000px"

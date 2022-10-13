@@ -6,19 +6,39 @@ Add horizontal scrollbar
 
 --- Project statuses 
 
+
+A: 
+Search by guest name + 
+user tags autocomplite 
+Phone numbers 
+user entry 
+customers visibility on others pc 
+if queue is work 
+
+
+Delete all default values  
+All Mail Notification 
+Vacancy created at random 
+Change requiremement file 
+
+B: 
+
+
 Project types disable if not match the queryString 
-
-
 Refact stylying 
 Error  showsystem 
 Perfect scroll mobile 
-Alert system 
 Pdf-export 
 
-Order more seeding 
 
 
-Search by guest name + 
+
+
+
+
+
+
+
 
 Online Chat:  
 - send message from customer to manager 
@@ -28,11 +48,7 @@ Role Guard
 
 if sort and filter too fast app work is wrong  
 
-
-customers visibility on others pc 
-user tags autocomplite 
 link icon types 
-
 query string for saved state of page 
 
 --- DB 
@@ -46,15 +62,11 @@ query string for saved state of page
 
 
 
-
-if change chat new messages no loading 
-load relationships by collection element 
 check if query is work  
-user entry 
+
 random id 
 phone number store 
 
 
 
 
-project progress 

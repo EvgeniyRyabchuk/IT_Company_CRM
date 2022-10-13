@@ -339,12 +339,9 @@ const CustomerListPage = () => {
                     <MenuItem
                         key={1}
                         onClick={ async () => {
-
                             const toUser = row.original;
-
                             const { data } = await ChatService.createChat(user!.id, toUser.id);
                             navigate(`/chats/${toUser.id}`);
-
                             closeMenu();
                         }}
                         sx={{ m: 0 }}

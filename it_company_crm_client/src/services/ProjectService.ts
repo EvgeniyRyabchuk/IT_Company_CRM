@@ -31,10 +31,10 @@ export class ProjectService {
     }
 
     static async createProjectForOrder(payload: Project)
-        : Promise<AxiosResponse<string>> {
+        : Promise<AxiosResponse<Project>> {
 
         try {
-            const response = await $api.post<string>(`/projects`, {
+            const response = await $api.post<Project>(`/projects`, {
                 ...payload
             });
             showAxiosSuccessAlert(PrimarySuccessAlert.CREATED_PROJECT);

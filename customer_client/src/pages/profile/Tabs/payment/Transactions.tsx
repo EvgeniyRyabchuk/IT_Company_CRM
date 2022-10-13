@@ -9,7 +9,7 @@ import useAuth from "../../../../hooks/useAuth";
 const TransactionList = tw.div`my-10`;
 
 
-const Transactions = () => {
+const Transactions = ({ _for, orderId } : {_for: 'customer' | 'order', orderId?: number}) => {
 
 
     const { user } = useAuth();
@@ -18,12 +18,19 @@ const Transactions = () => {
 
     useEffect(() => {
 
-        const fetchTransactions = async () => {
+        const fetchCustomerTransactions = async () => {
             const { data } = await TransactionService.getTransactionsByCustomerId();
             setTransactions([...data]);
         }
-        fetchTransactions();
+        const fetchOrderTransactions = async (orderId: number) => {
+            const { data } = await TransactionService.getTransactionsByOrderId(orderId);
+            setTransactions([...data]);
+        }
 
+        if(_for === 'customer')
+            fetchCustomerTransactions();
+        else if(_for === 'order' && orderId)
+            fetchOrderTransactions(orderId);
 
     }, [])
 

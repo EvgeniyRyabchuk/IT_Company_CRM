@@ -12,7 +12,7 @@ import {Order} from "../../../types/order";
 import {OrderService} from "../../../services/OrderService";
 
 const Container = tw(ContainerBase)`min-h-screen text-white font-medium`;
-const Content = tw.div`max-w-screen-xl my-0 sm:my-8 bg-white text-gray-900 shadow sm:rounded-lg mx-auto`;
+const Content = tw.div`max-w-screen-xl my-0 sm:my-8 bg-white text-gray-900 shadow drop-shadow-lg sm:rounded-lg mx-auto py-10`;
 
 
 const OrderPage = () => {

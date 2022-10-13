@@ -99,7 +99,7 @@ const AccountInformation : React.FC<{ userEntity: UserRoleEntity }> = ({userEnti
                                         label="About"
                                         multiline
                                         rows={8}
-                                        defaultValue="Default Value"
+                                        // defaultValue="Default Value"
 
                                         name='about'
                                         onBlur={handleBlur}

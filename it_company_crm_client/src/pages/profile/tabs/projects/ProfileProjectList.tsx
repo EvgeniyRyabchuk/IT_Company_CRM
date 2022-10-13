@@ -8,11 +8,13 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../../http";
 import {useNavigate} from "react-router-dom";
+import {getProjectProgress} from "../../../../utils/utils";
 
 const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
 
     const navigate = useNavigate();
     
+    // @ts-ignore
     return (
         <div className="MuiBox-root css-1phy807">
             <Grid container spacing={10} className="MuiGrid-root MuiGrid-container css-1h77wgb">
@@ -26,6 +28,7 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                              className="MuiGrid-root css-1twzmnh"
                         >
                             <div
+                                key={project.id}
                                 onClick={() => {
                                     navigate(`/projects/${project.id}`);
                                 }}
@@ -50,15 +53,27 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                                     }
                                 </p>
                                 <div className="css-3de75">
-                            <span className="MuiLinearProgress-root
-                            MuiLinearProgress-colorPrimary MuiLinearProgress-determinate css-3bkacx"
-                                  role="progressbar" >
-                                <span className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary
-                                MuiLinearProgress-bar1Determinate css-17jm9ao"
-                                      style={{transform: 'translateX(-30%)'}}>
-                                </span>
-                            </span>
-                                    <h6 className=" MuiBox-root css-11tyiws">70%</h6>
+                                    <span className="
+                                    MuiLinearProgress-root
+                                    MuiLinearProgress-colorPrimary
+                                    MuiLinearProgress-determinate css-3bkacx"
+                                    role="progressbar">
+
+                                        <span
+                                            className="MuiLinearProgress-bar
+                                            MuiLinearProgress-barColorPrimary
+                                            MuiLinearProgress-bar1Determinate
+                                            css-17jm9ao"
+                                            style={{
+                                              transform: `translateX(-${100 - Number(getProjectProgress(project)) }%)`
+                                            }}>
+                                        </span>
+                                    </span>
+                                    <h6 className=" MuiBox-root css-11tyiws">
+                                        <>
+                                            {getProjectProgress(project)}%
+                                        </>
+                                    </h6>
                                 </div>
                                 <div className="MuiBox-root css-1lekzkb">
                                     <AvatarGroup max={4}>

@@ -87,7 +87,8 @@ export enum ChatActionTypes {
     ADD_CHAT = 'ADD_CHAT',
     CLEAN = 'CLEAN',
 
-    SET_CHAT_MESSAGES = 'SET_CHAT_MESSAGES'
+    SET_CHAT_MESSAGES = 'SET_CHAT_MESSAGES',
+    SET_CHATS = 'SET_CHATS'
 }
 
 interface FetchChatsAction {
@@ -187,6 +188,11 @@ interface SetChatMessagesAction {
     payload: { chatId: number, messages: ChatMessage[] }
 }
 
+interface SetChats {
+    type: ChatActionTypes.SET_CHATS;
+    payload: Chat[];
+}
+
 export type ChatAction =
     FetchChatsAction | FetchChatsSuccessAction | FetchChatsErrorAction |
     ChatSetPageAction | ChatSetLimitAction |
@@ -200,7 +206,8 @@ export type ChatAction =
     MarkAllMessagesAsSeenAction |
     AddChatAction |
     CleanAction |
-    SetChatMessagesAction
+    SetChatMessagesAction | SetChats
+
 
 
 

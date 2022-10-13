@@ -8,7 +8,7 @@ const FunnelSalas = ({ height, color = [], data}) => {
 
     const option = {
         title: {
-            text: 'Funnel'
+            text: 'Sales Funnel (For Order Statuses)'
         },
         tooltip: {
             trigger: 'item',

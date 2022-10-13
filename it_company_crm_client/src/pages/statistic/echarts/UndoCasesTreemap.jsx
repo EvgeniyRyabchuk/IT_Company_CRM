@@ -33,7 +33,7 @@ const UndoCasesTreemap = ({ height, color = [], data}) => {
 
     const option = {
         title: {
-            text: 'Disk Usage',
+            text: 'Undo Cases',
             left: 'center'
         },
         tooltip: {

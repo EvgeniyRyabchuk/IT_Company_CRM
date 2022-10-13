@@ -7,7 +7,7 @@ import { SectionHeading, Subheading as SubheadingBase } from "../misc/Headings.j
 import { ReactComponent as PlusIcon } from "feather-icons/dist/icons/plus.svg";
 import { ReactComponent as MinusIcon } from "feather-icons/dist/icons/minus.svg";
 import {VacancyService} from "../../services/VacancyService";
-
+import VacancyImg from '../../assets/images/vacancy_illustration.png'
 const Container = tw.div`relative py-3`;
 const Content = tw.div`max-w-screen-xl mx-auto py-5 lg:py-5`;
 
@@ -90,7 +90,7 @@ export default ({
       <Content>
         <TwoColumn>
           <Column tw="hidden lg:block w-5/12 flex-shrink-0">
-            <Image imageContain={imageContain} imageShadow={imageShadow} imageSrc={imageSrc} />
+            <Image imageContain={imageContain} imageShadow={imageShadow} imageSrc={VacancyImg} />
           </Column>
           <Column>
             <FAQContent>

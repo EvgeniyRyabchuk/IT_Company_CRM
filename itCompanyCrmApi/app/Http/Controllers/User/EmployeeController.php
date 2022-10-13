@@ -10,9 +10,12 @@ use App\Models\Position;
 use App\Models\Role;
 use App\Models\Skill;
 use App\Models\User;
+use App\Notifications\EmployeeAccountCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -21,7 +24,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class EmployeeController extends Controller
 {
     public function index(Request $request) {
-        $perPage = $request->input('perPage') ?? 10;
+        $perPage = $request->input('perPage') ?? 15;
         if($perPage === 'all') {
             $perPage = Employee::all()->count();
         }
@@ -160,10 +163,14 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'Such level does not exist on that position'], 404);
         }
 
+
+
         if($mode === 'create') {
             $user = new User();
             $employee = new Employee();
-            $user->password = Str::random(10);
+            $randPassword = Str::random(10);
+            $user->password =  Hash::make($randPassword);
+
         } else {
             $employee = Employee::findOrFail($employeeId);
             $user = $employee->user;
@@ -215,6 +222,11 @@ class EmployeeController extends Controller
             $employee->user->roles()->attach($roleDb);
         }
         $employee->save();
+
+        if($mode === 'create') {
+            Notification::send($user, new EmployeeAccountCreatedNotification($user, $randPassword));
+        }
+
         return $employee;
     }
 
@@ -250,10 +262,12 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'employee does not exist'], 404);
         }
 
-        $userExist = User::where('email', $email)->first();
+        if($user->email !== $email) {
+            $userExist = User::where('email', $email)->first();
 
-        if($userExist) {
-            return response()->json(['message' => 'user with such email already exist'], 405);
+            if($userExist) {
+                return response()->json(['message' => 'user with such email already exist'], 405);
+            }
         }
 
         $user = $employee->user;

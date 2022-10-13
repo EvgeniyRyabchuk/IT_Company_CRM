@@ -101,6 +101,10 @@ export const setChatMessages = (chatId: number, messages: ChatMessage[]) => {
     }};
 }
 
+export const setChats = (chats: Chat[]) => {
+    return { type: ChatActionTypes.SET_CHATS, payload: chats};
+}
+
 
 export const setMessagePage = (page: number): ChatAction => {
     console.log('setMessagePage action');

@@ -14,7 +14,7 @@ import {DEFAULT_LIMIT, DEFAULT_PAGE} from "../../store/reducers/chatReducer";
 import {User} from "../../types/user";
 import useAuth from "../../hooks/useAuth";
 import AddUserChatModal from "../../components/modals/AddUserChatModal/AddUserChatModal";
-import useTimer from "../../hooks/useTimer";
+import useTimeoutLoop from "../../hooks/useTimeoutLoop";
 import {ChatService} from "../../services/ChatService";
 
 
@@ -52,23 +52,16 @@ const ChatPage = ({...props}) => {
     } = useAction();
 
 
-    const { timer, setTimer, loop } = useTimer(() => {
-        // console.log('check');
+    const { timer, start, stop } = useTimeoutLoop(() => {
+        console.log('check');
         checkNewMessages();
-    }, 5000);
+    }, 3000);
 
     useEffect(() => {
         if(!chatLoadingFirstTime) {
-            loop();
+            start();
         }
     }, [chatLoadingFirstTime])
-
-
-
-    const killNewMessageChecker = () => {
-        if(timer)
-            clearTimeout(timer);
-    }
 
     useEffect(() => {
         console.log('chatId', withUserId);
@@ -179,10 +172,12 @@ const ChatPage = ({...props}) => {
 
     return (
         <Container>
-
-            <Button onClick={checkNewMessages}>
-                Check
-            </Button>
+            {/*<Button onClick={checkNewMessages}>*/}
+            {/*    Check*/}
+            {/*</Button>*/}
+            {/*<Button onClick={() => { stop(); }}>*/}
+            {/*    Stop Checking*/}
+            {/*</Button>*/}
 
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "Chats" }]} />

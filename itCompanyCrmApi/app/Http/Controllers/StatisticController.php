@@ -37,6 +37,7 @@ class StatisticController extends Controller
             ->get();
 
         $biggestProjects = Project::with('projectType')
+            ->where('paid', '>', 0)
             ->orderBy('budget', 'desc')->get();
 
         return response()->json(compact(

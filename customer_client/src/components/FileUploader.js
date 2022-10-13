@@ -131,7 +131,11 @@ const FileUploader = ({
                                     )}
 
                                     <FileMetaData isImageFile={isImageFile}>
-                                        <span>{file.name}</span>
+                                        <span style={{
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }}>{file.name}</span>
                                         <aside>
                                             <span>{convertBytesToKB(file.size)} kb</span>
                                             <RemoveFileIcon

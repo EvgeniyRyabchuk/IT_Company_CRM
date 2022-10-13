@@ -153,7 +153,7 @@ class ChatController extends Controller
         switch ($target) {
             case 'messages':
 
-                 $query = ChatMessage::with('content', 'toUser', 'fromUser')
+                 $query = ChatMessage::with('content', 'toUser', 'fromUser', 'chat.users.roles')
                     ->where('isSeen', false)
                     ->where('to_id', $user->id);
 
@@ -176,6 +176,7 @@ class ChatController extends Controller
             case 'chats':
 
                 break;
+
             default:
                 return response()->json(['alertMessage' => 'no target in url'], 404);
         }
