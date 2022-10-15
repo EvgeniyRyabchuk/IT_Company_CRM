@@ -71,9 +71,13 @@ const CloseModalButton = tw.button`absolute top-0 right-0 mt-8 mr-8 hocus:text-p
 
 const IndexPage = () => {
 
-    const heading = "Effective websites for your business";
+    const heading = "Effective Websites for Your Business";
     const description="Our team of professionals develop stylish websites with exclusive designs that " +
         "really boost your business and generate profit. Contact us now for more details.";
+
+    const sub_description = 'Our work is more modern and efficient than that of competitors in the same industry.' +
+        ' We don\'t make promises, we just do our job and show the result in the form of the best brand created,'
+
     const primaryButtonText="Make an Order";
     const primaryButtonUrl="/make-an-order";
     const watchVideoButtonText="Watch Video";
@@ -113,6 +117,7 @@ const IndexPage = () => {
                 <LeftColumn>
                     <Heading>{heading}</Heading>
                     <Paragraph>{description}</Paragraph>
+                    <Paragraph>{sub_description}</Paragraph>
                     <Actions>
                         <PrimaryButton
                             /*
@@ -123,16 +128,9 @@ const IndexPage = () => {
                                 e.preventDefault();
                                 navigate(`/make-an-order`)
                             }}
-
                         >
                             {primaryButtonText}
                         </PrimaryButton>
-                        {/*<WatchVideoButton onClick={toggleModal}>*/}
-                        {/*    <span className="playIconContainer">*/}
-                        {/*      <PlayIcon className="playIcon" />*/}
-                        {/*    </span>*/}
-                        {/*    <span className="playText">{watchVideoButtonText}</span>*/}
-                        {/*</WatchVideoButton>*/}
                     </Actions>
                 </LeftColumn>
                 <RightColumn>
@@ -175,13 +173,6 @@ const IndexPage = () => {
                     <FAQS id='faqs' name={'faqs'}/>
                 </AnimationRevealPage>
             </Element>
-
-
-
-
-
-
-
 
         </>
 

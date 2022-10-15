@@ -104,6 +104,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
         ProjectSocialLinkTitle.HOST,
         ProjectSocialLinkTitle.EXTERNAL_LINK
     ];
+
     const formik = useRef<FormikProps<FormikValues>>(null);
     const innerForm = useRef<any>();
 
@@ -236,6 +237,8 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                 <Grid item md={6} xs={12}>
                                     <Card
                                         sx={{
+                                            height: '100%',
+
                                             padding: '5px',
                                             boxShadow: 2,
                                             minHeight: 400,
@@ -245,11 +248,11 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                             position: 'relative'
                                         }}
                                     >
-
                                         <div style={{
                                             height: '320px',
                                             overflowY: 'auto'
                                         }}>
+                                            <h3 className='text-center'>Members</h3>
                                             <ProjectMemberList
                                                 members={members}
                                                 setMembers={setMembers}
@@ -258,128 +261,127 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                             />
                                         </div>
 
+                                        <h3 className='text-center'>External Links</h3>
                                         <div style={{
                                             padding: '0 10px',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            height: '235px',
-                                            overflowY: 'auto',
+                                            maxHeight: '235px',
+                                            overflowY: 'scroll',
                                             marginTop: "10px",
                                             width: '100%',
-                                            paddingTop: '20px'
+                                            paddingTop: '20px',
+                                            paddingBottom: '20px'
                                         }}>
-
-                                            {
-                                                projectLinks.map(link =>
-                                                    <div style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'start',
-                                                        alignItems: 'center',
-                                                        height: '50px',
-                                                        margin: '5px 0'
-                                                    }}>
-                                                        <div key={link.id}>
-                                                            <Button
-                                                                color='error'
-                                                                onClick={() => {
-                                                                    const index = projectLinks.findIndex(l => l.id === link.id);
-                                                                    projectLinks.splice(index, 1);
-                                                                    setProjectLinks([...projectLinks]);
-                                                                }}
-                                                            >
-                                                                <Delete />
-                                                            </Button>
-                                                        </div>
-                                                        <div style={{ margin: '0 3px'}}>
-                                                            <Autocomplete
-                                                                defaultValue={link.title}
-                                                                value={link.title}
-                                                                onChange={(event: any, value) => {
-                                                                   const newLinks = projectLinks.map((l) => {
-                                                                       if(l.id === link.id) {
-                                                                           l.title = value ?? '';
-                                                                           return l;
-                                                                       }
-                                                                       else return l;
-                                                                   });
-                                                                   setProjectLinks([...newLinks]);
-                                                                }}
-                                                                style={{
-                                                                    height: '100%',
-                                                                    width: '120px',
-                                                                    zIndex: '999999'
-                                                                }}
-                                                                size='small'
-                                                                disablePortal
-                                                                id="combo-box-demo"
-                                                                renderOption={(props, option) => (
-                                                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                                                        <div style={{width: '24px', height: '24px', marginRight: '10px'}}>
-                                                                            {
-                                                                                projectLinkTitleIcon.find((lti: LinkIcon) =>
-                                                                                    option === lti.title)!.icon
+                                            <Box sx={{ minHeight: "400px" }}>
+                                                {
+                                                    projectLinks.map(link =>
+                                                        <div style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'start',
+                                                            alignItems: 'center',
+                                                            height: '50px',
+                                                            margin: '5px 0'
+                                                        }}>
+                                                            <div key={link.id}>
+                                                                <Button
+                                                                    color='error'
+                                                                    onClick={() => {
+                                                                        const index = projectLinks.findIndex(l => l.id === link.id);
+                                                                        projectLinks.splice(index, 1);
+                                                                        setProjectLinks([...projectLinks]);
+                                                                    }}
+                                                                >
+                                                                    <Delete />
+                                                                </Button>
+                                                            </div>
+                                                            <div style={{ margin: '0 3px'}}>
+                                                                <Autocomplete
+                                                                    defaultValue={link.title}
+                                                                    value={link.title}
+                                                                    onChange={(event: any, value) => {
+                                                                        const newLinks = projectLinks.map((l) => {
+                                                                            if(l.id === link.id) {
+                                                                                l.title = value ?? '';
+                                                                                return l;
                                                                             }
-                                                                        </div>
-                                                                        {
-                                                                            option
-                                                                        }
-                                                                    </Box>
-                                                                )}
+                                                                            else return l;
+                                                                        });
+                                                                        setProjectLinks([...newLinks]);
+                                                                    }}
+                                                                    style={{
+                                                                        height: '100%',
+                                                                        width: '120px',
+                                                                        zIndex: '999999'
+                                                                    }}
+                                                                    size='small'
+                                                                    disablePortal
+                                                                    id="combo-box-project-roles"
+                                                                    renderOption={(props, option) => (
+                                                                        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                            <div style={{width: '24px', height: '24px', marginRight: '10px'}}>
+                                                                                {
+                                                                                    projectLinkTitleIcon.find((lti: LinkIcon) =>
+                                                                                        option === lti.title)!.icon
+                                                                                }
+                                                                            </div>
+                                                                            {
+                                                                                option
+                                                                            }
+                                                                        </Box>
+                                                                    )}
 
-                                                                options={linkResourceOptions}
-                                                                sx={{ width: '100%' }}
-                                                                renderInput={(params) =>
-                                                                    <TextField {...params} label="Link Titles" />}
-                                                            />
+                                                                    options={linkResourceOptions}
+                                                                    sx={{ width: '100%' }}
+                                                                    renderInput={(params) =>
+                                                                        <TextField {...params} label="Link Titles" />}
+                                                                />
+                                                            </div>
+
+                                                            <div style={{flexGrow: 1, margin: '0 3px'}}>
+                                                                <TextField
+                                                                    style={{ width: '100%'}}
+                                                                    label="Url"
+                                                                    id="outlined-size-small"
+                                                                    defaultValue={link.link}
+                                                                    size="small"
+                                                                    onChange={(event: any) => {
+                                                                        const newLinks = projectLinks.map((l) => {
+                                                                            if(l.id === link.id) {
+                                                                                l.link = event.target.value ?? '';
+                                                                                return l;
+                                                                            }
+                                                                            else return l;
+                                                                        });
+                                                                        setProjectLinks([...newLinks]);
+                                                                    }}
+                                                                />
+                                                            </div>
                                                         </div>
+                                                    )
+                                                }
+                                            </Box>
 
-                                                        <div style={{flexGrow: 1, margin: '0 3px'}}>
-                                                            <TextField
-                                                                style={{ width: '100%'}}
-                                                                label="Url"
-                                                                id="outlined-size-small"
-                                                                defaultValue={link.link}
-                                                                size="small"
-                                                                onChange={(event: any) => {
-                                                                    const newLinks = projectLinks.map((l) => {
-                                                                        if(l.id === link.id) {
-                                                                            l.link = event.target.value ?? '';
-                                                                            return l;
-                                                                        }
-                                                                        else return l;
-                                                                    });
-                                                                    setProjectLinks([...newLinks]);
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
-
-
-                                            <Button
-                                                variant="outlined"
-                                                color='primary'
-                                                style={{width: '100%'}}
-                                                onClick={() => {
-                                                    setProjectLinks([...projectLinks, {
-                                                        id: random(1, 100000),
-                                                        title: '',
-                                                        project_id: order.project?.id ?? 1,
-                                                        link: ''
-                                                    }])
-                                                }}
-                                            >
-                                                <Add/>
-
-                                            </Button>
                                         </div>
-
+                                        <Button
+                                            variant="contained"
+                                            color='primary'
+                                            style={{width: '100%'}}
+                                            onClick={() => {
+                                                setProjectLinks([...projectLinks, {
+                                                    id: random(1, 100000),
+                                                    title: '',
+                                                    project_id: order.project?.id ?? 1,
+                                                    link: ''
+                                                }])
+                                            }}>
+                                            <Add/>
+                                        </Button>
                                     </Card>
                                 </Grid>
 
                                 <Grid item md={6} xs={12}>
-                                    <Card sx={{ padding: 3, boxShadow: 2 }}>
+                                    <Card sx={{ padding: 3, boxShadow: 2, height: '100%' }}>
                                         <Grid container spacing={3}>
                                             <Grid item xs={12}>
                                                 <TextField
@@ -397,7 +399,6 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                 />
                                             </Grid>
                                         </Grid>
-
                                         <Grid sx={{mt: 2}} container spacing={3}>
                                             <Grid item xs={12}>
                                                 <div style={{display: 'flex'}}>
@@ -480,7 +481,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                   style={{
                                                       height: '200px',
                                                       overflowY: 'auto',
-                                                      marginTop: '20px'
+                                                      marginTop: '20px',
                                             }}
                                             >
                                                 <Autocomplete

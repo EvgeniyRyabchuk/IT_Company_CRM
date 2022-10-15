@@ -24,8 +24,6 @@ class KanbanLaneSeeder extends Seeder
         foreach ($developers as $developer) {
 
             foreach ($developer->projects as $project) {
-
-
                 $titles = ['Backlog', 'To do', 'Doing', 'In Review', 'Done'];
                 $index = 0;
 
@@ -41,16 +39,6 @@ class KanbanLaneSeeder extends Seeder
                     $kanbanLane->color = fake()->hexColor;
                     $kanbanLane->index = $laneCounter++;
                     $kanbanLane->save();
-
-                    KanbanCard::factory()->count(30)->create()->each(function ($card) use($kanbanLane, $index) {
-                        $priority = KanbanPriority::inRandomOrder()->first();
-
-                        $card->index = $index++;
-                        $card->tags()->attach($priority);
-                        $card->priority = $priority->title;
-                        $card->lane_id = $kanbanLane->id;
-                        $card->save();
-                    });
                 }
 
             }
@@ -60,3 +48,18 @@ class KanbanLaneSeeder extends Seeder
 
     }
 }
+
+/*
+
+
+//                    KanbanCard::factory()->count(30)->create()->each(function ($card) use($kanbanLane, $index) {
+//                        $priority = KanbanPriority::inRandomOrder()->first();
+//
+//                        $card->index = $index++;
+//                        $card->tags()->attach($priority);
+//                        $card->priority = $priority->title;
+//                        $card->lane_id = $kanbanLane->id;
+//                        $card->save();
+//                    });
+
+ */

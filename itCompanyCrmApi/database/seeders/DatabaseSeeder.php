@@ -140,7 +140,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(KanbanPrioritySeeder::class);
 
-//        $this->call(KanbanLaneSeeder::class, false, compact('developers'));
+        $employeesForKanban = Employee::all();
+        $this->call(KanbanLaneSeeder::class, false, ['developers' => $employeesForKanban]);
 
         $users = User::all();
 

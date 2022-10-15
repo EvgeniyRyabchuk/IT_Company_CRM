@@ -173,27 +173,18 @@ const ProjectPage = () => {
                         <ProjectMain
                             project={project}
                             orderInfo={orderInfo}
-                        />
-                        :
-                        'Loading Project'
+                        /> : 'Loading Project'
                 }
-
             </TabPanel>
-
             <TabPanel value={value} index={1} dir={theme.direction}>
                 Kanban Board
 
                 <Kanban projectId={parseInt(projectId!)} />
             </TabPanel>
-
-
             <TabPanel value={value} index={2} dir={theme.direction}>
                 <h1>Project File Manager</h1>
-
                 <ProjectFileManager projectId={projectId!} />
-
             </TabPanel>
-
             <TabPanel value={value} index={3} dir={theme.direction}>
                 <h1>Members</h1>
                 <div style={{display: 'flex', justifyContent: 'end'}}>
@@ -216,7 +207,6 @@ const ProjectPage = () => {
                             }}
                         />
                 }
-
                 {
                     memberEditMode && project && orderInfo &&
                         <Button
@@ -239,8 +229,6 @@ const ProjectPage = () => {
                             Save
                         </Button>
                 }
-
-
             </TabPanel>
             <TabPanel value={value} index={4} dir={theme.direction}>
                 {
@@ -250,7 +238,6 @@ const ProjectPage = () => {
 
 
             </TabPanel>
-
         </Container>
     );
 };

@@ -261,6 +261,7 @@ const NewsListPage = () => {
                                     subheader={ moment(n.created_at).format('DD.MM.YYYY') }
                                 />
                                 <CardMedia
+                                    style={{ height: '194px'}}
                                     component="img"
                                     width='800'
                                     height="194"

@@ -112,20 +112,23 @@ class OrderController extends Controller
             $queryForAuth
                 ->leftJoin('customers', 'orders.customer_id', 'customers.id')
                 ->leftJoin('users', 'customers.user_id', 'users.id')
-                ->leftJoin('phones', 'users.id', 'phones.user_id')
+//                ->leftJoin('phones', 'users.id', 'phones.user_id')
                 ->where('users.full_name', 'LIKE', "%$search%")
-                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
+//                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
                 ->orWhere('users.email', 'LIKE', "%$search%")
             ;
 
+
+            $query = $queryForAuth;
+
 //            dd($queryForAuth->get()->map(function ($item) { return $item->id; }));
 
-            $queryForGuest
-                ->leftJoin('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
-                ->orWhere('order_contacts.name', 'LIKE', "%$search%")
-                ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
-                ->orWhere('order_contacts.email', 'LIKE', "%$search%")
-            ;
+//            $queryForGuest
+//                ->leftJoin('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
+//                ->orWhere('order_contacts.name', 'LIKE', "%$search%")
+//                ->orWhere('order_contacts.phone', 'LIKE', "%$search%")
+//                ->orWhere('order_contacts.email', 'LIKE', "%$search%")
+//            ;
 
 //            $query
 //                ->join('order_contacts', 'orders.order_contact_id', 'order_contacts.id')
@@ -140,7 +143,7 @@ class OrderController extends Controller
 //            ;
 
 //            $query = $queryForAuth;
-            $query = $queryForAuth->unionAll($queryForGuest);
+//            $query = $queryForAuth->unionAll($queryForGuest);
 //            return response()->json($query->toSql(), 201);
         }
 

@@ -57,6 +57,29 @@ const validationSchema = Yup.object().shape({
 });
 
 
+/*
+
+  const defInitialValues = useMemo(() => {
+    return {
+      name: user ? user.full_name : 'empty',
+      phone:  {
+        number: '380984756384',
+        countyData: {
+          countryCode: "UA",
+          dialCode: "380",
+          format: "+... (..) ... .. ..",
+          name: "Ukraine",
+        },
+      },
+      email: user ? user.email : 'empty@gmail.com',
+      about: 'empty',
+      type_id: null,
+    }
+  }, []);
+
+
+ */
+
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 
 const TwoColContactUsWithIllustrationFullForm = ({
@@ -89,18 +112,13 @@ const TwoColContactUsWithIllustrationFullForm = ({
 
   const defInitialValues = useMemo(() => {
     return {
-      name: user ? user.full_name : 'empty',
+      name: user ? user.full_name : '',
       phone:  {
-        number: '380984756384',
-        countyData: {
-          countryCode: "UA",
-          dialCode: "380",
-          format: "+... (..) ... .. ..",
-          name: "Ukraine",
-        },
+        number: user.phones[0].phone_number,
+        countyData: {},
       },
-      email: user ? user.email : 'empty@gmail.com',
-      about: 'empty',
+      email: user ? user.email : '',
+      about: '',
       type_id: null,
     }
   }, []);

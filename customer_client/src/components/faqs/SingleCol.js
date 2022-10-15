@@ -41,27 +41,39 @@ const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
 const FAQS = ({
   subheading = "FAQS",
   heading = "You have Questions ?",
-  description = "And we have got answers to all of them. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  description = "And we have got answers to all of them. Answers to standard questions that are often asked by clients when contacting the company for the first time.",
   faqs = [
     {
-      question: "Is lunch provided free of cost ?",
+      question: "Do you work with a contract ?",
       answer:
-        "Yes, it is, if you have a membership with us. Otherwise it is charged as per the menu. Some limits do apply as to how much items can be included in your lunch. This limit is enough for any one person and merely exists to discourage abusal of the system."
+        "Of course, we work officially. Before the start of work, we sign the contract and the technical task related to it in two copies. The documents have full legal validity.."
     },
     {
-      question: "Do you have 2 Bedroom suites ?",
+      question: "Do you provide a service guarantee? ?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "So. We provide a month of free technical support and a warranty for the developed product (1 year).\n" +
+          "\n" +
+          "This period of free support is quite enough to detect possible defects in the process of operation.\n" +
+          "\n" +
+          "If such defects suddenly appear, we will eliminate them free of charge.\n" +
+          "\n" +
+          "Also, as part of the support, we advise our customers on additional issues that may arise during the use of the product.."
     },
     {
-      question: "Are Wi-Fi costs included in the price ?",
+      question: "What is a domain and hosting? Why are they needed? ?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "Hosting is a service for providing resources for placing a site on a server that is permanently located on the network. It is needed in order to store files with the site in 24/7 access, manage these files and change their properties. For this, hosting providers install special equipment - control panels.."
     },
     {
-      question: "Where can I reach you for support ?",
+      question: "How to order a site? ?",
       answer:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        "You can contact us directly by phone, or write through the feedback form and describe your requirements or wishes. For example, in the application you can answer the following questions:\n" +
+          "\n" +
+          "What do you do (what goods, services do you sell)?\n" +
+          "Why do you need a site/logo/naming/advertising (what do you need to convey to visitors)?\n" +
+          "What do you have (logo, corporate style, photos, texts for the site, etc.)?\n" +
+          "How quickly would you like to receive the finished product?\n" +
+          "We will call you back in 30 seconds and discuss the details of the project in detail."
     }
   ],
   ...props

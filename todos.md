@@ -9,20 +9,16 @@ Add horizontal scrollbar
 
 A: 
 Search by guest name + 
-user tags autocomplite 
 Phone numbers 
 user entry 
 customers visibility on others pc 
 if queue is work 
-
+Role system 
 
 Delete all default values  
 All Mail Notification 
-Vacancy created at random 
-Change requiremement file 
 
 B: 
-
 
 Project types disable if not match the queryString 
 Refact stylying 

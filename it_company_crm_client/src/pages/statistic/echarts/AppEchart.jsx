@@ -102,13 +102,7 @@ const AppEchart = () => {
 
                 </SimpleCard>
 
-                <SimpleCard title="Current Order Count With Status">
-                    <BarRace
-                        data={data.orderStatusesCounter ?? []}
-                        height="400px"
-                        color={[theme.palette.primary.main, theme.palette.primary.light]}
-                    />
-                </SimpleCard>
+
 
                 <Box sx={{ my: 5, boxShadow: 1}}>
                     <SimpleCard title="">
@@ -131,6 +125,14 @@ const AppEchart = () => {
 
                     </SimpleCard>
                 </Box>
+
+                <SimpleCard title="Current Order Count With Status">
+                    <BarRace
+                        data={data.orderStatusesCounter ?? []}
+                        height="400px"
+                        color={[theme.palette.primary.main, theme.palette.primary.light]}
+                    />
+                </SimpleCard>
 
                 <Box sx={{ my: 5, boxShadow: 1}}>
                     <SimpleCard title="">

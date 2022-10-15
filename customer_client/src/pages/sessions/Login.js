@@ -67,6 +67,16 @@ const validationSchema = Yup.object().shape({
 });
 
 
+/*
+
+ const defInitialValues = useMemo(() => {
+    return {
+      email: 'jeka.rubchuk@gmail.com',
+      password: '123',
+    }
+  }, []);
+
+ */
 
 export default ({
   logoLinkUrl = "#",
@@ -98,8 +108,8 @@ export default ({
 
   const defInitialValues = useMemo(() => {
     return {
-      email: 'jeka.rubchuk@gmail.com',
-      password: '123',
+      email: '',
+      password: '',
     }
   }, []);
 

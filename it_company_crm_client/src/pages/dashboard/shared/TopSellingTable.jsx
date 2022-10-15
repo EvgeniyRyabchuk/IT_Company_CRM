@@ -177,7 +177,7 @@ const TopSellingTable = ({ orders, timeRangeList, timeRange, isLoading, onTimeRa
                             {/*${product.price > 999 */}
                             {/*  ? (product.price / 1000).toFixed(1)*/}
                             {/*  + 'k' : product.price}*/}
-                            {order.project ? order.project.paid : 0}
+                           ${order.project ? order.project.paid : 0}
                           </TableCell>
 
                           <TableCell sx={{ px: 1 }} align="left" colSpan={3}>

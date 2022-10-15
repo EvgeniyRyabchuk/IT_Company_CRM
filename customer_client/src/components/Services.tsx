@@ -73,12 +73,36 @@ const Services : React.FC<any> = ({ ...props}) => {
             imageSrc: ShieldIconImage,
             title: "Ads Management",
             description: "We create and manage ads that you need, from creation to deployment. Lorem ipsum donor sit amet consicou."
+
         },
-        { imageSrc: SupportIconImage, title: "Video Marketing" },
-        { imageSrc: CustomizeIconImage, title: "Customer Relation" },
-        { imageSrc: ReliableIconImage, title: "Product Outreach" },
-        { imageSrc: FastIconImage, title: "PR Campaign" },
-        { imageSrc: SimpleIconImage, title: "Product Expansion" }
+        {
+            imageSrc: SupportIconImage,
+            title: "Understandable Development",
+            description: 'The project manager is always available. He will answer even difficult questions in simple human language.'
+        },
+        {
+            imageSrc: CustomizeIconImage,
+            title: "Compilation of TA",
+            description: 'Listening to your wishes, we ask additional questions, express our vision and record the summary of the conversation in a technical task.'
+
+        },
+        {
+            imageSrc: ReliableIconImage,
+            title: "Demonstration and adjustment",
+            description: 'Demonstration of the first sketches and "skeleton", receiving edits and comments from the client, further refinement.'
+
+        },
+        {
+            imageSrc: FastIconImage,
+            title: "Experts Team",
+            description: 'We have a large team consisting of experienced specialists who will calculate the psychology of your potential client.'
+
+        },
+        {
+            imageSrc: SimpleIconImage,
+            title: "Contact us",
+            description: 'You contact us by phone or leave a request, after which we call you back in 30 seconds to discuss the project.'
+        }
     ];
 
     return (

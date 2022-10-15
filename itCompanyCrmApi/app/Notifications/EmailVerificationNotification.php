@@ -21,7 +21,7 @@ class EmailVerificationNotification extends Notification implements ShouldQueue
     private User|null $user = null;
     private UserVerification|null $verification = null;
 
-    public function __construct($verification)
+    public function __construct($verification) 
     {
         $this->verification = $verification;
     }

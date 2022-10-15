@@ -138,11 +138,11 @@ const ProjectMemberList
                     bgcolor: 'background.paper',
                     height: mode === 'preview' ? '320px' : '100%',
                     overflowY: 'auto',
-                    paddingLeft: '0 !important'
+                    paddingLeft: '0 !important',
+                    py: 2
                 }}
                 {...props}
             >
-
                 {projectRoles.length > 0 && members.map((member: EmployeeWithProjectRoles) => {
                     const labelId = `checkbox-list-secondary-label-${member}`;
                     const labelId2 = `checkbox-list-secondary-label-${member}`;
@@ -220,9 +220,7 @@ const ProjectMemberList
                                     <ListItemText
                                         id={labelId}
                                         primary={
-                                            <div style={{
-
-                                                textAlign: 'end'}}>
+                                            <div style={{textAlign: 'end'}}>
                                                 <div>
                                                     {member.level.name}
                                                 </div>

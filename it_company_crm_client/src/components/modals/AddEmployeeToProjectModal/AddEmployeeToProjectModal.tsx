@@ -84,7 +84,6 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                 BackdropProps={{
                     timeout: 500,
                 }}
-
             >
                 <Fade in={open}>
                     <Box sx={modalStyle} >
@@ -98,7 +97,7 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                                 console.log('on input change', newInputValue)
                             }}
                             onChange={onChange}
-                            id="country-select-demo"
+                            id="employee-select"
                             sx={{ width: 300 }}
                             options={employees}
                             autoHighlight

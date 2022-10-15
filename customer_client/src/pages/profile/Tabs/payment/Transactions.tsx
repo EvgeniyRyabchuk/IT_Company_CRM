@@ -6,7 +6,7 @@ import {Transaction} from "../../../../types/card";
 import moment from "moment";
 import useAuth from "../../../../hooks/useAuth";
 
-const TransactionList = tw.div`my-10`;
+const TransactionList = tw.div`mt-5 mb-10   `;
 
 
 const Transactions = ({ _for, orderId } : {_for: 'customer' | 'order', orderId?: number}) => {

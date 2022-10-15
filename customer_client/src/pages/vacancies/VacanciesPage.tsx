@@ -22,9 +22,7 @@ const IndexPage = () => {
             setVacancies(data);
         }
         fetchVacancies();
-
     }, [])
-
 
     return (
         <>

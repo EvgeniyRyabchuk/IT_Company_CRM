@@ -179,7 +179,8 @@ const OrderDetail : React.FC<{order: Order}>
                                 </FlexBoxCenter>
                             </Grid>
                         }
-                        <Grid item xs={12} sm={12} md={12}>
+                        <Grid item xs={12} sm={12} md={12} sx={{ mt: 3}}>
+                            <Typography sx={{ mt: 3, mb: 1}}>Order Transactions</Typography>
                             <Transactions _for='order' orderId={order.id} />
                         </Grid>
                     </Grid>
@@ -200,6 +201,8 @@ const OrderDetail : React.FC<{order: Order}>
                                                 Order status №{index+1}
                                                 <br/>
                                                 {
+                                                    order?.status_history
+                                                        .find(sh => sh.status_id === status?.id) &&
                                                     moment(order?.status_history
                                                         .find(sh => sh.status_id === status?.id)
                                                         ?.created_at ?? '')

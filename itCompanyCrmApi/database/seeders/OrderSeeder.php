@@ -52,7 +52,7 @@ class OrderSeeder extends Seeder
         $customers = Customer::take($customer_count)->get();
         $projects = Project::take($projects_count)->get();
 
-        $reqPath = 'static/files/orders/requirements/SoftwareRequirements.doc';
+        $reqPath = 'static/files/orders/requirements/SoftwareRequirements.docx';
 //        $requirementFile= Storage::disk('public')->files($reqPth);
 
         $contacts = OrderContact::factory()->count($order_contact_count)->create()

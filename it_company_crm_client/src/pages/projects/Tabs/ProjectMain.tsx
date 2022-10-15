@@ -19,21 +19,16 @@ const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = (
 
 
     useEffect(() => {
-
         const getHistory = async () => {
             const { data } = await ProjectService.getHistory(project.id);
             setHistory([...data.data]);
         }
-
         getHistory();
-
     }, []);
-
 
     const projectTagsForAutocompliteOptionDefault = useMemo<string[]>(() => {
         return project.tags.map(e => e.name);
     }, [project]);
-
 
     return (
         <div style={{paddingTop: '30px'}}>
@@ -45,26 +40,20 @@ const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = (
                             <Grid item xs={12} md={12} lg={8}>
                                 <Box sx={{
                                     p: 1,
-                                    maxHeight: '800px',
+                                    height: '100%',
                                     overflowY: 'auto',
                                     paddingTop: '30px',
-
                                 }}
-                                className={'box-shadow-1'}
-                                >
-                                    <LinkList
-                                        list={project.project_links}
-                                    />
+                                     className={'box-shadow-1'}>
+                                    <LinkList list={project.project_links}/>
                                 </Box>
 
                             </Grid>
                             <Grid item xs={12} md={12} lg={4}>
-
                                 <h3>
                                     Order #{orderInfo.id} |
                                     Deadline: {orderInfo.deadline ?? 'No Deadline Yet'}
                                 </h3>
-
 
                                 <div style={{margin: '30px 0'}}>
                                     <h4>
@@ -86,7 +75,6 @@ const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = (
                                             </Button>
                                         </div>
                                     }
-
                                 </div>
 
                                 <div>
@@ -101,8 +89,7 @@ const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = (
                                             mode='preview'
                                             project={project}
                                             className={`members-list ${project.employees.length > 5
-                                            && 'hidden-bottom-60'}
-                                    `}
+                                            && 'hidden-bottom-60'}`}
                                             style={{
                                                 maxWidth: '100%'
                                             }}

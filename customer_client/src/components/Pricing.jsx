@@ -118,7 +118,7 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
  const Pricing = ({
     subheading = "",
     heading = "Affordable Pricing",
-    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    description = "Want to know the cost development of your project? Then write us by e-mail or leave a request.",
     plans = null,
     primaryButtonText = "Make An Order",
      id,

@@ -90,6 +90,33 @@ const validationSchema = Yup.object().shape({
       'Passwords must match')
 });
 
+/*
+
+
+  const defInitialValues = useMemo(() => {
+    return {
+      first_name: 'first',
+      last_name: 'last',
+      middle_name: 'middle',
+
+      email: 'sdfgkjsldfgi@gmail.com',
+      phone:  {
+        number: '380984756384',
+        countryData: {
+          countryCode: "UA",
+          dialCode: "380",
+          format: "+... (..) ... .. ..",
+          name: "Ukraine",
+        },
+      },
+
+      password: '123456789',
+      password_repetition: '123456789',
+    }
+  }, []);
+
+ */
+
 
 
 export default ({
@@ -121,26 +148,21 @@ export default ({
   const { register, profile } = useAuth();
 
   const defInitialValues = useMemo(() => {
-    return {
-      first_name: 'first',
-      last_name: 'last',
-      middle_name: 'middle',
+      return {
+        first_name: '',
+        last_name: '',
+        middle_name: '',
 
-      email: 'sdfgkjsldfgi@gmail.com',
-      phone:  {
-        number: '380984756384',
-        countryData: {
-          countryCode: "UA",
-          dialCode: "380",
-          format: "+... (..) ... .. ..",
-          name: "Ukraine",
+        email: '',
+        phone: {
+          number: '',
+          countryData: {},
         },
-      },
+        password: '',
+        password_repetition: '',
 
-      password: '123456789',
-      password_repetition: '123456789',
-    }
-  }, []);
+      }
+    }, []);
 
   const submit = async (values) => {
     console.log(values)
