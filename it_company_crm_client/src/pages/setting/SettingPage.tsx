@@ -7,23 +7,12 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import '../../assets/components/UI/Tab/index.css'
-import {
-    AccountCircle,
-    Attachment,
-    Delete,
-    Fingerprint,
-    Lock,
-    Phone,
-    Settings,
-    SocialDistance
-} from "@mui/icons-material";
+import {AccountCircle, Attachment, Delete, Fingerprint, Lock, Settings} from "@mui/icons-material";
 import {SettingContainer} from "../../assets/components/Setting";
-import {createSearchParams, useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {SettingTabConstants, UserRoleEntity} from "../../types/auth";
 import {toLower} from "lodash";
 import AccountInformation from "./Tabs/AccountInformation";
-import PasswordReset from "../sessions/PasswordReset";
-import ForgotPassword from "../sessions/ForgotPassword";
 import PasswordTab from "./Tabs/PasswordTab";
 import Preferences from "./Tabs/Preferences";
 import Verification from "./Tabs/Verification";

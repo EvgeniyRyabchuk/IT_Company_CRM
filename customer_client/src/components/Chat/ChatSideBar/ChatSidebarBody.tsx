@@ -73,32 +73,32 @@ const ChatSidebarBody = () => {
             />
 
 
-            <div className="io">
-                <div className="go gh gq gv ro">Channels</div>
-                <ul className="rh">
-                    <li className="nv">
-                        <button className="flex items-center fe ou dx rounded">
-                            <div className="flex items-center">
-                                <div className="ld">
-                                    <span className="text-sm gp text-slate-800">#New Leads</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center nq">
-                                <div className="w-2 h-2 pi rounded-full"></div>
-                            </div>
-                        </button>
-                    </li>
-                    <li className="nv">
-                        <button className="flex items-center fe ou dx rounded">
-                        <div className="flex items-center ld">
-                            <div className="ld">
-                                <span className="text-sm gp text-slate-800">#Development Team</span>
-                            </div>
-                        </div>
-                    </button>
-                </li>
-                </ul>
-            </div>
+            {/*<div className="io">*/}
+            {/*    <div className="go gh gq gv ro">Channels</div>*/}
+            {/*    <ul className="rh">*/}
+            {/*        <li className="nv">*/}
+            {/*            <button className="flex items-center fe ou dx rounded">*/}
+            {/*                <div className="flex items-center">*/}
+            {/*                    <div className="ld">*/}
+            {/*                        <span className="text-sm gp text-slate-800">#New Leads</span>*/}
+            {/*                    </div>*/}
+            {/*                </div>*/}
+            {/*                <div className="flex items-center nq">*/}
+            {/*                    <div className="w-2 h-2 pi rounded-full"></div>*/}
+            {/*                </div>*/}
+            {/*            </button>*/}
+            {/*        </li>*/}
+            {/*        <li className="nv">*/}
+            {/*            <button className="flex items-center fe ou dx rounded">*/}
+            {/*            <div className="flex items-center ld">*/}
+            {/*                <div className="ld">*/}
+            {/*                    <span className="text-sm gp text-slate-800">#Development Team</span>*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </button>*/}
+            {/*    </li>*/}
+            {/*    </ul>*/}
+            {/*</div>*/}
 
         </div>
     );

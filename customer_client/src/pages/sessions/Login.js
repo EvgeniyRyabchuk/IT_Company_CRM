@@ -81,7 +81,7 @@ const validationSchema = Yup.object().shape({
 export default ({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
-  headingText = "Sign In To Treact",
+  headingText = "Sign In to DEV.WEEK",
   socialButtons = [
     {
       iconImageSrc: googleIconImageSrc,

@@ -50,7 +50,7 @@ const ChatContent = ({ lastElement }: any) => {
                 ref={lastElement}
                 style={{
                     height: 20,
-                    background: 'red',
+                    // background: 'red',
                     display: currentChat ? 'block' : "none"
                 }}>
 
@@ -65,7 +65,7 @@ const ChatContent = ({ lastElement }: any) => {
             <div
                 style={{
                     height: '30px',
-                    background: 'yellow'
+                    // background: 'yellow'
                 }}
                 ref={firstElement}>
 

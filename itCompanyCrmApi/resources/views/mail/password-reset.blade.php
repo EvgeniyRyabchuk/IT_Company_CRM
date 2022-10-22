@@ -86,7 +86,7 @@
                                   font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif;"
                                     bgcolor="rgba(115, 103, 240, var(--bg-opacity))">
                                     <a
-                                        href="{{ env('FRONTEND_APP_URL') . '/session/password-reset/' . $id . '/' . $token }}"
+                                        href="{{ env('FRONTEND_EMPLOYEE_CLIENT_APP_URL') . '/session/password-reset/' . $id . '/' . $token }}"
                                        style="display: block; font-weight: 600;
                                        font-size: 14px; line-height: 100%;
                                         padding: 16px 24px; --text-opacity: 1;

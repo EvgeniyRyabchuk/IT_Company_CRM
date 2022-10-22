@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 
-import '../../assets/components/Chat/index.css';
+import '../../assets/components/Chat/index.scss';
 import ChatMain from "./ChatMain/ChatMain";
 import ChatSidebar from "./ChatSideBar/ChatSidebar";
 // import AddEmployeeToProjectModal from "../modals/AddEmployeeToProjectModal/AddEmployeeToProjectModal";

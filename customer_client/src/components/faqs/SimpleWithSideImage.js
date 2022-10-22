@@ -41,7 +41,7 @@ const Answer = motion(tw.dd`pointer-events-none text-sm sm:text-base leading-rel
 export default ({
   subheading = "",
   heading = "Vacancies",
-  description = "Here are some frequently asked questions about our hotels from our loving customers. Should you have any other questions, feel free to reach out via the contact form below.",
+  description = "If you enjoy what you do in the field of IT technologies, if you live your profession and every day you think what else you could improve in yourself as a professional, then you are welcome to us.",
   imageSrc = "https://images.unsplash.com/photo-1579427421635-a0015b804b2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1024&q=80",
   imageContain = false,
   imageShadow = true,

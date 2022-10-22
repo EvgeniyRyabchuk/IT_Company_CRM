@@ -336,7 +336,7 @@ const EmployeeListPage = () => {
 
                             const toUser = row.original;
 
-                            const { data } = await ChatService.createChat(user!.id, toUser.id);
+                            const { data } = await ChatService.createChat(user!.id, toUser.user.id);
                             navigate(`/chats/${toUser.id}`);
 
                             closeMenu();

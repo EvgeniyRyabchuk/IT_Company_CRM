@@ -478,11 +478,20 @@ class ProjectController extends Controller
                         ]);
                     }
 
+
+
                     $oldPath = $projectFile->path;
                     $projectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;
                     $projectFile->location = $requestProcessedData["destinationPath"];
 
-                    Storage::disk('private')->move( $requestProcessedData["sourcePath"],
+//                    return response()->json([
+//                        "success" => false,
+//                        "errorCode" => 404,
+//                        "errorText" => "Item with such name already exist",
+//                        'message' => $requestProcessedData["sourcePath"]."\n".$requestProcessedData["destinationPath"]."/".$projectFile->name
+//                    ]);
+
+                    Storage::disk('private')->move($requestProcessedData["sourcePath"],
                         $requestProcessedData["destinationPath"] . "/" . $projectFile->name
                     );
                     $projectFile->save();

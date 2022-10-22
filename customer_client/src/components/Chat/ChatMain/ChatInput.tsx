@@ -2,6 +2,30 @@ import React, {useState} from 'react';
 import {useTypeSelector} from "../../../hooks/useTypedSelector";
 import {useAction} from "../../../hooks/useAction";
 import useAuth from "../../../hooks/useAuth";
+import styled from "styled-components";
+
+
+const SendButton = styled.button`
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0 !important;
+  text-transform: none;
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+  outline: auto;
+  cursor: pointer;
+
+  padding-left: .75rem;
+  padding-right: .75rem;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  
+  
+`;
 
 const ChatInput = () => {
     const { user } = useAuth();
@@ -70,12 +94,12 @@ const ChatInput = () => {
                             onKeyPress={handleKeyPress}
                         />
                     </div>
-                    <button
+                    <SendButton
                         type="button"
                         className="btn ho xi ye lm"
                         onClick={onSend}
                     >
-                        Send -&gt;</button>
+                        Send -&gt;</SendButton>
                 </form>
             </div>
         </div>

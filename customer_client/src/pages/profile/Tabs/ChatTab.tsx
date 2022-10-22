@@ -1,4 +1,5 @@
-import '../../../assets/components/Chat/index.css';
+import '../../../assets/components/Chat/index.scss';
+
 import React, {useEffect, useRef, useState} from 'react';
 import {Box, Button} from "@mui/material";
 
@@ -170,7 +171,7 @@ const ChatTab = ({...props}) => {
 
     return (
         <div>
-            <Box className='chat' sx={{
+            <Box className='chat-wrapper' sx={{
                 display: 'flex',
                 padding: '20px',
                 height: '700px',

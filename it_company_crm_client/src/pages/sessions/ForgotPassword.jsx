@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import forgotPasswordLogo from '../../assets/images/matx/illustrations/dreamer.svg';
 import AuthService from "../../services/AuthService";
+import useAuth from "../../hooks/useAuth";
 
 const FlexBox = styled(Box)(() => ({
   display: 'flex',
@@ -28,10 +29,14 @@ const ForgotPasswordRoot = styled(JustifyBox)(() => ({
   },
 }));
 
+// jeka.rubchuk@gmail.com
+
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
   const [searchParams, setSearchParams] = useSearchParams();
-  const [email, setEmail] = useState('jeka.rubchuk@gmail.com');
+  const [email, setEmail] = useState(user.email ?? '');
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();

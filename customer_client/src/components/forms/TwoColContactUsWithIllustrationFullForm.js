@@ -85,7 +85,7 @@ const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
 const TwoColContactUsWithIllustrationFullForm = ({
    subheading = "Contact Us",
    heading = <>Feel free to <span tw="text-primary-500">get in touch</span><wbr/> with us.</>,
-   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+   description = "Describe the desired project and leave your contact details so that we can contact you. We are always happy to help. Our job is to make your business more efficient",
    submitButtonText = "Send",
    textOnLeft = true,
    setStatus
@@ -114,7 +114,7 @@ const TwoColContactUsWithIllustrationFullForm = ({
     return {
       name: user ? user.full_name : '',
       phone:  {
-        number: user.phones[0].phone_number,
+        number: user ? user.phones[0].phone_number : '',
         countyData: {},
       },
       email: user ? user.email : '',

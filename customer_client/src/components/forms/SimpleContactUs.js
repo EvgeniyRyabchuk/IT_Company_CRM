@@ -46,6 +46,28 @@ const SubmitButton = tw.button`w-full sm:w-32 mt-6 py-3 bg-gray-100 text-primary
 const SvgDotPattern1 = tw(SvgDotPatternIcon)`absolute bottom-0 right-0 transform translate-y-1/2 translate-x-1/2 -z-10 opacity-50 text-primary-500 fill-current w-24`
 
 
+/*
+
+const defInitialValues = useMemo(() => {
+    return {
+      name: 'dssdfg',
+      phone:  {
+        number: '380984756384',
+        countyData: {
+          countryCode: "UA",
+          dialCode: "380",
+          format: "+... (..) ... .. ..",
+          name: "Ukraine",
+        },
+      },
+      email: 'jeka.rubchuk@gmail.com',
+      message: 'sdfhdfhdfghdfghdfghdfghdfghdfgh',
+      vacancy_id: null,
+    }
+  }, []);
+
+ */
+
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required!'),
 
@@ -69,18 +91,13 @@ export default ({setStatus, vacancies}) => {
 
   const defInitialValues = useMemo(() => {
     return {
-      name: 'dssdfg',
+      name: '',
       phone:  {
-        number: '380984756384',
-        countyData: {
-          countryCode: "UA",
-          dialCode: "380",
-          format: "+... (..) ... .. ..",
-          name: "Ukraine",
-        },
+        number: '',
+        countyData: {},
       },
-      email: 'jeka.rubchuk@gmail.com',
-      message: 'sdfhdfhdfghdfghdfghdfghdfghdfgh',
+      email: '',
+      message: '',
       vacancy_id: null,
     }
   }, []);
