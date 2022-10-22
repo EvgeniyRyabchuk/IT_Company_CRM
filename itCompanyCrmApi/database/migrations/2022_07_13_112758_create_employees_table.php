@@ -18,7 +18,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('position_id')->constrained('positions')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('level_id')->constrained('levels')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

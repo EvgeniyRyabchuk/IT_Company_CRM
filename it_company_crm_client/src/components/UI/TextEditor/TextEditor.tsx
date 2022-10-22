@@ -1,11 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import ReactQuill, { Quill } from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.snow.css';
+//
+// //@ts-ignore
+// import hljs from 'highlight.js'
+// import 'highlight.js/styles/agate.css'
 // import { ImageResize } from 'quill-image-resize-module';
 
 
 import './styles.css';
 import {useTheme} from "@mui/material/styles";
+//@ts-ignore
+import hljs from 'highlight.js'
+
+hljs.configure({
+    languages: ['javascript', 'ruby', 'python', 'rust'],
+})
+
 const TextEditor : React.FC<{
         width?: string,
         height?: string,
@@ -17,6 +28,8 @@ const TextEditor : React.FC<{
     // const [editorHtml, setEditorHtml] = useState<string>('');
 
     const theme = useTheme();
+
+    console.log(hljs.highlightAuto)
 
     const [modules, setModules] = useState<any>({
         toolbar: [
@@ -31,13 +44,17 @@ const TextEditor : React.FC<{
                 { indent: '+1' }
             ],
             ['link', 'image', 'video'],
-            ['clean']
+            ['clean'],
+            ['code-block'],
         ],
         clipboard: {
             // toggle to add extra line breaks when pasting HTML:
             matchVisual: false
         },
+        syntax: {
+            highlight: (text: any) => hljs.highlightAuto(text).value,
 
+        }
 
     });
 
@@ -68,7 +85,8 @@ const TextEditor : React.FC<{
         'code',
         'script',
         'header',
-        'align'
+        'align',
+        'code-block',
 
     ]);
 

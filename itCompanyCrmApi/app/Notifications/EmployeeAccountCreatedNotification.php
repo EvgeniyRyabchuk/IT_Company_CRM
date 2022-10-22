@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EmployeeAccountCreatedNotification extends Notification
+class EmployeeAccountCreatedNotification extends Notification implements ShouldQueue
 {
     /**
      * Create a new notification instance.

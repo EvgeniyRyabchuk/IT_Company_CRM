@@ -16,7 +16,12 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name', 500);
-            $table->foreignId('project_type_id')->constrained('project_types')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('project_type_id')
+                ->constrained('project_types')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->date('deadline');
             $table->unsignedDecimal('budget', 9, 2);
             $table->unsignedDecimal('paid', 9, 2)->default(0);

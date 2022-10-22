@@ -242,7 +242,6 @@ const ProjectsListPage = () => {
                             justifyContent: 'space-between',
                             alignContent: 'center'}}
                         >
-
                             <SearchInput
                                 sx={{p: 0}}>
                                 <TextField
@@ -264,7 +263,6 @@ const ProjectsListPage = () => {
                                     onChange={(e) =>
                                         setSearch(e.target.value)
                                     }
-
                                 />
                             </SearchInput>
 
@@ -332,8 +330,11 @@ const ProjectsListPage = () => {
                            isOpen={isFilterOpen}
                            onFilterChange={handlerFilterChange}
                        />
-                        <div className="table-responsive">
-                            <table className="table table-striped table-hover text-nowrap mb-0">
+                        <div className="table-responsive"
+                             style={{ maxHeight: '70vh', overflow: 'auto' }}
+                        >
+                            <table
+                                className="table table-striped table-hover text-nowrap mb-0">
                                 <thead className="thead-light">
                                 <tr>
                                     <th className="text-center">#id</th>

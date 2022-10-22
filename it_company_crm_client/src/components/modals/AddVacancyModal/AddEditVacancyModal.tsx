@@ -46,6 +46,16 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
     const [mode, setMode] = useState<ComponentMode>('create');
     const [editableVacancy, setEditableVacancy] = useState<Vacancy | null>(null);
 
+    const reset = () => {
+        setEditableVacancy(null);
+        setMode('create');
+
+        setTitle('');
+        setText('');
+        setRequired(true);
+
+        setExpanded(false);
+    }
 
     const getVacancies = async () => {
         const { data } = await VacancyService.getVacancies();
@@ -273,7 +283,9 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                                         }
                                         console.log(newVacancy)
                                         onSave(newVacancy, mode);
+
                                         setOpen(false);
+                                        reset();
                                     }}
                                 >
                                     {

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PasswordResetNotification extends Notification
+class PasswordResetNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -17,7 +17,7 @@ class PasswordResetNotification extends Notification
      * @return void
      */
 
-    private string|null $token;
+    private $token;
 
     public function __construct($token)
     {
@@ -45,9 +45,9 @@ class PasswordResetNotification extends Notification
     {
         $id = $notifiable->id;
         $token = $this->token;
-
         return (new MailMessage)
-                  ->view('mail.password-reset', compact('id', 'token'));
+                  ->view('mail.password-reset',
+                      compact('id', 'token'));
     }
 
     /**

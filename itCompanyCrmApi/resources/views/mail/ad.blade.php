@@ -39,7 +39,12 @@
 </style>
 
 
-<table class="sm-w-full" style="font-family: 'Montserrat',Arial,sans-serif; width: 600px;" width="600"
+<table class="sm-w-full"
+       style="font-family: 'Montserrat',Arial,sans-serif;
+        width: 600px;
+          border: 1px solid black;
+        "
+       width="600"
        cellpadding="0" cellspacing="0" role="presentation">
     <tbody>
     <tr>

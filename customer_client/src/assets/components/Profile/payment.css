@@ -209,9 +209,7 @@ ul {
     grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
-.ak {
-    flex-direction: column;
-}
+
 
 .fe {
     justify-content: space-between;
@@ -388,10 +386,6 @@ ul {
 
 .gt {
     text-align: left;
-}
-
-.gn {
-    text-align: center;
 }
 
 .gr {

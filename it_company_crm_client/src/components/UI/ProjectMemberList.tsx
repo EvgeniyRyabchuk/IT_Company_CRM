@@ -36,6 +36,8 @@ const ProjectMemberList
 
     const [checkedMember, setCheckedMember] = React.useState<EmployeeWithProjectRoles[]>([]);
 
+    console.log()
+
     const handleToggle = (value: any) => () => {
         const currentIndex = checkedMember.indexOf(value);
         const newChecked = [...checkedMember];
@@ -71,6 +73,7 @@ const ProjectMemberList
                 }
             }
             setMembers(newMembers);
+            setCheckedMember([]);
         }
         // if(mode === 'update' && order && order.project) {
         //     if(checkedMember.length == 1) {

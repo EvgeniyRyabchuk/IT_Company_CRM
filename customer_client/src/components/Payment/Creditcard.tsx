@@ -216,40 +216,39 @@ const Creditcard : React.FC<CreditCardComponentProps>
                             />
                         </div>
                     </div>
-                    <div className="row justify-center">
-                        <Box sx={{width: '300px', my: 2}}>
+                    {
+                        mode === 'pay' &&
+                        <div className="row justify-center">
+                            <Box sx={{width: '300px', my: 2}}>
 
-                            <label
-                                htmlFor='summa'>
+                                <label
+                                    htmlFor='summa'>
 
-                                Summa
-                                {/*{*/}
-                                {/*    order && order.project &&*/}
-                                {/*    <>*/}
-                                {/*        {order.project.paid} / {order.project.budget}*/}
-                                {/*    </>*/}
-                                {/*}*/}
-                            </label>
+                                    Summa
+                                    {/*{*/}
+                                    {/*    order && order.project &&*/}
+                                    {/*    <>*/}
+                                    {/*        {order.project.paid} / {order.project.budget}*/}
+                                    {/*    </>*/}
+                                    {/*}*/}
+                                </label>
 
-                            {
-                                mode === 'pay' &&
-                                <input
-                                    style={{marginBottom: '10px'}}
-                                    id='summa'
-                                    type="number"
-                                    name="summa"
-                                    value={summa}
-                                    className="form-control"
-                                    placeholder="Summa"
-                                    required
-                                    onChange={(e) => setSumma(parseInt(e.target.value))}
-                                    // onFocus={handleInputFocus}
-                                />
-                            }
 
-                        </Box>
-
-                    </div>
+                                    <input
+                                        style={{marginBottom: '10px'}}
+                                        id='summa'
+                                        type="number"
+                                        name="summa"
+                                        value={summa}
+                                        className="form-control"
+                                        placeholder="Summa"
+                                        required
+                                        onChange={(e) => setSumma(parseInt(e.target.value))}
+                                        // onFocus={handleInputFocus}
+                                    />
+                            </Box>
+                        </div>
+                    }
                     <input type="hidden" name="issuer" value={card.issuer} />
 
                     {

@@ -62,9 +62,8 @@ class CustomerController extends Controller
                 'orders as order_count',
                 'orders as finished_order_count' => function($q) use($doneOrderStatus) {
             //TODO: solve customers visible
-//                    $q->join('orders as _orders', 'customers.id', '_orders.customer_id')
-//                    ->join('statuses as _statuses', '_orders.status_id', '_statuses.id')
-//                    ->where('_statuses.id', $doneOrderStatus->id);
+                    $q->join('statuses as _statuses', 'orders.status_id', '_statuses.id')
+                    ->where('_statuses.id', $doneOrderStatus->id);
                 }
             ])
             ->whereHas('user', function ($q) use ($search) {

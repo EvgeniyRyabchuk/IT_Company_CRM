@@ -1,6 +1,6 @@
 
 
-<div style="margin: 50px auto; ">
+<div style="margin: 50px auto;   border: 1px solid black;">
 
     <div>
         <h3></h3>

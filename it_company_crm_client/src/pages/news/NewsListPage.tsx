@@ -39,12 +39,10 @@ import AddEditNewsModal from '../../components/modals/AddEditNewsModal/AddEditNe
 import NewsItemSkeleton from "./NewsItemSkeleton";
 import moment from "moment/moment";
 import {ViewService} from "../../services/ViewService";
-import {toast} from "react-toastify";
-import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert} from "../../utils/alert";
 import 'react-quill/dist/quill.snow.css';
-// import 'react-quill/dist/quill.bubble.css';
-// import 'react-quill/dist/quill.core.css';
-// import 'react-quill/dist/react-quill';
+import 'highlight.js/styles/github-dark.css'
+import './style.css';
+
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;

@@ -9,28 +9,19 @@ Add horizontal scrollbar
 
 A: 
 
-if delete member hide bin 
-payment style fix 
+
+
 please log in in order page for a while after using  
-project files delete space in floder name
-delete files in storage too 
+cascade delete fix 
 select created_at date in user tables 
-chat double first message for customer  
-news code view mode 
-disable edit mode fater vacancy created 
-payment summa hide if card editing 
+delete files in storage too 
+project files delete space in floder name
+
+
 
 Search by guest name + 
 Phone numbers 
-user entry 
-customers visibility on others pc 
-if queue is work 
-Role system 
-
-Delete all default values  
-All Mail Notification 
 Invoice 
-
 
 
 DB localization 

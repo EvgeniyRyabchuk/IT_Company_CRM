@@ -106,10 +106,10 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
     const defInitialValues = useMemo<any>(() => {
         return {
             id: null,
-            first_name: '123',
-            last_name: '123',
-            middle_name: '123',
-            email: 'evgeniy@gmail.com',
+            first_name: '',
+            last_name: '',
+            middle_name: '',
+            email: '',
             position_id: null,
             level_id: null,
             skills: '',

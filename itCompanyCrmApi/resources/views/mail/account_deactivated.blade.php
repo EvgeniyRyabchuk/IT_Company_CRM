@@ -13,7 +13,16 @@
 
 
 
-<table class="sm-w-full" style="font-family: 'Montserrat',Arial,sans-serif; width: 600px;" width="600" cellpadding="0" cellspacing="0" role="presentation">
+<table class="sm-w-full"
+       style="font-family: 'Montserrat',Arial,sans-serif;
+        width: 600px;
+          border: 1px solid black;
+        "
+       width="600"
+       cellpadding="0"
+       cellspacing="0"
+       role="presentation"
+>
     <tbody><tr>
         <td class="sm-py-32 sm-px-24" style="font-family: Montserrat, -apple-system, 'Segoe UI', sans-serif; padding: 48px; text-align: center;" align="center">
             <a href="https://1.envato.market/vuexy_admin">
