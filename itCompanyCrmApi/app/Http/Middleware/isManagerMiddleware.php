@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\_Sl\RoleChecker;
+use App\_Sl\RoleChecker;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;

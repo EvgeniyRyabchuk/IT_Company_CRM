@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
+
+
 class AuthController extends Controller
 {
     public function __construct()
@@ -37,6 +39,12 @@ class AuthController extends Controller
             ['except' => ['login','register', 'refresh', 'getRoles']]);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/auth/profile",
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function getProfile(Request $request) {
         // check permissions
 //        $this->authorize('user_create');

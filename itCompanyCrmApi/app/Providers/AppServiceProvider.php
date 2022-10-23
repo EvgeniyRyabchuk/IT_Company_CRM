@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Http\_Sl\RoleChecker;
+use App\_Sl\RoleChecker;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -20,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
+//        $this->app->register(\App\_Sl\);
         //
     }
 
@@ -30,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+
 
         Schema::defaultStringLength(191);
         Gate::define('user_select', function (User $user) {
