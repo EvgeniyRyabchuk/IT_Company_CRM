@@ -90,4 +90,5 @@ public function fileManager(Request $request, $projectId) {
         return response()->json(["message" => "OK = $command"]);
     }
 
+d
 
