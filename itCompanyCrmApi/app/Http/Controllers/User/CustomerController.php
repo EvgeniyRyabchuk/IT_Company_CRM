@@ -72,8 +72,6 @@ class CustomerController extends Controller
                         ->orWhere('email', 'LIKE', "%$search%");
             });
 
-//        dd($query->toSql());
-
         $sortDirect = $sort['desc'] ? 'desc' : 'asc';
 
         switch ($sort['id']) {

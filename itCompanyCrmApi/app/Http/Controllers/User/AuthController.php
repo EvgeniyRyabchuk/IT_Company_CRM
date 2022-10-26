@@ -197,6 +197,8 @@ class AuthController extends Controller
         ]);
 
         if($rememberMe) {
+            logs()->warning('set cookies');
+//            Cookie::queue('refreshToken', $refreshToken, config('jwt.refresh_ttl'));
             $responce->withCookie(cookie('refreshToken', $refreshToken, config('jwt.refresh_ttl')));
         }
 

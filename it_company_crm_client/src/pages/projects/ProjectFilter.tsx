@@ -205,7 +205,7 @@ const ProjectFilter : React.FC<{
                 <Grid item md={4} xs={12}>
                     <Box sx={{ width: 250 }}>
                         <Typography id="non-linear-slider" gutterBottom>
-                            Storage: ${budgetValues[0]} | ${budgetValues[1]}
+                            Budget: ${budgetValues[0]} | ${budgetValues[1]}
                         </Typography>
 
                         <Slider

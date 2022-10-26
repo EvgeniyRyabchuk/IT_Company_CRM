@@ -463,7 +463,7 @@ const ProjectsListPage = () => {
                                                                 {
                                                                     e.customer!.user.phones &&
                                                                     e.customer!.user.phones.length > 0 &&
-                                                                    `${e.customer!.user.phones[0].phone_number}`
+                                                                    `${e.customer!.user.phones.map(p => p.phone_number)}`
                                                                 }
                                                             </div>
                                                         </div>
