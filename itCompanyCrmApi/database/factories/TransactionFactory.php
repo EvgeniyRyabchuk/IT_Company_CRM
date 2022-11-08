@@ -22,7 +22,7 @@ class TransactionFactory extends Factory
 
         $randIssuer = $issuers[rand(0, count($issuers) - 1)];
         $lastDigits = $this->faker->numberBetween(1000, 9999);
-        $summa = $this->faker->numberBetween(300, 3000);
+        $summa = $this->faker->numberBetween(300, 500);
 
         $randOrder = Order::inRandomOrder()->whereNotNull('project_id')->first();
 

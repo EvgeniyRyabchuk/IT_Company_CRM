@@ -111,7 +111,7 @@ const BiggestProjects = ({ height, color = [], data}) => {
                 '<div class="tooltip-title">' +
                 // ReactEcharts.format.encodeHTML(info.name) +
                 '</div>',
-                'Paid : &nbsp;&nbsp;' + amount + '<br>',
+                'Paid : &nbsp;&nbsp;' + value[0] + '<br>',
                 'Budget: &nbsp;&nbsp;' + value[2] + '<br>',
                 'Project ID: &nbsp;&nbsp;' + id + '<br>',
                 'Description: &nbsp;&nbsp;'
@@ -132,13 +132,13 @@ const BiggestProjects = ({ height, color = [], data}) => {
                         '{name|' + params.name + '}',
                         '{hr|}',
                         '{paid|$ ' +
-                        numberWithCommas(parseFloat(params.value[0])) +
+                        numberWithCommas(parseFloat(params.value[2])) +
                         '} {label|budget}'
                     ];
                     mode !== 1 &&
                     arr.push(
                         '{budget|$ ' +
-                        numberWithCommas(parseFloat(params.value[2]).toFixed(2)) +
+                        numberWithCommas(parseFloat(params.value[0]).toFixed(2)) +
                         '} {label|paid}'
                     );
                     return arr.join('\n');

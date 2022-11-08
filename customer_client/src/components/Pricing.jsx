@@ -176,7 +176,12 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
                                       <span className="name">{plan.name}</span>
                                         {[`${index}`] && <span className="featuredText">{[`${index+1}`]}</span>}
                                     </span>
-                                    <div className="pricingContainer">
+                                    <div className="pricingContainer"
+                                         style={{
+                                             display: 'flex',
+                                             justifyContent: 'center',
+                                        }}
+                                    >
                                       <span className="currentPrice">
                                         {/*<span className="bigText">{plan.price[0]}</span>*/}
                                           {'$'}{plan.fromPrice}{" "}
@@ -188,7 +193,10 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
                                       </span>
                                         {/*{plan.oldPrice && <span className="oldPrice">{plan.oldPrice}</span>}*/}
                                     </div>
-                                    <p className="description">{plan.description}</p>
+                                    <p className="description"
+                                       style={{ display: 'flex', justifyContent: 'center'}}>
+                                        {plan.description}
+                                    </p>
                                 </PlanHeader>
                                 {/*<PlanFeatures>*/}
                                 {/*    {plan.features.map((feature, index) => (*/}

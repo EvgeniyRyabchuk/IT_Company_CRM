@@ -16,7 +16,7 @@ import useAuth from "../../hooks/useAuth";
 
 const Container = tw.div`relative`;
 
-const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-10 md:py-10`;
+const TwoColumn = tw.div`flex flex-col md:flex-row justify-between max-w-screen-xl mx-auto py-10 md:py-10 md:px-5 sm:px-5`;
 const Column = tw.div`w-full max-w-md mx-auto md:max-w-none md:mx-0`;
 const ImageColumn = tw(Column)`md:w-5/12 flex-shrink-0 h-80 md:h-auto`;
 const TextColumn = styled(Column)(props => [
@@ -39,6 +39,9 @@ const Input = tw.input`mt-6 first:mt-0 border-b-2 py-3 focus:outline-none font-m
 const Textarea = styled(Input).attrs({as: "textarea"})`
   ${tw`h-24`}
 `
+const OrderContactPhone = styled(PhoneInputField)(() => [
+    tw`flex-grow text-black lg:w-1/2 md:w-full my-3`
+]);
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
@@ -171,6 +174,7 @@ const TwoColContactUsWithIllustrationFullForm = ({
                       }}>
                         <Input
                             type="text"
+                            style={{ width: '100%'}}
                             name="name"
                             placeholder="Full Name"
                             value={values.name}
@@ -185,9 +189,9 @@ const TwoColContactUsWithIllustrationFullForm = ({
                             </p>
                         }
 
-                        <Box sx={{ my: 3, display: 'flex', justifyContent: 'center'}}>
+                        <Box sx={{ my: 3, display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
                           <Input
-                              style={{width: '50%'}}
+                              style={{flexGrow: 1, minWidth: '200px', flexWrap: 'wrap', margin: '10px 0'}}
                               type="email"
                               name="email"
                               placeholder="Your Email Address"
@@ -203,16 +207,14 @@ const TwoColContactUsWithIllustrationFullForm = ({
                               </p>
                           }
 
-                          <PhoneInputField
-                              style={{color: 'black', width: '50%'}}
+                          <OrderContactPhone
+                              className='order-page-phone'
 
                               name="phone"
-
                               value={values.phone.number}
                               onChange={(phone) => {
                                 setFieldValue('phone', phone);
                               }}
-
                               touched={touched.phone}
                               error={errors.phone}
                           />
@@ -221,7 +223,7 @@ const TwoColContactUsWithIllustrationFullForm = ({
                       </Box>
                       {/*<Input type="text" name="subject" placeholder="Subject" />*/}
 
-                      <Box sx={{ mt: 3}}>
+                      <Box sx={{ mt: 0}}>
                         <Autocomplete
                             size="small"
                             getOptionLabel={(option) => option.name}

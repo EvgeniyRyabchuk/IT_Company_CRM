@@ -33,7 +33,7 @@ class Utils
     public static function getNumberParts($number, $countryCode) {
         $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
 
-        echo $countryCode;
+//        echo $countryCode;
         // Country Code: 380 National Number: 985882884
         $swissNumberProto = $phoneUtil->parse($number, $countryCode);
 

@@ -30,7 +30,7 @@ class ProjectFactory extends Factory
             'name' => $projectType->name,
             'project_type_id' => $projectType->id,
             'deadline' => $deadline,
-            'budget' => random_int(500, 3000),
+            'budget' => $budget,
             'paid' => 0,
             'created_at' => $created_at
         ];

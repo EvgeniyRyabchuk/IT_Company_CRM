@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import './App.css';
+import './App.scss';
 import {useRoutes} from "react-router-dom";
 import routes from "./routing/routes";
 import {AuthProvider} from "./context/JWTAuthContext";

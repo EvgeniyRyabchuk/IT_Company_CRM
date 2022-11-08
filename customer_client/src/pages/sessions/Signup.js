@@ -9,6 +9,7 @@ import logo from "../../assets/images/logo.svg";
 import googleIconImageSrc from "../../assets/images/google-icon.png";
 import twitterIconImageSrc from "../../assets/images/twitter-icon.png";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
+import Icon from '../../assets/logos/logo_64_64.png';
 import * as Yup from "yup";
 import {useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -17,7 +18,7 @@ import {Box, TextField} from "@mui/material";
 import PhoneInputField from "../../components/PhoneInputField/PhoneInputField";
 import {Label} from "@mui/icons-material";
 
-const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center m-5`;
+const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16
  bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`  p-6 sm:p-12`;
@@ -64,12 +65,10 @@ const IllustrationImage = styled.div`
 `;
 
 /*
-
     email: string,
     username: string
     password: string;
     remember_me: boolean;
-
  */
 
 const validationSchema = Yup.object().shape({
@@ -167,12 +166,8 @@ export default ({
   const submit = async (values) => {
     console.log(values)
     await register(values);
-    // await profile();
-    navigate('/session/login');
-
+    navigate('/profile');
   }
-
-
 
   return (
       <>
@@ -180,7 +175,7 @@ export default ({
           <Content>
             <MainContainer>
               <LogoLink href={logoLinkUrl}>
-                <LogoImage src={logo}/>
+                <LogoImage src={Icon}/>
               </LogoLink>
               <MainContent>
                 <Heading>{headingText}</Heading>
@@ -280,8 +275,6 @@ export default ({
                                     id="email"
                                     type="email"
                                     placeholder="Email"
-
-
                                     name="email"
                                     value={values.email}
                                     onChange={handleChange}
@@ -298,12 +291,10 @@ export default ({
                                     id="phone"
                                     style={{color: 'black'}}
                                     name="phone.number"
-
                                     value={values.phone.number}
                                     onChange={(data) => {
                                       setFieldValue('phone', data);
                                     }}
-
                                     touched={touched.phone}
                                     error={errors.phone}
                                 />
@@ -311,7 +302,6 @@ export default ({
 
                             </Box>
                           </Box>
-
 
                           <Box sx={{ margin: '0 auto'}}>
                             <label htmlFor='email' >Password</label>
@@ -322,10 +312,8 @@ export default ({
                                 size='medium'
                                 id="outlined-basic"
                                 variant="outlined"
-
                                 type="password"
                                 placeholder="Password"
-
                                 name="password"
                                 value={values.password}
                                 onChange={handleChange}
@@ -337,7 +325,6 @@ export default ({
 
                           <Box sx={{ margin: '0 auto'}}>
                             <label htmlFor='email' >Password Confirm</label>
-
                             <TextField
                                 fullWidth
                                 sx={{ m: 1,  minWidth: '170px', flexGrow: 1}}
@@ -355,9 +342,6 @@ export default ({
                                 error={Boolean(errors.password_repetition && touched.password_repetition)}
                             />
                           </Box>
-
-
-
 
                           <SubmitButton type="submit">
                             <SubmitButtonIcon className="icon"/>
@@ -383,7 +367,6 @@ export default ({
                         </Form>
                     )}
                   </Formik>
-
                 </FormContainer>
               </MainContent>
             </MainContainer>

@@ -9,7 +9,6 @@ import MiniCenteredFooter from "../footers/MiniCenteredFooter";
 
 const Container = tw.div`relative`;
 
-
 const Layout = () => {
 
     const location = useLocation();
@@ -22,7 +21,8 @@ const Layout = () => {
         <>
             <Header logoLink={undefined} links={undefined} className={undefined} />
 
-            <Container style={{ minHeight: '80vh', overflow: 'hidden'}}>
+            <Container className='layout-container'
+                       style={{ minHeight: '80vh', overflow: 'hidden', marginTop: '60px'}}>
                 <Outlet />
             </Container>
 

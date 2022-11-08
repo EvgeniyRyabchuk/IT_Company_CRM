@@ -133,7 +133,7 @@ const ProfilePage = () => {
                     </div>
 
 
-                <div className="y vs jj mk">
+                <div className="y jj">
                     <div className="ib rh _x">
                         <div className="flex ak items-center ja jd jl">
                             <div className="inline-flex rj rq ri _y">

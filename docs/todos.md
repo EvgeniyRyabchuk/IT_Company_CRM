@@ -6,17 +6,22 @@ Add horizontal scrollbar
 
 --- Project statuses 
 
+rand soul for each users 
+
 
 A: 
-after sing up redirect to log in page 
-
-
+uniq phone number 
+fix upload file visual bags 
+bolder font 
+redirect to admin side for employees 
 
 please log in in order page for a while after using  
 cascade delete fix 
 select created_at date in user tables 
 delete files in storage too 
 project files delete space in floder name
+Customer full profile features 
+
 
 
 

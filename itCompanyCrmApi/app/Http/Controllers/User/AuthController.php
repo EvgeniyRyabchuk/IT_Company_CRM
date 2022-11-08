@@ -253,7 +253,6 @@ class AuthController extends Controller
         if(count($phoneParts) !== 3) {
             $phoneParts = ['000', '000', '000'];
         }
-
         $phoneModel = [
             'code_1' => $phoneParts[0],
             'code_2' => $phoneParts[1],
@@ -261,8 +260,8 @@ class AuthController extends Controller
             'phone_number' => $phoneNumber,
             'user_id' => $user->id,
         ];
-        Phone::create($phoneModel);
 
+        Phone::create($phoneModel);
 
         $token = Auth::login($user);
 
@@ -302,6 +301,7 @@ class AuthController extends Controller
         PersonalNotificationController::store($payloadForMessageNot);
         PersonalNotificationController::store($payloadForVerifyEmailNot);
 
+        $user->load('phones');
 
         return response()->json([
             'status' => 'success',

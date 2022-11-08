@@ -4,6 +4,7 @@ import axios from 'axios'
 import {JWTAuthContextInitialState, LoginRequest, RegisterRequest, RoleEntity, RoleName} from "../types/auth";
 import AuthService from "../services/AuthService";
 import {MyLoader} from "../components/layout/LayoutSuspence";
+export const REACT_APP_EMPLOYEE_CLIENT_URL = process.env.REACT_APP_EMPLOYEE_CLIENT_URL;
 
 const initialState : JWTAuthContextInitialState = {
     isAuthenticated: false,
@@ -109,6 +110,13 @@ export const AuthProvider = ({ children } : any) => {
 
         const { authorisation, user } = data;
 
+        if(user.roles.find(r => r.name !== 'customer')) {
+            window.open(`http://localhost:3000`);
+            window.location.href = '/';
+            return;
+        }
+        console.log(user);
+
         // set access token
         setSession(authorisation.token)
 
@@ -121,9 +129,11 @@ export const AuthProvider = ({ children } : any) => {
     }
 
     const register = async (args : RegisterRequest) => {
+
         const response = await AuthService.register(args);
 
         const { authorisation, user } = response.data;
+
 
         setSession(authorisation.token)
 
@@ -142,6 +152,7 @@ export const AuthProvider = ({ children } : any) => {
         catch (ex) {
             console.error(ex);
         }
+
         setSession(null)
         dispatch({ type: 'LOGOUT' })
     }

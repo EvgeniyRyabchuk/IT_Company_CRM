@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import CreditCardModal from "../../../../components/modals/CreditCardModal";
 import {Card as CardType} from "../../../../types/card";
 import CardIconSwitcher from "../../../../components/icons/Payment/CardIconSwitcher";
-import '../../../../assets/components/Profile/payment.css'
+import '../../../../assets/components/Profile/payment.scss'
 
 // @ts-ignore
 import Card from 'react-credit-cards-2';
@@ -77,7 +77,8 @@ const CardManagment : React.FC<{
                 mode={mode}
                 order={null}
             />
-            <div className="vs jj ttm vl ou uf na">
+
+            <div className="vs jj ttm vl card-list-left" style={{ width: '70%'}}>
                 {
                     viewMode === 'full' &&
                     <>
@@ -112,10 +113,9 @@ const CardManagment : React.FC<{
                     </>
                 }
 
-
                  Card List
 
-                <div className="fb">
+                <div className="fb" >
                     {
                         cards.map((card: CardType) =>
                             <label key={card.id}
@@ -181,7 +181,7 @@ const CardManagment : React.FC<{
 
             {
                 viewMode === 'full' &&
-                <div>
+                <div className="card-detail-right" style={{ width: '30%'}}>
                     <div className="tel tep hp ttp tth l ttr co ttd ttv border-slate-200 tte te_">
                         <div className="vl vs ttm">
                             <div className="ul na ttn">

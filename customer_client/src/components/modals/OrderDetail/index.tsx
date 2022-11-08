@@ -29,6 +29,13 @@ interface Modal {
     onClose: () => void
 }
 
+export const OrderContentGrid = styled(Grid)(({ theme }) => ({
+    padding: '20px 50px !important',
+
+    [theme.breakpoints.down("md")]: {
+        padding: '20px !important',
+    }
+}));
 
 
 const OrderDetail : React.FC<{order: Order}>
@@ -50,7 +57,7 @@ const OrderDetail : React.FC<{order: Order}>
     return (
         <OrderDetailWrapper>
             <Grid container spacing={3}>
-                <Grid item md={9} xl={9} sx={{padding: '20px 50px !important'}}>
+                <OrderContentGrid item md={9} xl={9}>
                     <Grid container spacing={3}>
                         <Grid item md={12}>
                             <Typography sx={{pb: 1}} variant='h2'>
@@ -72,6 +79,7 @@ const OrderDetail : React.FC<{order: Order}>
 
                             <Box sx={{ my: 3, textAlign: 'jusify'}}>
                                 <h2>Your short description</h2>
+                                <br/>
                                 <Typography
                                     align='justify'>
                                     { order.about }
@@ -83,14 +91,13 @@ const OrderDetail : React.FC<{order: Order}>
                         <Grid item xs={12} sm={12} md={12}>
                             <Grid container sx={{my: 1}}>
                                 <Grid item xs={12} sm={12} md={6} xl={6}>
-                                    <FlexBoxCenter>
-                                        <Box>
+                                    <FlexBoxCenter >
+                                        <Box className='file-download-btn'>
                                             <Typography>
                                                 Your Order Extra File
                                             </Typography>
                                             {
                                                 order.extra_file ?
-
                                                 <IconButton
                                                     onClick={() => {
                                                         window.location.href
@@ -101,7 +108,6 @@ const OrderDetail : React.FC<{order: Order}>
                                                         { order.extra_file.split('/').at(-1) }
                                                         {/*somedoc.doc*/}
                                                     </Typography>
-
                                                     <Download sx={{mx: 1}}/>
                                                 </IconButton> : 'No Extra File'
                                             }
@@ -148,8 +154,8 @@ const OrderDetail : React.FC<{order: Order}>
                         {
                             order.project &&
                             <Grid item xs={12} sm={12} md={12}>
-                                <FlexBoxCenter>
-                                    <Box sx={{ m: 3}}>
+                                <FlexBoxCenter style={{ flexWrap: 'wrap'}}>
+                                    <Box sx={{ m: 3}} style={{ flexGrow: 1}}>
                                         <Typography sx={{mb: 1}}>
                                             Budget
                                         </Typography>
@@ -157,7 +163,7 @@ const OrderDetail : React.FC<{order: Order}>
                                             { order.project.budget }
                                         </Typography>
                                     </Box>
-                                    <Box sx={{ m: 3}}>
+                                    <Box sx={{ m: 3}}  style={{ flexGrow: 1}}>
                                         <Typography sx={{mb: 1}}>
                                             Paid
                                         </Typography>
@@ -165,7 +171,7 @@ const OrderDetail : React.FC<{order: Order}>
                                             { order.project.paid }
                                         </Typography>
                                     </Box>
-                                    <Box sx={{ m: 3}}>
+                                    <Box sx={{ m: 3}}  style={{ flexGrow: 1}}>
                                         <Typography sx={{mb: 1}}>
                                             Deadline
                                         </Typography>
@@ -184,7 +190,7 @@ const OrderDetail : React.FC<{order: Order}>
                             <Transactions _for='order' orderId={order.id} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </OrderContentGrid>
 
                 <Grid item
                       md={3}

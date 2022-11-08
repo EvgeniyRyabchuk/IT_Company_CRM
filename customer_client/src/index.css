@@ -10,6 +10,7 @@ html {
 
 
 body {
+  overflow-x: hidden;
   margin: 0;
   /*padding: 30px;*/
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -19,10 +20,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.file-download-btn:hover {
+  background-color: #8ca3ba;
+  color: white;
+}
+
 @media screen and (max-width: 640px) {
-  body {
-    padding: 10px;
+  .App {
+    padding: 0 !important;
   }
+
+  .layout-container {
+    padding: 1rem;
+  }
+  /*.start-group chrome no-clip-path moveFromRight-enter-done {*/
+  /*  right: 0;*/
+  /*}*/
 }
 
 code {

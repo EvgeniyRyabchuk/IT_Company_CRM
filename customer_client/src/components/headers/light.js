@@ -22,11 +22,15 @@ const Header = tw.header`
 
 `;
 
-const stickyStyle = {
-  top: '10px',
-  position: 'sticky',
+const StaticStyle = {
+  top: '3px',
+  left: '0',
+  right: '0',
+  position: 'fixed',
+
   zIndex: '999',
   opacity: '0.9',
+
   backgroundColor: 'white'
 };
 
@@ -139,7 +143,9 @@ export default ({
   const defaultLinks = [
     <NavLinks key={1} >
       <NavLink onClick={(e) => {
-        e.preventDefault()
+        e.preventDefault();
+        toggleNavbar(e);
+
         navigate('/make-an-order')
       }} href="/make-an-order">Make an Order</NavLink>
 
@@ -151,7 +157,7 @@ export default ({
                         console.log('click')
                         navigate(indexNav.link)
                         // setTimeout(() => navigate(indexNav.link), 1000);
-
+                        toggleNavbar(e);
                       }}
                       onSetActive={handleSetActive}
                       activeClass="active"
@@ -170,11 +176,13 @@ export default ({
       }
 
       <NavLink onClick={(e) => {
-        e.preventDefault()
+        e.preventDefault();
+        toggleNavbar(e);
         navigate('/contact-us')
       }} href="/contact-us">Contact Us</NavLink>
       <NavLink onClick={(e) => {
-        e.preventDefault()
+        e.preventDefault();
+        toggleNavbar(e);
         navigate('/vacancies')
       }} href="/vacancies">Vacancies</NavLink>
 
@@ -183,8 +191,9 @@ export default ({
           <>
             <NavLink
                 style={{cursor: 'pointer'}}
-                onClick={() => {
+                onClick={(e) => {
                   logout();
+                  toggleNavbar(e);
                   navigate('/session/login');
                 }}
                 tw="lg:ml-12!">
@@ -194,7 +203,8 @@ export default ({
                 css={roundedHeaderButton && tw`rounded-full`}
                 href="/profile"
                 onClick={(e) => {
-                  e.preventDefault()
+                  e.preventDefault();
+                  toggleNavbar(e);
                   navigate('/profile')
                 }}
             >
@@ -208,7 +218,8 @@ export default ({
           <>
             <NavLink
                 onClick={(e) => {
-                  e.preventDefault()
+                  e.preventDefault();
+                  toggleNavbar(e);
                   navigate('/session/signup')
                 }}
                 href="/session/signup" tw="lg:ml-12!">
@@ -216,7 +227,8 @@ export default ({
             </NavLink>
             <PrimaryLink
                 onClick={(e) => {
-                  e.preventDefault()
+                  e.preventDefault();
+                  toggleNavbar(e);
                   navigate('/session/login')
                 }}
                 css={roundedHeaderButton && tw`rounded-full`}
@@ -249,7 +261,7 @@ export default ({
   return (
     <Header
 
-        style={stickyStyle}
+        style={StaticStyle}
         className={className || "header-light"}>
       <DesktopNavLinks
 
@@ -260,7 +272,10 @@ export default ({
 
       <MobileNavLinksContainer css={collapseBreakpointCss.mobileNavLinksContainer}>
         {logoLink}
-        <MobileNavLinks initial={{ x: "150%", display: "none" }} animate={animation} css={collapseBreakpointCss.mobileNavLinks}>
+        <MobileNavLinks initial={{ x: "150%", display: "none" }}
+                        animate={animation}
+                        css={collapseBreakpointCss.mobileNavLinks}
+        >
           {links}
         </MobileNavLinks>
         <NavToggle onClick={toggleNavbar} className={showNavLinks ? "open" : "closed"}>

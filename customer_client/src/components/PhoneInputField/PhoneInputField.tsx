@@ -12,21 +12,31 @@ import PhoneInput, {CountryData} from 'react-phone-input-2'
 import {toUpper} from "lodash";
 
 
+export const PhoneBox = styled(Box)(({ theme }) => ({
+    [theme.breakpoints.down("md")]: {
+        width: '100%',
+        margin: '20px 0px'
+    },
+    "& > div": {
+        [theme.breakpoints.down("md")]: { width: '100%' },
+    },
+}));
+
+
 const PhoneInputField : React.FC<any>
     = ({onChange, value, ...props}) => {
 
     const r = useRef<any>();
 
     return (
-        <Box className={classes.BoxInline} >
-            <Box>
+        <PhoneBox className={`${classes.BoxInline}`} >
+            <Box style={{ margin: '0 auto'}}>
                 <PhoneInput
                     onChange={(number, data: CountryData) => {
                         data.countryCode = toUpper(data.countryCode);
                         onChange({number, countryData: data})
                     }}
                     value={value}
-
                     specialLabel={''}
                     country={'ua'}
                     inputStyle={{
@@ -42,7 +52,7 @@ const PhoneInputField : React.FC<any>
                     </p>
                 }
             </Box>
-        </Box>
+        </PhoneBox>
     )
 }
 
