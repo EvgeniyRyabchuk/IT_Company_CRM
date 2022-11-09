@@ -56,7 +56,8 @@ $api.interceptors.response.use((config) => {
             return $api.request(originalRequest);
         } catch (e) {
             if (error.response.status == 401) {
-                // redirect to login form
+                //TODO: logout
+
                 console.log('НЕ АВТОРИЗОВАН')
                 throw new Error('Not auth');
             }

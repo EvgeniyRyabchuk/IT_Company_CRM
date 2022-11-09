@@ -19,7 +19,18 @@ return new class extends Migration
             $table->string('code_2', 5);
             $table->string('number', 7);
             $table->string('phone_number', 17);
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->string('countryCode', 5)->default('');
+            $table->string('name', 100)->default('');
+            $table->string('dialCode', 5)->default('');
+            $table->string('format', 30)->default('');
+
+
+
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

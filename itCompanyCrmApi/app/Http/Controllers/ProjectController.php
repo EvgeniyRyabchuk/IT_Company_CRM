@@ -272,7 +272,6 @@ class ProjectController extends Controller
 
     public function fileManager(Request $request, $projectId)
     {
-
         $command = $request->get('command');
         $project = Project::findOrFail($projectId);
         $location = "projects/$projectId/data";
@@ -280,6 +279,7 @@ class ProjectController extends Controller
         $requestProcessedData = FileManager::getArgsFromRequest($request, $command, $location);
         $pathInfo = $requestProcessedData["pathInfo"] ?? null;
         $name = $requestProcessedData["name"] ?? null;
+        $name = trim($name);
 
         if($command != "Download") {
             if($pathInfo) {
@@ -292,7 +292,6 @@ class ProjectController extends Controller
         }
 
         if($command == "UploadChunk") {
-
             if(FileManager::checkIfFilesExist($location, $name)) {
                 return response()->json([
                     "success" => false,
@@ -383,7 +382,7 @@ class ProjectController extends Controller
 
                 case "CreateDir":
                     //TODO: has sub directory
-
+                    $name = trim($name);
                     if(FileManager::checkIfFilesExist($location, $name)) {
                         return response()->json([
                             "success" => false,
@@ -419,8 +418,6 @@ class ProjectController extends Controller
                             "errorText" => "Item with such name already exist ==="
                         ]);
                     }
-
-
                     // in this place location using as old path
                     $projectFile = ProjectFile::where([
                         "project_id" => $projectId,
@@ -477,8 +474,6 @@ class ProjectController extends Controller
                             "errorText" => "Item with such name already exist"
                         ]);
                     }
-
-
 
                     $oldPath = $projectFile->path;
                     $projectFile->path = $requestProcessedData["destinationPath"] . "/" . $projectFile->name;

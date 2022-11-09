@@ -20,6 +20,12 @@ class PhoneFactory extends Factory
             'code_1' => fake()->numberBetween(0, 99999),
             'code_2' => fake()->numberBetween(0, 99999),
             'number' => fake()->numberBetween(0, 9999999),
+
+            'countryCode' => 'UA',
+            'dialCode' => "380",
+            'name' => "Ukraine",
+            'format' => "+... (..) ... .. ..",
+
             'phone_number' => fake()->e164PhoneNumber(),
             'user_id' => 1
         ];

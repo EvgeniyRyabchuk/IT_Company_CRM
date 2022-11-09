@@ -1,14 +1,10 @@
 import React, {useMemo} from "react";
-import AnimationRevealPage from "../../helpers/AnimationRevealPage.js";
-import { Container as ContainerBase } from "../../components/misc/Layouts";
+import {Container as ContainerBase} from "../../components/misc/Layouts";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
 import illustration from "../../assets/images/server-illustration-2.svg";
-import logo from "../../assets/images/logo.svg";
 import googleIconImageSrc from "../../assets/images/google-icon.png";
-import twitterIconImageSrc from "../../assets/images/twitter-icon.png";
-import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
+import {ReactComponent as SignUpIcon} from "feather-icons/dist/icons/user-plus.svg";
 import Icon from '../../assets/logos/logo_64_64.png';
 import * as Yup from "yup";
 import {useNavigate} from "react-router-dom";
@@ -16,7 +12,6 @@ import useAuth from "../../hooks/useAuth";
 import {Formik} from "formik";
 import {Box, TextField} from "@mui/material";
 import PhoneInputField from "../../components/PhoneInputField/PhoneInputField";
-import {Label} from "@mui/icons-material";
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16
@@ -141,7 +136,6 @@ export default ({
   signInUrl = "#"
 }) => {
 
-
   const navigate = useNavigate();
 
   const { register, profile } = useAuth();
@@ -151,15 +145,18 @@ export default ({
         first_name: '',
         last_name: '',
         middle_name: '',
-
         email: '',
         phone: {
           number: '',
-          countryData: {},
+          countryData: {
+            countryCode: "",
+            dialCode: "",
+            format: "",
+            name: "",
+          },
         },
         password: '',
         password_repetition: '',
-
       }
     }, []);
 

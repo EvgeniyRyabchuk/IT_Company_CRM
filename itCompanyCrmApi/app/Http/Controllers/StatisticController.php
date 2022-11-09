@@ -52,8 +52,6 @@ class StatisticController extends Controller
     }
 
 
-
-
     public static function getOrderRatio() {
         $undoStatus = Status::where('name', 'Undo')->first();
         $finishedStatus = Status::where('name', 'Finished')->first();

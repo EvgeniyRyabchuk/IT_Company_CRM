@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ViewController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public static function getViewableByClassName($viewable, $id) {
         $res = null;
         switch ($viewable) {

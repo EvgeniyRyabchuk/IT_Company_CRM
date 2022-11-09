@@ -159,7 +159,7 @@ export const FileMetaData = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  right: 0; 
   bottom: 0;
   padding: 10px;
   border-radius: 6px;

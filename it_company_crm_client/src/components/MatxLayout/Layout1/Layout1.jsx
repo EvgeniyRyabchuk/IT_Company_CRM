@@ -63,10 +63,8 @@ const Layout1 = () => {
     switch (sidenavMode) {
       case 'full':
         return sideNavWidth;
-
       case 'compact':
         return sidenavCompactWidth;
-
       default:
         return '0px';
     }

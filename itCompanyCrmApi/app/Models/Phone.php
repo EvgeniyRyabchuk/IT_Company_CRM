@@ -14,6 +14,10 @@ class Phone extends Model
         'code_2',
         'number',
         'phone_number',
+        'countryCode',
+        'dialCode',
+        'format',
+        'name',
         'user_id'
     ];
 

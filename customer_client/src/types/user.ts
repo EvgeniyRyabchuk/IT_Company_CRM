@@ -37,7 +37,13 @@ export interface Phone {
     code_1: string;
     code_2: string;
     number: string;
+
     phone_number: string;
+    countryCode: string;
+    dialCode: string;
+    format: string;
+    name: string;
+
 }
 export interface Level {
     id: number;

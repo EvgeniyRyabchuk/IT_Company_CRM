@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function showChats(Request $request, $userId) {
         $user = User::findOrFail($userId);
         $chats = Chat::with('users.roles')

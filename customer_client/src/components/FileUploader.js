@@ -71,11 +71,11 @@ const FileUploader = ({
 
     const [fileEnter, setFileEnter] = useState(false);
 
-    const onDragEnter = () => {
+    const onDragEnter = (e) => {
         // console.log('drag enter ')
         setFileEnter(true);
     }
-    const onDragLeave = () => {
+    const onDragLeave = (e) => {
         // console.log('drag leave')
         setFileEnter(false);
     }

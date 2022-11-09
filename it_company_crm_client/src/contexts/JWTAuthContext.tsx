@@ -257,10 +257,15 @@ export const AuthProvider = ({ children } : any) => {
 
 
     useEffect(() => {
-        profile();
-        getViewCounter();
+        const getProfileWithViews = async () => {
+            await profile();
+            await getViewCounter();
+        }
+        getProfileWithViews();
 
     }, [])
+
+
 
     if (!state.isInitialised) {
         return <MatxLoading />;

@@ -156,7 +156,6 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $rememberMe = $request->input('remember_me') ?? false;
 
-
         $token = Auth::attempt($credentials);
 
         if (!$token) {
@@ -236,28 +235,31 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-
         $user->roles()->attach(
             Role::where('name', 'customer')->first()->id
         );
 
-        //TODO: temp
         Customer::create([
             'user_id' => $user->id,
         ]);
 
         $phoneNumber = $request->input('phone.number');
         $countryCode = $request->input('phone.countryData.countryCode');
-        $phoneParts = Utils::getNumberParts($phoneNumber, $countryCode);
+        $dialCode = $request->input('phone.countryData.dialCode');
+        $format = $request->input('phone.countryData.format');
+        $countryName = $request->input('phone.countryData.name');
 
-        if(count($phoneParts) !== 3) {
-            $phoneParts = ['000', '000', '000'];
-        }
         $phoneModel = [
-            'code_1' => $phoneParts[0],
-            'code_2' => $phoneParts[1],
-            'number' => $phoneParts[2],
+            'code_1' => '000',
+            'code_2' => '000',
+            'number' => '000',
+
             'phone_number' => $phoneNumber,
+            'countryCode' => $countryCode,
+            'dialCode' => $dialCode,
+            'format' => $format,
+            'name' => $countryName,
+
             'user_id' => $user->id,
         ];
 
@@ -333,7 +335,6 @@ class AuthController extends Controller
     // TODO: not work
 //        Auth::logout();
 //        \auth()->logout();
-
 
         return response()->json([
             'status' => 'success',
@@ -440,7 +441,5 @@ class AuthController extends Controller
 
         return $customer;
     }
-
-
 
 }
