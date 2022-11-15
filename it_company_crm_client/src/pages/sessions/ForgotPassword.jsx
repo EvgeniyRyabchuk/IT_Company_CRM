@@ -71,6 +71,7 @@ const ForgotPassword = () => {
                   variant="outlined"
                   onChange={(e) => setEmail(e.target.value)}
                   sx={{ mb: 3, width: '100%' }}
+                  disabled
                 />
 
                 <Button fullWidth variant="contained" color="primary" type="submit">

@@ -1,8 +1,6 @@
-import { Box, Button, Card, Grid, styled, TextField } from '@mui/material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Box, Button, Card, Grid, styled} from '@mui/material';
+import {useNavigate} from 'react-router-dom';
 import forgotPasswordLogo from '../../assets/images/matx/illustrations/dreamer.svg';
-import AuthService from "../../services/AuthService";
 import {H5} from "../../assets/typography/Typography";
 
 const FlexBox = styled(Box)(() => ({

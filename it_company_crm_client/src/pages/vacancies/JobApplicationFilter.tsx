@@ -57,7 +57,6 @@ const ProjectFilter : React.FC<{
     // @ts-ignore
     const [toCreatedAt, setToCreatedAt] = React.useState<Date>(defaultValues.createdAtRange[1] );
 
-
     const handleCheckBoxCheck = (ragetId: number, checked: boolean, checkType : 'status' | 'vacancy') => {
         const checkBoxList = checkType === 'status' ? checkBoxJobApplicationStatuses : checkBoxVacancies;
         const newCheckBoxList = checkBoxList.map((e) => {
@@ -79,9 +78,7 @@ const ProjectFilter : React.FC<{
 
     }
 
-
     useEffect(() => {
-
         const fetchStatuses = async () => {
             const { data }  = await JobApplicationService.getJobApplicationStatuses();
             const newCheckBoxList = data.map((e) => {
@@ -96,7 +93,6 @@ const ProjectFilter : React.FC<{
             });
             setCheckBoxVacancies(newCheckBoxList);
         }
-
         const fetchJobApplicationMinMax = async () => {
             const {data} = await JobApplicationService.getMinMaxValues();
             const minMaxCreatedAt = data.minMaxCreatedAtRange;
@@ -150,10 +146,6 @@ const ProjectFilter : React.FC<{
         setToCreatedAt(defaultValues.createdAtRange[1]);
     }
 
-    useEffect(() => {
-        console.log(checkBoxVacancies);
-    }, [checkBoxVacancies])
-
     return (
         <div
             style={{
@@ -163,9 +155,7 @@ const ProjectFilter : React.FC<{
                 overflow: "hidden",
                 overflowY: 'scroll',
                 margin:  isOpen ? '10px' : '0'
-            }}
-        >
-
+            }}>
             <div style={{
                 top: '10px',
                 left: '10px',
@@ -179,17 +169,13 @@ const ProjectFilter : React.FC<{
                         backgroundColor: 'gray',
                         color: 'white',
                         marginLeft: '10px'
-                    }}
-                >
+                    }}>
                     Reset
                 </Button>
             </div>
 
-
-
             <Grid container spacing={3} style={{ padding: '30px', margin: '0'}}>
                 <Grid item md={4} xs={12}>
-
                     <Accordion defaultExpanded={true}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -272,13 +258,8 @@ const ProjectFilter : React.FC<{
                             />
                         </Stack>
                     </LocalizationProvider>
-
                 </Grid>
-
             </Grid>
-
-
-
         </div>
     )
 };

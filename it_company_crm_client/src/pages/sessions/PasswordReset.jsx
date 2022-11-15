@@ -35,7 +35,6 @@ const ForgotPassword = (props) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        console.log(newPassword);
         const response = await AuthService.passwordReset(id, token,newPassword);
         navigate('/');
     };

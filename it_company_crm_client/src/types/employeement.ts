@@ -13,6 +13,7 @@ export interface JobApplication {
     id: number;
     name: string;
     email: string;
+    phone: string;
 
     vacancy: Vacancy;
     job_application_status: JobApplicationStatus;

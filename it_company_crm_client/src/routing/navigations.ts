@@ -72,5 +72,11 @@ export const navigations : NavigationRoute[]  = [
     path: 'https://www.tidio.com/panel',
     // badge: { value: '3', color: 'white' }
   },
+  {
+    name: 'Mail Trap',
+    icon: 'email',
+    type: 'extLink',
+    path: 'https://mailtrap.io/inboxes/',
+  }
 
 ];

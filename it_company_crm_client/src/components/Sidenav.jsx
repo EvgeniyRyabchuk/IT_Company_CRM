@@ -70,8 +70,6 @@ const Sidenav = ({ children }) => {
     }
   }), [counter]);
 
-  console.log(navigationsWithBadge)
-
   return (
     <Fragment>
 

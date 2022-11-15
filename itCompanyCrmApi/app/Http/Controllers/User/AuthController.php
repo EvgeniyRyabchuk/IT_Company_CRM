@@ -344,7 +344,6 @@ class AuthController extends Controller
 
     public function refresh(Request $request)
     {
-
         $refreshToken = Cookie::get('refreshToken');
 
         if(is_null($refreshToken))
@@ -392,10 +391,22 @@ class AuthController extends Controller
     public function deleteAccount(Request $request, $userId) {
         $user = Auth::user();
         $user->delete();
-
         return response()->json(['message' => 'account deleted successfully']);
     }
 
+    /*
+
+      $fullNameArr = explode(' ', $contact->name);
+      $user = User::create([
+            'first_name' => $fullNameArr[0],
+            'last_name' =>$fullNameArr[1] ?? '',
+            'middle_name' => $fullNameArr[2] ?? '',
+            'full_name' =>  $contact->name,
+            'email' => $contact->email,
+            'password' => Hash::make($randPassword),
+        ]);
+
+     */
 
     public static function createCustomerAccount($contact)
     {
@@ -421,12 +432,6 @@ class AuthController extends Controller
         $customer = Customer::create(['user_id' => $user->id,]);
 
         $phoneNumber = $contact->phone;
-//        $countryCode = $request->input('phone.countryData.countryCode');
-//        $phoneParts = Utils::getNumberParts($phoneNumber, $countryCode);
-//
-//        if(count($phoneParts) !== 3) {
-//            $phoneParts = ['000', '000', '000'];
-//        }
 
         $phoneModel = [
             'code_1' => 333,
@@ -435,6 +440,7 @@ class AuthController extends Controller
             'phone_number' => $phoneNumber,
             'user_id' => $user->id,
         ];
+
         Phone::create($phoneModel);
 
         Notification::send($user, new AccountCreatedNotification($user, $randPassword));

@@ -33,13 +33,22 @@ class _Statistic
                 $model::whereBetween('created_at', $beforeLastDateRange)->count();
         }
 
+        //TODO: treat zero divide 
+
+        if($lastWeekRevenue === 0) {
+            $percent = 0;
+        }
+        else {
+           $percent = (($beforeLastWeekRevenue - $lastWeekRevenue)
+                     / $lastWeekRevenue) * 100; 
+        }
+
          return [
              'targetName' => $tableName,
-             'percent' => (($beforeLastWeekRevenue - $lastWeekRevenue)
-                     / $lastWeekRevenue) * 100,
+             'percent' => $percent, 
              'absolute' => $beforeLastWeekRevenue - $lastWeekRevenue,
              'last' => $lastWeekRevenue,
-             'beforeLast' => $beforeLastWeekRevenue
+             'beforeLast' => $beforeLastWeekRevenue 
          ];
 
     }

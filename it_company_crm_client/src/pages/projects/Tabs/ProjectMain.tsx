@@ -11,12 +11,10 @@ import ProjectHistoryList from "./ProjectHistory/ProjectHistoryList";
 
 const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = ({project, orderInfo}) => {
 
-
     const [history, setHistory] = useState<ProjectHistory[]>();
     const orderTextBox = useRef<any>();
     const navigate = useNavigate();
     const [projectTags, setProjectTags] = useState<ProjectTag[]>([]);
-
 
     useEffect(() => {
         const getHistory = async () => {
@@ -32,7 +30,6 @@ const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = (
 
     return (
         <div style={{paddingTop: '30px'}}>
-
             {
                 orderInfo ?
                     <div>
@@ -130,10 +127,10 @@ const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = (
                                                 variant='standard'
                                                 label="Project Tags"
 
-                                            />)}
+                                            />
+                                        )}
                                     />
                                 </div>
-
                             </Grid>
                         </Grid>
                         <hr/>
@@ -146,19 +143,14 @@ const ProjectMain : React.FC<{project: Project, orderInfo: PublicOrderInfo}> = (
                                         variant={'outlined'}
                                         onClick={() =>
                                             navigate(`/projects/${project.id}?tab=history`)
-                                        }
-                                    >
+                                        }>
                                         View more history
                                     </Button>
                                 </div>
                             </Grid>
                         </Grid>
-                    </div>
-
-                    :
-                    <CircularProgress />
+                    </div> : <CircularProgress />
             }
-
         </div>
     );
 };

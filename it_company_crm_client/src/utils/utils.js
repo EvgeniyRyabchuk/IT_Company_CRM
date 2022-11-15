@@ -12,8 +12,6 @@ export function getProjectProgress(project) {
   // 100 -  6
   // x   -  3
 
-  console.log(index, totalOrderStatuses)
-
   return ((100 * index) / totalOrderStatuses).toFixed(0);
 }
 

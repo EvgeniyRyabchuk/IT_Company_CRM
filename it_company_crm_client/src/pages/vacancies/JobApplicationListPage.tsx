@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
-    Box, Button,
+    Box,
+    Button,
     Card,
     CardContent,
     CircularProgress,
@@ -20,7 +21,7 @@ import {CloudDownload, Delete, FilterAlt, Search, Sort} from "@mui/icons-materia
 import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
-import  {getSortOrderOptionValue} from "./sortOptions";
+import defJobApplicationSortOrderData, {getSortOrderOptionValue} from "./sortOptions";
 import {ComponentMode, SortOrderOptionType} from "../../types/global";
 import {defLimit, defPage} from "../../utils/constant";
 import useDebounce from "../../hooks/useDebounce";
@@ -29,11 +30,8 @@ import {JobApplication, JobApplicationStatus, Vacancy} from "../../types/employe
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import {JobApplicationService} from "../../services/JobApplicationService";
 import {VacancyService} from "../../services/VacancyService";
-import defJobApplicationSortOrderData from "./sortOptions";
 import AddEditVacancyModal from "../../components/modals/AddVacancyModal/AddEditVacancyModal";
 import {ViewService} from "../../services/ViewService";
-import {toast} from "react-toastify";
-import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert} from "../../utils/alert";
 
 export const SearchInput = styled("div")(({ theme }) => ({
     padding: "10px",
@@ -42,9 +40,7 @@ export const SearchInput = styled("div")(({ theme }) => ({
 }));
 
 
-const VacanciesListPage = () => {
-
-    const navigator = useNavigate();
+const VacanciesListPage = () => {;
 
     const [jobApplications, setJobApplications] = useState<JobApplication[]>([]);
     const lastElementRef = useRef<any>();
@@ -118,7 +114,6 @@ const VacanciesListPage = () => {
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
-        console.log('-' , page, totalPage, '-');
         setPage(page + 1);
     });
 
@@ -131,10 +126,7 @@ const VacanciesListPage = () => {
             setPage(defPage);
             setLimit(defLimit);
         }
-
-        console.log('sort', option)
     }
-
 
     const deleteJobApplication = async (jobApplicationId: number) => {
         const deleteIndex = jobApplications.findIndex((e: JobApplication) => e.id === jobApplicationId);
@@ -163,10 +155,8 @@ const VacanciesListPage = () => {
             const newJobApplications = [ ...jobApplications ];
             const findIndex = newJobApplications.findIndex(e => e.id === data.id);
             newJobApplications.splice(findIndex, 1, data);
-            console.log(newJobApplications)
             setJobApplications(newJobApplications);
-        }
-
+    }
 
     const [addVacancyModalOpen, setAddVacancyModalOpen] = useState<boolean>(false);
 
@@ -177,12 +167,13 @@ const VacanciesListPage = () => {
             const { data } = await VacancyService.updateVacancy(newVacancy.id, newVacancy);
         }
     }
+
     const onVacancyDelete = async (vacancy: Vacancy,)  => {
         const { data } = await VacancyService.deleteVacancy(vacancy.id); 
     }
+
     return (
         <Container>
-
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "JobApplications" }]} />
             </Box>
@@ -194,7 +185,12 @@ const VacanciesListPage = () => {
                             <small>Tables</small>
                             <h3>Job Applications</h3>
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            marginBottom: '10px'
+                        }}>
                             <div style={{display: 'flex'}}>
                                 <SearchInput style={{padding: 0, width: '300px'}}>
                                     <TextField
@@ -222,8 +218,7 @@ const VacanciesListPage = () => {
                                 <Button
                                     variant='outlined'
                                     onClick={() => setAddVacancyModalOpen(true)}
-                                    style={{width: '100xp', maxHeight: '40px', padding: '0 15px' }}
-                                >
+                                    style={{width: '100xp', maxHeight: '40px', padding: '0 15px' }}>
                                     Add Vacancy
                                 </Button>
                             </div>
@@ -256,10 +251,8 @@ const VacanciesListPage = () => {
                                                     color="primary"
                                                     className="text-primary"
                                                     title="View details"
-                                                    onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                                >
+                                                    onClick={() => setIsFilterOpen(!isFilterOpen)}>
                                                     <Sort />
-
                                                 </IconButton>
                                                 { getSortOrderOptionValue(e) }
                                             </MenuItem>
@@ -276,17 +269,14 @@ const VacanciesListPage = () => {
                                         border: '1px dashed gray',
                                         height: 'auto',
                                         padding: '0px 50px'
-                                    }}
-                                >
+                                    }}>
                                     Filter
                                     <FilterAlt/>
-
                                 </IconButton>
-
                             </Box>
                         </div>
-
                     </div>
+
                     <CardContent className="p-0">
                        <JobApplicationFilter
                            isOpen={isFilterOpen}
@@ -296,7 +286,7 @@ const VacanciesListPage = () => {
                             <table className="table table-striped table-hover text-nowrap mb-0">
                                 <thead className="thead-light">
                                 <tr>
-                                    <th style={{ width: '40%' }}>Name/Email</th>
+                                    <th style={{ width: '40%' }}>Name/Email/Phone</th>
                                     <th className="text-center">Status</th>
                                     <th className="text-center">Vacancy</th>
                                     <th className="text-center">Resume File</th>
@@ -319,6 +309,9 @@ const VacanciesListPage = () => {
                                                     </span>
                                                     <span className="text-black-50 d-block">
                                                         {e.email}
+                                                    </span>
+                                                    <span className="text-black-50 d-block">
+                                                        {e.phone}
                                                     </span>
                                                 </div>
                                             </div>
@@ -386,7 +379,6 @@ const VacanciesListPage = () => {
                                         </td>
                                     </tr>
                                 )}
-
                                 </tbody>
                             </table>
                             {
@@ -404,13 +396,10 @@ const VacanciesListPage = () => {
 
                             </div>
                         </div>
-                        { isLoading &&
-                            <CircularProgress />
-                        }
+                        { isLoading && <CircularProgress /> }
                     </CardContent>
                 </Card>
             </div>
-
 
             <AddEditVacancyModal
                 open={addVacancyModalOpen}
@@ -419,7 +408,6 @@ const VacanciesListPage = () => {
                 onSave={onVacancyAddEditChange}
                 onDelete={onVacancyDelete}
             />
-
 
         </Container>
     );

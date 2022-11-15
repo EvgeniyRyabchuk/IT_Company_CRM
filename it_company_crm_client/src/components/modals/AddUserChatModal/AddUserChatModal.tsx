@@ -86,13 +86,11 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                         {/*<div>{`inputValue: '${inputValue}'`}</div>*/}
 
                         <Autocomplete
-
                             onInputChange={(event, newInputValue) => {
                                 setUserIndentity(newInputValue);
                                 console.log('on input change', newInputValue)
                             }}
                             onChange={onChange}
-                            id="country-select-demo"
                             sx={{ width: 300 }}
                             options={users}
                             autoHighlight

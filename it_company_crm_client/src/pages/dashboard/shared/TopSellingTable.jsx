@@ -141,7 +141,7 @@ const TopSellingTable = ({ orders, timeRangeList, timeRange, isLoading, onTimeRa
           <TableHead>
             <TableRow>
               <TableCell sx={{ px: 3 }} colSpan={3}>
-                Customer / Project Type
+                Project Type
               </TableCell>
               <TableCell sx={{ px: 1 }} colSpan={2}>
                 Revenue

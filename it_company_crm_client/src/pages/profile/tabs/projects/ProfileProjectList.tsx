@@ -1,5 +1,5 @@
 import React from 'react';
-import './index.css';
+import '../../../../assets/components/Profile/project.css';
 import {Project} from "../../../../types/project";
 import {Computer} from "@mui/icons-material";
 import moment from "moment";
@@ -11,13 +11,13 @@ import {useNavigate} from "react-router-dom";
 import {getProjectProgress} from "../../../../utils/utils";
 
 const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
-
     const navigate = useNavigate();
-    
     // @ts-ignore
     return (
         <div className="MuiBox-root css-1phy807">
-            <Grid container spacing={10} className="MuiGrid-root MuiGrid-container css-1h77wgb">
+            <Grid container
+                  spacing={10}
+                  className="MuiGrid-root MuiGrid-container css-1h77wgb">
                 {
                     projects.map(project =>
                         <Grid key={project.id}
@@ -32,7 +32,12 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                                 onClick={() => {
                                     navigate(`/projects/${project.id}`);
                                 }}
-                                className="project-box MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-14lzsk6">
+                                className="project-box
+                                MuiPaper-root
+                                MuiPaper-elevation
+                                MuiPaper-rounded
+                                MuiPaper-elevation1
+                                MuiCard-root css-14lzsk6">
                                 <div className="MuiBox-root css-1lekzkb">
                                     <div className="MuiBox-root css-1g86e6t"> 
                                         <Computer />
@@ -47,7 +52,9 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                                     {project.name}
                                 </h5>
                                 <p
-                                    className="project-item MuiBox-root css-1imspi1">
+                                    className="project-item
+                                    MuiBox-root
+                                    css-1imspi1">
                                     {
                                         project.order?.about
                                     }
@@ -80,7 +87,9 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                                         {
                                             project.employees
                                                 .map(employee =>
-                                                    <Avatar alt="Remy Sharp"
+                                                    <Avatar
+                                                        key={employee.id}
+                                                        alt="Remy Sharp"
                                                         src={`${API_URL_WITH_PUBLIC_STORAGE}/${employee.user.avatar}`}
                                                     />
                                                 )

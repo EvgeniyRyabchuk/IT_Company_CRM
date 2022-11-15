@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Box, Button, CircularProgress,} from "@mui/material";
-import {useNavigate} from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
 import {Container} from "../../assets/components/breadcrumb";
 import {styled} from '@mui/material/styles';
@@ -34,14 +33,14 @@ import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
 import {useFetching} from "../../hooks/useFetching";
 import {useObserver} from "../../hooks/useObserver";
-import {defLimit, defPage} from "../../utils/constant";
+import {defPage} from "../../utils/constant";
 import AddEditNewsModal from '../../components/modals/AddEditNewsModal/AddEditNewsModal';
 import NewsItemSkeleton from "./NewsItemSkeleton";
 import moment from "moment/moment";
 import {ViewService} from "../../services/ViewService";
 import 'react-quill/dist/quill.snow.css';
 import 'highlight.js/styles/github-dark.css'
-import './style.css';
+import '../../assets/components/News/style.css';
 
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -68,7 +67,6 @@ const NewsListPage = () => {
     const [news, setNews] = useState<News[]>([]);
     const lastElementRef = useRef<any>(null);
 
-    const navigator = useNavigate();
     const [expanded, setExpanded] = useState<{id: number, expand: boolean } | null>(null);
     const [contextMenu, setContextMenu] = useState<{id: number, open: boolean } | null>(null);
 
@@ -108,25 +106,20 @@ const NewsListPage = () => {
 
     const [alignment, setAlignment] = useState<SimpleItemAlignment>(SimpleItemAlignment.COLUMN);
 
-    // TODO: why twice
     useEffect(() => {
         const storedAlignment = localStorage.getItem('newsAlignment');
         if(storedAlignment) { // @ts-ignore
             setAlignment(storedAlignment);
         }
-        // console.log(storedAlignment);
-        // fetchNews();
     }, []);
 
     useEffect(() => {
         fetchNews();
     }, [page, limit, order]);
 
-
     useEffect(() => {
         localStorage.setItem('newsAlignment', alignment);
     }, [alignment])
-
 
     const handleChange = (
         event: React.MouseEvent<HTMLElement>,
@@ -137,7 +130,6 @@ const NewsListPage = () => {
         }
         setAlignment(newAlignment);
     };
-
 
     const urlParamsStr = useMemo<string>( () => {
         const params = [
@@ -164,13 +156,10 @@ const NewsListPage = () => {
         }
     });
 
-
-
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
         console.log('-' , page, totalPage, '-');
         setPage(page + 1);
     });
-
 
     // @ts-ignore
     // @ts-ignore
@@ -180,7 +169,6 @@ const NewsListPage = () => {
                 setContextMenu(null);
             }}
         >
-
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "News" }]} />
             </Box>
@@ -372,8 +360,6 @@ const NewsListPage = () => {
                         isLoading && news.length > 0 && <CircularProgress />
                     }
                 </div>
-
-
 
             </NewsList>
 

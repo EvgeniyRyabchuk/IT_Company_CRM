@@ -11,22 +11,6 @@ import {
     showAxiosSuccessAlert
 } from "../utils/alert";
 
-
-/*
-
-       try {
-          const response = await $api.get<PaginatedResponse<News>>
-              (`/news${queryParams ?? ''}`);
-         showAxiosSuccessAlert(PrimarySuccessAlert.CREATED_NEWS);
-          return response;
-      }
-      catch (err) {
-          showAxiosErrorAlert({ primary: PrimaryErrorAlert.DELETED_NEWS}, err);
-          throw err;
-      }
-
-*/
-
 export class NewsService {
 
     static async getNews(queryParams?: string, isFetchAlertShow = false):

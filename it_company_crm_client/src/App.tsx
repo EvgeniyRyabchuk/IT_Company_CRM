@@ -14,13 +14,13 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-    const content = useRoutes(routes);
-    console.log('route: ', content);
+  const content = useRoutes(routes);
+
   return (
       <Provider store={store}>
           <SettingsProvider>
               <MatxTheme>
-                <div className="App"> 
+                <div className="App">
                     <ToastContainer position='bottom-left' autoClose={1500} />
                     <AuthProvider>
                         {content}

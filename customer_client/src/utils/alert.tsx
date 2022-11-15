@@ -5,6 +5,8 @@ export enum SimpleAlertMessage {
     LOGGED_IN = 'Welcome to admin panel'
 }
 
+
+
 export enum PrimarySuccessAlert {
     FETCH_CUSTOMERS = 'Success fetch customer',
 
@@ -41,7 +43,9 @@ export enum PrimarySuccessAlert {
     CREATE_CHAT = 'Chat created successfully ',
     DELETE_CHAT = 'Chat deleted successfully ',
 
-    MAIL_SENT_SUCCESS = 'mail sent success'
+    MAIL_SENT_SUCCESS = 'mail sent success',
+
+
 }
 
 export enum PromiseAlert {
@@ -93,8 +97,9 @@ export enum PrimaryErrorAlert {
     CREATE_CHAT = 'Fail to add chat ',
     DELETE_CHAT = 'Fail to remove chat ',
 
-    MAIL_SENT_SUCCESS = 'mail does not sent'
+    MAIL_SENT_SUCCESS = 'mail does not sent',
 
+    MAKING_ORDER_ERROR = 'Error to make an order',
 }
 export interface ErrorAlertMessage {
     primary: PrimaryErrorAlert,

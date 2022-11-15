@@ -151,8 +151,8 @@ class JobApplicationController extends Controller
 
     public function getMinMaxValues() {
         $minMaxCreatedAtRange = [
-            JobApplication::max('created_at'),
             JobApplication::min('created_at'),
+            JobApplication::max('created_at'),
         ];
 
         return response()->json(compact('minMaxCreatedAtRange'));

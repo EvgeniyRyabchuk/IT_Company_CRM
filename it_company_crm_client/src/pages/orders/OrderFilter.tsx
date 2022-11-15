@@ -1,21 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Accordion, AccordionDetails, AccordionSummary,
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Button,
-    Checkbox, FormControl,
+    Checkbox,
+    FormControl,
     FormControlLabel,
-    FormGroup, FormLabel,
-    Grid, Radio, RadioGroup,
-    Slider,
+    FormGroup,
+    FormLabel,
+    Grid,
+    Radio,
+    RadioGroup,
     TextField,
     Typography
 } from "@mui/material";
-import {Box, Stack} from "@mui/system";
+import {Stack} from "@mui/system";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DesktopDatePicker} from '@mui/x-date-pickers/DesktopDatePicker';
-import {ProjectService} from "../../services/ProjectService";
-import useDebounce from "../../hooks/useDebounce";
 import moment from "moment";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {OrderService} from "../../services/OrderService";
@@ -58,7 +61,6 @@ const OrderFilter : React.FC<{
             new Date('1970-01-01T00:00:00'),
             new Date(),
         ],
-
     });
 
     const [checkBoxOrdersStatuses, setCheckBoxOrdersStatuses] = useState<CheckBoxGroup[]>([]);
@@ -179,7 +181,6 @@ const OrderFilter : React.FC<{
                 margin:  isOpen ? '10px' : '0'
             }}
         >
-
             <div style={{
                 top: '10px',
                 left: '10px',
@@ -202,29 +203,34 @@ const OrderFilter : React.FC<{
                 </Button>
 
                 <FormControl>
-                    <FormLabel id="demo-row-radio-buttons-group-label">Project is exist</FormLabel>
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                        Project is exist
+                    </FormLabel>
                     <RadioGroup
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="row-radio-buttons-group"
                     >
-                        <FormControlLabel value="female"
-                                          control={<Radio />}
-                                          label="All"
-                                          checked={projectMustExist === ProjectExistMode.ALL}
-                                          onChange={() => setProjectMustExist(ProjectExistMode.ALL)}
+                        <FormControlLabel
+                            value="female"
+                            control={<Radio />}
+                            label="All"
+                            checked={projectMustExist === ProjectExistMode.ALL}
+                            onChange={() => setProjectMustExist(ProjectExistMode.ALL)}
                         />
-                        <FormControlLabel value="male"
-                                          control={<Radio />}
-                                          label="Project Exist"
-                                          checked={projectMustExist === ProjectExistMode.EXIST}
-                                          onChange={() => setProjectMustExist(ProjectExistMode.EXIST)}
+                        <FormControlLabel
+                            value="male"
+                            control={<Radio />}
+                            label="Project Exist"
+                            checked={projectMustExist === ProjectExistMode.EXIST}
+                            onChange={() => setProjectMustExist(ProjectExistMode.EXIST)}
                         />
-                        <FormControlLabel value="other"
-                                          control={<Radio />}
-                                          label="Project Not Exist"
-                                          checked={projectMustExist === ProjectExistMode.NOT_EXIST}
-                                          onChange={() => setProjectMustExist(ProjectExistMode.NOT_EXIST)}
+                        <FormControlLabel
+                            value="other"
+                            control={<Radio />}
+                            label="Project Not Exist"
+                            checked={projectMustExist === ProjectExistMode.NOT_EXIST}
+                            onChange={() => setProjectMustExist(ProjectExistMode.NOT_EXIST)}
                         />
                     </RadioGroup>
                 </FormControl>
@@ -241,8 +247,7 @@ const OrderFilter : React.FC<{
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
+                            id="panel1a-header">
                             <Typography>Order Statuses</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -256,7 +261,6 @@ const OrderFilter : React.FC<{
                                                 onChange={(e, data) =>
                                                     handleOrderStatusCheck(type.id, data)
                                                 }
-
                                             />
                                         } label={type.name} />
                                 )}
@@ -298,7 +302,6 @@ const OrderFilter : React.FC<{
                     </Typography>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <Stack spacing={3}>
-
                             <DesktopDatePicker
                                 disabled={projectMustExist !== ProjectExistMode.EXIST}
                                 label="From date"
@@ -317,12 +320,8 @@ const OrderFilter : React.FC<{
                             />
                         </Stack>
                     </LocalizationProvider>
-
                 </Grid>
-
             </Grid>
-
-
 
         </div>
     )

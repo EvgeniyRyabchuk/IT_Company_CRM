@@ -5,7 +5,6 @@ import Breadcrumb from "../../components/Breadcrumb";
 import useAuth from "../../hooks/useAuth";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import '../../assets/components/UI/Tab/index.css'
 import {AccountCircle, Attachment, Delete, Fingerprint, Lock, Settings} from "@mui/icons-material";
 import {SettingContainer} from "../../assets/components/Setting";
@@ -18,42 +17,8 @@ import Preferences from "./Tabs/Preferences";
 import Verification from "./Tabs/Verification";
 import SocialLinkTab from "./Tabs/SocialLinkTab";
 import DeleteAccount from "./Tabs/DeleteAccount";
+import {a11yProps, TabPanel} from "../../components/Tab";
 
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
-
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`vertical-tabpanel-${index}`}
-            aria-labelledby={`vertical-tab-${index}`}
-            style={{ flexGrow: '1' }}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ px: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-function a11yProps(index: number) {
-    return {
-        id: `vertical-tab-${index}`,
-        'aria-controls': `vertical-tabpanel-${index}`,
-    };
-}
 
 const SettingPage = () => {
 
@@ -191,9 +156,6 @@ const SettingPage = () => {
                 </TabPanel>
 
             </SettingContainer>
-
-
-
         </Container>
     );
 };

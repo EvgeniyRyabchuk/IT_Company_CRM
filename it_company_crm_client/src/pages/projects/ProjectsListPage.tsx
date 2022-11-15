@@ -60,14 +60,13 @@ const ProjectsListPage = () => {
     const [openEmployeeAddMoal, setOpenEmployeeAddModal] = useState<boolean>(false);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-
     const urlParamsStr = useMemo<string>( () => {
         const params = [
             { key: 'page', value: page },
             { key: 'limit', value: limit },
             { key: 'sort', value: sort },
             { key: 'order', value: order },
-            { key: 'search', value: search },
+            { key: 'search', value: debouncedSearch },
 
             { key: 'projectTypes', value: JSON.stringify(filterOptionData?.projectTypes) },
             { key: 'budgetRange', value: JSON.stringify(filterOptionData?.budgetRange) },
@@ -99,7 +98,6 @@ const ProjectsListPage = () => {
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
-        console.log('-' , page, totalPage, '-');
         setPage(page + 1);
     });
 
@@ -112,13 +110,9 @@ const ProjectsListPage = () => {
             setPage(defPage);
             setLimit(defLimit);
         }
-
-        console.log('sort', option)
     }
 
     const addEmployeeToProjectHandle = async (employee: Employee) => {
-        console.log('===============================');
-        console.log(employee.id, selectedProject!.id);
         if(selectedProject) {
             const { data } =
                 await ProjectService.addEmployeeToProject(employee.id, selectedProject.id);
@@ -138,15 +132,8 @@ const ProjectsListPage = () => {
         setLimit(defLimit);
     }, []);
 
-    useEffect(() => {
-        console.log(page, limit, totalPage, isLoading);
-    }, [page, limit, totalPage, isLoading]);
-
-
-
     return (
         <Container>
-
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "Projects" }]} />
             </Box>
@@ -233,10 +220,8 @@ const ProjectsListPage = () => {
                                     }}
                                 >
                                     Filter
-                                    <FilterAlt/>
-
+                                <FilterAlt/>
                                 </IconButton>
-
                             </Box>
                         </div>
 
@@ -351,14 +336,10 @@ const ProjectsListPage = () => {
 
                             </div>
                         </div>
-                        { isLoading &&
-                        <CircularProgress />
-                        }
+                        { isLoading && <CircularProgress /> }
                     </CardContent>
                 </Card>
             </div>
-
-
 
             <AddEmployeeToProjectModal
                 open={openEmployeeAddMoal}
@@ -367,8 +348,6 @@ const ProjectsListPage = () => {
                 setOpen={setOpenEmployeeAddModal}
                 project={selectedProject}
             />
-
-
         </Container>
     );
 }

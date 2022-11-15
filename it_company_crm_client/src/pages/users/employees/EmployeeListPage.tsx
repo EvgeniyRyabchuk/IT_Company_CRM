@@ -8,13 +8,11 @@ import {Employee, Phone, Role, Skill} from "../../../types/user";
 import {EmployeeService} from "../../../services/EmployeeService";
 import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
-
 import type {ColumnFiltersState, PaginationState, SortingState,} from '@tanstack/react-table';
 import {RowSelectionState} from '@tanstack/react-table';
 import {getQueryVarsInStringFormat} from "../../../utils/pages";
 import CreateEditEmployeeModal from "../../../components/modals/CreateEditEmployeeModal/CreateEditEmployeeModal";
 import {ChatService} from "../../../services/ChatService";
-
 import {useNavigate} from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 
@@ -47,7 +45,6 @@ const EmployeeListPage = () => {
     const [selectedEmployee, setSelectedEmployee] = useState<Employee>();
 
     const handleCreateEditRow = async (values: Employee, mode: string) => {
-        console.log('submit', values);
         if(mode === 'create') {
             const { data } = await EmployeeService.createEmployee(values);
             fetchEmployees();
@@ -59,8 +56,6 @@ const EmployeeListPage = () => {
             setEmployees(newEmployees);
         }
     };
-
-    console.log(isLoading);
 
     const fetchEmployees = async () => {
         try {
@@ -77,14 +72,11 @@ const EmployeeListPage = () => {
                 {key: 'sort', value: JSON.stringify(sorting ?? [])},
                 {key: 'page', value: pagination.pageIndex + 1}
             ])
-
             const { data } = await EmployeeService.getEmployees(queryParamString);
-
             setEmployees(data.data);
             setRowCount(data.total);
         } catch (error) {
             setIsError(true);
-            console.error(error);
             return;
         }
         setIsError(false);
@@ -93,13 +85,13 @@ const EmployeeListPage = () => {
     };
 
     useEffect(() => {
-        //
         fetchEmployees();
     }, [ columnFilters,
         globalFilter,
         pagination.pageIndex,
         pagination.pageSize,
-        sorting,])
+        sorting
+    ])
 
     const columns = useMemo<MRT_ColumnDef<Employee>[]>(
         () => [
@@ -139,7 +131,6 @@ const EmployeeListPage = () => {
                     </Box>
                 ),
             },
-
             {
                 id: 'project_count',
                 header: 'Members in projects',
@@ -159,14 +150,12 @@ const EmployeeListPage = () => {
                             color: '#fff',
                             maxWidth: '9ch',
                             p: '0.25rem',
-                        })}
-                    >
+                        })}>
                         {row.original.project_count}
                     </Box>
                 ),
                 },
                 {
-
                     id: 'user.created_at',
                     header: 'Account Created At',
                     muiTableHeadCellFilterTextFieldProps: {
@@ -178,7 +167,6 @@ const EmployeeListPage = () => {
                     Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
                 },
             ], []);
-
 
 
     const handleDeleteRow = useCallback(
@@ -198,7 +186,6 @@ const EmployeeListPage = () => {
 
     return (
         <Container>
-
             <h2>All employees</h2>
 
             <MaterialReactTable
@@ -209,9 +196,10 @@ const EmployeeListPage = () => {
 
                 enableRowActions
                 enableRowSelection
-
-                getRowId={(row: any) => row.id} //give each row a more useful id
-                onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+                //give each row a more useful id
+                getRowId={(row: any) => row.id}
+                //connect internal row selection state to your own
+                onRowSelectionChange={setRowSelection}
 
                 positionToolbarAlertBanner="bottom"
                 positionActionsColumn='last'
@@ -222,12 +210,10 @@ const EmployeeListPage = () => {
                 manualSorting
 
                 muiToolbarAlertBannerProps={
-                    isError
-                        ? {
+                    isError ? {
                             color: 'error',
                             children: 'Error loading data',
-                        }
-                        : undefined
+                        } : undefined
                 }
                 onColumnFiltersChange={setColumnFilters}
                 onGlobalFilterChange={setGlobalFilter}
@@ -244,21 +230,15 @@ const EmployeeListPage = () => {
                     sorting,
                     rowSelection
                 }}
-
-
-
                 renderDetailPanel={({ row }) => (
-                    <Box
-
-                    >
+                    <Box>
                         { row.original && row.original.user &&
                             <div
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'space-around',
                                     alignItems: 'center',
-                                }}
-                            >
+                                }}>
                                 <img
                                     alt="avatar"
                                     height={200}
@@ -310,7 +290,6 @@ const EmployeeListPage = () => {
                                         )
                                     }
                                 </ul>
-
                             </div>
                         }
 
@@ -320,7 +299,6 @@ const EmployeeListPage = () => {
                     <MenuItem
                         key={0}
                         onClick={() => {
-                            // View profile logic...
                             closeMenu();
                         }}
                         sx={{ m: 0 }}
@@ -351,7 +329,6 @@ const EmployeeListPage = () => {
                     <MenuItem
                         key={2}
                         onClick={() => {
-                            console.log('selected employee', row.original);
                             setSelectedEmployee({ ...row.original });
                             setCreateEditModalState({ isOpen: true, mode: 'update'})
                             closeMenu();
@@ -404,10 +381,7 @@ const EmployeeListPage = () => {
                     };
                     const handleExportSelectedRows = async () => {
                         const ids = Object.keys(rowSelection);
-                        console.log(Object.keys(rowSelection));
                         const param = ids ? `?ids=${JSON.stringify(ids)}` : '';
-
-                        console.log( `${API_URL}/excel/employees${param}`);
                         // eslint-disable-next-line no-restricted-globals
                         location.href = `${API_URL}/excel/employees${param}`;
                     };
@@ -427,8 +401,7 @@ const EmployeeListPage = () => {
                             <Button
                                 color="secondary"
                                 onClick={() => setCreateEditModalState({ isOpen: true, mode: 'create'})}
-                                variant="contained"
-                            >
+                                variant="contained">
                                 Create New Employee Account
                             </Button>
 
@@ -436,8 +409,7 @@ const EmployeeListPage = () => {
                                 color="primary"
                                 onClick={handleAllExportRows}
                                 startIcon={<FileDownload />}
-                                variant="contained"
-                            >
+                                variant="contained">
                                 Export All Data
                             </Button>
 
@@ -445,18 +417,15 @@ const EmployeeListPage = () => {
                                 disabled={table.getSelectedRowModel().flatRows.length === 0}
                                 onClick={handleExportSelectedRows}
                                 startIcon={<FileDownload />}
-                                variant="contained"
-                            >
+                                variant="contained">
                                 Export Selected rows
                             </Button>
-
 
                             <Button
                                 disabled={table.getRowModel().rows.length === 0}
                                 onClick={() => handleExportPageRows(table.getRowModel().rows)}
                                 startIcon={<FileDownload />}
-                                variant="contained"
-                            >
+                                variant="contained">
                                 Export Page Rows
                             </Button>
 
@@ -464,8 +433,6 @@ const EmployeeListPage = () => {
 
                     );
                 }}
-
-
             />
 
             <CreateEditEmployeeModal

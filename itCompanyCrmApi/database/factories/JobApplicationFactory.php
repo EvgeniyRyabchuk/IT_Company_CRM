@@ -26,13 +26,16 @@ class JobApplicationFactory extends Factory
 
         $resume_path = 'static/files/jobApplications/resumeExample.doc';
 
+
+
         return [
             'name' => $this->faker->firstName,
             'email' => $this->faker->email,
             'phone' => fake()->e164PhoneNumber(),
             'vacancy_id' => $vacancy->id,
             'resume_path' => $resume_path,
-            'job_application_status_id' => $vacancyStatus->id
+            'job_application_status_id' => $vacancyStatus->id,
+            'created_at' => $this->faker->dateTimeBetween('-9 month', '- 1 day')
         ];
     }
 

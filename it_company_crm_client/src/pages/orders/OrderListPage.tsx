@@ -92,7 +92,6 @@ const ProjectsListPage = () => {
         const { data } = await OrderService.getOrders(urlParamsStr);
         const total = getPageCount(data.total, limit);
 
-        // const onlyPending = data.data.filter(order => order.status.name === 'Pending' && order.id);
         ViewService.markAsSeen('orders', data.data.map(order => order.id));
 
         setTotalPage(total);
@@ -106,7 +105,6 @@ const ProjectsListPage = () => {
             setOrders([]);
         }
     });
-
 
     const fetchStatuses = async () => {
         const { data }  = await OrderService.getOrderStatuses();
@@ -122,7 +120,6 @@ const ProjectsListPage = () => {
     }, [page, limit, sort, order, debouncedSearch, filterOptionData]);
 
     useObserver(lastElementRef,page < totalPage, isLoading, () => {
-        console.log("useObserver", page, totalPage)
         setPage(page + 1);
     });
 
@@ -161,14 +158,10 @@ const ProjectsListPage = () => {
         if(status) {
             if(status.name === OrderStatusNameEnum.UNDO) {
                 if(!undoReason) {
-
                     setUndoModalOpen(true);
                     setSelectedOrder(order)
                     return;
                 }
-                // const { data } = await OrderService.undoOrder(order.id, undoReason);
-                // setUndoModalOpen(false);
-                // console.log(data);
             }
         }
 
@@ -183,7 +176,6 @@ const ProjectsListPage = () => {
         setOrders(newOrders);
     }
 
-
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [createEditModalState, setCreateEditModalState] = useState<ModalStandartState>({
         isOpen: false,
@@ -192,8 +184,6 @@ const ProjectsListPage = () => {
     const [undoModalOpen, setUndoModalOpen] = useState<boolean>(false);
 
     const handleCreateEditRow = async (orderId: number | null | undefined, values: any, mode: string) => {
-        console.log('submit', values);
-
         if(mode === 'create') {
             const { data } = await ProjectService.createProjectForOrder(values);
             const newOrders : Order[] = orders.map((order) => {
@@ -201,9 +191,7 @@ const ProjectsListPage = () => {
                     return {...order, project: data, project_id: data.id };
                 return order;
             });
-            console.log(newOrders)
             setOrders([...newOrders]);
-            // fetchOrders();
         }
         else {
             const { data: updatedProject } = await ProjectService.updateProject(values.id, values);
@@ -222,7 +210,6 @@ const ProjectsListPage = () => {
 
     return (
         <Container>
-
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "Orders" }]} />
             </Box>
@@ -588,9 +575,7 @@ const ProjectsListPage = () => {
 
                             </div>
                         </div>
-                        { isLoading &&
-                        <CircularProgress />
-                        }
+                        { isLoading && <CircularProgress /> }
                     </CardContent>
                 </Card>
             </div>
@@ -611,10 +596,7 @@ const ProjectsListPage = () => {
                     <UndoOrderModal
                         onClose={() => {
                             setUndoModalOpen(false);
-                            // setOrders([...orders])
                             setSelectedOrder(null);
-                            fetchOrders();
-                            console.log('close');
                         }}
                         onSave={(reason) => {
                             const undoStatus = statuses.find(s => s.name === OrderStatusNameEnum.UNDO);
@@ -629,7 +611,6 @@ const ProjectsListPage = () => {
                         order={selectedOrder}
                     />
             }
-
 
         </Container>
     );

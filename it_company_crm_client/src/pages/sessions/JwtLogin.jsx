@@ -38,8 +38,8 @@ const JWTRoot = styled(JustifyBox)(() => ({
 
 // inital login credentials
 const initialValues = {
-  email: 'jeka.rubchuk@gmail.com',
-  password: '123',
+  email: '',
+  password: '',
   remember: true,
 };
 
@@ -71,7 +71,6 @@ const JwtLogin = () => {
       setLoading(false);
     }
   };
-
 
   return (
     <JWTRoot>

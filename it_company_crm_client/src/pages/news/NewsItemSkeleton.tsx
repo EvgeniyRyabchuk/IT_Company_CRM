@@ -12,10 +12,7 @@ import {NewsItem} from "../../assets/components/News";
 const NewsItemSkeleton : React.FC<{alignment: any,  children?: JSX.Element|JSX.Element[]}>= ({alignment}) => {
     return (
         <NewsItem
-            sx={{
-                py: 3,
-                px: 1,
-            }}
+            sx={{py: 3, px: 1,}}
             /*
              // @ts-ignore */
             alignment={alignment}

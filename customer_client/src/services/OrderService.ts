@@ -1,7 +1,7 @@
 import $api from "../http";
 import {AxiosResponse} from "axios";
 import {PaginatedResponse} from "../types/global";
-import {Order, OrderStatus, UndoOrderCase, UndoOrderCaseGrouped, UndoOrderReason} from "../types/order";
+import {Order, OrderStatus, UndoOrderCaseGrouped} from "../types/order";
 import {PrimaryErrorAlert, PrimarySuccessAlert, showAxiosErrorAlert, showAxiosSuccessAlert} from "../utils/alert";
 
 
@@ -31,20 +31,25 @@ export class OrderService {
         return $api.get<PaginatedResponse<Order>>(`/orders?userId=${userId}`);
     }
 
-    static async createOrder(data: OrderForm, extra_file: any | null | undefined) : Promise<AxiosResponse<any>> {
+    static async createOrder(data: OrderForm, extra_file: any | null | undefined)
+        : Promise<AxiosResponse<any>> {
+        try {
+            const phone = JSON.stringify(data.phone);
 
-        console.log('service')
-        const phone = JSON.stringify(data.phone);
-
-        return $api.post<any>(`/orders`, {
-            ...data,
-            phone,
-            extra_file
-        }, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
+            return await $api.post<any>(`/orders`, {
+                ...data,
+                phone,
+                extra_file
+            }, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+        }
+        catch (err) {
+            showAxiosErrorAlert({ primary: PrimaryErrorAlert.MAKING_ORDER_ERROR}, err);
+            throw err;
+        }
     }
 
     static async updateOrder(orderId: number, payload: any):

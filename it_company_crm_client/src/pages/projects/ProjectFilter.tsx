@@ -49,7 +49,6 @@ const ProjectFilter : React.FC<{
     const [checkBoxProjectTypes, setCheckBoxProjectTypes] = useState<CheckBoxGroup[]>([]);
     const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
 
-
     const [budgetValues, setBudgetValues] = useState<number[]>(defaultValues.budgetRange);
     const debouncedBudget = useDebounce(budgetValues, 500);
 
@@ -58,8 +57,6 @@ const ProjectFilter : React.FC<{
 
     // @ts-ignore
     const [toDeadline, setToDeadline] = React.useState<Date>(defaultValues.budgetRange[1] );
-
-    console.log(defaultValues)
 
     const handleProjectTypeCheck = (typeId: number, checked: boolean) => {
         const newCheckBoxList = checkBoxProjectTypes.map((e) => {
@@ -133,10 +130,6 @@ const ProjectFilter : React.FC<{
         setToDeadline(defaultValues.deadlineRange[1]);
     }
 
-    useEffect(() => {
-        console.log(checkBoxProjectTypes);
-    }, [checkBoxProjectTypes])
-
     return (
         <div
             style={{
@@ -146,9 +139,7 @@ const ProjectFilter : React.FC<{
                 overflow: "hidden",
                 overflowY: 'scroll',
                 margin:  isOpen ? '10px' : '0'
-            }}
-        >
-
+            }}>
             <div style={{
                 top: '10px',
                 left: '10px',
@@ -168,11 +159,8 @@ const ProjectFilter : React.FC<{
                 </Button>
             </div>
 
-
-
             <Grid container spacing={3} style={{ padding: '30px', margin: '0'}}>
                 <Grid item md={4} xs={12}>
-
                     <Accordion defaultExpanded={true}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
@@ -192,7 +180,6 @@ const ProjectFilter : React.FC<{
                                                 onChange={(e, data) =>
                                                     handleProjectTypeCheck(type.id, data)
                                                 }
-
                                             />
                                         } label={type.name} />
                                 )}
@@ -223,12 +210,13 @@ const ProjectFilter : React.FC<{
                 </Grid>
 
                 <Grid item md={4} xs={12}>
-                    <Typography id="non-linear-slider" gutterBottom>
+                    <Typography id="non-linear-slider"
+                                gutterBottom>
                         Deadline date range
                     </Typography>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider
+                        dateAdapter={AdapterDateFns}>
                         <Stack spacing={3}>
-
                             <DesktopDatePicker
                                 label="From date"
                                 inputFormat="dd/MM/yyyy"
@@ -245,12 +233,8 @@ const ProjectFilter : React.FC<{
                             />
                         </Stack>
                     </LocalizationProvider>
-
                 </Grid>
-
             </Grid>
-
-
 
         </div>
     )

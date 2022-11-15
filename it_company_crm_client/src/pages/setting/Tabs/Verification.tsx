@@ -38,7 +38,6 @@ const Verification = () => {
                                     endIcon={<Send />}
                                     variant={isSent ? 'outlined' : 'contained'}
                                     onClick={sendCode}
-
                                 >
                                     {isSent ? 'Code was sent' : 'Send Code For Verification'}
                                 </Button>
@@ -68,15 +67,9 @@ const Verification = () => {
                                 </Box>
 
                             }
-
-
-
                         </Box>
                     </Box>
             }
-
-
-
         </Fragment>
     );
 };

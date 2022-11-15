@@ -18,7 +18,7 @@ import useTimeoutLoop from "../../hooks/useTimeoutLoop";
 import {ChatService} from "../../services/ChatService";
 
 
-const ChatPage = ({...props}) => {
+const ChatPage = () => {
 
     const [chatLoadingFirstTime, setChatLoadingFirstTime] = useState<boolean>(true);
 
@@ -166,29 +166,15 @@ const ChatPage = ({...props}) => {
         //     setChatMessages(currentChatId, [msg]);
     }
 
-    const checkNewChat = () => {
-
-    }
-
     return (
         <Container>
-            {/*<Button onClick={checkNewMessages}>*/}
-            {/*    Check*/}
-            {/*</Button>*/}
-            {/*<Button onClick={() => { stop(); }}>*/}
-            {/*    Stop Checking*/}
-            {/*</Button>*/}
-
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[ { name: "Chats" }]} />
             </Box>
 
             <div className='chat' style={{display: 'flex', padding: '20px'}}>
-
                 <ChatSidebar setUserModalOpen={setUserModalOpen} />
-
                 <ChatMain lastElement={lastElement} />
-
             </div>
 
             <AddUserChatModal

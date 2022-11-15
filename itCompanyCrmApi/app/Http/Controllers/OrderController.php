@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderContact;
 use App\Models\OrderStatusHistory;
+use App\Models\Phone;
 use App\Models\Status;
 use App\Models\Project;
 use App\Models\Role;
@@ -112,9 +113,9 @@ class OrderController extends Controller
             $queryForAuth
                 ->leftJoin('customers', 'orders.customer_id', 'customers.id')
                 ->leftJoin('users', 'customers.user_id', 'users.id')
-                ->leftJoin('phones', 'users.id', 'phones.user_id')
+//                ->leftJoin('phones', 'users.id', 'phones.user_id')
                 ->where('users.full_name', 'LIKE', "%$search%")
-                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
+//                ->orWhere('phones.phone_number', 'LIKE', "%$search%")
                 ->orWhere('users.email', 'LIKE', "%$search%")
             ;
 
@@ -148,8 +149,7 @@ class OrderController extends Controller
 //            return response()->json($query->toSql(), 201);
         }
 
-
-
+        // fetching customer orders
         $userId = $request->input('userId');
         $user = Auth::user();
         if(!$user) {
@@ -209,9 +209,7 @@ class OrderController extends Controller
             $customer = Customer::where('user_id', $user->id)->first();
 
             if(!$customer) {
-                return response()->json(
-                    ['alertMessage' => 'Such customer does not exist'],
-                    404);
+                return response()->json(['alertMessage' => 'Such customer does not exist'], 404);
             }
 
             $order->customer()->associate($customer);
@@ -219,8 +217,13 @@ class OrderController extends Controller
         else {
             $phoneDecode = json_decode($request->input('phone'), true);
             $phoneNumber = $phoneDecode['number'];
+            $phoneExist = Phone::where('phone_number', $phoneNumber)->first();
 
-//            return response()->json(, 404);
+            if($phoneExist) {
+                return response()->json(['alertMessage' => 'Customer with such phone number already exist'],
+                    404);
+            }
+
             $contact = OrderContact::create([
                 'name' => $request->name,
                 'email' => $request->email,

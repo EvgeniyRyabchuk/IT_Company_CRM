@@ -16,7 +16,6 @@ const DeleteAccount = () => {
             const { data } = await AuthService.deleteAccount(user!.id);
             navigate(`/session/signin`);
         }
-
     }
 
     return (

@@ -32,7 +32,8 @@ const children = [
   ...jobApplicationsRoutes,
   ...newsRoutes,
   ...profileRoutes,
-  ...settingRoutes
+  ...settingRoutes,
+  ...materialRoutes
 ];
 
 

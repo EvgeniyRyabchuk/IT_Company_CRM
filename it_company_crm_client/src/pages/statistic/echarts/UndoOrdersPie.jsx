@@ -1,8 +1,5 @@
 import React from 'react';
 import ReactEcharts from "echarts-for-react";
-import {values} from "lodash";
-
-
 
 const UndoOrdersPie = ({ height, color = [], data}) => {
 

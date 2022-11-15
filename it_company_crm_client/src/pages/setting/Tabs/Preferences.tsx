@@ -8,7 +8,6 @@ import {Container} from "@mui/system";
 
 const Preferences = () => {
     const [compactModeChecked, setCompactModeChecked] = React.useState(false);
-    const theme = useTheme();
     const { settings, updateSettings } = useSettings();
 
     const leftSidebar = settings.layout1Settings.leftSidebar;

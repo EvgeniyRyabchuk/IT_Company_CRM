@@ -8,12 +8,10 @@ import {Customer, Employee, Phone} from "../../../types/user";
 import {API_URL, API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import moment from "moment";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
 import type {ColumnFiltersState, PaginationState, SortingState,} from '@tanstack/react-table';
 import {RowSelectionState} from '@tanstack/react-table';
 import {getQueryVarsInStringFormat} from "../../../utils/pages";
 import {ChatService} from "../../../services/ChatService";
-
 import {useNavigate} from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import {CustomerService} from "../../../services/CustomerService";
@@ -44,23 +42,6 @@ const CustomerListPage = () => {
 
     const [rowCount, setRowCount] = useState(0);
 
-    const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
-
-
-    const handleCreateEditRow = async (values: Customer, mode: string) => {
-        console.log('submit', values);
-        if(mode === 'create') {
-            const { data } = await CustomerService.createCustomer(values);
-            fetchCustomers();
-        }
-        else {
-            const { data } = await CustomerService.updateCustomer(values);
-            // update employee list
-            const newCustomers = customers.map((e: Customer) => e.id === data.id ? data : e);
-            setCustomers(newCustomers);
-        }
-    };
-
     const fetchCustomers = async () => {
         try {
             // hooks that returns query string for url
@@ -75,7 +56,6 @@ const CustomerListPage = () => {
             const { data } = await CustomerService.getCustomer(queryParamString);
             setCustomers(data.data);
             setRowCount(data.total);
-            toast.success("Success fetch customers", { autoClose: 2000})
         } catch (error: any) {
             setIsError(true);
             showAxiosErrorAlert({ primary: PrimaryErrorAlert.FETCH_CUSTOMERS }, error);
@@ -93,17 +73,17 @@ const CustomerListPage = () => {
         customerForUpdate!.vip = !oldValue;
         const newCustomers = customers.
             map((e: Customer) => e.id === customerId ? customerForUpdate : e);
-
         setCustomers(newCustomers);
     }
 
     useEffect(() => {
         fetchCustomers();
-    }, [ columnFilters,
+    },[ columnFilters,
         globalFilter,
         pagination.pageIndex,
         pagination.pageSize,
-        sorting,])
+        sorting
+    ])
 
     const columns = useMemo<MRT_ColumnDef<Customer>[]>(
         () => [
@@ -191,7 +171,6 @@ const CustomerListPage = () => {
                 ),
             },
             {
-
                 id: 'user.created_at',
                 header: 'Account Created At',
                 muiTableHeadCellFilterTextFieldProps: {
@@ -203,7 +182,6 @@ const CustomerListPage = () => {
                 Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
             },
             {
-
                 id: 'vip',
                 size: 80,
                 header: 'Favorite',
@@ -242,9 +220,10 @@ const CustomerListPage = () => {
 
                 enableRowActions
                 enableRowSelection
-
-                getRowId={(row: any) => row.id} //give each row a more useful id
-                onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+                //give each row a more useful id
+                getRowId={(row: any) => row.id}
+                //connect internal row selection state to your own
+                onRowSelectionChange={setRowSelection}
 
                 positionToolbarAlertBanner="bottom"
                 positionActionsColumn='last'
@@ -255,12 +234,10 @@ const CustomerListPage = () => {
                 manualSorting
 
                 muiToolbarAlertBannerProps={
-                    isError
-                        ? {
+                    isError ? {
                             color: 'error',
                             children: 'Error loading data',
-                        }
-                        : undefined
+                        } : undefined
                 }
                 onColumnFiltersChange={setColumnFilters}
                 onGlobalFilterChange={setGlobalFilter}
@@ -278,13 +255,8 @@ const CustomerListPage = () => {
                     rowSelection
                 }}
 
-
-
                 renderDetailPanel={({ row }) => (
-                    <Box
-
-                    >
-
+                    <Box>
                         {row.original && row.original.user &&
                         <div
                             style={{
@@ -295,7 +267,6 @@ const CustomerListPage = () => {
                                 flexWrap: 'wrap'
                             }}
                         >
-
                             <img
                                 alt="avatar"
                                 height={200}
@@ -303,7 +274,6 @@ const CustomerListPage = () => {
                                 loading="lazy"
                                 style={{borderRadius: '50%'}}
                             />
-
                             {row.original.user.tags?.map((tag: { id: number; name: string; }) =>
                                 <Box
                                     key={tag.id}
@@ -351,21 +321,6 @@ const CustomerListPage = () => {
                         </ListItemIcon>
                         Chat
                     </MenuItem>,
-                    // <MenuItem
-                    //     key={2}
-                    //     onClick={() => {
-                    //         console.log('selected employee', row.original);
-                    //         setSelectedCustomer({ ...row.original });
-                    //         // setCreateEditModalState({ isOpen: true, mode: 'update'})
-                    //         closeMenu();
-                    //     }}
-                    //     sx={{ m: 0 }}
-                    // >
-                    //     <ListItemIcon>
-                    //         <Edit />
-                    //     </ListItemIcon>
-                    //     Edit
-                    // </MenuItem>,
                     <MenuItem
                         key={3}
                         onClick={async () => {
@@ -384,20 +339,15 @@ const CustomerListPage = () => {
                     </MenuItem>,
                 ]}
                 renderTopToolbarCustomActions={({ table }) => {
-
                     const handleAllExportRows = async () => {
                         const ids = Object.keys(rowSelection);
                         // const param = ids ? `?${JSON.stringify(ids)}` : '';
                         // eslint-disable-next-line no-restricted-globals
                         location.href = `${API_URL}/excel/customers`;
-
                     };
                     const handleExportSelectedRows = async () => {
                         const ids = Object.keys(rowSelection);
-                        console.log(Object.keys(rowSelection));
                         const param = ids ? `?ids=${JSON.stringify(ids)}` : '';
-
-                        console.log( `${API_URL}/excel/customers${param}`);
                         // eslint-disable-next-line no-restricted-globals
                         location.href = `${API_URL}/excel/customers${param}`;
                     };
@@ -412,33 +362,19 @@ const CustomerListPage = () => {
                     const handleExportPageRowsAsPdf = async (rows: MRT_Row<Employee>[]) => {
                         if(tableRef.current !== null) {
                             const report = new JsPDF('landscape','px','a4');
-                            let y = 20;
-                            // customers.forEach((e) => {
-                            //     const full_name = e.user.full_name;
-                            //     const email = e.user.email;
-                            //     const phones = e.user.phones.map(phone =>`${phone.phone_number}`).join(' ');
-                            //     const created_at = e.user.created_at;
-
-                            //     const row = `Full Name: ${full_name} | Email: ${email} | Phones: ${phones} | Created At: ${created_at}`;
-
-                            //     report.text(row,20, y);
-                            //     // report.setLineWidth(0.5)
-                            //     // report.line(20, y, 20, y)
-                            //     y += 100;
-                            // })
-                            //     report.save('report.pdf');
                             report.html(tableRef.current).then(() => {
                                 report.save('report.pdf');
                             });
                         }
-
                     }
 
                     return (
-
-                        <Box
-                            sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
-                        >
+                        <Box sx={{
+                                display: 'flex',
+                                gap: '1rem',
+                                p: '0.5rem',
+                                flexWrap: 'wrap'
+                        }}>
                             <Button
                                 color="primary"
                                 onClick={handleAllExportRows}
@@ -457,7 +393,6 @@ const CustomerListPage = () => {
                                 Export Selected rows
                             </Button>
 
-
                             <Button
                                 disabled={table.getRowModel().rows.length === 0}
                                 onClick={() => handleExportPageRows(table.getRowModel().rows)}
@@ -467,7 +402,6 @@ const CustomerListPage = () => {
                                 Export Page Rows
                             </Button>
 
-
                             <Button
                                 disabled={table.getRowModel().rows.length === 0}
                                 onClick={() => handleExportPageRowsAsPdf(table.getRowModel().rows)}
@@ -476,23 +410,11 @@ const CustomerListPage = () => {
                             >
                                 Export Page As PDF
                             </Button>
-
-
                         </Box>
 
                     );
                 }}
-
-
             />
-
-            {/*<CreateEditEmployeeModal*/}
-            {/*    onClose={() => setCreateEditModalState( { ...createEditModalState, isOpen: false })}*/}
-            {/*    onSubmit={handleCreateEditRow}*/}
-            {/*    open={createEditModalState.isOpen}*/}
-            {/*    mode={createEditModalState.mode} */}
-            {/*    employee={selectedEmployee}*/}
-            {/*/>*/}
 
         </Container>
     );

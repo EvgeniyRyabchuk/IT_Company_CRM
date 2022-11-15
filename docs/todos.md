@@ -10,16 +10,20 @@ rand soul for each users
 
 
 A: 
-fix upload file visual bags 
+
 uniq phone number 
+alert message 
+
+fix upload file visual bags 
 http 401 if refresh token not exist then logout 
+twice employee adding 
+more email messages 
+check if user is employee when log in 
 
 select created_at date in user tables 
 cascade delete fix 
 Customer full profile features 
-card save for user 
-
-
+edit employee phone numbers 
 
 Search by guest name + 
 Invoice 
@@ -36,7 +40,9 @@ Error  showsystem
 Perfect scroll mobile 
 Pdf-export 
 Search String 
-
+Email company  
+customer order history 
+relationships history 
 
 
 Online Chat:  

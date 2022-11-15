@@ -75,22 +75,21 @@ const MatxVerticalNav = ({ items }) => {
   const { settings } = useSettings();
   const { mode } = settings.layout1Settings.leftSidebar;
 
-
-
   const renderLevels = (data) => {
-    console.log(items);
-
     return data.map((item, index) => {
       if (item.type === 'label')
         return (
-          <ListLabel key={index} mode={mode} className="sidenavHoverShow">
+          <ListLabel key={index}
+                     mode={mode}
+                     className="sidenavHoverShow">
             {item.label}
           </ListLabel>
         );
 
       if (item.children) {
         return (
-          <MatxVerticalNavExpansionPanel mode={mode} item={item} key={index}>
+          <MatxVerticalNavExpansionPanel
+              mode={mode} item={item} key={index}>
             {renderLevels(item.children)}
           </MatxVerticalNavExpansionPanel>
         );
@@ -108,7 +107,9 @@ const MatxVerticalNav = ({ items }) => {
                 if (item.icon) {
                   return <Icon className="icon">{item.icon}</Icon>;
                 } else {
-                  return <span className="item-icon icon-text">{item.iconText}</span>;
+                  return <span className="item-icon icon-text">
+                    {item.iconText}
+                  </span>;
                 }
               })()}
               <StyledText mode={mode} className="sidenavHoverShow">
@@ -167,7 +168,6 @@ const MatxVerticalNav = ({ items }) => {
                 <Box mx="auto" />
               </ButtonBase>
             </NavLink>
-
           </InternalLink>
         );
       }

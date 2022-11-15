@@ -1,14 +1,9 @@
 import React from 'react';
 import ReactEcharts from "echarts-for-react";
-// import obama_budget_2012 from './data1.json';
 import {numberWithCommas} from '../../../utils/utils';
-
-import diskData from './data.json';
 
 
 const BiggestProjects = ({ height, color = [], data}) => {
-
-
     const household_america_2012 = 113616229;
 
     function buildData(mode, originList) {
@@ -21,11 +16,7 @@ const BiggestProjects = ({ height, color = [], data}) => {
             }
             out[i] = newNode;
             let value = newNode.value;
-            // Calculate amount per household.
-            // value[3] = value[0] / household_america_2012;
-            // if mode === 0 and mode === 2 do nothing
             if (mode === 1) {
-                // Set 'Change from 2010' to value[0].
                 let tmp = value[1];
                 value[1] = value[0];
                 value[0] = tmp;
@@ -207,10 +198,7 @@ const BiggestProjects = ({ height, color = [], data}) => {
             seriesOpt.levels = getLevelOption(idx);
             return seriesOpt;
         })
-};
-
-
-
+    };
 
     return <ReactEcharts style={{ height: height }} option={option} />;
 };

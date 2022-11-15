@@ -13,7 +13,6 @@ const PasswordTab = () => {
                 !searchParams.get('sent') ?
                     <ForgotPassword /> :
                 <EmailSentSuccessfully text={'Check out your email to reset password'} />
-                // <PasswordReset style={{ padding: '1px', minHeight: '500px !important' }} />
             }
 
         </div>

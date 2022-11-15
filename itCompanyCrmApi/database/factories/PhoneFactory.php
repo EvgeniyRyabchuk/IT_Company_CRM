@@ -26,7 +26,7 @@ class PhoneFactory extends Factory
             'name' => "Ukraine",
             'format' => "+... (..) ... .. ..",
 
-            'phone_number' => fake()->e164PhoneNumber(),
+            'phone_number' => mb_substr(fake()->e164PhoneNumber(), 1),
             'user_id' => 1
         ];
     }

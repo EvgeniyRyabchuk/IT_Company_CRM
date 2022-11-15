@@ -11,6 +11,7 @@ import {DashboardService} from "../../services/DashboardService";
 import {useFetching} from "../../hooks/useFetching";
 import {DashBoardAnalytic} from "../../types/statistics";
 import EventCalendarWidget from "../../components/EventCalendar/EventCalendar";
+import ModifiedAreaChart from "./shared/ModifiedAreaChart";
 
 const ContentBox = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -88,7 +89,6 @@ const Analytics = () => {
             <Grid container spacing={3}>
               <Grid item lg={8} md={8} sm={12} xs={12}>
                 <StatCards counter={data.counter} />
-
                 <TopSellingTable
                     isLoading={isTimeRangeLoading}
                     orders={data.lastOrders}
@@ -97,12 +97,10 @@ const Analytics = () => {
                     timeRange={ordersTimeRange}
                     onTimeRangeChange={handleTimeRangeChange}
                 />
-
                 <StatCards2
                     newCustomers={data.increases.find(e => e.targetName === 'customers')}
                     transactins={data.increases.find(e => e.targetName === 'transactions')}
                 />
-
                 <H4>On going Projects</H4>
                 {/*
                 // @ts-ignore */}
@@ -115,7 +113,6 @@ const Analytics = () => {
                 <Card sx={{ px: 3, py: 2, mb: 3 }} >
                   <Title>Project Types Count</Title>
                   <SubTitle>All the time</SubTitle>
-
                   <DoughnutChart
                       data={data.percentProjectTypes.map(type =>
                             ({value: type.absolute, name: type.target.name})
@@ -125,13 +122,10 @@ const Analytics = () => {
                       color={[palette.primary.dark, palette.primary.main, palette.primary.light]}
                   />
                 </Card>
-
                 {/*<UpgradeCard />*/}
-
                 <Box sx={{ py: 2, mb: 3 }}>
                   <StatCards3 />
                 </Box>
-
                 <Box sx={{
                   "& .react-calendar" : {border: '0px', padding: 0, margin: 0, boxShadow: 1, width: '100%'}
                   , height: '320px'
@@ -141,7 +135,6 @@ const Analytics = () => {
                      alignContent='center'>
                   <EventCalendarWidget />
                 </Box>
-
                 {/*<Campaigns />*/}
               </Grid>
             </Grid>

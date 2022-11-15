@@ -33,34 +33,6 @@ import '../../assets/components/ProjectPage/index.css';
 import {ChatService} from "../../services/ChatService";
 import useAuth from "../../hooks/useAuth";
 
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
 const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     = ({ mode, setMode}) => {
 
@@ -71,11 +43,7 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     const [order, setOrder] = useState<Order>();
 
     const [statuses, setStatuses] = useState<OrderStatus[]>([]);
-    const [orderPageMode, setOrderPageMode] = useState<PageMode>(PageMode.SELECT);
-
-    console.log(order?.customer?.user.phones.map(t => t.phone_number));
-
-
+    // const [orderPageMode, setOrderPageMode] = useState<PageMode>(PageMode.SELECT);
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -91,13 +59,10 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
 
     }, [])
 
-
    const userTagsAutocompliteDefaultValues = useMemo<string[]>(() => {
            return order && order.customer ?
                order.customer.user.tags.map(e => e.name) : [];
-       }
-   , [order]);
-
+   }, [order]);
 
     const deleteOrder = async () => {
         if(order) {
@@ -108,14 +73,12 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
 
     return (
         <Container>
-
             <Box className="breadcrumb">
                 <Breadcrumb routeSegments={[
                     { name: "Orders", path: '/orders' },
                     { name: orderId }]
                 } />
             </Box>
-
 
             <Card sx={{p: 3}}>
                 <Grid item md={4} xs={12}>
@@ -208,7 +171,6 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                             { order?.about}
                                         </div>
                                     </div>
-
 
                                     <div className='flex-row'>
                                         <div className='flex-cell'
@@ -310,9 +272,7 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                                         />
                                                     </div>
                                                 }
-
                                             </div>
-
                                             {
                                                 order.customer &&
                                                 <div className='flex-row-column'>
@@ -332,8 +292,6 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                                     </div>
                                                 </div>
                                             }
-
-
                                         </div>
                                         :
                                         <div className='flex-table' style={{height: '450px'}}>
@@ -379,10 +337,7 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                     overflowY: "scroll"
                                 }}
                             >
-                                <Table
-                                    // aria-label="simple table"
-                                    stickyHeader aria-label="sticky table"
-                                >
+                                <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell align="center">ID</TableCell>

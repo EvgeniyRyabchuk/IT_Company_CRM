@@ -14,16 +14,12 @@ const AddEditNewsModal : React.FC<ModalProps &
            selectedNews}) => {
 
     const { user } = useAuth();
-
-    const [error, setError] = useState<string | null>(null);
-
     const [title, setTitle] = useState<string>('');
     const [text, setText] = useState<string>('');
 
-    // const [vacancies, setVacancies] = useState<Vacancy[]>([]);
-    const [required, setRequired] = useState<boolean>(true);
-
     const [editableNews, setEditableNews] = useState<News | null>(selectedNews ?? null);
+
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if(selectedNews) {
@@ -31,15 +27,8 @@ const AddEditNewsModal : React.FC<ModalProps &
         }
     }, [selectedNews]);
 
-    // const getVacancies = async () => {
-    //     const { data } = await VacancyService.getVacancies();
-    //     setVacancies(data);
-    // }
-
     useEffect(() => {
-        if(open) {
-            // getVacancies();
-        }
+        if(open) {}
         else {
             setError(null);
             setTitle('');
@@ -48,7 +37,36 @@ const AddEditNewsModal : React.FC<ModalProps &
     }, [open])
 
 
+    const addNews = (e: any) => {
+        if(mode === 'create') {
+            if(!title || !text || title === '' || text === '') {
+                setError('fill all needs field')
+                return;
+            }
+        }
+        else if(mode === 'update' && editableNews) {
+            if(!editableNews.title ||
+                !editableNews.text ||
+                editableNews.title === '' ||
+                editableNews.text === '') {
+                setError('fill all needs field')
+                return;
+            }
+        } else { return; }
 
+        let news = {};
+        if(mode === 'create') {
+            news = {
+                title,
+                text,
+                user_id: user!.id
+            };
+        } else if(mode === 'update') {
+            news = {...editableNews};
+        }
+        onSave(news, mode);
+        setOpen(false);
+    }
 
     return (
             <Modal
@@ -63,7 +81,7 @@ const AddEditNewsModal : React.FC<ModalProps &
             >
                 <Fade in={open}>
                     <Box sx={modalStyle} style={{width: '800px'}}>
-
+                        { error && <p style={{ color: 'red'}}>{error}</p>}
                         <TextField
                             id="outlined-basic"
                             label="Title"
@@ -95,51 +113,12 @@ const AddEditNewsModal : React.FC<ModalProps &
                                 <Button onClick={onClose} color="primary">
                                     Cancel
                                 </Button>
-
                                 <Button
                                     color="primary"
                                     autoFocus
-                                    onClick={() => {
-
-                                        if(mode === 'create') {
-                                            console.log('click')
-                                            if(!title || !text || title === '' || text === '') {
-                                                setError('fill all needs field')
-                                                return;
-                                            }
-                                        }
-                                        else if(mode === 'update' && editableNews) {
-                                            if(!editableNews.title ||
-                                                !editableNews.text ||
-                                                editableNews.title === '' ||
-                                                editableNews.text === '') {
-                                                setError('fill all needs field')
-                                                return;
-                                            }
-                                        } else { return; }
-
-                                        let news = {};
-                                        if(mode === 'create') {
-                                            news = {
-                                                title,
-                                                text,
-                                                user_id: user!.id
-                                            };
-                                        } else if(mode === 'update') {
-                                            news = {...editableNews};
-                                        }
-
-                                        onSave(news, mode);
-                                        setOpen(false);
-
-                                    }}
-                                >
-                                    {
-                                        mode === 'create' && 'Add News'
-                                    }
-                                    {
-                                        mode === 'update' && 'Update News'
-                                    }
+                                    onClick={addNews}>
+                                    {mode === 'create' && 'Add News'}
+                                    {mode === 'update' && 'Update News'}
                                 </Button>
                             </Box>
                         </DialogActions>
