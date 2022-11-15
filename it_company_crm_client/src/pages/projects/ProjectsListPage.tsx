@@ -30,12 +30,7 @@ import {Employee} from "../../types/user";
 import ProjectFilter, {ProjectFilterData} from "./ProjectFilter";
 import useDebounce from "../../hooks/useDebounce";
 import {ViewService} from "../../services/ViewService";
-
-export const SearchInput = styled("div")(({ theme }) => ({
-    padding: "10px",
-    width: '300px',
-    display: 'flex',
-}));
+import {SearchInput} from "../../assets/components/Shared";
 
 
 const ProjectsListPage = () => {
@@ -132,6 +127,7 @@ const ProjectsListPage = () => {
         setLimit(defLimit);
     }, []);
 
+
     return (
         <Container>
             <Box className="breadcrumb">
@@ -146,7 +142,9 @@ const ProjectsListPage = () => {
                             <h3>Projects</h3>
                         </div>
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                            <SearchInput>
+                            {/*
+                            // @ts-ignore */}
+                            <SearchInput width='300px'>
                                 <TextField
                                     id="outlined-search"
                                     label="Search Project By Name"

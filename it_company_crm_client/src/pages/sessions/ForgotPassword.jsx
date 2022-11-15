@@ -4,32 +4,9 @@ import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import forgotPasswordLogo from '../../assets/images/matx/illustrations/dreamer.svg';
 import AuthService from "../../services/AuthService";
 import useAuth from "../../hooks/useAuth";
+import {ContentBox, JustifyBox} from "../../assets/components/Shared";
+import {ForgotPasswordRoot} from "../../assets/components/Session";
 
-const FlexBox = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-}));
-
-const JustifyBox = styled(FlexBox)(() => ({
-  justifyContent: 'center',
-}));
-
-const ContentBox = styled(Box)(({ theme }) => ({
-  padding: 32,
-  background: theme.palette.background.default,
-}));
-
-const ForgotPasswordRoot = styled(JustifyBox)(() => ({
-  background: '#1A2038',
-  // minHeight: '100vh !important',
-  '& .card': {
-    maxWidth: 800,
-    margin: '1rem',
-    borderRadius: 12,
-  },
-}));
-
-// jeka.rubchuk@gmail.com
 
 const ForgotPassword = () => {
   const navigate = useNavigate();

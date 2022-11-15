@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Box, Button, CircularProgress,} from "@mui/material";
 import Breadcrumb from "../../components/Breadcrumb";
 import {Container} from "../../assets/components/breadcrumb";
-import {styled} from '@mui/material/styles';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -28,7 +27,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import {NewsService} from "../../services/NewsService";
 import {News} from "../../types/news";
-import {NewsItem, NewsList} from "../../assets/components/News";
+import {ExpandMore, NewsContent, NewsItem, NewsList, newsPaperStyle} from "../../assets/components/News";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import {getPageCount, getQueryVarsInStringFormat} from "../../utils/pages";
 import {useFetching} from "../../hooks/useFetching";
@@ -42,22 +41,9 @@ import 'react-quill/dist/quill.snow.css';
 import 'highlight.js/styles/github-dark.css'
 import '../../assets/components/News/style.css';
 
-
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
 }
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
-
 
 //TODO: image reduce when screen is small
 //TODO: why loaded style
@@ -84,7 +70,6 @@ const NewsListPage = () => {
             const newNewsList = news.map(n => n.id === data.id ? data : n);
             setNews(newNewsList);
         }
-
     }
 
     const deleteNews = async (newsId: number) => {
@@ -99,7 +84,6 @@ const NewsListPage = () => {
     const [limit, setLimit] = useState<number>(15);
     const [order, setOrder] = useState<string>('desc');
 
-
     const handleExpandClick = (targetId: number, expand: boolean) => {
         setExpanded({id: targetId, expand: expand});
     };
@@ -108,7 +92,8 @@ const NewsListPage = () => {
 
     useEffect(() => {
         const storedAlignment = localStorage.getItem('newsAlignment');
-        if(storedAlignment) { // @ts-ignore
+        if(storedAlignment) {
+            // @ts-ignore
             setAlignment(storedAlignment);
         }
     }, []);
@@ -161,8 +146,6 @@ const NewsListPage = () => {
         setPage(page + 1);
     });
 
-    // @ts-ignore
-    // @ts-ignore
     return (
         <Container
             onClick={() => {
@@ -173,20 +156,13 @@ const NewsListPage = () => {
                 <Breadcrumb routeSegments={[ { name: "News" }]} />
             </Box>
 
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    paddingRight: '30px'
-                }}>
+            <NewsContent>
                 <ToggleButtonGroup
                     color="primary"
                     value={alignment}
                     exclusive
                     onChange={handleChange}
-                    aria-label="Platform"
-                >
+                    aria-label="Platform">
                     <ToggleButton value="column">
                         <ViewHeadline/>
                     </ToggleButton>
@@ -198,11 +174,10 @@ const NewsListPage = () => {
                 <Button
                     style={{ height: '40px'}}
                     variant='contained'
-                    onClick={() => setModalOpen(true)}
-                >
+                    onClick={() => setModalOpen(true)}>
                     Create News
                 </Button>
-            </Box>
+            </NewsContent>
 
             <h1>News</h1>
 
@@ -221,7 +196,7 @@ const NewsListPage = () => {
                                 }}
                                 key={n.id}
                                 /*
-                                 // @ts-ignore */
+                               // @ts-ignore */
                                 alignment={alignment}
                             >
                                 <CardHeader
@@ -256,7 +231,11 @@ const NewsListPage = () => {
                                 />
                                 <CardContent>
                                     <hr/>
-                                    <Typography sx={{pt: 1}} variant={alignment === 'column' ? "h5" : "h6"} color="text.primary">
+                                    <Typography
+                                        sx={{pt: 1}}
+                                        variant={alignment === 'column' ? "h5" : "h6"}
+                                        color="text.primary"
+                                    >
                                         {n.title}
                                     </Typography>
                                 </CardContent>
@@ -293,13 +272,7 @@ const NewsListPage = () => {
                                     </ExpandMore>
                                     {
                                         contextMenu?.open && contextMenu?.id === n.id &&
-                                        <Paper sx={{
-                                            width: 200,
-                                            maxWidth: '100%',
-                                            position: 'absolute',
-                                            top: 90,
-                                            right: 0
-                                        }}>
+                                        <Paper sx={newsPaperStyle}>
                                             <MenuList>
                                                 <MenuItem
                                                     onClick={() => {
@@ -347,19 +320,21 @@ const NewsListPage = () => {
                             </NewsItem>
                         )
                 }
-                <div
+                <Box
                     ref={lastElementRef}
-                    style={{
+                    sx={{
                         width: '100%',
-                        // height: 20,
                         background: 'red',
                     }}
-                ></div>
-                <div style={{ width: '100%', height: '30px', display: 'flex', justifyContent: 'center'}}>
-                    {
-                        isLoading && news.length > 0 && <CircularProgress />
-                    }
-                </div>
+                ></Box>
+                <Box sx={{
+                    width: '100%',
+                    height: '30px',
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}>
+                    {isLoading && news.length > 0 && <CircularProgress />}
+                </Box>
 
             </NewsList>
 

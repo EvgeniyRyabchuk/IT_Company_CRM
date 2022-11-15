@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {ComponentMode, ModalProps} from "../../../types/global";
-import {Order, UndoOrderCase, UndoOrderCaseGrouped} from "../../../types/order";
-import {OrderService} from "../../../services/OrderService";
 import {
     Autocomplete,
     Box,
@@ -10,7 +8,9 @@ import {
     DialogActions,
     Fade,
     FormControlLabel,
-    FormGroup, Grid, IconButton,
+    FormGroup,
+    Grid,
+    IconButton,
     Modal,
     TextField
 } from "@mui/material";
@@ -22,7 +22,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {ButtonItem} from "devextreme-react/form";
 import {Close, Delete, Edit} from "@mui/icons-material";
 
 
@@ -281,13 +280,11 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                                         } else if(mode === 'update') {
                                             newVacancy = {...editableVacancy};
                                         }
-                                        console.log(newVacancy)
                                         onSave(newVacancy, mode);
 
                                         setOpen(false);
                                         reset();
-                                    }}
-                                >
+                                    }}>
                                     {
                                         mode === 'create' && 'Add Vacancy'
                                     }

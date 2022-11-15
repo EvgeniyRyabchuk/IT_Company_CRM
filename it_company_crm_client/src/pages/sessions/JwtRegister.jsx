@@ -9,29 +9,9 @@ import * as Yup from 'yup';
 import useAuth from "../../hooks/useAuth";
 import {Paragraph} from "../../assets/typography/Typography";
 import registerLogo from '../../assets/images/matx/illustrations/posting_photo.svg';
+import {ContentBox2, FlexBox, JustifyBox} from "../../assets/components/Shared";
+import {JWTRegister} from "../../assets/components/Session";
 
-const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
-
-const JustifyBox = styled(FlexBox)(() => ({ justifyContent: 'center' }));
-
-const ContentBox = styled(JustifyBox)(() => ({
-  height: '100%',
-  padding: '32px',
-  background: 'rgba(0, 0, 0, 0.01)',
-}));
-
-const JWTRegister = styled(JustifyBox)(() => ({
-  background: '#1A2038',
-  minHeight: '100vh !important',
-  '& .card': {
-    maxWidth: 800,
-    minHeight: 400,
-    margin: '1rem',
-    display: 'flex',
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-}));
 
 // inital login credentials
 const initialValues = {
@@ -74,13 +54,13 @@ const JwtRegister = () => {
       <Card className="card">
         <Grid container>
           <Grid item sm={6} xs={12}>
-            <ContentBox>
+            <ContentBox2>
               <img
                 width="100%"
                 alt="Register"
                 src={registerLogo}
               />
-            </ContentBox>
+            </ContentBox2>
           </Grid>
 
           <Grid item sm={6} xs={12}>

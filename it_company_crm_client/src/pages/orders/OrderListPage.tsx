@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
     Avatar,
     Box,
-    Button,
     Card,
     CardContent,
     CircularProgress,
@@ -29,25 +28,14 @@ import OrderFilter, {OrderFilterData} from "./OrderFilter";
 import useDebounce from "../../hooks/useDebounce";
 import {Order, OrderStatus, OrderStatusNameEnum, UndoOrderReason} from "../../types/order";
 import {OrderService} from "../../services/OrderService";
-import {styled} from "@mui/system";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import CreateEditProjectModal from "../../components/modals/CreateEditProjectModal/CreateEditProjectModal";
 import {ProjectService} from "../../services/ProjectService";
 import UndoOrderModal from "../../components/modals/UndoOrderModal/UndoOrderModal";
 import {ViewService} from "../../services/ViewService";
+import {FlexJustifyCenter, Line, SearchInput} from "../../assets/components/Shared";
+import {CustomerBoxWrapper, CustomerInfoBox, CustomerProfileLink, OrderDatesBox} from "../../assets/components/Order";
 
-export const SearchInput = styled("div")(({ theme }) => ({
-    padding: "10px",
-    width: '400px',
-    display: 'flex',
-}));
-
-export const Line = styled("div")(({theme}) => ({
-    height: '2px',
-    backgroundColor: 'black',
-    margin: '5px 0px',
-    width: '100px',
-}));
 
 const ProjectsListPage = () => {
 
@@ -68,7 +56,6 @@ const ProjectsListPage = () => {
     const [filterOptionData, setFilterOptionData] = useState<OrderFilterData | null>(null);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-
 
     const [statuses, setStatuses] = useState<OrderStatus[]>([]);
 
@@ -339,26 +326,16 @@ const ProjectsListPage = () => {
                                         id={`${e.id}`}
                                         key={e.id}>
                                         <td>
-                                            <div
-                                                className="d-flex align-items-center"
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center'
-                                                }}>
+                                            <FlexJustifyCenter className="d-flex align-items-center">
                                                 <div>
                                                     <span className="font-weight-bold text-black">
                                                         {e.id}
                                                     </span>
                                                 </div>
-                                            </div>
+                                            </FlexJustifyCenter>
                                         </td>
                                         <td>
-                                            <div
-                                                className="d-flex align-items-center"
-                                                 style={{
-                                                     display: 'flex',
-                                                     justifyContent: 'center'
-                                                 }}>
+                                            <FlexJustifyCenter className="d-flex align-items-center">
                                                     {
                                                         e.project ?
                                                             <div>
@@ -374,7 +351,7 @@ const ProjectsListPage = () => {
                                                                 No project yet
                                                             </span>
                                                     }
-                                            </div>
+                                            </FlexJustifyCenter>
                                         </td>
                                         <td className="text-center">
                                             <Box>
@@ -390,17 +367,16 @@ const ProjectsListPage = () => {
                                                         value={e.status_id}
                                                         onChange={(event: any) => {
                                                             handleStatusChange(event.target.value, e, e.status_id)
-                                                        }}
-                                                    >
+                                                        }}>
                                                         {
                                                             statuses.map(status =>
                                                                 <MenuItem
                                                                     key={status.id}
                                                                     value={status.id}
                                                                     style={{
-                                                                        border: `1px solid ${status.bgColor ?? '#ffffff'} !important`
-                                                                    }}
-                                                                >
+                                                                        border: `1px solid ${status.bgColor
+                                                                        ?? '#ffffff'} !important`
+                                                                    }}>
                                                                     {status.name}
                                                                 </MenuItem>
                                                             )
@@ -411,38 +387,25 @@ const ProjectsListPage = () => {
                                         </td>
 
                                         <td className="text-center">
-                                            <Box style={{
-                                                width: '250px',
-                                                overflowX: 'hidden'
-                                            }}>
+                                            <CustomerBoxWrapper>
                                                 { e.customer_id ?
                                                     <div className="d-flex align-items-center">
                                                         <div
                                                             className="MuiAvatar-root MuiAvatar-circle"
-                                                            style={{marginRight: '10px'}}
-                                                            >
+                                                            style={{marginRight: '10px'}}>
                                                             <Avatar
                                                                 alt="avatar"
                                                                 src={`${API_URL_WITH_PUBLIC_STORAGE}/${e.customer?.user.avatar}`}
                                                                 className="MuiAvatar-img"
                                                             />
-                                                            </div>
-                                                        <div style={{
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            alignContent: 'start'}}
-                                                        >
-                                                            <a href="#/"
-                                                               style={{
-                                                                   maxWidth: '200px',
-                                                                   whiteSpace: 'nowrap',
-                                                                   overflow: 'hidden',
-                                                                   textOverflow: 'ellipsis',
-                                                               }}
+                                                        </div>
+                                                        <CustomerInfoBox>
+                                                            <CustomerProfileLink
+                                                               href="#/"
                                                                className="text-left font-weight-bold text-black"
-                                                                title="...">
+                                                               title="...">
                                                                 {e.customer!.user.full_name}
-                                                            </a>
+                                                            </CustomerProfileLink>
                                                             <div className="text-left text-black-50 d-block">
                                                                   {e.customer!.user.email}
                                                             </div>
@@ -453,7 +416,7 @@ const ProjectsListPage = () => {
                                                                     `${e.customer!.user.phones.map(p => p.phone_number)}`
                                                                 }
                                                             </div>
-                                                        </div>
+                                                        </CustomerInfoBox>
                                                     </div>
                                                     :
                                                     <div>
@@ -469,7 +432,7 @@ const ProjectsListPage = () => {
                                                     </div>
                                                 }
 
-                                            </Box>
+                                            </CustomerBoxWrapper>
                                         </td>
 
                                         <td className="text-center">
@@ -482,26 +445,17 @@ const ProjectsListPage = () => {
                                                         }}>
                                                             <CloudDownload/>
                                                         </IconButton>
-                                                        :
-                                                        'no extra file'
+                                                        : 'no extra file'
                                                 }
                                             </Box>
                                         </td>
 
                                         <td className="text-center">
-                                            <div
-                                                className="h-auto py-0 px-3 badge d-flex"
-                                                 style={{
-                                                     fontSize: '13px',
-                                                     flexWrap: 'wrap',
-                                                     flexDirection: 'column',
-                                                     alignContent: 'center'
-                                                 }}>
+                                            <OrderDatesBox className="h-auto py-0 px-3 badge d-flex">
                                                     {
                                                         <div>
                                                             {moment(e.created_at).format('DD/MM/YYYY')}
                                                         </div>
-
                                                     }
                                                     <Line />
                                                     {
@@ -512,7 +466,7 @@ const ProjectsListPage = () => {
                                                         :
                                                             'no deadline yet'
                                                     }
-                                            </div>
+                                            </OrderDatesBox>
                                         </td>
 
                                         <td className="text-center table-action-btn">
@@ -564,15 +518,11 @@ const ProjectsListPage = () => {
                                 !isLoading && orders.length === 0 &&
                                     <h3>No data</h3>
                             }
-
-                            <div
-                                ref={lastElementRef}
+                            <div ref={lastElementRef}
                                 style={{
                                     width: '100%',
-                                    // height: 20,
                                     background: 'red',
                                 }}>
-
                             </div>
                         </div>
                         { isLoading && <CircularProgress /> }
@@ -593,25 +543,24 @@ const ProjectsListPage = () => {
             }
             {
                 statuses && selectedOrder &&
-                    <UndoOrderModal
-                        onClose={() => {
-                            setUndoModalOpen(false);
-                            setSelectedOrder(null);
-                        }}
-                        onSave={(reason) => {
-                            const undoStatus = statuses.find(s => s.name === OrderStatusNameEnum.UNDO);
-                            handleStatusChange(undoStatus!.id,
-                                selectedOrder,
-                                selectedOrder.status.id,
-                                reason
-                            )
-                        }}
-                        open={undoModalOpen}
-                        setOpen={setUndoModalOpen}
-                        order={selectedOrder}
-                    />
+                <UndoOrderModal
+                    onClose={() => {
+                        setUndoModalOpen(false);
+                        setSelectedOrder(null);
+                    }}
+                    onSave={(reason) => {
+                        const undoStatus = statuses.find(s => s.name === OrderStatusNameEnum.UNDO);
+                        handleStatusChange(undoStatus!.id,
+                            selectedOrder,
+                            selectedOrder.status.id,
+                            reason
+                        )
+                    }}
+                    open={undoModalOpen}
+                    setOpen={setUndoModalOpen}
+                    order={selectedOrder}
+                />
             }
-
         </Container>
     );
 }

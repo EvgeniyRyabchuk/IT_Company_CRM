@@ -1,4 +1,3 @@
-
 import React, {FC, useEffect, useMemo, useRef, useState} from "react";
 import {Employee, Level, Position, Role, Skill} from "../../../types/user";
 import {
@@ -16,8 +15,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {Box, styled} from "@mui/system";
-
+import {Box} from "@mui/system";
 import {Formik, FormikProps, FormikValues} from 'formik';
 import * as Yup from "yup";
 import {Delete, PhotoCamera} from "@mui/icons-material";
@@ -29,51 +27,17 @@ import {defaultUserAvatar} from "../../../utils/constant";
 import AvatarImageCropper from "react-avatar-image-cropper";
 import AuthService from "../../../services/AuthService";
 import {ModalProps} from "../../../types/global";
-// styled components
-const ButtonWrapper = styled(Box)(({ theme }) => ({
-    width: 100,
-    height: 100,
-    display: "flex",
-    borderRadius: "50%",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.palette.secondary,
-    position: 'absolute',
-    marginTop: '20px'
-
-}));
-
-const UploadButton = styled(Box)(({ theme }) => ({
-    width: 50,
-    height: 50,
-    display: "flex",
-    borderRadius: "50%",
-    border: "2px solid",
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: theme.palette.background.paper,
-    backgroundColor: theme.palette.secondary
-}));
-
-const SwitchWrapper = styled(Box)(() => ({
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    marginTop: 10,
-}));
+import {SwitchWrapper} from "../../../assets/components/Shared";
 
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
-
     first_name: Yup.string().required('First Name is required!'),
     last_name: Yup.string().required('Last Name is required!'),
     middle_name: Yup.string().required('Middle Name is required!'),
     email: Yup.string().email().required("Email is Required!"),
     position_id: Yup.number().required("Position is required"),
     level_id: Yup.number().required('Level is required'),
-
 });
 
 interface InitialValueType {
@@ -143,14 +107,12 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
     const [imageFile, _setImageFile] = useState<any>(null);
 
     const handleFormSubmit = (values: any) => {
-        console.log('create edit employee submit');
         if(imageFile !== null) {
             values.newAvatar = imageFile;
         }
         if(mode === 'update' && employee) values.id = employee.id
         onSave(values, mode);
         onClose();
-        console.log(values);
     };
 
     const getLevels = async (values: any) => {
@@ -547,7 +509,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
 
                                                         onChange={(event: any, values: any) => {
                                                             const names = values.map((e: Skill) => e.name);
-                                                            console.log('skills on change ', names.join(','))
                                                             setFieldValue("skills", names.join(','));
                                                         }}
                                                         onKeyDown={(e) => {
@@ -592,7 +553,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
 
                                                         onChange={(event: any, values: any) => {
                                                             const names = values.map((e: Role) => e.name);
-                                                            console.log('roles on change ', names.join(','))
                                                             setFieldValue("roles", names.join(','));
                                                         }}
                                                     />
@@ -617,16 +577,12 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                             type='submit'
                             form="inner-form"
                             onClick={() => {
-                            console.log('submit')
-                            innerForm.current?.handleSubmit();
-
-                        }}>
+                                innerForm.current?.handleSubmit();
+                            }}>
                             { mode === 'create' ? 'Create New Account' : 'Update Employee Information' }
                         </Button>
                     </DialogActions>
-
             </DialogContent>
-
         </Dialog>
     );
 };

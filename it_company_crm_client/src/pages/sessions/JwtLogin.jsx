@@ -11,30 +11,11 @@ import {Paragraph} from "../../assets/typography/Typography";
 
 import loginLogo from '../../assets/images/matx/illustrations/dreamer.svg';
 import {LoadingButton} from "@mui/lab";
+import {ContentBox2, FlexBox, JustifyBox} from "../../assets/components/Shared";
+import {JWTRoot} from "../../assets/components/Session";
 
-const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
 
-const JustifyBox = styled(FlexBox)(() => ({ justifyContent: 'center' }));
 
-const ContentBox = styled(Box)(() => ({
-  height: '100%',
-  padding: '32px',
-  position: 'relative',
-  background: 'rgba(0, 0, 0, 0.01)',
-}));
-
-const JWTRoot = styled(JustifyBox)(() => ({
-  background: '#1A2038',
-  minHeight: '100% !important',
-  '& .card': {
-    maxWidth: 800,
-    minHeight: 400,
-    margin: '1rem',
-    display: 'flex',
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-}));
 
 // inital login credentials
 const initialValues = {
@@ -83,7 +64,7 @@ const JwtLogin = () => {
           </Grid>
 
           <Grid item sm={6} xs={12}>
-            <ContentBox>
+            <ContentBox2>
               <Formik
                 onSubmit={handleFormSubmit}
                 initialValues={initialValues}
@@ -171,7 +152,7 @@ const JwtLogin = () => {
                   </form>
                 )}
               </Formik>
-            </ContentBox>
+            </ContentBox2>
           </Grid>
         </Grid>
       </Card>

@@ -94,7 +94,6 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
 
                             onInputChange={(event, newInputValue) => {
                                 setEmployeeIndentity(newInputValue);
-                                console.log('on input change', newInputValue)
                             }}
                             onChange={onChange}
                             id="employee-select"
@@ -131,7 +130,6 @@ const AddEmployeeToProjectModal = ({open, setOpen, onClose, onSave, project}: Ad
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
                                 <Button autoFocus onClick={() => {
-                                    console.log('selected')
                                     onSave(selectedOption);
                                     onClose();
                                 }} color="primary">

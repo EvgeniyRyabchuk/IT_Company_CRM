@@ -1,9 +1,6 @@
 import React from 'react';
 import {FormControlLabel, Switch} from "@mui/material";
 import useSettings from "../../../hooks/useSettings";
-import {useTheme} from "@emotion/react";
-import {sidenavCompactWidth, sideNavWidth} from "../../../utils/constant";
-import {convertHexToRGB} from "../../../utils/utils";
 import {Container} from "@mui/system";
 
 const Preferences = () => {
@@ -31,7 +28,6 @@ const Preferences = () => {
 
     return (
         <Container sx={{ p: 5}}>
-
             <FormControlLabel
                 control={
                     <Switch
@@ -43,7 +39,6 @@ const Preferences = () => {
                 }
                 label={`${compactModeChecked ? 'Compact Mode On' : 'Full Mode On'}`}
             />
-
         </Container>
     );
 };

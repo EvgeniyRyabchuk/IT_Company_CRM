@@ -96,7 +96,6 @@ const ProjectPage = () => {
     }, []);
 
 
-
     // @ts-ignore
     return (
         <Container style={{padding: '30px'}}>

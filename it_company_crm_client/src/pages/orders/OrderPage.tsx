@@ -32,6 +32,7 @@ import {API_URL_WITH_PUBLIC_STORAGE} from "../../http";
 import '../../assets/components/ProjectPage/index.css';
 import {ChatService} from "../../services/ChatService";
 import useAuth from "../../hooks/useAuth";
+import {FlexJustifyBetween, FlexJustifyCenter} from "../../assets/components/Shared";
 
 const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
     = ({ mode, setMode}) => {
@@ -82,16 +83,11 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
 
             <Card sx={{p: 3}}>
                 <Grid item md={4} xs={12}>
-                    <Box
-                        style={{
-                            display: 'flex', justifyContent: 'space-between'
-                        }}>
+                    <FlexJustifyBetween>
                         <Box className='just-flex'>
                             <h3>Order #{order?.id}</h3>
                         </Box>
-                        <Box style={{
-                            display: 'flex', alignItems: 'center'
-                        }}>
+                        <FlexJustifyCenter>
                             {/*<Button*/}
                             {/*    sx={{mx: 1}}*/}
                             {/*    variant='contained'*/}
@@ -103,20 +99,17 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                             {/*    <Edit />*/}
                             {/*</Button>*/}
                             <Button
-                                sx={{
-                                    mx: 1,
-                                }}
+                                sx={{ mx: 1}}
                                 variant='contained'
                                 color={'error'}
-                                onClick={deleteOrder}
-                            >
+                                onClick={deleteOrder}>
                                 <div>
                                     DELETE
                                 </div>
                                 <Delete />
                             </Button>
-                        </Box>
-                    </Box>
+                        </FlexJustifyCenter>
+                    </FlexJustifyBetween>
                 </Grid>
                 <Grid container spacing={3} sx={{mt: 5}}>
                     <Grid item md={9} xs={12}>
@@ -230,7 +223,8 @@ const OrderPage : React.FC<{ mode: PageMode, setMode: () => void }>
                                             </div>
 
                                             <div className='flex-row'>
-                                                <div className='flex-cell text-center' style={{padding: '20px 0'}}>
+                                                <div className='flex-cell text-center'
+                                                     style={{padding: '20px 0'}}>
                                                     Phones
                                                 </div>
                                                 <div className='flex-cell-list'>

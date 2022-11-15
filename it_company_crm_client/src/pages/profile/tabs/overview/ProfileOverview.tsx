@@ -1,8 +1,6 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React from 'react';
 import useAuth from "../../../../hooks/useAuth";
-import {
-    UserRoleEntity
-} from "../../../../types/auth";
+import {UserRoleEntity} from "../../../../types/auth";
 import {User} from "../../../../types/user";
 import {ChatMessage} from "../../../../types/chat";
 import moment from "moment/moment";
@@ -57,8 +55,8 @@ const ProfileOverview : React.FC<{
                                     </h5>
                                     <button
                                         className="MuiButtonBase-root
-                                        MuiIconButton-root MuiIconButton-
-                                        sizeMedium
+                                        MuiIconButton-root
+                                        MuiIconButton-sizeMedium
                                         css-1ln8k10"
                                         tabIndex={0} type="button">
                                             <EditPenIcon />
@@ -71,11 +69,11 @@ const ProfileOverview : React.FC<{
                                 </p>
                             </div>
                             <div className="MuiPaper-root
-                            MuiPaper-elevation
-                            MuiPaper-rounded
-                            MuiPaper-elevation1
-                            MuiCard-root
-                            css-14lzsk6">
+                                MuiPaper-elevation
+                                MuiPaper-rounded
+                                MuiPaper-elevation1
+                                MuiCard-root
+                                css-14lzsk6">
                                 <div className="MuiBox-root css-1gbbedy">
                                     <h5 className=" MuiBox-root css-42oadk">
                                         Skills
@@ -115,8 +113,11 @@ const ProfileOverview : React.FC<{
                             </div>
 
                             <div
-                                className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded
-                                MuiPaper-elevation1 MuiCard-root css-14lzsk6">
+                                className="MuiPaper-root
+                                MuiPaper-elevation
+                                MuiPaper-rounded
+                                MuiPaper-elevation1
+                                MuiCard-root css-14lzsk6">
                                 <h5 className=" MuiBox-root css-1d2ltpw">Recently added to Project</h5>
                                 <div className="simplebar-content-wrapper"
                                      tabIndex={0}
@@ -128,7 +129,8 @@ const ProfileOverview : React.FC<{
                                      }}>
                                     <div className="simplebar-content" style={{padding: '0px'}}>
                                         <table className="MuiTable-root css-wqyv36">
-                                            <tbody className="MuiTableBody-root css-blw62a">
+                                            <tbody className="MuiTableBody-root
+                                            css-blw62a">
                                             {
                                                 userEntity?.projects.slice(0, 5).map(project =>
                                                     <tr key={project.id} className="MuiTableRow-root css-i8cgtw">
@@ -326,10 +328,12 @@ const ProfileOverview : React.FC<{
                                             <ProfilePersonIcon />
                                         </div>
                                         <div className="MuiBox-root css-0">
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">
+                                            <p style={{textAlign: 'left'}}
+                                               className=" MuiBox-root css-1imspi1">
                                                 Last Time Updated
                                             </p>
-                                            <h6 style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">
+                                            <h6 style={{textAlign: 'left'}}
+                                                className=" MuiBox-root css-11tyiws">
                                                 {
                                                     moment(user?.updated_at)
                                                         .format('DD-MM-YYYY HH:mm')
@@ -342,10 +346,12 @@ const ProfileOverview : React.FC<{
                                             <ProfileCalendarIcon />
                                         </div>
                                         <div className="MuiBox-root css-0">
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">
+                                            <p style={{textAlign: 'left'}}
+                                               className=" MuiBox-root css-1imspi1">
                                                 Last Account Updated At
                                             </p>
-                                            <h6 style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">
+                                            <h6 style={{textAlign: 'left'}}
+                                                className=" MuiBox-root css-11tyiws">
                                                 Aug 15th, 2021
                                             </h6>
                                         </div>
@@ -375,10 +381,12 @@ const ProfileOverview : React.FC<{
                                             <ProfileEducationIcon />
                                         </div>
                                         <div className="MuiBox-root css-0">
-                                            <p style={{textAlign: 'left'}} className=" MuiBox-root css-1imspi1">
+                                            <p style={{textAlign: 'left'}}
+                                               className=" MuiBox-root css-1imspi1">
                                                 Education
                                             </p>
-                                            <h6 style={{textAlign: 'left'}} className=" MuiBox-root css-11tyiws">
+                                            <h6 style={{textAlign: 'left'}}
+                                                className=" MuiBox-root css-11tyiws">
                                                 Cambridge University
                                             </h6>
                                         </div>

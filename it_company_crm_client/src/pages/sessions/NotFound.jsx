@@ -1,48 +1,25 @@
-import { Box, Button, styled } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {Button} from '@mui/material';
+import {useNavigate} from 'react-router-dom';
 
 import notFound404Logo from '../../assets/images/matx/illustrations/404.svg';
-
-const FlexBox = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-}));
-
-const JustifyBox = styled(FlexBox)(() => ({
-  maxWidth: 320,
-  flexDirection: 'column',
-  justifyContent: 'center',
-}));
-
-const IMG = styled('img')(() => ({
-  width: '100%',
-  marginBottom: '32px',
-}));
-
-const NotFoundRoot = styled(FlexBox)(() => ({
-  width: '100%',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100vh !important',
-}));
+import {JustifyBox2} from "../../assets/components/Shared";
+import {IMG, NotFoundRoot} from "../../assets/components/Session";
 
 const NotFound = () => {
   const navigate = useNavigate();
 
   return (
     <NotFoundRoot>
-      <JustifyBox>
+      <JustifyBox2>
         <IMG src={notFound404Logo} alt="" />
-
         <Button
           color="primary"
-          variant="contained"
+          variant="contained" 
           sx={{ textTransform: 'capitalize' }}
-          onClick={() => navigate(-1)}
-        >
+          onClick={() => navigate(-1)}>
           Go Back
         </Button>
-      </JustifyBox>
+      </JustifyBox2>
     </NotFoundRoot>
   );
 };

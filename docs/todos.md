@@ -16,7 +16,7 @@ alert message
 
 fix upload file visual bags 
 http 401 if refresh token not exist then logout 
-twice employee adding 
+twice employee adding  
 more email messages 
 check if user is employee when log in 
 
@@ -36,7 +36,6 @@ B:
 
 Project types disable if not match the queryString 
 Refact stylying 
-Error  showsystem 
 Perfect scroll mobile 
 Pdf-export 
 Search String 

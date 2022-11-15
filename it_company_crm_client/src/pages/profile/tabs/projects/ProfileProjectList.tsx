@@ -25,19 +25,18 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                               xs={12}
                               sm={6}
                               md={4}
-                             className="MuiGrid-root css-1twzmnh"
-                        >
+                              className="MuiGrid-root css-1twzmnh">
                             <div
                                 key={project.id}
                                 onClick={() => {
                                     navigate(`/projects/${project.id}`);
                                 }}
                                 className="project-box
-                                MuiPaper-root
-                                MuiPaper-elevation
-                                MuiPaper-rounded
-                                MuiPaper-elevation1
-                                MuiCard-root css-14lzsk6">
+                                    MuiPaper-root
+                                    MuiPaper-elevation
+                                    MuiPaper-rounded
+                                    MuiPaper-elevation1
+                                    MuiCard-root css-14lzsk6">
                                 <div className="MuiBox-root css-1lekzkb">
                                     <div className="MuiBox-root css-1g86e6t"> 
                                         <Computer />
@@ -61,16 +60,16 @@ const ProfileProjectList : React.FC<{projects: Project[]}> = ({projects}) => {
                                 </p>
                                 <div className="css-3de75">
                                     <span className="
-                                    MuiLinearProgress-root
-                                    MuiLinearProgress-colorPrimary
-                                    MuiLinearProgress-determinate css-3bkacx"
-                                    role="progressbar">
+                                        MuiLinearProgress-root
+                                        MuiLinearProgress-colorPrimary
+                                        MuiLinearProgress-determinate css-3bkacx"
+                                        role="progressbar">
 
                                         <span
                                             className="MuiLinearProgress-bar
-                                            MuiLinearProgress-barColorPrimary
-                                            MuiLinearProgress-bar1Determinate
-                                            css-17jm9ao"
+                                                MuiLinearProgress-barColorPrimary
+                                                MuiLinearProgress-bar1Determinate
+                                                css-17jm9ao"
                                             style={{
                                               transform: `translateX(-${100 - Number(getProjectProgress(project)) }%)`
                                             }}>

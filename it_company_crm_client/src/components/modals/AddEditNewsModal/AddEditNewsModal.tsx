@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Vacancy} from "../../../types/employeement";
 import {ComponentMode, ModalProps} from "../../../types/global";
 import {Box, Button, DialogActions, Fade, Modal, TextField} from "@mui/material";
 import {modalStyle} from "../../../assets/components/Modals";

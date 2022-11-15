@@ -10,19 +10,8 @@ import FunnelSales from "./FunnelSales";
 import UndoOrdersPie from "./UndoOrdersPie";
 import UndoCasesTreemap from "./UndoCasesTreemap";
 import BiggestProjectsTreemap from "./BiggestProjects";
+import {Container} from "../../../assets/components/Shared";
 
-const Container = styled('div')(({ theme }) => ({
-  margin: '30px',
-  [theme.breakpoints.down('sm')]: {
-    margin: '16px',
-  },
-  '& .breadcrumb': {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: {
-      marginBottom: '16px',
-    },
-  },
-}));
 
 const AppEchart = () => {
 

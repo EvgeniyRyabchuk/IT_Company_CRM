@@ -2,29 +2,27 @@ import React, {useEffect, useState} from 'react';
 import {
     Avatar,
     Box,
-    Button, DialogActions,
-    Fade, Hidden,
-    makeStyles,
+    Button,
+    DialogActions,
+    Fade,
+    Hidden,
     MenuItem,
     Modal,
-    Select, styled,
+    Select,
     TextareaAutosize,
-    TextField,
-    Typography
+    TextField
 } from "@mui/material";
 import {modalStyle, Span, UserMenu} from "../../../assets/components/Modals";
-import {KanbanCard, KanbanLane} from "../../../types/kanban";
+import {KanbanCard} from "../../../types/kanban";
 import {Employee} from "../../../types/user";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import {ModalProps} from "../../../types/global";
-
 
 
 type KanbanCardEditModal = ModalProps & {
     card: KanbanCard | null | undefined;
     owner: Employee | null | undefined;
 }
-
 
 const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
     ({open, setOpen, onClose, card,owner, onSave}) => {
@@ -34,7 +32,6 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
     const [priority, setPriority] = useState<string>('');
     const [color, setColor] = useState<{background: string}>({ background: '#fff'});
 
-
     useEffect(() => {
         if(card) {
             setTitle(card.title);
@@ -42,15 +39,12 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
             setPriority(card.priority);
             setColor({ background: card.bgcolor});
         }
-
     }, [card])
 
     const save = () => {
-        console.log(card)
         if(card)
             onSave({title, description, priority, color, id: card.id, lane_id: card.lane_id});
     }
-
 
     return (
         <div>
@@ -60,14 +54,12 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
                 open={open}
                 onClose={onClose}
                 closeAfterTransition
-
                 BackdropProps={{
                     timeout: 500,
                 }}
             >
                 <Fade in={open}>
                     <Box sx={modalStyle}>
-
                         <TextField
                             id="standard-basic"
                             label="Standard"
@@ -84,7 +76,6 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
                                 value={description}
                                 style={{ width: '100%', padding: '10px 5px' }}
                                 onChange={(e: any) => setDescription(e.target.value)}
-
                             />
                         </Box>
 
@@ -94,8 +85,7 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
                                 id="demo-simple-select"
                                 value={priority}
                                 label="Age"
-                                onChange={(e: any) => setPriority(e.target.value)}
-                            >
+                                onChange={(e: any) => setPriority(e.target.value)}>
                                 <MenuItem value={'A'}>A</MenuItem>
                                 <MenuItem value={'B'}>B</MenuItem>
                                 <MenuItem value={'C'}>C</MenuItem>
@@ -128,15 +118,8 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
                                 </Button>
                             </Box>
                         </DialogActions>
-
                     </Box>
                 </Fade>
-               {/*<Box*/}
-               {/*    modalStyle={{width: '500px', height: '300px', backgroundColor: 'white', margin: "100px auto"}}*/}
-               {/*     position="relative"*/}
-               {/*>*/}
-               {/*     <Button variant="contained" onClick={() => setOpen(false)}></Button>*/}
-               {/*</Box>*/}
             </Modal>
 
         </div>

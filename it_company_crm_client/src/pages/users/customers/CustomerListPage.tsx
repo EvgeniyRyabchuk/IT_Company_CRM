@@ -16,7 +16,6 @@ import {useNavigate} from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import {CustomerService} from "../../../services/CustomerService";
 import JsPDF from 'jspdf';
-import {toast} from "react-toastify";
 import {PrimaryErrorAlert, showAxiosErrorAlert} from "../../../utils/alert";
 
 const CustomerListPage = () => {

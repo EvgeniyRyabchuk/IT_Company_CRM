@@ -10,7 +10,6 @@ import {User} from "../../../types/user";
 import {ModalProps} from "../../../types/global";
 
 
-
 const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
 
     const { user } = useAuth();
@@ -30,7 +29,6 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
     }
 
     useEffect(() => {
-        console.log(123);
         let active = true;
 
         if (!loading) {
@@ -59,7 +57,6 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
     }
 
     const create = async () => {
-        console.log(123);
         if(selecteOption != null) {
             const toUserId = selecteOption.id;
             createChat(user!.id, toUserId);
@@ -82,13 +79,10 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                 <Fade in={open}>
                     <Box sx={modalStyle}>
                         <h1>Add chat with</h1>
-                        {/*<div>{`value: ${value !== null ? `'${value}'` : 'null'}`}</div>*/}
-                        {/*<div>{`inputValue: '${inputValue}'`}</div>*/}
 
                         <Autocomplete
                             onInputChange={(event, newInputValue) => {
                                 setUserIndentity(newInputValue);
-                                console.log('on input change', newInputValue)
                             }}
                             onChange={onChange}
                             sx={{ width: 300 }}
@@ -131,10 +125,8 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                                 </Button>
                             </Box>
                         </DialogActions>
-
                     </Box>
                 </Fade>
-
             </Modal>
         </div>
     );

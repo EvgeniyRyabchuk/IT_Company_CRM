@@ -10,13 +10,11 @@ import {
     InputAdornment,
     MenuItem,
     Select,
-    styled,
     TextField
 } from "@mui/material";
 import {Breadcrumb} from "../../components";
 import {Container} from "../../assets/components/breadcrumb";
 import '../../assets/components/AltTable/style.scss';
-import {useNavigate} from "react-router-dom";
 import {CloudDownload, Delete, FilterAlt, Search, Sort} from "@mui/icons-material";
 import {useObserver} from "../../hooks/useObserver";
 import {useFetching} from "../../hooks/useFetching";
@@ -32,15 +30,10 @@ import {JobApplicationService} from "../../services/JobApplicationService";
 import {VacancyService} from "../../services/VacancyService";
 import AddEditVacancyModal from "../../components/modals/AddVacancyModal/AddEditVacancyModal";
 import {ViewService} from "../../services/ViewService";
-
-export const SearchInput = styled("div")(({ theme }) => ({
-    padding: "10px",
-    width: '300px',
-    display: 'flex',
-}));
+import {FlexGrow, JustifyBox, SearchInput} from "../../assets/components/Shared";
 
 
-const VacanciesListPage = () => {;
+const VacanciesListPage = () => {
 
     const [jobApplications, setJobApplications] = useState<JobApplication[]>([]);
     const lastElementRef = useRef<any>();
@@ -57,8 +50,6 @@ const VacanciesListPage = () => {;
     const [filterOptionData, setFilterOptionData] = useState<JobApplicationFilterData | null>(null);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-    const [selectedJobAplication, setSelectedJobAplication] = useState<JobApplication | null>(null);
 
     const [statuses, setStatuses] = useState<JobApplicationStatus[]>([]);
     const [vacancies, setVacancies] = useState<Vacancy[]>([]);
@@ -179,20 +170,24 @@ const VacanciesListPage = () => {;
             </Box>
 
             <div className='table-alt-1'>
-                <Card className="card-box mb-4">
-                    <div className="card-header" style={{display: 'block'}}>
+                <Card className="card-box mb-4" >
+                    <div className="card-header"
+                         style={{display: 'block'}}
+                    >
                         <div className="card-header--title">
                             <small>Tables</small>
                             <h3>Job Applications</h3>
                         </div>
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginBottom: '10px'
-                        }}>
-                            <div style={{display: 'flex'}}>
-                                <SearchInput style={{padding: 0, width: '300px'}}>
+                        <JustifyBox sx={{ mb: '10px' }}>
+                            <FlexGrow >
+                                {/*
+                                // @ts-ignore */}
+                                <SearchInput width='300px'
+                                     style={{
+                                         padding: 0,
+                                         width: '300px'
+                                    }}
+                                >
                                     <TextField
                                         id="outlined-search"
                                         label="Search By Name Or Email"
@@ -221,7 +216,7 @@ const VacanciesListPage = () => {;
                                     style={{width: '100xp', maxHeight: '40px', padding: '0 15px' }}>
                                     Add Vacancy
                                 </Button>
-                            </div>
+                            </FlexGrow>
 
                             <Box
                                 className="card-header--actions"
@@ -238,14 +233,12 @@ const VacanciesListPage = () => {;
                                     id="demo-select-small"
                                     defaultValue='1'
                                     label="Sort"
-                                    onChange={(e: any) => onSortJobApplicationsHandleChange(e)}
-                                >
+                                    onChange={(e: any) => onSortJobApplicationsHandleChange(e)}>
                                     {
                                         defJobApplicationSortOrderData.map((e: SortOrderOptionType) =>
                                             <MenuItem
                                                 key={e.id}
-                                                value={e.id}
-                                            >
+                                                value={e.id}>
                                                 <IconButton
                                                     size="small"
                                                     color="primary"
@@ -274,7 +267,7 @@ const VacanciesListPage = () => {;
                                     <FilterAlt/>
                                 </IconButton>
                             </Box>
-                        </div>
+                        </JustifyBox>
                     </div>
 
                     <CardContent className="p-0">
@@ -283,7 +276,10 @@ const VacanciesListPage = () => {;
                            onFilterChange={handlerFilterChange}
                        />
                         <div className="table-responsive">
-                            <table className="table table-striped table-hover text-nowrap mb-0">
+                            <table className="table
+                                table-striped
+                                table-hover
+                                text-nowrap mb-0">
                                 <thead className="thead-light">
                                 <tr>
                                     <th style={{ width: '40%' }}>Name/Email/Phone</th>
@@ -318,7 +314,9 @@ const VacanciesListPage = () => {;
                                         </td>
                                         <td className="text-center">
                                             <Box>
-                                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                                <FormControl
+                                                    sx={{ m: 1, minWidth: 120 }}
+                                                    size="small">
                                                     <Select
                                                         style={{
                                                             width: '200px',
@@ -338,7 +336,8 @@ const VacanciesListPage = () => {;
                                                                     key={status.id}
                                                                     value={status.id}
                                                                     style={{
-                                                                        border: `1px solid ${status.bgColor ?? '#ffffff'} !important`
+                                                                        border: `1px solid ${status.bgColor
+                                                                        ?? '#ffffff'} !important`
                                                                     }}
                                                                 >
                                                                     {status.name}
@@ -361,7 +360,8 @@ const VacanciesListPage = () => {;
                                                     {
                                                         <IconButton onClick={() => {
                                                             // eslint-disable-next-line no-restricted-globals
-                                                            location.href = `${API_URL_WITH_PUBLIC_STORAGE}/${e.resume_path}`;
+                                                            location.href =
+                                                                `${API_URL_WITH_PUBLIC_STORAGE}/${e.resume_path}`;
                                                         }}>
                                                             <CloudDownload/>
                                                         </IconButton>
@@ -372,7 +372,8 @@ const VacanciesListPage = () => {;
 
                                         <td className="text-center table-action-btn">
                                             <Box>
-                                                <IconButton onClick={() => deleteJobApplication(e.id)}>
+                                                <IconButton
+                                                    onClick={() => deleteJobApplication(e.id)}>
                                                     <Delete />
                                                 </IconButton>
                                             </Box>
@@ -390,7 +391,7 @@ const VacanciesListPage = () => {;
                                 ref={lastElementRef}
                                 style={{
                                     width: '100%',
-                                    height: 20,
+                                    // height: 20,
                                     background: 'red',
                                 }}>
 
