@@ -59,13 +59,6 @@ const IllustrationImage = styled.div`
   ${tw`m-12 xl:m-16 w-full max-w-lg bg-contain bg-center bg-no-repeat`}
 `;
 
-/*
-    email: string,
-    username: string
-    password: string;
-    remember_me: boolean;
- */
-
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required('first_name is required!'),
   last_name: Yup.string().required('last_name is required!'),
@@ -84,34 +77,6 @@ const validationSchema = Yup.object().shape({
       'Passwords must match')
 });
 
-/*
-
-
-  const defInitialValues = useMemo(() => {
-    return {
-      first_name: 'first',
-      last_name: 'last',
-      middle_name: 'middle',
-
-      email: 'sdfgkjsldfgi@gmail.com',
-      phone:  {
-        number: '380984756384',
-        countryData: {
-          countryCode: "UA",
-          dialCode: "380",
-          format: "+... (..) ... .. ..",
-          name: "Ukraine",
-        },
-      },
-
-      password: '123456789',
-      password_repetition: '123456789',
-    }
-  }, []);
-
- */
-
-
 
 export default ({
   logoLinkUrl = "#",
@@ -123,11 +88,6 @@ export default ({
       text: "Sign UpIcon With Google",
       url: "https://google.com"
     },
-    // {
-    //   iconImageSrc: twitterIconImageSrc,
-    //   text: "Sign UpIcon With Twitter",
-    //   url: "https://twitter.com"
-    // }
   ],
   submitButtonText = "Sign Up",
   SubmitButtonIcon = SignUpIcon,
@@ -260,13 +220,15 @@ export default ({
                                 <label htmlFor='email' >Email</label>
                                 <TextField
                                     fullWidth
-                                    sx={{ display: 'block', "& > div": {
-                                      height: '47px'
-                                    },
-                                    "& input": {
-                                      padding: '10.5px 14px'
-                                    }
-                                }}
+                                    sx={{
+                                      display: 'block',
+                                      "& > div": {
+                                        height: '47px'
+                                      },
+                                      "& input": {
+                                        padding: '10.5px 14px'
+                                      }
+                                    }}
                                     size='small'
                                     variant="outlined"
                                     id="email"
@@ -296,7 +258,6 @@ export default ({
                                     error={errors.phone}
                                 />
                               </Box>
-
                             </Box>
                           </Box>
 
@@ -367,9 +328,6 @@ export default ({
                 </FormContainer>
               </MainContent>
             </MainContainer>
-            {/*<IllustrationContainer>*/}
-            {/*  <IllustrationImage imageSrc={illustrationImageSrc}/>*/}
-            {/*</IllustrationContainer>*/}
           </Content>
         </Container>
 

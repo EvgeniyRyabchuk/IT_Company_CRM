@@ -4,6 +4,7 @@ import {Order, UndoOrderCase, UndoOrderCaseGrouped} from "../../../types/order";
 import {Autocomplete, Box, Button, DialogActions, Fade, Modal, TextField} from "@mui/material";
 import {modalStyle} from "../../../assets/components/Modals";
 import {OrderService} from "../../../services/OrderService";
+import {FlexJustifyCenter} from "../../../assets/components/Shared";
 
 
 interface GroupedCases {
@@ -56,6 +57,22 @@ const UndoOrderModal : React.FC<ModalProps & {
             };
         }, [loading]);
 
+        const onSaveBtnCLick = () => {
+            if(!type || !reason || type === '' || reason === '') {
+                setError('fill all needs field')
+                return;
+            }
+            const undoOrderReason = {
+                extra_reason_text: extraReasonText,
+                orderUndoCase: {
+                    type_name: type,
+                    reason: reason
+                },
+                order_id: order.id,
+            }
+            onSave(undoOrderReason);
+            setOpen(false);
+        }
 
         return (
             <div>
@@ -65,10 +82,7 @@ const UndoOrderModal : React.FC<ModalProps & {
                     open={open}
                     onClose={onClose}
                     closeAfterTransition
-                    BackdropProps={{
-                        timeout: 500,
-                    }}
-                >
+                    BackdropProps={{ timeout: 500 }}>
                     <Fade in={open}>
                         <Box sx={modalStyle}>
                             <h1>Add undo reason</h1>
@@ -116,17 +130,11 @@ const UndoOrderModal : React.FC<ModalProps & {
                             </div>
 
                             <div style={{color: 'red'}}>
-                                {
-                                    error ?? ''
-                                }
+                                { error ?? '' }
                             </div>
 
                             <DialogActions sx={{mt: 2}} >
-                                <Box style={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'center'
-                                }}>
+                                <FlexJustifyCenter sx={{ width: '100%' }}>
                                     <Button onClick={onClose} color="primary">
                                         Cancel
                                     </Button>
@@ -134,26 +142,10 @@ const UndoOrderModal : React.FC<ModalProps & {
                                     <Button
                                         color="primary"
                                         autoFocus
-                                        onClick={() => {
-                                            if(!type || !reason || type === '' || reason === '') {
-                                                setError('fill all needs field')
-                                                return;
-                                            }
-                                            const undoOrderReason = {
-                                                extra_reason_text: extraReasonText,
-                                                orderUndoCase: {
-                                                    type_name: type,
-                                                    reason: reason
-                                                },
-                                                order_id: order.id,
-                                            }
-                                            onSave(undoOrderReason);
-                                            setOpen(false);
-                                        }}
-                                    >
+                                        onClick={onSaveBtnCLick}>
                                         Add Reason
                                     </Button>
-                                </Box>
+                                </FlexJustifyCenter>
                             </DialogActions>
                         </Box>
                     </Fade>

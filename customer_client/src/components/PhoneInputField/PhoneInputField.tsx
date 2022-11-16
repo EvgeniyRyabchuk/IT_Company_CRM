@@ -11,7 +11,6 @@ import classes from './st.module.scss';
 import PhoneInput, {CountryData} from 'react-phone-input-2'
 import {toUpper} from "lodash";
 
-
 export const PhoneBox = styled(Box)(({ theme }) => ({
     [theme.breakpoints.down("md")]: {
         width: '100%',
@@ -21,7 +20,6 @@ export const PhoneBox = styled(Box)(({ theme }) => ({
         [theme.breakpoints.down("md")]: { width: '100%' },
     },
 }));
-
 
 const PhoneInputField : React.FC<any>
     = ({onChange, value, ...props}) => {
@@ -47,7 +45,11 @@ const PhoneInputField : React.FC<any>
                 />
                 {(props.touched && props.error) &&
                     <p style={{color:'red'}}
-                       className="MuiFormHelperText-root MuiFormHelperText-contained Mui-error MuiFormHelperText-filled MuiFormHelperText-marginDense">
+                       className="MuiFormHelperText-root
+                       MuiFormHelperText-contained
+                       Mui-error
+                       MuiFormHelperText-filled
+                       MuiFormHelperText-marginDense">
                         {props.error}
                     </p>
                 }

@@ -1,9 +1,5 @@
-import React, {useState} from "react";
+import React from "react";
 import tw from "twin.macro";
-import ContactUsForm from "../components/forms/TwoColContactUsWithIllustrationFullForm.js";
-import {SimpleFormStatus} from "../types/global";
-import ContactSuccess from "../components/statusCards/contactUs/ContactSuccess";
-import {Box} from "@mui/material";
 import ContactDetails from "../components/cards/ThreeColContactDetails.js";
 
 const Address = tw.span`leading-relaxed`;
@@ -12,13 +8,10 @@ const Email = tw.span`text-sm mt-6 block text-gray-500`;
 const Phone = tw.span`text-sm mt-0 block text-gray-500`;
 
 
-
 export default () => {
 
   return (
     <>
-
-
       <ContactDetails
         cards={[
           {
@@ -101,9 +94,6 @@ export default () => {
           }
         ]}
       />
-
-
-
     </>
   );
 };

@@ -1,18 +1,15 @@
 import React, {useEffect, useState} from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
-import { SectionHeading, Subheading as SubheadingBase } from "./misc/Headings.js";
-import { SectionDescription } from "./misc/Typography.js";
-import { PrimaryButton as PrimaryButtonBase } from "./misc/Buttons.js";
-import { Container as ContainerBase, ContentWithPaddingXl as ContentBase } from "./misc/Layouts.js";
+import {SectionHeading, Subheading as SubheadingBase} from "./misc/Headings.js";
+import {SectionDescription} from "./misc/Typography.js";
+import {PrimaryButton as PrimaryButtonBase} from "./misc/Buttons.js";
+import {Container as ContainerBase, ContentWithPaddingXl as ContentBase} from "./misc/Layouts.js";
 // @ts-ignore
-import { ReactComponent as CheckboxIcon } from "../assets/images/checkbox-circle.svg";
 import {ProjectService} from "../services/ProjectService";
 import {Box, Divider, Typography} from "@mui/material";
 import {ArrowDownward, ArrowUpward} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-
 const Container = tw(ContainerBase)`bg-primary-900 text-gray-100 -mx-8 px-8`;
 const ContentWithPaddingXl = tw(
     ContentBase
@@ -82,39 +79,34 @@ const ActionButton = styled(PrimaryButtonBase)`
   ${tw`block text-center text-sm font-semibold tracking-wider w-full text-gray-100 bg-primary-500 px-6 py-4 rounded hover:bg-primary-700 focus:shadow-outline focus:outline-none transition-colors duration-300`}
 `;
 
-//  const defaultPlans = [
-//     {
-//         name: "Personal",
-//         price: ["$9", ".99/month"],
-//         oldPrice: "$11.99",
-//         description: "Perfect for when you want to host your personal blog or a hobby side project.",
-//         features: ["1"],
-//         url: "https://google.com"
-//     },
-//     {
-//         name: "Business",
-//         price: ["$15", ".99/month"],
-//         oldPrice: "$19.99",
-//         description: "Perfect for hosting blogs with lots of traffic or heavy development projects",
-//         features: ["1"],
-//         url: "https://google.com",
-//         featured: "Most Popular"
-//     },
-//     {
-//         name: "Enterprise",
-//         price: ["$25", ".99/month"],
-//         oldPrice: "$29.99",
-//         description: "Perfect for hosting production websites & API services with high traffic load",
-//         features: ["1"],
-//         url: "https://google.com"
-//     }
-// ];
-//
-// // ts-ignore
-// if (!plans) plans = defaultPlans;
+const Wrapper = styled(Box)(({open}) => ({
+    height: open ? 'auto' : '930px',
+    overflow: 'hidden',
+    position: 'relative',
+}));
+
+const BottomLine = styled(Box)(({open}) => ({
+    width: '100%',
+    height: '80px',
+    opacity: '0.8',
+    backgroundColor: 'black',
+    position: open ? 'static' : 'absolute',
+    top: 850,
+    color: 'white',
+    py: 3,
+    zIndex: 99,
+    padding: '20px 0'
+}));
+
+const BottomLineTypography = styled(Typography)(() => ({
+    fontSize: '25px',
+    cursor: 'pointer',
+    "&:hover": {
+        color: 'yellow'
+    }
+}));
 
 const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3 bg-white z-0`;
-
  const Pricing = ({
     subheading = "",
     heading = "Affordable Pricing",
@@ -131,6 +123,8 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
 
      const [open, setOpen] = useState(false);
 
+     console.log(open)
+
      useEffect(() => {
         const fetchProjectTypes = async () => {
             const { data } = await ProjectService.getProjectTypes();
@@ -138,9 +132,6 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
         }
          fetchProjectTypes();
      }, []);
-
-
-
 
      const scrollToElement = () => {
          setTimeout(() => {
@@ -152,13 +143,7 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
      }
 
     return (
-        <Box
-            id={id}
-            style={{
-                height: open ? 'auto' : '930px',
-                overflow: 'hidden',
-                position: 'relative'
-            }}>
+        <Wrapper id={id} open={open}>
             <Container >
                 <ContentWithPaddingXl>
                     <HeaderContainer>
@@ -183,7 +168,6 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
                                         }}
                                     >
                                       <span className="currentPrice">
-                                        {/*<span className="bigText">{plan.price[0]}</span>*/}
                                           {'$'}{plan.fromPrice}{" "}
                                             <Divider sx={{ my: 3}} />
                                           {' Development time from: '}
@@ -191,21 +175,12 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
                                           {plan.fromTerm} {" "}
                                           {plan.fromTermType}
                                       </span>
-                                        {/*{plan.oldPrice && <span className="oldPrice">{plan.oldPrice}</span>}*/}
                                     </div>
                                     <p className="description"
                                        style={{ display: 'flex', justifyContent: 'center'}}>
                                         {plan.description}
                                     </p>
                                 </PlanHeader>
-                                {/*<PlanFeatures>*/}
-                                {/*    {plan.features.map((feature, index) => (*/}
-                                {/*        <li className="feature" key={index}>*/}
-                                {/*            <CheckboxIcon className="icon" />*/}
-                                {/*            <span className="text">{feature}</span>*/}
-                                {/*        </li>*/}
-                                {/*    ))}*/}
-                                {/*</PlanFeatures>*/}
                                 <PlanAction>
                                     <ActionButton
                                         as="a"
@@ -213,8 +188,7 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
                                         onClick={(e) => {
                                             e.preventDefault();
                                             navigate(`/make-an-order`)
-                                        }}
-                                    >
+                                        }}>
                                         {primaryButtonText}
                                     </ActionButton>
                                 </PlanAction>
@@ -222,39 +196,17 @@ const WhiteBackgroundOverlay = tw.div`absolute inset-x-0 bottom-0 h-1/6 lg:h-1/3
                         ))}
                     </PlansContainer>
                 </ContentWithPaddingXl>
-                {/*<WhiteBackgroundOverlay />*/}
             </Container>
-            <Box sx={{
-                width: '100%',
-                height: '80px',
-                opacity: '0.8',
-                backgroundColor: 'black',
-                position: open ? 'static' : 'absolute',
-                top: 850,
-                color: 'white',
-                py: 3,
-                zIndex: 99
-            }}>
-                <Typography
-                    onClick={() => {
-                        setOpen(!open);
-                        scrollToElement();
-                    }}
+            <BottomLine open={open}>
+                <BottomLineTypography
+                    onClick={() => { setOpen(!open); scrollToElement(); }}
                     variant='span'
-                            sx={{
-                                fontSize: '25px',
-                                cursor: 'pointer',
-                                "&:hover": {
-                                    // opacity: '1',
-                                    color: 'yellow'
-                            }
-                            }}>
-
-                    { open ?  'Hide' : 'Show More' }
-                    { open ? <ArrowUpward /> :  <ArrowDownward /> }
-                </Typography>
-            </Box>
-        </Box>
+                >
+                        { open ?  'Hide' : 'Show More' }
+                        { open ? <ArrowUpward /> :  <ArrowDownward /> }
+                </BottomLineTypography>
+            </BottomLine>
+        </Wrapper>
 
     );
 };

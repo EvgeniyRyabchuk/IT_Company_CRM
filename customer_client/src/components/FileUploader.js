@@ -14,9 +14,16 @@ import {
     UploadFileBtn
 } from "../assets/components/FileUploader";
 import {Upload} from "@mui/icons-material";
+import {styled} from "@mui/material";
 
 const KILO_BYTES_PER_BYTE = 1000;
 const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 5000000;
+
+const FileMetaSpan = styled('span')(() => ({
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+}))
 
 const convertNestedObjectToArray = (nestedObj) =>
     Object.keys(nestedObj).map((key) => nestedObj[key]);
@@ -104,7 +111,6 @@ const FileUploader = ({
                 />
             </FileUploadContainer>
             <FilePreviewContainer>
-                {/*<span>To Upload</span>*/}
                 <PreviewList>
                     {Object.keys(files).map((fileName, index) => {
                         let file = files[fileName];
@@ -131,11 +137,9 @@ const FileUploader = ({
                                     )}
 
                                     <FileMetaData isImageFile={isImageFile}>
-                                        <span style={{
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
-                                        }}>{file.name}</span>
+                                        <FileMetaSpan>
+                                            {file.name}
+                                        </FileMetaSpan>
                                         <aside>
                                             <span>{convertBytesToKB(file.size)} kb</span>
                                             <RemoveFileIcon

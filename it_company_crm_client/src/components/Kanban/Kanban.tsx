@@ -1,19 +1,17 @@
 import React, {useCallback, useEffect, useId, useMemo, useState} from 'react';
-
-
-// @ts-ignore
-import Board from 'react-trello';
-import './style.scss';
+import '../../assets/components/Kanban/index.scss'
 import useQueryParams from "../../hooks/useQueryParams";
 import defaultSortData from "./defaultSortData";
 import KanbanCardEditModal from "../modals/KanbanCardEditModal/KanbanCardEditModal";
 import {useAction} from "../../hooks/useAction";
-
 import {useTypeSelector} from "../../hooks/useTypedSelector";
 import {KanbanService} from "../../services/KanbanService";
 import {KanbanCard, KanbanLane} from "../../types/kanban";
 import useAuth from "../../hooks/useAuth";
 import {Employee} from "../../types/user";
+
+// @ts-ignore
+import Board from 'react-trello';
 
 const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
     const { user } = useAuth();
@@ -35,7 +33,6 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
         lanes,
         sort,
         order
-
     } = useTypeSelector(state => state.kanban);
 
     const data = { lanes: [] };
@@ -51,16 +48,11 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
                 return e;
             });
         }
-        //TODO: push query params to url
-        // https://stackoverflow.com/questions/40161516/how-do-you-programmatically-update-query-params-in-react-router
         return defaultSortData
-
     }, [sort, order]);
 
     // hooks that returns query string for url
     const { queryParamString } = useQueryParams([sort, order]);
-
-    console.log(lanes);
 
     useEffect(() => {
         getLanesByMember(projectId, user!.id, queryParamString);
@@ -68,24 +60,14 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
 
 
     const onCardAdd = async (card: any, laneId: any) => {
-        console.log("onCardAdd");
-        console.log(card)
-        console.log(laneId);
-        console.log("========== onCardAdd");
-
         await KanbanService.addCard(projectId, laneId, card);
         getLanesByMember(projectId, user!.id, queryParamString);
     }
 
     const onCardDelete = (cardId: any, laneId: any) => {
-        console.log("onCardDelete")
-        console.log(cardId, laneId);
         deleteCard(projectId, laneId, cardId);
     }
     const onCardMoveAcrossLanes = (fromLaneId: any, toLaneId: any, cardId: any, index: any) => {
-        console.log("onCardMoveAcrossLanes")
-        console.log(fromLaneId, toLaneId, cardId, index);
-
         if(sort.value != 'index')
             return;
         if(order.value != 'asc')
@@ -114,27 +96,18 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
     }
 
     const onLaneAdd = (params: any) => {
-        console.log("onLaneAdd");
-        console.log(params);
         addLane(projectId, user!.id, { ...params, employee_id: user!.id});
     }
 
     const onLaneDelete = (laneId: any) => {
-        console.log("onLaneDelete")
-        console.log(laneId);
         deleteLane(projectId, laneId);
 
     }
     const onLaneUpdate = (laneId: number, data: any) => {
-        console.log("onLaneUpdate")
-        console.log(laneId, data);
         updateLane(projectId, laneId, data);
-
     }
-    const handleLaneDragEnd = (removedIndex: any, addedIndex: any, payload: any) => {
-        console.log("handleLaneDragEnd")
-        console.log(removedIndex, addedIndex, payload);
 
+    const handleLaneDragEnd = (removedIndex: any, addedIndex: any, payload: any) => {
         const temp = lanes[removedIndex];
         // delete old item
         lanes.splice(removedIndex, 1);
@@ -156,9 +129,8 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
 
         setSort({ ...sort, value: sortValue});
         setOrder({ ...order, value: orderValue});
-        ///setSort({ ...sort, value: sortValue})
-        ///setOrder({ ...order, value: orderValue});
     }
+
     const selectSortDefVal = () :string => {
         const def = sortedData.filter(e => e.selected === true)[0] ?? sortedData[0];
         return def.value + "&" + def.order;
@@ -169,8 +141,6 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
     const [cardOwner, setCardOwner] = useState<Employee>();
 
     const onCardClick = (cardId: any, metadata: any, laneId: any) => {
-        console.log('===============Click===============')
-        console.log(cardId, metadata, laneId);
         const lane = lanes.filter((kd: KanbanLane) => kd.id === laneId)[0];
         const card = lane.cards.filter((c: any) => c.id == cardId)[0];
         setCard({...card});
@@ -183,8 +153,6 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
     }
 
     const onModalSave = async (newCard: KanbanCard) => {
-        console.log(newCard)
-
         const lane = lanes.filter((kd: any) => kd.id == newCard.lane_id)[0];
         const card = lane.cards.filter((c: any) => c.id == newCard.id)[0];
         card.title = newCard.title;
@@ -196,11 +164,8 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
         setOpen(false);
     }
 
-    /*    https://colorhunt.co/palette/1c3879607eaaeae3d2f9f5eb*/
-
     return (
         <div className={'kanban-wrapper'}>
-
             <KanbanCardEditModal
                 open={open}
                 onClose={onModalClose}
@@ -209,21 +174,18 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
                 card={card}
                 owner={cardOwner}
             />
-
             <select
                 onChange={onSort}
-                value={selectSortDefVal()}
-            >
+                value={selectSortDefVal()}>
                 { sortedData.map(e =>
                     <option
                         key={e.id}
-                        value={e.value + "&" + e.order}
-                    >
+                        value={e.value + "&" + e.order}>
                         {e.name} ({e.order})
                     </option>
                 )}
-
             </select>
+
             <Board
                 data={lanes.length > 0 ? { lanes: lanes} : data}
                 canAddLanes={true}
@@ -240,11 +202,7 @@ const Kanban : React.FC<{projectId: number}> = ({projectId}) => {
 
                 onCardClick={onCardClick}
 
-
-                style={{
-                    backgroundColor: '#607EAA'
-                }}
-
+                style={{ backgroundColor: '#607EAA' }}
             />
         </div>
     );

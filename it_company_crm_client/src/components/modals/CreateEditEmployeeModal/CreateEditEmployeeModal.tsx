@@ -15,7 +15,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import {Box} from "@mui/system";
+import {Box, styled} from "@mui/system";
 import {Formik, FormikProps, FormikValues} from 'formik';
 import * as Yup from "yup";
 import {Delete, PhotoCamera} from "@mui/icons-material";
@@ -28,6 +28,17 @@ import AvatarImageCropper from "react-avatar-image-cropper";
 import AuthService from "../../../services/AuthService";
 import {ModalProps} from "../../../types/global";
 import {SwitchWrapper} from "../../../assets/components/Shared";
+
+// @ts-ignore
+const AddEmployeeCard = styled(Card)(() => ({
+    padding: 3,
+    boxShadow: 2,
+    minHeight: 400,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    position: 'relative'
+}));
 
 
 // form field validation schema
@@ -170,7 +181,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
             const url = URL.createObjectURL(file);
             setImageUrl(url);
             _setImageFile(file);
-            // formikSetter('newAvatar', file);
         }
     };
     const cleanImage = (event: any) => {
@@ -180,32 +190,20 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
         }
     };
 
-
     return (
         <Dialog
             maxWidth="lg"
             open={open}
-            style={{zIndex: '3000'}}
-        >
-
-            <DialogTitle textAlign="center">Create New Employee Account</DialogTitle>
+            style={{zIndex: '3000'}}>
+            <DialogTitle textAlign="center">
+                Create New Employee Account
+            </DialogTitle>
             <DialogContent sx={{paddingTop: '20px !important'}}>
-
                 <Box pt={2} pb={4}>
                     <Card sx={{ padding: 4 }}>
                         <Grid container spacing={3}>
                             <Grid item md={4} xs={12}>
-                                <Card
-                                    sx={{
-                                        padding: 3,
-                                        boxShadow: 2,
-                                        minHeight: 400,
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        position: 'relative'
-                                    }}
-                                >
+                                <AddEmployeeCard>
                                     <Avatar
                                         alt={employee?.user.first_name}
                                         src={imageUrl ?? defaultUserAvatar}
@@ -215,7 +213,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                         width: '150px',
                                         height: '150px',
                                         position: 'absolute',
-
                                     }}>
                                         <AvatarImageCropper
                                             apply={(e: any) => handleImageOnChange(e, formik)}
@@ -224,30 +221,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                             </IconButton>}
                                         />
                                     </div>
-
-                                    {/*
-                                      <ButtonWrapper>
-                                        <UploadButton>
-                                            <label htmlFor="upload-btn">
-                                                <input
-                                                    id='upload-btn'
-                                                    accept="image/*"
-                                                    type="file"
-                                                    style={{ display: "none" }}
-                                                    ref={inputFileRef}
-                                                    name='newAvatar'
-                                                    onChange={(e: any) =>
-                                                        handleImageOnChange(e, setFieldValue)}
-                                                />
-
-                                                <IconButton component="span">
-                                                    <PhotoCamera sx={{ fontSize: 30, color: "white" }} />
-                                                </IconButton>
-                                            </label>
-                                        </UploadButton>
-                                    </ButtonWrapper>
-                                    */}
-
                                     {imageUrl || employee?.user.avatar ?
                                         <label>
                                             <Button
@@ -261,7 +234,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                             </Button>
                                         </label> : ''
                                     }
-
                                     <Typography variant="caption" display="block" gutterBottom>
                                         Para obter os melhores resultados, use uma imagem de pelo menos 128 x
                                         128 pixels no formato .jpg
@@ -307,7 +279,7 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                             email
                                         </Tiny>
                                     </Box>
-                                </Card>
+                                </AddEmployeeCard>
                             </Grid>
 
                              <Grid item md={8} xs={12}>
@@ -476,7 +448,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
 
                                             <Grid sx={{mt: 2}} container spacing={3}>
                                                 <Grid item sm={6} xs={12}>
-
                                                     <Autocomplete
                                                         size="small"
                                                         getOptionLabel={(option: Skill) => option.name}
@@ -511,13 +482,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                                             const names = values.map((e: Skill) => e.name);
                                                             setFieldValue("skills", names.join(','));
                                                         }}
-                                                        onKeyDown={(e) => {
-                                                            // console.log(e.key);
-                                                            // if(e.key === ' ') {
-                                                                // console.log('space')
-                                                                // setSkills([...skills, { name: 'new tag'} ])
-                                                            // }
-                                                        }}
                                                     />
                                                 </Grid>
                                                 <Grid item sm={6} xs={12}>
@@ -550,7 +514,6 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                                                 {option.name} ({option.id})
                                                             </Box>
                                                         )}
-
                                                         onChange={(event: any, values: any) => {
                                                             const names = values.map((e: Role) => e.name);
                                                             setFieldValue("roles", names.join(','));
@@ -563,25 +526,23 @@ export const CreateEditEmployeeModal: FC< ModalProps & {
                                      )}
                                  </Formik>
                              </Grid>
-
                         </Grid>
                     </Card>
                 </Box>
 
-
-                    <DialogActions sx={{ p: '1.25rem' }}>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button
-                            color="secondary"
-                            variant="contained"
-                            type='submit'
-                            form="inner-form"
-                            onClick={() => {
-                                innerForm.current?.handleSubmit();
-                            }}>
-                            { mode === 'create' ? 'Create New Account' : 'Update Employee Information' }
-                        </Button>
-                    </DialogActions>
+                <DialogActions sx={{ p: '1.25rem' }}>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        type='submit'
+                        form="inner-form"
+                        onClick={() => {
+                            innerForm.current?.handleSubmit();
+                        }}>
+                        { mode === 'create' ? 'Create New Account' : 'Update Employee Information' }
+                    </Button>
+                </DialogActions>
             </DialogContent>
         </Dialog>
     );

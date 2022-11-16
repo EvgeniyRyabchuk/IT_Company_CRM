@@ -1,11 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
-
 import {Card as CardType, PaymentDetail} from '../../types/card';
-
 import "react-credit-cards-2/es/styles-compiled.css";
 import '../../assets/components/CreditCard/global.scss'
-
-
 import {formatCreditCardNumber, formatCVC, formatExpirationDate, formatFormData} from "../../utils/card";
 import {Box, Button} from "@mui/material";
 import {getUniqId} from "../../utils/utils";
@@ -57,15 +53,9 @@ const Creditcard : React.FC<CreditCardComponentProps>
         }
     }, [transferCard]);
 
-    // console.log(order)
-
     const [focused, setFocused] = useState<string>('');
     const [formData, setFormData] = useState<any>(null);
     const { cards } = useTypeSelector(state => state.card);
-
-    console.log('==========================');
-    console.log(transferCard, card);
-    console.log('==========================');
 
     useEffect(() => {
         if(mode === 'update' && transferCard) {
@@ -102,7 +92,6 @@ const Creditcard : React.FC<CreditCardComponentProps>
     const formRef = useRef<any>(null);
 
     const handleSubmit = (e: any) => {
-        console.log('submit')
         e.preventDefault();
 
         const formData = [...e.target.elements]
@@ -151,8 +140,6 @@ const Creditcard : React.FC<CreditCardComponentProps>
     return (
         <div key="Payment">
             <div className="App-payment">
-                {/*<h1>React Credit Cards</h1>*/}
-                {/*<h4>Beautiful credit cards for your payment forms</h4>*/}
                 <Card
                     number={card.number}
                     name={card.name}
@@ -220,20 +207,9 @@ const Creditcard : React.FC<CreditCardComponentProps>
                         mode === 'pay' &&
                         <div className="row justify-center">
                             <Box sx={{width: '300px', my: 2}}>
-
-                                <label
-                                    htmlFor='summa'>
-
+                                <label htmlFor='summa'>
                                     Summa
-                                    {/*{*/}
-                                    {/*    order && order.project &&*/}
-                                    {/*    <>*/}
-                                    {/*        {order.project.paid} / {order.project.budget}*/}
-                                    {/*    </>*/}
-                                    {/*}*/}
                                 </label>
-
-
                                     <input
                                         style={{marginBottom: '10px'}}
                                         id='summa'
@@ -296,7 +272,6 @@ const Creditcard : React.FC<CreditCardComponentProps>
                         ))}
                     </div>
                 )}
-                {/*<SupportedCards />*/}
             </div>
 
         </div>

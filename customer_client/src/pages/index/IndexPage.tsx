@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 import styled from "styled-components";
 import tw from "twin.macro";
@@ -19,10 +19,9 @@ import OurTeam from "../../components/cards/ProfileThreeColGrid";
 import Pricing from "../../components/Pricing";
 import AnimationRevealPage from "../../helpers/AnimationRevealPage";
 import FAQS from "../../components/faqs/SingleCol";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 //@ts-ignore
 import {Element, scroller} from "react-scroll";
-import {Button} from "@mui/material";
 
 
 const Container = tw.div`relative`;

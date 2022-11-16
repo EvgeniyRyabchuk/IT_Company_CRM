@@ -1,8 +1,6 @@
 import '../../../assets/components/Chat/index.scss';
-
 import React, {useEffect, useRef, useState} from 'react';
 import {Box, Button} from "@mui/material";
-
 import {useTypeSelector} from "../../../hooks/useTypedSelector";
 import {useAction} from "../../../hooks/useAction";
 import {useObserver} from "../../../hooks/useObserver";
@@ -30,11 +28,9 @@ const ChatTab = ({...props}) => {
         loadingChats,
         loadingMessages,
         loadingSendedMessage,
-
         messagePage,
         messageLimit,
         totalMessagePages,
-
         currentChatId,
         currentChat,
 
@@ -49,7 +45,6 @@ const ChatTab = ({...props}) => {
         clean,
         setChatMessages
     } = useAction();
-
 
     const { timer, start, stop } = useTimeoutLoop(() => {
         console.log('check');
@@ -128,7 +123,6 @@ const ChatTab = ({...props}) => {
         }
     }, [messagePage])
 
-
     // if current chat change
     useEffect(() => {
         if(chatLoadingFirstTime) {
@@ -163,10 +157,6 @@ const ChatTab = ({...props}) => {
         // const msg = currentChat?.messages[0];
         // if(msg && currentChatId)
         //     setChatMessages(currentChatId, [msg]);
-    }
-
-    const checkNewChat = () => {
-
     }
 
     return (

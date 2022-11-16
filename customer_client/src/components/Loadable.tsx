@@ -1,6 +1,4 @@
-import React from 'react';
-import { Suspense } from 'react';
-import {MyLoader} from "./layout/LayoutSuspence";
+import React, {Suspense} from 'react';
 import {CircularProgress} from "@mui/material";
 
 const PageLoader = (

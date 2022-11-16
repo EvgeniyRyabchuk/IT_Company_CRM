@@ -23,6 +23,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {Close, Delete, Edit} from "@mui/icons-material";
+import {FlexJustifyCenter, JustifyBox} from "../../../assets/components/Shared";
 
 
 const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy) => void}>
@@ -72,6 +73,37 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
         }
     }, [open])
 
+    const onSaveBtnClick = () => {
+        if(mode === 'create') {
+            if(!title || !text || title === '' || text === '') {
+                setError('fill all needs field')
+                return;
+            }
+        }
+        else if(mode === 'update' && editableVacancy) {
+            if(!editableVacancy.title ||
+                !editableVacancy.text ||
+                editableVacancy.title === '' ||
+                editableVacancy.text === '') {
+                setError('fill all needs field')
+                return;
+            }
+        } else { return; }
+
+        let newVacancy = {};
+        if(mode === 'create') {
+            newVacancy = {
+                title,
+                text,
+                required
+            };
+        } else if(mode === 'update') {
+            newVacancy = {...editableVacancy};
+        }
+        onSave(newVacancy, mode);
+        setOpen(false);
+        reset();
+    }
 
     return (
         <div>
@@ -83,15 +115,15 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                 closeAfterTransition
                 BackdropProps={{
                     timeout: 500,
-                }}
-            >
+                }}>
                 <Fade in={open}>
                     <Box sx={modalStyle} style={{width: '900px'}}>
 
                         <Grid container spacing={10}>
                             <Grid item xs={12} md={6}>
-                                <h2 className='text-center'>Add Vacancy Form</h2>
-
+                                <h2 className='text-center'>
+                                    Add Vacancy Form
+                                </h2>
                                 <div>
                                     <Autocomplete
                                         size='small'
@@ -134,8 +166,7 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                                         }}
                                         variant="filled"
                                     />
-
-                                    <div style={{display: 'flex', justifyContent: 'center', marginTop: '10px'}}>
+                                    <FlexJustifyCenter sx={{ marginTop: '10px'}}>
                                         <FormGroup>
                                             <FormControlLabel
                                                 control={
@@ -154,19 +185,14 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                                                     />}
                                                 label="Required" />
                                         </FormGroup>
-                                    </div>
-
+                                    </FlexJustifyCenter>
                                 </div>
-
                                 <div style={{color: 'red'}}>
-                                    {
-                                        error ?? ''
-                                    }
+                                    { error ?? '' }
                                 </div>
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <h2 className='text-center'>Vacancy List</h2>
-
                                 <div style={{height: '380px', overflowY: 'auto'}}>
                                     {
                                         vacancies.map(vacancy =>
@@ -185,11 +211,7 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                                                         {vacancy.text}
                                                     </Typography>
                                                     <hr/>
-                                                    <Box sx={{
-                                                            px: 1,
-                                                            display: 'flex',
-                                                            justifyContent: 'space-between',
-                                                            alignItems: 'center'}}>
+                                                    <JustifyBox sx={{ px: 1 }}>
                                                         <div>
                                                             {vacancy.required ? 'Required' : 'No required'}
                                                         </div>
@@ -211,30 +233,25 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                                                                     <Close />
                                                                 </IconButton>
                                                                     :
-                                                                    <IconButton
-                                                                        onClick={() => {
-                                                                            setMode('update');
-                                                                            setEditableVacancy(vacancy);
-                                                                        }}
-                                                                    >
-                                                                        <Edit/>
-                                                                    </IconButton>
+                                                                <IconButton
+                                                                    onClick={() => {
+                                                                        setMode('update');
+                                                                        setEditableVacancy(vacancy);
+                                                                    }}>
+                                                                    <Edit/>
+                                                                </IconButton>
                                                             }
                                                         </div>
-
-                                                    </Box>
+                                                    </JustifyBox>
                                                     <hr/>
                                                         <IconButton
                                                             style={{ width: '100%', fontSize: '15px'}}
                                                             onClick={() => {
                                                                 onDelete(vacancy)
                                                                 onClose();
-                                                            }}
-                                                        >
+                                                            }}>
                                                             <span>Remove</span> <Delete />
                                                         </IconButton>
-
-
                                                 </AccordionDetails>
                                             </Accordion>
                                         )
@@ -243,48 +260,15 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
                             </Grid>
                         </Grid>
 
-
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
                                 <Button onClick={onClose} color="primary">
                                     Cancel
                                 </Button>
-
                                 <Button
                                     color="primary"
                                     autoFocus
-                                    onClick={() => {
-                                        if(mode === 'create') {
-                                            if(!title || !text || title === '' || text === '') {
-                                                setError('fill all needs field')
-                                                return;
-                                            }
-                                        }
-                                        else if(mode === 'update' && editableVacancy) {
-                                            if(!editableVacancy.title ||
-                                                !editableVacancy.text ||
-                                                editableVacancy.title === '' ||
-                                                editableVacancy.text === '') {
-                                                setError('fill all needs field')
-                                                return;
-                                            }
-                                        } else { return; }
-
-                                        let newVacancy = {};
-                                        if(mode === 'create') {
-                                            newVacancy = {
-                                                title,
-                                                text,
-                                                required
-                                            };
-                                        } else if(mode === 'update') {
-                                            newVacancy = {...editableVacancy};
-                                        }
-                                        onSave(newVacancy, mode);
-
-                                        setOpen(false);
-                                        reset();
-                                    }}>
+                                    onClick={onSaveBtnClick}>
                                     {
                                         mode === 'create' && 'Add Vacancy'
                                     }
@@ -297,7 +281,6 @@ const AddEditVacancyModal : React.FC<ModalProps & { onDelete: (vacancy: Vacancy)
 
                     </Box>
                 </Fade>
-
             </Modal>
         </div>
     );

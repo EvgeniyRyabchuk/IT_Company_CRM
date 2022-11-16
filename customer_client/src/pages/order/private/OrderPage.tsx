@@ -6,8 +6,6 @@ import {Container as ContainerBase} from "../../../components/misc/Layouts";
 import {Button} from "@mui/material";
 import CreditCardModal from "../../../components/modals/CreditCardModal";
 import {useParams} from "react-router-dom";
-import {Transaction} from "../../../types/card";
-import {TransactionService} from "../../../services/TransactionService";
 import {Order} from "../../../types/order";
 import {OrderService} from "../../../services/OrderService";
 
@@ -43,16 +41,10 @@ const OrderPage = () => {
             />
             <Container>
                 <Content>
-                    {
-                        order &&
+                    {order &&
                         <OrderDetail order={order} />
                     }
-
-
-                    {/*Card list*/}
-
                     <br/>
-
                     {
                         order?.project &&
                         <Button variant='contained' onClick={() => {
@@ -61,11 +53,9 @@ const OrderPage = () => {
                             Pay with credit card
                         </Button>
                     }
-
                 </Content>
             </Container>
         </AnimationRevealPage>
-
     );
 };
 

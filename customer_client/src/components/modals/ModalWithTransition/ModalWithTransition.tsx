@@ -1,7 +1,7 @@
 import React from 'react';
 import './ModalWithTransition.scss';
 import {Close} from "@mui/icons-material";
-import {IconButton} from "@mui/material";
+import {Box, IconButton, styled} from "@mui/material";
 
 export type ModalTransitionType = 'one' | 'two' | 'three' | 'four' | 'five' | 'six' | 'seven';
 
@@ -10,16 +10,20 @@ interface Modal {
     onClose: () => void
 }
 
+const Wrapper = styled(Box)(() => ({
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'end',
+    alignItems: 'center',
+    marginBottom: '5px'
+}))
+
 const ModalWithTransition : React.FC<Modal & {
     children? : any,
     type: ModalTransitionType
 }>
     = ({children, type, isOpen, onClose}) => {
 
-    // const onModalBtnClick = (e: any, type: ModalTransitionType) => {
-    //     e.stopPropagation();
-    //     setIsOpen(true);
-    // }
     const modalContainerClick = (e: any) => {
         onClose();
     }
@@ -29,11 +33,9 @@ const ModalWithTransition : React.FC<Modal & {
              onMouseDown={modalContainerClick} >
             <div id="modal-container"
                  onMouseUp={(e => {
-                     console.log('up btn')
                      e.stopPropagation();
                  })}
                  className={isOpen && type ? type : ''}>
-
                 <div className="modal-background">
                     <div className="modal"
                          onMouseUp={(e) =>
@@ -44,22 +46,13 @@ const ModalWithTransition : React.FC<Modal & {
                          onClick={(e) => {
                             e.stopPropagation();
                          }}>
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'end',
-                                alignItems: 'center',
-                                marginBottom: '5px'
-                        }}>
+                        <Wrapper>
                             <IconButton onClick={onClose}>
                                 <Close />
                             </IconButton>
-
-                        </div>
+                        </Wrapper>
                         <hr style={{ marginBottom: '20px'}}/>
                         {children}
-
                     </div>
                 </div>
             </div>

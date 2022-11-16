@@ -14,7 +14,6 @@ import {useFetching} from "../../../hooks/useFetching";
 import useAuth from "../../../hooks/useAuth";
 import {getProjectProgress} from "../../../utils/utils";
 
-
 const Orders : React.FC<{}> = ({}) => {
 
     const navigate = useNavigate();
@@ -49,14 +48,10 @@ const Orders : React.FC<{}> = ({}) => {
                               xs={12}
                               sm={6}
                               md={4}
-                              className="MuiGrid-root css-1twzmnh"
-                        >
+                              className="MuiGrid-root css-1twzmnh">
                             <div
                                 onClick={() => {
-
                                     navigate(`/orders/${order.id}`);
-                                    // setIsOpen(true);
-
                                 }}
                                 className="order-box MuiPaper-root
                                  MuiPaper-elevation MuiPaper-rounded
@@ -77,7 +72,6 @@ const Orders : React.FC<{}> = ({}) => {
                                             <Download />
                                         </IconButton>
                                     </Box>
-
                                     <p
                                         style={{ backgroundColor: order.status.bgColor}}
                                         className=" MuiBox-root css-tuzptp">
@@ -87,11 +81,8 @@ const Orders : React.FC<{}> = ({}) => {
                                 <h5 className=" MuiBox-root css-19thmws">
                                     {order.project?.name ?? 'No created project for order yet'}
                                 </h5>
-                                <p
-                                    className="project-item MuiBox-root css-1imspi1">
-                                    {
-                                        order.about
-                                    }
+                                <p className="project-item MuiBox-root css-1imspi1">
+                                    { order.about }
                                 </p>
                                 <div className="css-3de75">
                                      <span className="
@@ -99,7 +90,6 @@ const Orders : React.FC<{}> = ({}) => {
                                     MuiLinearProgress-colorPrimary
                                     MuiLinearProgress-determinate css-3bkacx"
                                            role="progressbar">
-
                                         <span
                                             className="MuiLinearProgress-bar
                                             MuiLinearProgress-barColorPrimary
@@ -127,9 +117,7 @@ const Orders : React.FC<{}> = ({}) => {
                                                         />
                                                     )
                                                 :
-                                                <Avatar alt="Remy Sharp"
-                                                        src={`${defaultUserAvatar}`}
-                                                />
+                                                <Avatar alt="Remy Sharp" src={`${defaultUserAvatar}`} />
                                         }
                                     </AvatarGroup>
                                     <small className=" MuiBox-root css-1laq4cc">

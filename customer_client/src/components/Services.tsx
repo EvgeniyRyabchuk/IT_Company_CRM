@@ -2,16 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 //eslint-disable-next-line
-import { css } from "styled-components/macro";
 import {SectionHeading} from "./misc/Headings.js";
+// @ts-ignore
 // @ts-ignore
 import defaultCardImage from '../assets/images/shield-icon.svg';
 // @ts-ignore
-import { ReactComponent as SvgDecoratorBlob3 } from "../assets/images/svg-decorator-blob-3.svg";
+import ShieldIconImage from '../assets/images/shield-icon.svg';
+// @ts-ignore
+import {ReactComponent as SvgDecoratorBlob3} from "../assets/images/svg-decorator-blob-3.svg";
 // @ts-ignore
 import SupportIconImage from "../assets/images/support-icon.svg";
-// @ts-ignore
-import ShieldIconImage from "../assets/images/shield-icon.svg";
 // @ts-ignore
 import CustomizeIconImage from "../assets/images/customize-icon.svg";
 // @ts-ignore
@@ -20,7 +20,6 @@ import FastIconImage from "../assets/images/fast-icon.svg";
 import ReliableIconImage from "../assets/images/reliable-icon.svg";
 // @ts-ignore
 import SimpleIconImage from "../assets/images/simple-icon.svg";
-import exp from "constants";
 
 const Container = tw.div`relative`;
 
@@ -67,7 +66,6 @@ const Services : React.FC<any> = ({ ...props}) => {
      *  3) description - the description of the card
      *  If a key for a particular card is not provided, a default value is used
      */
-
     const cards = [
         {
             imageSrc: ShieldIconImage,
@@ -112,15 +110,18 @@ const Services : React.FC<any> = ({ ...props}) => {
                 {cards.map((card, i) => (
                     <Column key={i}>
                         <Card>
-              <span className="imageContainer">
-                <img src={card.imageSrc || defaultCardImage} alt="" />
-              </span>
+                            <span className="imageContainer">
+                                <img src={card.imageSrc || defaultCardImage} alt="" />
+                            </span>
                             <span className="textContainer">
-                <span className="title">{card.title || "Fully Secure"}</span>
-                <p className="description">
-                  {card.description || "Lorem ipsum donor amet siti ceali ut enim ad minim veniam, quis nostrud. Sic Semper Tyrannis. Neoas Calie artel."}
-                </p>
-              </span>
+                            <span className="title">{card.title || "Fully Secure"}</span>
+                                <p className="description">
+                                  {card.description ||
+                                      "Lorem ipsum donor amet siti ceali ut enim ad " +
+                                      "minim veniam, quis nostrud. Sic Semper Tyrannis. Neoas Calie artel."
+                                  }
+                                </p>
+                            </span>
                         </Card>
                     </Column>
                 ))}

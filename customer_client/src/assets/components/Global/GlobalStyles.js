@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 import  { globalStyles } from 'twin.macro'
+import {Box, styled} from "@mui/material";
 
 const GlobalStyles = createGlobalStyle(globalStyles, `
      .ReactModal__Overlay {
@@ -15,4 +16,25 @@ const GlobalStyles = createGlobalStyle(globalStyles, `
    }
 `)
 
-export default GlobalStyles
+export default GlobalStyles;
+
+
+const JustifyContent = styled(Box)(() => ({
+    display: 'flex',
+    justifyContent: 'center',
+}))
+
+const JustifyBox = styled(JustifyContent)(() => ({
+    alignItems: 'center'
+}))
+
+const JustifyWrap = styled(JustifyContent)(() => ({
+    flexWrap: 'wrap'
+}))
+
+
+export {
+    JustifyContent,
+    JustifyBox,
+    JustifyWrap
+}

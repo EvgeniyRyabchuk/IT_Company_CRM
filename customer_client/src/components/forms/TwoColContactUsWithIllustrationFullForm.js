@@ -1,18 +1,18 @@
 import React, {useEffect, useMemo, useState} from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
-import { SectionHeading, Subheading as SubheadingBase } from "../../components/misc/Headings.js";
-import { PrimaryButton as PrimaryButtonBase } from "../../components/misc/Buttons.js";
+import {SectionHeading, Subheading as SubheadingBase} from "../../components/misc/Headings.js";
+import {PrimaryButton as PrimaryButtonBase} from "../../components/misc/Buttons.js";
 import EmailIllustrationSrc from "../../assets/images/email-illustration.svg";
 import FileUploader from "../FileUploader";
 import {ProjectService} from "../../services/ProjectService";
 import {Autocomplete, Box, Button, TextField} from "@mui/material";
 import * as Yup from "yup";
-import {Formik, FormikProps, FormikValues} from 'formik';
+import {Formik} from 'formik';
 import PhoneInputField from "../PhoneInputField/PhoneInputField";
 import {OrderService} from "../../services/OrderService";
 import useAuth from "../../hooks/useAuth";
+import {JustifyWrap} from "../../assets/components/Global/GlobalStyles";
 
 const Container = tw.div`relative`;
 
@@ -43,7 +43,8 @@ const OrderContactPhone = styled(PhoneInputField)(() => [
     tw`flex-grow text-black lg:w-1/2 md:w-full my-3`
 ]);
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 // require('yup-phone');
 
@@ -59,36 +60,21 @@ const validationSchema = Yup.object().shape({
   type_id: Yup.number().required('Project Type is required!'),
 });
 
-
-/*
-
-  const defInitialValues = useMemo(() => {
-    return {
-      name: user ? user.full_name : 'empty',
-      phone:  {
-        number: '380984756384',
-        countyData: {
-          countryCode: "UA",
-          dialCode: "380",
-          format: "+... (..) ... .. ..",
-          name: "Ukraine",
-        },
-      },
-      email: user ? user.email : 'empty@gmail.com',
-      about: 'empty',
-      type_id: null,
-    }
-  }, []);
-
-
- */
-
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
+
+const EmailInput = styled(Input)(() => ({
+  flexGrow: 1,
+  minWidth: '200px',
+  flexWrap: 'wrap',
+  margin: '10px 0'
+}))
+
 
 const TwoColContactUsWithIllustrationFullForm = ({
    subheading = "Contact Us",
    heading = <>Feel free to <span tw="text-primary-500">get in touch</span><wbr/> with us.</>,
-   description = "Describe the desired project and leave your contact details so that we can contact you. We are always happy to help. Our job is to make your business more efficient",
+   description = "Describe the desired project and leave your contact details so that we can contact you. " +
+   "We are always happy to help. Our job is to make your business more efficient",
    submitButtonText = "Send",
    textOnLeft = true,
    setStatus
@@ -126,21 +112,14 @@ const TwoColContactUsWithIllustrationFullForm = ({
     }
   }, []);
 
-
-
   const handleFormSubmit = async (values) => {
-    console.log(values)
-    console.log(files)
     const file = files && files.length > 0 && files[0];
-
     const { data } = await OrderService.createOrder(values, file);
-
     setStatus(1);
   }
 
   return (
       <Container>
-
         <TwoColumn>
           <ImageColumn>
             <Image imageSrc={EmailIllustrationSrc} />
@@ -184,14 +163,17 @@ const TwoColContactUsWithIllustrationFullForm = ({
                         />
                         {touched.name && errors.name &&
                             <p style={{color:'red'}}
-                               className="MuiFormHelperText-root MuiFormHelperText-contained Mui-error MuiFormHelperText-filled MuiFormHelperText-marginDense">
+                               className="MuiFormHelperText-root
+                               MuiFormHelperText-contained
+                               Mui-error
+                               MuiFormHelperText-filled
+                               MuiFormHelperText-marginDense">
                               {errors.name}
                             </p>
                         }
 
-                        <Box sx={{ my: 3, display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                          <Input
-                              style={{flexGrow: 1, minWidth: '200px', flexWrap: 'wrap', margin: '10px 0'}}
+                        <JustifyWrap sx={{ my: 3 }}>
+                          <EmailInput
                               type="email"
                               name="email"
                               placeholder="Your Email Address"
@@ -202,14 +184,16 @@ const TwoColContactUsWithIllustrationFullForm = ({
                           />
                           {touched.email && errors.email &&
                               <p style={{color:'red'}}
-                                 className="MuiFormHelperText-root MuiFormHelperText-contained Mui-error MuiFormHelperText-filled MuiFormHelperText-marginDense">
+                                 className="MuiFormHelperText-root
+                                 MuiFormHelperText-contained
+                                 Mui-error
+                                 MuiFormHelperText-filled
+                                  MuiFormHelperText-marginDense">
                                 {errors.email}
                               </p>
                           }
-
                           <OrderContactPhone
                               className='order-page-phone'
-
                               name="phone"
                               value={values.phone.number}
                               onChange={(phone) => {
@@ -218,11 +202,8 @@ const TwoColContactUsWithIllustrationFullForm = ({
                               touched={touched.phone}
                               error={errors.phone}
                           />
-
-                        </Box>
+                        </JustifyWrap>
                       </Box>
-                      {/*<Input type="text" name="subject" placeholder="Subject" />*/}
-
                       <Box sx={{ mt: 0}}>
                         <Autocomplete
                             size="small"
@@ -247,7 +228,12 @@ const TwoColContactUsWithIllustrationFullForm = ({
                                   />
                             }
                             renderOption={(props, option) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                <Box component="li"
+                                     sx={{
+                                       '& > img':
+                                           { mr: 2, flexShrink: 0 }
+                                    }}
+                                     {...props}>
                                   {option.name} ({option.id})
                                 </Box>
                             )}
@@ -256,10 +242,7 @@ const TwoColContactUsWithIllustrationFullForm = ({
                                 setFieldValue("type_id", values.id);
                             }}
                         />
-
                       </Box>
-
-
 
                       <Textarea
                           name="about"
@@ -270,14 +253,12 @@ const TwoColContactUsWithIllustrationFullForm = ({
                           error={Boolean(errors.about && touched.about)}
                       />
 
-
                       <FileUploader
                           accept="*"
                           // label="Profile Image(s)"
                           // multiple
                           updateFilesCb={updateUploadedFiles}
                       />
-
 
                       <Button
                           style={{ height: '50px'}}
@@ -292,8 +273,6 @@ const TwoColContactUsWithIllustrationFullForm = ({
             </TextContent>
           </TextColumn>
         </TwoColumn>
-
-
       </Container>
   );
 };

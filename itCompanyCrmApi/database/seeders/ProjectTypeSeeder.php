@@ -17,7 +17,7 @@ class ProjectTypeSeeder extends Seeder
     {
         $models = [
             [
-                'name' => 'Lading Page',
+                'name' => 'Landing page',
                 'description' =>
                     'We will develop a creative landing page to promote your product, services or events.
                     We use maximum useful information for the most effective engagement of your clients.',

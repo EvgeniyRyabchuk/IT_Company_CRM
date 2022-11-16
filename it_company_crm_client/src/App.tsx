@@ -25,7 +25,6 @@ function App() {
                     <AuthProvider>
                         {content}
                     </AuthProvider>
-
                 </div>
               </MatxTheme>
           </SettingsProvider>

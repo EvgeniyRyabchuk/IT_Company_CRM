@@ -3,6 +3,8 @@ import {Link} from "@mui/icons-material";
 import moment from "moment";
 import {ProjectLink} from "../../../types/project";
 import {LinkIcon, ProjectSocialLinkTitle} from "../../../types/global";
+import {LinkComponent, LinkDateWrapper, LinkListWrapper} from "../../../assets/UI/LinkList";
+
 
 const LinkListItem : React.FC<{link: ProjectLink, iconList: LinkIcon[]}> =
     ({link, iconList}) => {
@@ -15,55 +17,31 @@ const LinkListItem : React.FC<{link: ProjectLink, iconList: LinkIcon[]}> =
         return item.icon;
     }, []);
 
-    console.log(linkIcon)
     return (
         <li className="je jc jd">
             <div className="js flex items-center text-sm">
-
                 <div className="os sf rounded-full ub hy ng ra">
-                    {
-                        linkIcon
-                    }
+                    { linkIcon }
                 </div>
-
-                <div style={{
-                    textAlign: 'start',
-                    overflow: "hidden",
-                    width: '100%'
-                }}>
+                <LinkListWrapper>
                     <div className="gp text-slate-800">
                         {link.title}
                     </div>
                     <div
                         className="flex a_ items-center fc lm">
-                        <a
-                            style={{
-                                width: 'calc(100% - 32px)',
-                                color: '#1976D2',
-                                overflowWrap: 'break-word'
-                            }}
-                            href={link.link}>
+                        <LinkComponent href={link.link}>
                             {link.link}
-
-                        </a>
+                        </LinkComponent>
                         <Link />
                         <div className="gq">·</div>
-
                     </div>
-
-                </div>
+                </LinkListWrapper>
             </div>
-
-            <div className="__ rb _j"
-                 style={{
-                     minWidth: '200px',
-                     width: '200px',
-                     textAlign: 'end'
-                 }}>
+            <LinkDateWrapper className="__ rb _j">
                 Pinned at {
-                moment(link.created_at).format('DD/MM/yyyy HH:MM:ss')
-            }
-            </div>
+                    moment(link.created_at).format('DD/MM/yyyy HH:MM:ss')
+                }
+            </LinkDateWrapper>
         </li>
     );
 };

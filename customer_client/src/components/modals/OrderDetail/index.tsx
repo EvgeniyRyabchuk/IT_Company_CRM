@@ -1,17 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import ModalWithTransition from "../ModalWithTransition";
-import {
-    Box,
-    Button,
-    Grid,
-    IconButton,
-    LinearProgress,
-    Step,
-    StepLabel,
-    Stepper,
-    styled,
-    Typography
-} from "@mui/material";
+import {Box, Grid, IconButton, LinearProgress, Step, StepLabel, Stepper, styled, Typography} from "@mui/material";
 import {FlexBoxCenter, OrderDetailWrapper} from "../../../assets/components/Order/OrderDetail";
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -20,7 +8,6 @@ import moment from "moment";
 import {OrderService} from "../../../services/OrderService";
 import {Order, OrderStatus} from "../../../types/order";
 import {PageMode} from "../../../types/global";
-import {useParams} from "react-router-dom";
 import {API_URL_WITH_PUBLIC_STORAGE} from "../../../http";
 import Transactions from "../../../pages/profile/Tabs/payment/Transactions";
 
@@ -31,7 +18,6 @@ interface Modal {
 
 export const OrderContentGrid = styled(Grid)(({ theme }) => ({
     padding: '20px 50px !important',
-
     [theme.breakpoints.down("md")]: {
         padding: '20px !important',
     }
@@ -51,8 +37,6 @@ const OrderDetail : React.FC<{order: Order}>
         }
         fetchOrderStatuses();
     }, []);
-
-
 
     return (
         <OrderDetailWrapper>
@@ -136,8 +120,6 @@ const OrderDetail : React.FC<{order: Order}>
 
                                         </FlexBoxCenter>
                                     </Box>
-
-
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <Box sx={{ width: '100%', mr: 1 }}>
                                             <LinearProgress variant="determinate" value={30} aria-label={'asd'} />
@@ -227,9 +209,7 @@ const OrderDetail : React.FC<{order: Order}>
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
-                <Grid item md={21}>
-
-                </Grid>
+                <Grid item md={21}></Grid>
             </Grid>
         </OrderDetailWrapper>
     );

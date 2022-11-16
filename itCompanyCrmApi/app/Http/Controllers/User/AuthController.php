@@ -177,7 +177,6 @@ class AuthController extends Controller
             );
         }
 
-
         $user->accessTokens()->save(
             new AccessToken([
                 'token' => $token,

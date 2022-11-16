@@ -18,6 +18,11 @@ import {
 import {Box, styled} from "@mui/system";
 import {Formik, FormikProps, FormikValues} from 'formik';
 import * as Yup from "yup";
+import {
+    CreateProjectCard,
+    CreateProjectLink,
+    CreateProjectLinkWrapper, TagWrapper
+} from "../../../assets/modals/CreateEditProjectModal";
 // @ts-ignore
 import AvatarImageCropper from "react-avatar-image-cropper";
 import {EmployeeWithProjectRoles, ProjectLink, ProjectTag, ProjectType} from "../../../types/project";
@@ -35,29 +40,6 @@ import ProjectMemberList from "../../UI/ProjectMemberList";
 import {ComponentMode, LinkIcon, ModalProps, ProjectSocialLinkTitle} from "../../../types/global";
 import {projectLinkTitleIcon} from "../../../utils/constant";
 
-// @ts-ignore
-export const CreateProjectCard = styled(Box)(({ theme}) => ({
-    height: '100%',
-    padding: '5px',
-    boxShadow: 2,
-    minHeight: 400,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    position: 'relative'
-}));
-
-// @ts-ignore
-export const CreateProjectLinkCard = styled(Box)(({ theme}) => ({
-    height: '100%',
-    padding: '5px',
-    boxShadow: 2,
-    minHeight: 400,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    position: 'relative'
-}));
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
@@ -157,7 +139,6 @@ export const CreateEditProjectModal: FC<ModalProps & {
                 const { data } = await ProjectService.getProjectTypes();
                 setProjectTypes([...data]);
             }
-
             const getProjectTagsOptions = async () => {
                 const {data} = await ProjectService.getProjectTags();
                 setProjectTags([...data]);
@@ -177,8 +158,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
             setMembers([]);
             setProjectLinks([]);
         }
-    }, [open])
-
+    }, [open]);
 
     const [members, setMembers] = React.useState<EmployeeWithProjectRoles[]>(
         order?.project?.employees ?? []
@@ -217,10 +197,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
                             <Grid container spacing={3}>
                                 <Grid item md={6} xs={12}>
                                     <CreateProjectCard>
-                                        <div style={{
-                                            height: '320px',
-                                            overflowY: 'auto'
-                                        }}>
+                                        <Box sx={{ height: '320px', overflowY: 'auto' }}>
                                             <h3 className='text-center'>Members</h3>
                                             <ProjectMemberList
                                                 members={members}
@@ -228,31 +205,23 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                 mode={mode}
                                                 project={order?.project}
                                             />
-                                        </div>
+                                        </Box>
 
                                         <h3 className='text-center'>External Links</h3>
-                                        <CreateProjectLinkCard>
+                                        <CreateProjectLinkWrapper>
                                             <Box sx={{ minHeight: "400px" }}>
                                                 {
                                                     projectLinks.map(link =>
-                                                        <div style={{
-                                                            display: 'flex',
-                                                            justifyContent: 'start',
-                                                            alignItems: 'center',
-                                                            height: '50px',
-                                                            margin: '5px 0'
-                                                        }}>
+                                                        <CreateProjectLink>
                                                             <div key={link.id}>
                                                                 <Button
                                                                     color='error'
                                                                     onClick={() => {
-                                                                        const index =
-                                                                            projectLinks.findIndex(l =>
-                                                                                l.id === link.id);
+                                                                        const index = projectLinks
+                                                                            .findIndex(l => l.id === link.id);
                                                                         projectLinks.splice(index, 1);
                                                                         setProjectLinks([...projectLinks]);
-                                                                    }}
-                                                                >
+                                                                    }}>
                                                                     <Delete />
                                                                 </Button>
                                                             </div>
@@ -271,9 +240,10 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                                         });
                                                                         setProjectLinks([...newLinks]);
                                                                     }}
-                                                                    style={{
+                                                                    sx={{
+                                                                        width: '100%',
                                                                         height: '100%',
-                                                                        width: '120px',
+                                                                        // width: '120px',
                                                                         zIndex: '999999'
                                                                     }}
                                                                     size='small'
@@ -291,7 +261,8 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                                                     marginRight: '10px'
                                                                                 }}>
                                                                                 {
-                                                                                    projectLinkTitleIcon.find((lti: LinkIcon) =>
+                                                                                    projectLinkTitleIcon
+                                                                                        .find((lti: LinkIcon) =>
                                                                                         option === lti.title)!.icon
                                                                                 }
                                                                             </div>
@@ -299,16 +270,12 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                                         </Box>
                                                                     )}
                                                                     options={linkResourceOptions}
-                                                                    sx={{ width: '100%' }}
                                                                     renderInput={(params) =>
                                                                         <TextField {...params} label="Link Titles" />}
                                                                 />
                                                             </div>
 
-                                                            <div style={{
-                                                                flexGrow: 1,
-                                                                margin: '0 3px'
-                                                            }}>
+                                                            <Box sx={{flexGrow: 1, margin: '0 3px' }}>
                                                                 <TextField
                                                                     style={{ width: '100%'}}
                                                                     label="Url"
@@ -327,12 +294,12 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                                         setProjectLinks([...newLinks]);
                                                                     }}
                                                                 />
-                                                            </div>
-                                                        </div>
+                                                            </Box>
+                                                        </CreateProjectLink>
                                                     )
                                                 }
                                             </Box>
-                                        </CreateProjectLinkCard>
+                                        </CreateProjectLinkWrapper>
                                         <Button
                                             variant="contained"
                                             color='primary'
@@ -385,7 +352,6 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                         id="combo-box-types"
                                                         options={projectTypes}
                                                         sx={{ width: 500 }}
-
                                                         renderInput={
                                                             (params) =>
                                                                 <TextField
@@ -418,7 +384,6 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                                 setFieldValue("project_type_id", values.id);
                                                         }}
                                                     />
-
                                                 </div>
                                             </Grid>
 
@@ -436,10 +401,10 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                                 setFieldValue("budget", value);
                                                         }}
                                                         startAdornment={
-                                                        <InputAdornment position="start">
-                                                            $
-                                                        </InputAdornment>
-                                                    }
+                                                            <InputAdornment position="start">
+                                                                $
+                                                            </InputAdornment>
+                                                        }
                                                     />
                                                 </FormControl>
                                             </Grid>
@@ -462,12 +427,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                     </Stack>
                                                 </LocalizationProvider>
                                             </Grid>
-                                            <Grid item sm={12}
-                                                  style={{
-                                                      height: '200px',
-                                                      overflowY: 'auto',
-                                                      marginTop: '20px',
-                                                }}>
+                                            <TagWrapper item sm={12}>
                                                 <Autocomplete
                                                     multiple
                                                     id="tags-filled"
@@ -494,7 +454,7 @@ export const CreateEditProjectModal: FC<ModalProps & {
                                                             setFieldValue('tags', value)
                                                     }}
                                                 />
-                                            </Grid>
+                                            </TagWrapper>
                                         </Grid>
                                     </Card>
                                 </Grid>

@@ -1,14 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import ReactQuill, { Quill } from 'react-quill';
-// import 'react-quill/dist/quill.snow.css';
-//
-// //@ts-ignore
-// import hljs from 'highlight.js'
-// import 'highlight.js/styles/agate.css'
-// import { ImageResize } from 'quill-image-resize-module';
-
-
-import './styles.css';
 import {useTheme} from "@mui/material/styles";
 //@ts-ignore
 import hljs from 'highlight.js'
@@ -25,11 +16,6 @@ const TextEditor : React.FC<{
         value: any
     }>
     = ({width, height, onChange, placeholder, value}) => {
-    // const [editorHtml, setEditorHtml] = useState<string>('');
-
-    const theme = useTheme();
-
-    console.log(hljs.highlightAuto)
 
     const [modules, setModules] = useState<any>({
         toolbar: [
@@ -53,15 +39,11 @@ const TextEditor : React.FC<{
         },
         syntax: {
             highlight: (text: any) => hljs.highlightAuto(text).value,
-
         }
-
     });
 
     const handleChange = (html: any) => {
         onChange(html);
-
-        // console.log(html);
     }
 
     /*
@@ -89,7 +71,6 @@ const TextEditor : React.FC<{
         'code-block',
 
     ]);
-
 
     return (
         <ReactQuill

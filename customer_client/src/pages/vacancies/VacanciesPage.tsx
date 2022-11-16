@@ -3,11 +3,16 @@ import AnimationRevealPage from "../../helpers/AnimationRevealPage";
 import SimpleWithSideImage from "../../components/faqs/SimpleWithSideImage";
 import SimpleContactUs from "../../components/forms/SimpleContactUs";
 import {SimpleFormStatus} from "../../types/global";
-import {Box} from "@mui/material";
+import {Box, styled} from "@mui/material";
 import JobApplicationSentSuccess from "../../components/statusCards/vacancy/JobApplicationSentSuccess";
 import {VacancyService} from "../../services/VacancyService";
 import {Vacancy} from "../../types/employeement";
 
+const Wrapper = styled(Box)(() => ({
+    padding: '200px 50px',
+    maxWidth: '1280px',
+    margin: '0 auto'
+}))
 
 const IndexPage = () => {
 
@@ -35,11 +40,9 @@ const IndexPage = () => {
             }
             {
                 status === SimpleFormStatus.SUCCESS &&
-                <Box sx={{ padding: '200px 50px',
-                    maxWidth: '1280px',
-                    margin: '0 auto'}}>
+                <Wrapper>
                     <JobApplicationSentSuccess />
-                </Box>
+                </Wrapper>
             }
 
         </>

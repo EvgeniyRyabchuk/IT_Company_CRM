@@ -1,14 +1,12 @@
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import AnimationRevealPage from "../../helpers/AnimationRevealPage.js";
-import { Container as ContainerBase } from "../../components/misc/Layouts";
+import {Container as ContainerBase} from "../../components/misc/Layouts";
 import tw from "twin.macro";
 import styled from "styled-components";
-import {css} from "styled-components/macro"; //eslint-disable-line
 import illustration from "../../assets/images/login-illustration.svg";
 import logo from "../../assets/images/logo.svg";
 import googleIconImageSrc from "../../assets/images/google-icon.png";
-import twitterIconImageSrc from "../../assets/images/twitter-icon.png";
-import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
+import {ReactComponent as LoginIcon} from "feather-icons/dist/icons/log-in.svg";
 import * as Yup from "yup";
 import {Formik} from "formik";
 import useAuth from "../../hooks/useAuth";
@@ -67,17 +65,6 @@ const validationSchema = Yup.object().shape({
 });
 
 
-/*
-
- const defInitialValues = useMemo(() => {
-    return {
-      email: 'jeka.rubchuk@gmail.com',
-      password: '123',
-    }
-  }, []);
-
- */
-
 export default ({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
@@ -88,11 +75,6 @@ export default ({
       text: "Sign In With Google",
       url: "https://google.com"
     },
-    // {
-    //   iconImageSrc: twitterIconImageSrc,
-    //   text: "Sign In With Twitter",
-    //   url: "https://twitter.com"
-    // }
   ],
   submitButtonText = "Sign In",
   SubmitButtonIcon = LoginIcon,
@@ -120,16 +102,12 @@ export default ({
       password: values.password,
       remember_me: true
     });
-
     navigate('/profile');
-
   }
 
   return (
       <AnimationRevealPage>
-        <button type='submit'>
-
-        </button>
+        <button type='submit'></button>
         <Container>
           <Content>
             <MainContainer>
@@ -175,10 +153,8 @@ export default ({
                               id="outlined-basic"
                               label="Email"
                               variant="outlined"
-
                               type="email"
                               placeholder="Email"
-
                               name="email"
                               value={values.email}
                               onChange={handleChange}
@@ -192,10 +168,8 @@ export default ({
                               id="outlined-basic"
                               label="Password"
                               variant="outlined"
-
                               type="password"
                               placeholder="Password"
-
                               name="password"
                               value={values.password}
                               onChange={handleChange}
@@ -203,12 +177,7 @@ export default ({
                               error={Boolean(errors.password && touched.password)}
                           />
 
-
-
-
-
                           <SubmitButton
-
                               type="submit"
                               style={{
                                 backgroundColor: 'rgb(100 21 255) !important'

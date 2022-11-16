@@ -23,18 +23,15 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
     const loading = open;
 
     const getUsers = async () : Promise<User[]> => {
-
         const responce = await ChatService.getUsersWithNonExistChat(user!.id);
         return responce.data;
     }
 
     useEffect(() => {
         let active = true;
-
         if (!loading) {
             return undefined;
         }
-
         (async () => {
             const usersResponse = await getUsers();
 
@@ -42,7 +39,6 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                 setUsers([...usersResponse]);
             }
         })();
-
         return () => {
             active = false;
         };
@@ -74,12 +70,10 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                 closeAfterTransition
                 BackdropProps={{
                     timeout: 500,
-                }}
-            >
+                }}>
                 <Fade in={open}>
                     <Box sx={modalStyle}>
                         <h1>Add chat with</h1>
-
                         <Autocomplete
                             onInputChange={(event, newInputValue) => {
                                 setUserIndentity(newInputValue);
@@ -90,14 +84,16 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                             autoHighlight
                             getOptionLabel={(option: User) => option.full_name}
                             renderOption={(props, option: User) => (
-                                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-
-                                    <img
-                                        loading="lazy"
-                                        width="20"
-                                        src={`${apiUrl}storage/${option.avatar}`}
-                                    />
-
+                                <Box component="li"
+                                     sx={{
+                                         '& > img': { mr: 2, flexShrink: 0 }
+                                     }}
+                                     {...props}>
+                                        <img
+                                            loading="lazy"
+                                            width="20"
+                                            src={`${apiUrl}storage/${option.avatar}`}
+                                        />
                                     {option.full_name} ({option.id})
                                 </Box>
                             )}
@@ -112,14 +108,11 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                                 />
                             )}
                         />
-
-
                         <DialogActions sx={{mt: 2}} >
                             <Box style={{width: '100%', display: 'flex', justifyContent: 'center'}} >
                                 <Button onClick={() => setOpen(false)} color="primary">
                                     Cancel
                                 </Button>
-
                                 <Button onClick={create} color="primary" autoFocus>
                                     Add chat with user
                                 </Button>

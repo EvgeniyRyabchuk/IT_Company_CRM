@@ -4,7 +4,6 @@ import { Box, Button, styled } from '@mui/material';
 
 import notFound404Logo from '../../assets/images/matx/illustrations/404.svg';
 
-
 const FlexBox = styled(Box)(() => ({
     display: 'flex',
     alignItems: 'center',
@@ -40,8 +39,7 @@ const NotFound = () => {
                     color="primary"
                     variant="contained"
                     sx={{ textTransform: 'capitalize' }}
-                    onClick={() => navigate(-1)}
-                >
+                    onClick={() => navigate(-1)}>
                     Go Back
                 </Button>
             </JustifyBox>

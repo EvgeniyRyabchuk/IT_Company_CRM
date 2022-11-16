@@ -14,6 +14,8 @@ import AddEmployeeToProjectModal from "../modals/AddEmployeeToProjectModal/AddEm
 import {ComponentMode} from "../../types/global";
 import {ProjectService} from "../../services/ProjectService";
 import '../../assets/components/ProjectMembersList/index.css';
+import {FlexJustifyCenter} from "../../assets/components/Shared";
+import {ListComponent} from "../../assets/UI/ProjectMemberList";
 
 const ProjectMemberList
     :React.FC<{
@@ -33,10 +35,7 @@ const ProjectMemberList
     }) => {
 
     const [projectRoles, setProjectRoles] = useState<ProjectRole[]>([]);
-
     const [checkedMember, setCheckedMember] = React.useState<EmployeeWithProjectRoles[]>([]);
-
-    console.log()
 
     const handleToggle = (value: any) => () => {
         const currentIndex = checkedMember.indexOf(value);
@@ -62,33 +61,16 @@ const ProjectMemberList
     }
 
     const deleteMember = async () => {
-
-        const _delete = () => {
-            const newMembers = [...members];
-            for (let memeber of members) {
-                const find = checkedMember.find(e => e.id === memeber.id);
-                if(find) {
-                    const index = newMembers.indexOf(memeber);
-                    newMembers.splice(index, 1);
-                }
+        const newMembers = [...members];
+        for (let memeber of members) {
+            const find = checkedMember.find(e => e.id === memeber.id);
+            if(find) {
+                const index = newMembers.indexOf(memeber);
+                newMembers.splice(index, 1);
             }
-            setMembers(newMembers);
-            setCheckedMember([]);
         }
-        // if(mode === 'update' && order && order.project) {
-        //     if(checkedMember.length == 1) {
-        //         // const { data } =
-        //         //     await ProjectService.deleteEmployeeFromProject
-        //         //     (checkedMember[0].id, order.project.id);
-        //     }
-        //     else if (checkedMember.length > 1) {
-        //         // const { data } = await
-        //         //     ProjectService.deleteManyEmployeesFromProject(
-        //         //         checkedMember.map(e => e.id), order.project.id
-        //         // );
-        //     }
-        // }
-        _delete();
+        setMembers(newMembers);
+        setCheckedMember([]);
     }
 
     useEffect(() => {
@@ -100,8 +82,6 @@ const ProjectMemberList
     }, [])
 
 
-    console.log(members)
-
     return (
         <div style={{width: '100%'}}>
             {
@@ -110,10 +90,7 @@ const ProjectMemberList
             }
             {
                 mode === 'create' || mode === 'update' ?
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'center'
-                    }}>
+                    <FlexJustifyCenter>
                         <Button
                             variant='contained'
                             color={'primary'}
@@ -129,23 +106,16 @@ const ProjectMemberList
                         >
                             <Delete/>
                         </Button>
-                    </div>
+                    </FlexJustifyCenter>
                     : ''
             }
 
-            <List
+            <ListComponent
+                /*
+                // @ts-ignore */
+                mode={mode}
                 dense
-                sx={{
-                    width: '100%',
-                    maxWidth: 500,
-                    bgcolor: 'background.paper',
-                    height: mode === 'preview' ? '320px' : '100%',
-                    overflowY: 'auto',
-                    paddingLeft: '0 !important',
-                    py: 2
-                }}
-                {...props}
-            >
+                {...props}>
                 {projectRoles.length > 0 && members.map((member: EmployeeWithProjectRoles) => {
                     const labelId = `checkbox-list-secondary-label-${member}`;
                     const labelId2 = `checkbox-list-secondary-label-${member}`;
@@ -161,8 +131,7 @@ const ProjectMemberList
                                         inputProps={{ 'aria-labelledby': labelId }}
                                     /> : ''
                             }
-                            disablePadding
-                        >
+                            disablePadding>
                             <ListItemButton>
                                 <ListItemAvatar>
                                     <Avatar
@@ -183,62 +152,61 @@ const ProjectMemberList
                                             </div>
                                         </div>
 
-                                    } />
-
-                                {
-                                    mode === 'create' || mode === 'update' ?
-                                    <Autocomplete
-                                        size='small'
-                                        defaultValue={
-                                            projectRoles.find(pr => pr.id ===
-                                                member.pivot.project_role_id
-                                            )
-                                        }
-                                        getOptionLabel={(option) => option.name}
-                                        disablePortal
-                                        id="combo-box-project-roles"
-                                        options={projectRoles}
-                                        sx={{minWidth: '150px'}}
-                                        renderInput={(params) =>
-                                            <TextField {...params}
-                                                       label="Project Role"
-                                            />}
-                                        onChange={(event, value, reason, details) => {
-                                            if (value) {
-                                                const newMembers = members.map(m => {
-                                                    if (m.id === member.id) {
-                                                        m.pivot.project_role_id = value.id;
-                                                        return m;
-                                                    } else {
-                                                        return m;
-                                                    }
-                                                });
-                                                setMembers(newMembers)
+                                    }/>
+                                    {
+                                        mode === 'create' || mode === 'update' ?
+                                        <Autocomplete
+                                            size='small'
+                                            defaultValue={
+                                                projectRoles.find(pr => pr.id ===
+                                                    member.pivot.project_role_id
+                                                )
                                             }
-                                        }}
-                                    /> : ''
-                                }
-                                {
-                                    mode === 'view' &&
-                                    <ListItemText
-                                        id={labelId}
-                                        primary={
-                                            <div style={{textAlign: 'end'}}>
-                                                <div>
-                                                    {member.level.name}
+                                            getOptionLabel={(option) => option.name}
+                                            disablePortal
+                                            id="combo-box-project-roles"
+                                            options={projectRoles}
+                                            sx={{minWidth: '150px'}}
+                                            renderInput={(params) =>
+                                                <TextField {...params}
+                                                           label="Project Role"
+                                                />}
+                                            onChange={(event, value, reason, details) => {
+                                                if (value) {
+                                                    const newMembers = members.map(m => {
+                                                        if (m.id === member.id) {
+                                                            m.pivot.project_role_id = value.id;
+                                                            return m;
+                                                        } else {
+                                                            return m;
+                                                        }
+                                                    });
+                                                    setMembers(newMembers)
+                                                }
+                                            }}
+                                        /> : ''
+                                    }
+                                    {
+                                        mode === 'view' &&
+                                        <ListItemText
+                                            id={labelId}
+                                            primary={
+                                                <div style={{textAlign: 'end'}}>
+                                                    <div>
+                                                        {member.level.name}
+                                                    </div>
+                                                    <div>
+                                                        {member.position.name}
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    {member.position.name}
-                                                </div>
-                                            </div>
-                                        }
-                                    />
-                                }
+                                            }
+                                        />
+                                    }
                             </ListItemButton>
                         </ListItem>
                     );
                 })}
-            </List>
+            </ListComponent>
             {
                 mode === 'create' || mode === 'update' ?
                     <AddEmployeeToProjectModal
@@ -247,10 +215,9 @@ const ProjectMemberList
                         onSave={addEmployeeToProjectHandle}
                         setOpen={setOpenEmployeeAddModal}
                         project={project}
+                        currentMemberList={members}
                     /> : ''
             }
-
-
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Creditcard from "../../Payment/Creditcard";
-import ModalWithTransition from "../ModalWithTransition";
+import ModalWithTransition from "../ModalWithTransition/ModalWithTransition";
 import {Grid} from "@mui/material";
 import {Card as CardType, PaymentDetail} from "../../../types/card";
 import {useAction} from "../../../hooks/useAction";

@@ -43,7 +43,14 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
 
     const save = () => {
         if(card)
-            onSave({title, description, priority, color, id: card.id, lane_id: card.lane_id});
+            onSave({
+                title,
+                description,
+                priority,
+                color,
+                id: card.id,
+                lane_id: card.lane_id
+        });
     }
 
     return (
@@ -54,10 +61,7 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
                 open={open}
                 onClose={onClose}
                 closeAfterTransition
-                BackdropProps={{
-                    timeout: 500,
-                }}
-            >
+                BackdropProps={{ timeout: 500}}>
                 <Fade in={open}>
                     <Box sx={modalStyle}>
                         <TextField
@@ -99,7 +103,6 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
                                         Owner <strong>{owner?.user.full_name}</strong>
                                     </Span>
                                 </Hidden>
-
                                 <Avatar
                                     src={`${API_URL_WITH_PUBLIC_STORAGE}/${owner?.user.avatar}`}
                                     sx={{ cursor: 'pointer' }}
@@ -121,7 +124,6 @@ const KanbanCardEditModal : React.FC<KanbanCardEditModal> =
                     </Box>
                 </Fade>
             </Modal>
-
         </div>
     );
 };
