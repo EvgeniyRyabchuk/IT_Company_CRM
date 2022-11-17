@@ -85,7 +85,7 @@
 <!-- Screenshots -->
 ### :camera: Screenshots
 
-<div style="display: flex; justify-content: center; flex-wrap: wrap; padding: 10px;">
+<div style="display: flex; justify-content: center; flex-wrap: wrap; padding: 10px; text-align: center;">
   <img style="margin: 10px;" src="./assets/screenshots/Dashboard.png" alt="Dashboard" width="400" height="200">
   <img style="margin: 10px;" src="./assets/screenshots/OrdersTable.png" alt="OrdersTable" width="400" height="200">
   <img style="margin: 10px;" src="./assets/screenshots/Vacancy.png" alt="Vacancy" width="400" height="200">
