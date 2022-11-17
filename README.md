@@ -86,12 +86,12 @@
 ### :camera: Screenshots
 
 <div style="display: flex; justify-content: center; flex-wrap: wrap; padding: 10px;">
-  <img style="margin: 5px;" src="./assets/screenshots/Dashboard.png" alt="Dashboard" width="400" height="200">
-  <img style="margin: 5px;" src="./assets/screenshots/OrdersTable.png" alt="OrdersTable" width="400" height="200">
-  <img style="margin: 5px;" src="./assets/screenshots/Vacancy.png" alt="Vacancy" width="400" height="200">
-  <img style="margin: 5px;" src="./assets/screenshots/Pricing.png" alt="Pricing" width="400" height="200">
-  <img style="margin: 5px;" src="./assets/screenshots/MakeOrder.png" alt="Pricing" width="400" height="200">
-  <img style="margin: 5px;" src="./assets/screenshots/FileManager.png" alt="FileManager" width="400" height="200">
+  <img style="margin: 10px;" src="./assets/screenshots/Dashboard.png" alt="Dashboard" width="400" height="200">
+  <img style="margin: 10px;" src="./assets/screenshots/OrdersTable.png" alt="OrdersTable" width="400" height="200">
+  <img style="margin: 10px;" src="./assets/screenshots/Vacancy.png" alt="Vacancy" width="400" height="200">
+  <img style="margin: 10px;" src="./assets/screenshots/Pricing.png" alt="Pricing" width="400" height="200">
+  <img style="margin: 10px;" src="./assets/screenshots/MakeOrder.png" alt="Pricing" width="400" height="200">
+  <img style="margin: 10px;" src="./assets/screenshots/FileManager.png" alt="FileManager" width="400" height="200">
 </div>
 
 <!-- TechStack -->
@@ -273,6 +273,10 @@ Install Node.js
 Install PHP 8.0
 
 - https://www.php.net/downloads.php
+
+Install MySql 5.6
+
+- https://downloads.mysql.com/archives/installer/
 
 Install Composer
 ```bash
