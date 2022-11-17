@@ -1,5 +1,5 @@
 
-<div align="center" style="margin-top: 20px;">
+<div align="center" style="margin-top: 40px;">
 
   <img src="assets/full_logo.png" alt="logo" width="150" height="auto" />
 
@@ -97,12 +97,12 @@
 <!-- TechStack -->
 ### :space_invader: Tech Stack
 
-<div style="display: flex; padding: 50px;">
+<div style="display: flex; justify-content: center; padding: 30px; flex-wrap: wrap">
   <div align="center" style="padding: 0 3px"> 
-    <img src="./assets/illustration/images/2.png" alt="screenshot" />
+    <img src="./assets/illustration/images/2.png" alt="screenshot" width="480" height="270" />
   </div>
   <div align="center" style="padding: 0 3px"> 
-    <img src="./assets/illustration/images/3.png" alt="screenshot" />
+    <img src="./assets/illustration/images/3.png" alt="screenshot"  width="480" height="270" />
   </div>
 </div>
 
@@ -111,26 +111,33 @@
   <ul>
     <li><a href="https://reactjs.org/">React</a></li>
     <li><a href="https://www.typescriptlang.org/">Typescript</a></li>
-    <li><a href="https://nextjs.org/">Redux</a></li>
+    <li><a href="https://redux.js.org/">Redux</a></li>
     <li><a href="https://tailwindcss.com/">TailwindCSS</a></li>
-    <li><a href="https://nextjs.org/">Tidio Chat</a></li>
-    <li><a href="https://nextjs.org/">Axios</a></li>
+    <li><a href="https://www.tidio.com/">Tidio Chat</a></li>
+    <li><a href="https://www.npmjs.com/package/axios/">Axios</a></li>
+
   </ul>
 </details>
 
-<details>
+<details> 
   <summary>Employee Client</summary>
   <ul>
     <li><a href="https://reactjs.org/">React</a></li>
     <li><a href="https://www.typescriptlang.org/">Typescript</a></li>
-    <li><a href="https://nextjs.org/">Redux</a></li>
-    <li><a href="https://tailwindcss.com/">Material UI</a></li>
-    <li><a href="https://nextjs.org/">Echarts</a></li>
-    <li><a href="https://nextjs.org/">DevExtream File Manager</a></li>
-    <li><a href="https://nextjs.org/">material-react-table</a></li>
-    <li><a href="https://nextjs.org/">Quill</a></li>
-    <li><a href="https://nextjs.org/">Toastify</a></li>
-    <li><a href="https://nextjs.org/">React Trello</a></li>
+    <li><a href="https://redux.js.org/">Redux</a></li>
+    <li><a href="https://mui.com/material-ui/">Material UI</a></li>
+    <li><a href="https://echarts.apache.org/en/index.html">Echarts</a></li>
+    <li>
+      <a href="https://js.devexpress.com/Documentation/ApiReference/UI_Components/dxFileManager/">
+        DevExtream File Manager
+      </a>
+    </li>
+    <li><a href="https://www.material-react-table.com/">material-react-table</a></li>
+    <li><a href="https://quilljs.com/">Quill</a></li>
+    <li><a href="https://www.npmjs.com/package/react-toastify/">Toastify</a></li>
+    <li><a href="https://www.npmjs.com/package/react-trello/">React Trello</a></li>
+    <li><a href="http://matx-react.ui-lib.com//">Layout Template</a></li>
+
   </ul>
 </details>
 
@@ -139,7 +146,7 @@
   <ul>
     <li><a href="https://www.typescriptlang.org/">PHP 8</a></li>
     <li><a href="https://expressjs.com/">Laravel 9</a></li> 
-    <li><a href="https://go.dev/">JWT Auth</a></li>
+    <li><a href="https://go.dev/">JWT Auth (php-open-source-saver/jwt-auth)</a></li>
   </ul>
 </details>
 
@@ -147,7 +154,7 @@
 <summary>Database</summary>
   <ul>
     <li><a href="https://www.mysql.com/">MySQL</a></li>
-    <li><a href="https://www.postgresql.org/">UTF8-general_ci</a></li>
+    <li><a href="https://www.postgresql.org/">utf8_general_ci</a></li>
   </ul>
 </details>
 
@@ -227,11 +234,29 @@ For all users password by default is <strong>password</strong>
 
 To run this project, you will need to add the following environment variables to your .env file
 
+#### General: 
+
 `API_KEY`
 
 `JWT_SECRET`
 
 `JWT_ALGO=HS256`
+
+`FILESYSTEM_DISK=public`
+
+#### Mail: 
+
+`MAIL_MAILER=smtp`
+
+`MAIL_HOST=smtp.mailtrap.io`
+
+`MAIL_PORT=2525`
+
+`MAIL_USERNAME=30feef52e2d893`
+
+`MAIL_PASSWORD=693744b59f1f44`
+
+`MAIL_ENCRYPTION=tls`
 
 <!-- Getting Started -->
 ## 	:toolbox: Getting Started
@@ -243,7 +268,7 @@ To run this project, you will need to add the following environment variables to
 
 Install Node.js
 
-- https://nodejs.org/en/
+- https://nodejs.org/en/ 
 
 Install PHP 8.0
 
