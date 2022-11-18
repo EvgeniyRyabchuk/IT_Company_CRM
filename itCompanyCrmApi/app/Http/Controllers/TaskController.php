@@ -23,14 +23,8 @@ class TaskController extends Controller
     }
 
     public function getKanbanLanes(Request $request, $projectId) {
-        //TODO: sort by priority
-
         $project = Project::with('lanes.employee')
             ->findOrFail($projectId);
-
-//        $project->lanes->each(function ($todo) {
-//            $todo->setHidden(['project_id']);
-//        });
 
         return response()->json($project->lanes, 201);
     }
@@ -40,10 +34,9 @@ class TaskController extends Controller
         $employee = Employee::with('user')
             ->where('user_id', $memberId)
             ->first();
-//        dd($employee->toSql());
+
         $sort = $request->input('sort') ?? 'index';
         $order = $request->input('order') ?? 'asc';
-
 
         $query = KanbanLane::
             with(['employee.user',
@@ -84,10 +77,6 @@ class TaskController extends Controller
         $lane->project()->associate($project);
         $lane->save();
 
-//        $developerRoleId = Role::where('name', 'developer')->first()->id;
-//        $developer = Employee::whereHas('user.roles', function ($q) use($developerRoleId) {
-//            $q->where('role_id', $developerRoleId);
-//        })->first();
         $lanes = KanbanLane::
         with(['employee', 'cards' => function($c) {
             $c->orderBy('index', 'asc');
@@ -116,9 +105,7 @@ class TaskController extends Controller
     }
 
     public function swapKanbanLanes(Request $request, $projectId) {
-
         $project = Project::findOrFail($projectId);
-
         $lanes = $request->input("lanes");
 
         foreach ($lanes as $requestLane) {
@@ -148,7 +135,6 @@ class TaskController extends Controller
 
 
     public function addKanbanCard(Request $request, $projectId, $laneId) {
-
         $lane = KanbanLane::findOrFail($laneId);
 
         $card = new KanbanCard();
@@ -195,11 +181,9 @@ class TaskController extends Controller
 
         $card->title = $request->input('title');
         $card->description = $request->input('description') ?? '';
-//        $card->cardColor = $request->input('cardColor');
 
         $newPriority = $request->input('priority');
 
-//        return response()->json($request->all());
         if($newPriority != $card->priority) {
             $priorityModel = KanbanPriority::where('title', $card->priority)->first();
             $card->tags()->detach($priorityModel);
@@ -208,23 +192,6 @@ class TaskController extends Controller
             $card->priority = $newPriority;
             $card->tags()->attach($priorityModel);
         }
-//
-//        $tags = $request->input('card.tags');
-//
-//        if(isset($tags) && count($tags) > 0) {
-//
-//            $card->tags()->detach();
-//            foreach ($tags as $tag) {
-//                $t = KanbanPriority::where([
-//                    'title' => $tag
-//                ])->first();
-//                if(!$t) {
-//                    return response()->json(['message' => 'tag not found', 404]);
-//                }
-//                $card->tags()->attach($t);
-//            }
-//
-//        }
 
         $card->save();
 

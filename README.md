@@ -154,8 +154,11 @@
 <summary>Database</summary>
   <ul>
     <li><a href="https://www.mysql.com/">MySQL</a></li>
-    <li><a href="https://www.postgresql.org/">utf8_general_ci</a></li>
+    <li><a href="#">utf8_general_ci</a></li> 
+    <li><a href="https://sqldbm.com/">Online DB Model Builder - sqldbm</a></li>
+    <li><a href="https://www.phpmyadmin.net/">phpMyAdmin - As Mysql Client</a></li>
   </ul>
+
 </details>
 
 <details>
@@ -232,7 +235,7 @@ For all users password by default is <strong>password</strong>
 <!-- Env Variables -->
 ### :key: Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to add the following environment variables to api .env file
 
 #### General: 
 
@@ -327,7 +330,7 @@ Go to the customer client directory
 Install dependencies
 
 ```bash
-  composer install 
+  npm install 
 ```
 
 Start the Customer Client
@@ -365,8 +368,14 @@ Database migrate and seed
 Start server
 
 ```bash
-  php artisan serve
+  php artisan serve 
 ```
+
+Start queue for mail sending 
+```bash
+  php artisan queue:listen 
+```
+
 
 <!-- Deployment -->
 ### :triangular_flag_on_post: Deployment
@@ -386,13 +395,14 @@ To deploy both of React Client, run
 <!-- FAQ -->
 ## :grey_question: FAQ
 
-- Question 1
-  + Answer 1
+- What is my personal goal of developing this system?
+  + First of all, to test my knowledge in programming 
+    in practice and gain new knowledge and skills in the development process.
+    This is also my graduate work for <a href="https://itstep.zp.ua/">computer academy "Step"</a> .
   
-- Question 2
-  + Answer 2
-
-
+- How much time did I spend developing?
+  + About three months
+  
 <!-- License -->
 ## :warning: License
 
@@ -408,9 +418,8 @@ Project Link: [https://github.com/EvgeniyRyabchuk/IT_Company_CRM](https://github
 <!-- Acknowledgments -->
 ## :gem: Acknowledgements
 
-Use this section to mention useful resources and libraries that you have used in your projects.
-
- - [Shields.io](https://shields.io/)
- - [Awesome README](https://github.com/matiassingers/awesome-readme)
- - [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md#travel--places)
- - [Readme Template](https://github.com/othneildrew/Best-README-Template)
+ - [Laravel](https://laravel.com/docs/9.x/)
+ - [React](https://github.com/matiassingers/awesome-readme)
+ - [SQLDBM](https://sqldbm.com/Home/)
+ - [Clinet Host - Netlify](https://www.netlify.com/)
+ - [Server Host - Beget](https://cp.beget.com/)

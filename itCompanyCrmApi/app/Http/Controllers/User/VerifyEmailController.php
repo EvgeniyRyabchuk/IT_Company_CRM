@@ -44,10 +44,9 @@ class VerifyEmailController extends Controller
             $user->markEmailAsVerified();
 
             $veritication->delete();
-//            UserVerification::destroy($veritication->id);
 
             //TODO: read doc
-            event(new Verified($user));
+//            event(new Verified($user));
         }
 
         return response()->json(['status' => 'success', 'data' => $veritication], 201);

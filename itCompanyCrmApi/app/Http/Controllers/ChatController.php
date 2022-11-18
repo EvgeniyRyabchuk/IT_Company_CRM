@@ -24,7 +24,6 @@ class ChatController extends Controller
             ->orderBy('last_message_at', 'desc')
             ->get()
             ->map(function ($chat) use($user) {
-//                $chat->setRelation('messages', $chat->messages->take(10));
                 $chat->messagePage = 1;
                 $chat->newCount = ChatMessage::where('chat_id', $chat->id)
                 ->where('to_id', $user->id)
@@ -34,10 +33,8 @@ class ChatController extends Controller
                 return $chat;
             });
 
-//   'messages.content', 'messages.fromUser', 'messages.toUser'
         return response()->json($chats, 201);
     }
-
 
     public function deleteChat(Request $request, $userId, $chatId) {
         $chat = Chat::findOrFail($chatId);
@@ -45,13 +42,11 @@ class ChatController extends Controller
         return response('Ok');
     }
 
-
     public function showMessagesByChat(Request $request, $userId, $chatId) {
         $chat = Chat::findOrFail($chatId);
         $messages = ChatMessage::where('chat_id', $chat->id)
             ->with("content", "toUser", "fromUser")
             ->orderBy('created_at', 'desc')
-//        dd($messages->paginate(10));
             ->paginate(10);
         return response()->json($messages, 201);
     }
@@ -71,7 +66,6 @@ class ChatController extends Controller
             'message' => 'chat already exist',
         ], 201);
 
-
         $chat = new Chat();
         $chat->last_message_at = Carbon::now();
         $chat->save();
@@ -85,7 +79,6 @@ class ChatController extends Controller
 
         return response()->json($resChat);
     }
-
 
     public function sendMessage(Request $request, $userId, $chatId) {
         $fromUser = User::findOrFail($userId);
@@ -115,7 +108,6 @@ class ChatController extends Controller
         $message->chat()->associate($chat);
         $message->save();
 
-
         return response()->json(
             ChatMessage::with('content', 'fromUser', 'toUser', 'chat.users')
                 ->findOrFail($message->id)
@@ -123,7 +115,6 @@ class ChatController extends Controller
     }
 
     public function updateMessage(Request $request, $userId, $chatId, $messageId) {
-
         $message = ChatMessage::findOrFail($messageId);
         $content = ChatMessageContent::findOrFail($message->content_id);
         $content->message = $request->input('message');
@@ -131,7 +122,6 @@ class ChatController extends Controller
 
         $chat = Chat::with("messages.content")->findOrFail($chatId);
         return response()->json($chat->messages);
-
     }
 
     public function deleteMessage(Request $request, $userId, $chatId, $messageId) {
@@ -151,13 +141,10 @@ class ChatController extends Controller
     }
 
     public function getNew(Request $request, $userId, $target) {
-
         $user = Auth::user();
-
 
         switch ($target) {
             case 'messages':
-
                  $query = ChatMessage::with('content', 'toUser', 'fromUser', 'chat.users.roles')
                     ->where('isSeen', false)
                     ->where('to_id', $user->id);
@@ -175,7 +162,6 @@ class ChatController extends Controller
                         'newMessages' => $item
                     ];
                 }
-
                 return response()->json($newChatMessages);
 
             case 'chats':

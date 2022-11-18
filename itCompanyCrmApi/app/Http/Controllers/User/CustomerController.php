@@ -53,7 +53,6 @@ class CustomerController extends Controller
             ];
         }
 
-
         $doneOrderStatus = Status::where('name', 'Finished')->first();
 
         $query = Customer::with('user', 'user.phones', 'user.tags', 'user.phones');
@@ -145,7 +144,6 @@ class CustomerController extends Controller
 
         $skills = explode(',', $request->input('skills'));
 
-
         $position = Position::findOrFail($positionId);
         $level = $position->levels->filter(function($item) use($levelId) {
             return $item->id == $levelId;
@@ -172,8 +170,6 @@ class CustomerController extends Controller
         $user->full_name = "$lastName $firstName $middleName";
         $user->email = $email;
 
-
-        //TODO: send email with credentials
         $user->save();
 
         if($request->hasFile('newAvatar')) {
@@ -188,33 +184,17 @@ class CustomerController extends Controller
             $user->save();
         }
 
-
-        //TODO: social links
-
-
         $customer->user()->associate($user);
         $customer->save();
-
-//        if($mode === 'update') $customer->skills()->detach();
-//        foreach ($skills as $skill) {
-//            $skillDb = Skill::firstOrCreate(['name' => strtoupper($skill)]);
-//            $employee->skills()->attach($skillDb);
-//
-//        }
-        $customer->save();
-
 
         return $customer;
     }
 
     public function store(Request $request) {
         $customer = $this->saveCustomers($request, 'create');
-
         $addedCustomer = Customer::with('user', 'position', 'level', 'skills')
             ->withCount(['projects as order_count'])
             ->findOrFail($customer->id);
-
-
         return response()->json($addedCustomer);
     }
 
@@ -228,7 +208,6 @@ class CustomerController extends Controller
 
 
     public function destroy(Request $request, $customerId) {
-
         $customer = Customer::findOrFail($customerId);
         $user = $customer->user;
         $user->delete();

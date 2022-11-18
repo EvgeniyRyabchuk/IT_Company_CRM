@@ -1,7 +1,5 @@
 import {Card, Checkbox, Grid, TextField} from '@mui/material';
 import {Box, styled, useTheme} from '@mui/system';
-
-
 import {Formik} from 'formik';
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
@@ -15,12 +13,10 @@ import {ContentBox2, FlexBox, JustifyBox} from "../../assets/components/Shared";
 import {JWTRoot} from "../../assets/components/Session";
 
 
-
-
 // inital login credentials
 const initialValues = {
-  email: '',
-  password: '',
+  email: 'admin@gmail.com',
+  password: 'password',
   remember: true,
 };
 

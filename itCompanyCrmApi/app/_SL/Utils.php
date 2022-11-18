@@ -3,7 +3,6 @@
 namespace App\_Sl;
 
 use Illuminate\Support\Str;
-
 use App\Models\PersonalNotificationType;
 
 class Utils

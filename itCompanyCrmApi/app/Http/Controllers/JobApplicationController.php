@@ -50,7 +50,6 @@ class JobApplicationController extends Controller
         }
 
 
-
         if($search && $search !== '') {
             $query
                 ->where('name', 'LIKE', "%$search%")
@@ -107,7 +106,6 @@ class JobApplicationController extends Controller
 
         $jobApplication->vacancy()->associate($vacancy);
         $jobApplication->jobApplicationStatus()->associate($jobApplicationStatus);
-
 
         if($request->hasFile('resume_path')) {
             $extension = $request->file('resume_path')

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class RoleChecker
 {
-
     // at least one role match
     public static function hasRole(User $user, array $roleNames) {
         foreach ($user->roles as $role) {

@@ -17,7 +17,6 @@ class TagAttacher
         'orders'
     ];
 
-
     protected static function modelAvailable($modelName) {
         foreach (TagAttacher::$tagbleList as $item) {
             if($item == $modelName) {

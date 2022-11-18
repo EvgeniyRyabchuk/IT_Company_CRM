@@ -28,9 +28,7 @@ use function GuzzleHttp\Promise\all;
 
 class OrderController extends Controller
 {
-
     public function index(Request $request) {
-
         $perPage = $request->input('limit') ?? 10;
         $search = $request->input('search') ?? '';
 
@@ -189,7 +187,6 @@ class OrderController extends Controller
     }
 
     public function store(Request $request) {
-        //TODO: check if customer already registered
         $email = $request->input('email');
         // if customer with such email already exist
         $dbUser = User::where('email', $email)->first();
@@ -254,10 +251,7 @@ class OrderController extends Controller
         return response()->json($order);
     }
 
-    //TODO: create project if order status is Processing
-    // TODO: status change history
     public function update(Request $request, $orderId) {
-
         $order = Order::findOrFail($orderId);
 
         $oldStatus = Status::findOrFail($request->input('order_status_id'));
@@ -313,19 +307,12 @@ class OrderController extends Controller
         return response()->json($resOrder, 201);
     }
 
-
-
     public function addUndoCaseEntry(Request $request, $orderId, $caseId) {
         $undoOrder = UndoOrder::where('order_id', $orderId)->first();
 
         abort_if(!$undoOrder, 404, 'order status is not undo');
 
         $case = UndoOrderCase::findOrFail($caseId);
-        /*
-//        $case = new UndoOrderCase();
-//        $case->type_name = $request->input('type_name');
-//        $case->reason = $request->input('reason');
-        */
         $undoOrder->extra_reason_text = $request->input('extra_reason_text');
         $undoOrder->orderUndoCase()->associate($case);
         $undoOrder->save();
@@ -337,7 +324,6 @@ class OrderController extends Controller
 
         $undoCases = DB::table('undo_order_cases')
             ->selectRaw('type_name, reason')
-//            ->groupByRaw('type_name')
             ->get()
             ->groupBy('type_name')
             ->map(function ($items) {
@@ -363,7 +349,6 @@ class OrderController extends Controller
             ->findOrFail($orderId);
 
         $pwd = Str::random(10);
-
         $user = User::create([
             'first_name' => $order->orderContact->name,
             'last_name' => "",
@@ -379,7 +364,6 @@ class OrderController extends Controller
 
         return response()->json(['data' => $order, 201]);
     }
-
 
     public function getStatuses(Request $request) {
         $statuses = Status::orderBy('index', 'asc')->get();

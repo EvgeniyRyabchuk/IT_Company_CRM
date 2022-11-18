@@ -23,9 +23,6 @@ class PersonalNotificationController extends Controller
         return response()->json($notList);
     }
 
-
-
-
     public static function store($payload)
     {
 

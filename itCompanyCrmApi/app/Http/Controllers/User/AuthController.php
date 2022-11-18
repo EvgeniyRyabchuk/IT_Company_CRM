@@ -90,7 +90,6 @@ class AuthController extends Controller
                         }
                     ]);
 
-
                     // sort projects by connected employee date
                     $query
                         ->leftJoin('employee_project', 'employees.id', 'employee_project.employee_id')
@@ -99,8 +98,6 @@ class AuthController extends Controller
                         ->orderBy('employee_project.created_at', 'desc');
 
                     $employee = $query->first();
-
-    //                dd($employee);
 
                     $roleEntity[] = [
                         'role' => $role,
@@ -133,26 +130,14 @@ class AuthController extends Controller
                    return $item;
                 });
 
-
-
             return response()->json(compact('user', 'roleEntity', 'lastChats'));
         }
 
-
-//        return response()->json(["message' => 'opened show page.
-//        User = $user->id has roles $roles", 201]);
     }
 
 
     public function login(Request $request)
     {
-//        $newDateTimeRefreshToken = Carbon::now()->addMonth(10);
-//        $newDateTimeAccessToken = Carbon::now()->addMinutes(20);
-//        $request->validate([
-//            'email' => 'required|string|email',
-//            'password' => 'required|string',
-//        ]);
-
         $credentials = $request->only('email', 'password');
         $rememberMe = $request->input('remember_me') ?? false;
 
@@ -204,16 +189,6 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
-//        $request->validate([
-//            'name' => 'required|string|max:255',
-//            'email' => 'required|string|email|max:255|unique:users',
-//            'password' => 'required|string|min:6',
-//        ]);
-
-//        $phoneNumber = $request->input('phone.number');
-//        $countryCode = $request->input('phone.countryData.countryCode');
-//        $phoneParts = Utils::getNumberParts($phoneNumber, $countryCode);
-//        dd($phoneParts);
 
         $isExistWithSuchEmail = User::where('email', $request->input('email'))->first() ?? false;
 
@@ -393,19 +368,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'account deleted successfully']);
     }
 
-    /*
-
-      $fullNameArr = explode(' ', $contact->name);
-      $user = User::create([
-            'first_name' => $fullNameArr[0],
-            'last_name' =>$fullNameArr[1] ?? '',
-            'middle_name' => $fullNameArr[2] ?? '',
-            'full_name' =>  $contact->name,
-            'email' => $contact->email,
-            'password' => Hash::make($randPassword),
-        ]);
-
-     */
 
     public static function createCustomerAccount($contact)
     {

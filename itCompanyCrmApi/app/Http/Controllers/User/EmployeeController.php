@@ -48,7 +48,7 @@ class EmployeeController extends Controller
         } else {
             $sort = $sort[0];
         }
-//        dd($filters);
+
         //$doneStatus = OrderStatus::where('name', 'Finished')->first();
 
         $query = Employee::with('user.roles', 'user.phones', 'level', "position", 'skills')
@@ -63,14 +63,6 @@ class EmployeeController extends Controller
                 $query->whereDoesntHave('projects', function ($q) use($nonExistInProjectId) {
                     $q->where('projects.id', '=', $nonExistInProjectId);
                 });
-//                $query->join('employee_project',
-//                    'employees.id', '=',
-//                    'employee_project.employee_id')
-//                    ->where('employee_project.project_id', '!=', $nonExistInProject);
-
-//                $query->whereHas('projects', function($q) use($nonExistInProject) {
-//                    $q->where('projects.id', '!=', $nonExistInProject);
-//                });
             }
 
             $sortDirect = $sort['desc'] ? 'desc' : 'asc';
@@ -114,28 +106,9 @@ class EmployeeController extends Controller
                 }
             }
 
-            /*
-            ->map(function ($employee) use($doneStatus) {
-                $doneCount = 0;
-                foreach ($employee->projects as $project) {
-                    $exist = Order::where([
-                        ['project_id', $project->id],
-                        ['order_status_id', $doneStatus->id]
-                    ])->first();
-                    if(!is_null($exist))
-                        $doneCount++;
-                }
-                 $employee->finished_project_count = $doneCount;
-
-                return $employee;
-        });
-        $employees->map(function($i) { return $i->unsetRelation('projects'); });
-*/
-
         $employees = $query->paginate($perPage);
         return response()->json($employees);
     }
-
 
 
     protected function saveEmployee(Request $request, $mode) {
@@ -163,8 +136,6 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'Such level does not exist on that position'], 404);
         }
 
-
-
         if($mode === 'create') {
             $user = new User();
             $employee = new Employee();
@@ -182,8 +153,6 @@ class EmployeeController extends Controller
         $user->full_name = "$lastName $firstName $middleName";
         $user->email = $email;
 
-
-        //TODO: send email with credentials
         $user->save();
 
         if($request->hasFile('newAvatar')) {
@@ -197,10 +166,6 @@ class EmployeeController extends Controller
             $user->avatar = $avatarPath;
             $user->save();
         }
-
-
-        //TODO: social links
-
 
         $employee->user()->associate($user);
         $employee->position()->associate($position);
@@ -310,11 +275,9 @@ class EmployeeController extends Controller
     }
 
     public function destroy(Request $request, $employeeId) {
-
         $employee = Employee::findOrFail($employeeId);
         $user = $employee->user;
         $user->delete();
-
         return response()->json(['message' => 'employee was destroyed'], 201);
     }
 
@@ -340,9 +303,7 @@ class EmployeeController extends Controller
             return Excel::download(new EmployeeExport(count($ids) > 0 ? $ids : []), 'employees.xlsx');
         }
         return Excel::download(new EmployeeExport([]), 'employees.xlsx');
-
     }
-
 
     public function changeAvatar(Request $request, $employeeId) {
 

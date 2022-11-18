@@ -2,7 +2,6 @@
 
 namespace App\_Sl;
 
-
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\ProjectHistory;
@@ -28,7 +27,5 @@ class ProjectHistoryHandler
         $history->save();
         return true;
     }
-
-
 
 }

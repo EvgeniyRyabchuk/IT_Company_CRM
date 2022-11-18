@@ -53,7 +53,6 @@ class NewsController extends Controller
     }
 
     public function store(Request $request) {
-        //TODO: current auth user
         $news = $this->save($request, 'create');
         return response()->json($news, 201);
     }
@@ -66,9 +65,7 @@ class NewsController extends Controller
     public function destroy(Request $request, $newsId) {
         $news = News::findOrFail($newsId);
         $news->delete();
-
         ViewController::deleteAllViews($news);
-
         return response()->json(News::all(), 201);
     }
 

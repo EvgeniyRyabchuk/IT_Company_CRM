@@ -1,9 +1,6 @@
 <?php
 
-
 namespace App\_SL;
-
-
 
 
 use App\Http\Controllers\Controller;
@@ -112,13 +109,10 @@ class FileManager {
     }
 
 
-
-
     public static function createDirectory($path) {
         $fullPath = storage_path("app/private" . "/" . $path);
         return File::makeDirectory($fullPath, 0777, true, true);
     }
-
 
 
     public static function save($request, $requestBinaryFileName, $fileName, $distPath) {
@@ -132,11 +126,6 @@ class FileManager {
 
         return $path;
     }
-
-    public static function saveMany() {
-
-    }
-
 
     public static function saveOneChunk(Request $request, $path)
     {

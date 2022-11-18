@@ -45,32 +45,13 @@ class DatabaseSeeder extends Seeder
          $this->call([LevelSeeder::class]);
          $this->call([PositionSeeder::class]);
 
-
          $this->call([EmployeeSeeder::class], false, ['count' => 10, 'roleId' => $developerRoleId]);
          $this->call([EmployeeSeeder::class], false, ['count' => 3, 'roleId' => $managerRoleId]);
          $this->call([CustomerSeeder::class],
              false, ['count' => 100, 'roleId' => $customerRoleId]);
 
-        $testEmployeeAcoount = User::create([
-            'first_name' => 'Evgeniy',
-            'last_name' => 'Ryabchuk',
-            'middle_name' => 'Andreevich',
-            'full_name' => 'Ryabchuk Evgeniy Andreevich',
-            'email' => 'jeka.rubchuk@gmail.com',
-            'password' => Hash::make('123'),
-            'about' => fake()->sentence(100)
-        ]);
-
-        $testEmployeeAcoount->roles()->attach($adminRoleId);
-
-        //TODO: temp
-        Employee::create([
-            'position_id' => 1,
-            'level_id' => 1,
-            'user_id' => $testEmployeeAcoount->id,
-        ]);
-
-
+         $this->call(StaticUserSeeder::class, false,
+             compact('adminRoleId','managerRoleId', 'developerRoleId', 'customerRoleId'));
 
          $this->call([PhoneSeeder::class]);
          $this->call([SkillSeeder::class]);
@@ -81,7 +62,7 @@ class DatabaseSeeder extends Seeder
          })->get();
 
         $skills = Skill::all();
-
+        // generate rand skills
         foreach ($developers as $developer) {
             $randCount = rand(1, count($skills));
             $randSkills = Skill::inRandomOrder()->take($randCount)->get();
@@ -90,13 +71,11 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-//        $this->call(TagSeeder::class);
-
-
+        $this->call(TagSeeder::class);
         $users = User::all();
         $tags = Tag::all();
-
         TagAttacher::attachToManyRandom(User::class);
+
 
         $this->call(ProjectTypeSeeder::class);
 
@@ -113,14 +92,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProjectLinkSeeder::class);
 
         $this->call(NewsSeeder::class);
-
-//        $news = News::find(1);
-//        $user = User::find(1);
-//
-//        $view = new View();
-//        $view->user()->associate($user);
-//        $view->viewable()->associate($news);
-//        $view->save();
 
 
         $this->call(OrderStatusSeeder::class);
@@ -149,10 +120,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PersonalNotificationSeeder::class);
 
-
-
         $this->call(TransactionSeeder::class);
-
 
 
     }

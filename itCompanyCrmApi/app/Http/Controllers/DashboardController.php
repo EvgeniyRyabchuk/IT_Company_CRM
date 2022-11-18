@@ -15,8 +15,6 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function analytics(Request $request) {
-
-
         $customerCount = Customer::count();
         $employeeCount = Employee::count();
         $ordersCount = Order::count();
@@ -51,7 +49,7 @@ class DashboardController extends Controller
 
         //////////
 
-        // thisMonch or lastMonth
+        // thisMonth or lastMonth
         $lastOrdersDateRangeType = $request->input('lastOrdersDateRangeType');
         switch ($lastOrdersDateRangeType) {
             case 'thisMonth':

@@ -18,7 +18,6 @@ class StatisticController extends Controller
 
     public function index(Request $request)
     {
-
         $ordersDynamicMetric =
             StatisticController::getDynamicMetric(9, Order::class);
         $customerDynamicMetric =
@@ -116,10 +115,8 @@ class StatisticController extends Controller
         if($total) {
             for ($i = 0; $i < count($stack); $i++) {
                 $count = $stack[$i]['count'];
-
                 $stack[$i]['percent'] = round(($count / $total) * 100, 2);
             }
-
         }
 
         return [

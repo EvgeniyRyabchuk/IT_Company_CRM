@@ -14,10 +14,6 @@ class EventController extends Controller
         return response()->json($events, 201);
     }
 
-    public function show(Request $request, $newsId) {
-
-    }
-
     public function store(Request $request, $employeeId) {
 
         $employee = Employee::findOrFail($employeeId);

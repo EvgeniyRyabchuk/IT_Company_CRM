@@ -2,14 +2,12 @@
 
 namespace App\_Sl;
 
-
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\ProjectHistory;
 use App\Models\ProjectRole;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-
 
 class ProjectRoleHandler
 {
@@ -27,7 +25,5 @@ class ProjectRoleHandler
         });
         return $employeeWithRoles;
     }
-
-
 
 }
