@@ -196,7 +196,6 @@ class EmployeeController extends Controller
     }
 
     public function store(Request $request) {
-
         $employee =  $this->saveEmployee($request, 'create');
         $addedEmployee = Employee::with('user.roles', 'user.phones', 'position', 'level', 'skills')
             ->withCount(['projects as project_count'])

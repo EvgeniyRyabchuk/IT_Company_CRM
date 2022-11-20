@@ -32,8 +32,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         Schema::defaultStringLength(191);
+
         Gate::define('user_select', function (User $user) {
             return RoleChecker::hasRole($user, ['customer', 'admin', 'manager']);
         });

@@ -81,7 +81,6 @@ const AddUserChatModal = ({open, setOpen, onClose, onSave}: ModalProps) => {
                             onChange={onChange}
                             sx={{ width: 300 }}
                             options={users}
-                            autoHighlight
                             getOptionLabel={(option: User) => option.full_name}
                             renderOption={(props, option: User) => (
                                 <Box component="li"

@@ -26,8 +26,6 @@ class JobApplicationFactory extends Factory
 
         $resume_path = 'static/files/jobApplications/resumeExample.doc';
 
-
-
         return [
             'name' => $this->faker->firstName,
             'email' => $this->faker->email,

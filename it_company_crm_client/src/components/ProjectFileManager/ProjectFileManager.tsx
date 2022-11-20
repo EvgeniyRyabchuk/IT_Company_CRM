@@ -38,7 +38,10 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
     }
 
     const remoteFileProvider = new RemoteFileSystemProvider({
-        endpointUrl: `${API_URL}/projects/${projectId}/file-manager`
+        endpointUrl: `${API_URL}/projects/${projectId}/file-manager`,
+        requestHeaders: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
     });
 
     const onOptionChanged = (e: any) => {
@@ -65,8 +68,6 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
         console.log("on file uploading");
         console.log(e);
     }
-
-    console.log('render')
 
     const customizeIcon = (fileSystemItem: any) => {
         if (fileSystemItem.isDirectory) {
@@ -96,16 +97,11 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
                 onOptionChanged={onOptionChanged}
                 onDirectoryCreated={onDirectoryCreated}
                 onFileUploaded={onFileUploaded}
-                onFileUploading={onFileUploading}
-            >
-                <Upload
-                    chunkSize={1000000}
-                    maxFileSize={10000000}
-                />
+                onFileUploading={onFileUploading}>
 
-                <ItemView
-                    mode={itemViewMode}>
-                </ItemView>
+                <Upload chunkSize={1000000}  maxFileSize={10000000} />
+
+                <ItemView mode={itemViewMode}></ItemView>
 
                 <Permissions
                     create={true}
@@ -114,7 +110,8 @@ const ProjectFileManager : React.FC<{projectId: number | string}> = ({projectId}
                     delete={true}
                     rename={true}
                     upload={true}
-                    download={true}>
+                    download={true}
+                >
                 </Permissions>
             </FileManager>
         </div>

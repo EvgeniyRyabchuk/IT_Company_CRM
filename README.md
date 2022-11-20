@@ -41,12 +41,12 @@
 </p>
 
 <h4>
-    <a href="https://github.com/Louis3797/awesome-readme-template/">
-    View Customer Demo
+    <a href="https://vocal-macaron-c80422.netlify.app/">
+      View Customer Demo
     </a>
   <span> · </span>
-    <a href="https://github.com/Louis3797/awesome-readme-template">
-    View Employee Demo
+    <a href="https://creative-piroshki-f8bc5e.netlify.app/session/signin">
+      View Employee Demo
     </a>
   <span> · </span>
     <a href="https://github.com/Louis3797/awesome-readme-template/issues/">API Docs</a>

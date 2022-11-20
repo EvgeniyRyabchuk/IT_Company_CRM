@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->string('countryCode', 5)->default('');
             $table->string('name', 100)->default('');
-            $table->string('dialCode', 5)->default(''); 
+            $table->string('dialCode', 5)->default('');
             $table->string('format', 30)->default('');
 
 
