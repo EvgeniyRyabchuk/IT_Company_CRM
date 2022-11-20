@@ -3,27 +3,15 @@
 namespace Database\Seeders;
 
 use App\_Sl\TagAttacher;
-use App\Models\Customer;
 use App\Models\Employee;
-use App\Models\JobApplication;
-use App\Models\KanbanLane;
-use App\Models\KanbanPriority;
-use App\Models\Level;
-use App\Models\News;
-use App\Models\PersonalNotification;
 use App\Models\Project;
-use App\Models\ProjectLink;
-use App\Models\ProjectType;
 use App\Models\Role;
 use App\Models\Skill;
 use App\Models\Tag;
-use App\Models\Transaction;
 use App\Models\User;
-use App\Models\View;
 use Database\Factories\Creators\StaticCreator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {

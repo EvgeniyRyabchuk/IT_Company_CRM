@@ -12,3 +12,6 @@ pre.ql-syntax {
 }
 
 
+.ql-editor {
+    height: calc(100% - 66px);
+}

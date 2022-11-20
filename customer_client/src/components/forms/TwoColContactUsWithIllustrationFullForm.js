@@ -12,7 +12,7 @@ import {Formik} from 'formik';
 import PhoneInputField from "../PhoneInputField/PhoneInputField";
 import {OrderService} from "../../services/OrderService";
 import useAuth from "../../hooks/useAuth";
-import {JustifyWrap} from "../../assets/components/Global/GlobalStyles";
+import {ErrorSpan, JustifyWrap} from "../../assets/components/Global/GlobalStyles";
 
 const Container = tw.div`relative`;
 
@@ -49,15 +49,15 @@ const phoneRegExp =
 // require('yup-phone');
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Project Name is required!'),
+  name: Yup.string().required('Full Name is required!'),
   email: Yup.string().required('Email is required!'),
   phone: Yup.object().shape({
-    number: Yup.string().required('phone is required!'),
+    number: Yup.string().min(7, 'Too short number').required('phone is required!'),
     countryData: Yup.object(),
   }),
 
   about:  Yup.string().required('About Project Text is required!'),
-  type_id: Yup.number().required('Project Type is required!'),
+  type_id: Yup.string().required('Project Type is required!'),
 });
 
 const SubmitButton = tw(PrimaryButtonBase)`inline-block mt-8`
@@ -104,11 +104,16 @@ const TwoColContactUsWithIllustrationFullForm = ({
       name: user ? user.full_name : '',
       phone:  {
         number: user ? user.phones[0].phone_number : '',
-        countyData: {},
+        countyData: {
+          name: "UA",
+          dialCode: "380",
+          countryCode: "UA",
+          format: "+... (..) ... .. .."
+        },
       },
       email: user ? user.email : '',
       about: '',
-      type_id: null,
+      type_id: '',
     }
   }, []);
 
@@ -162,15 +167,11 @@ const TwoColContactUsWithIllustrationFullForm = ({
                             error={Boolean(errors.name && touched.name)}
                         />
                         {touched.name && errors.name &&
-                            <p style={{color:'red'}}
-                               className="MuiFormHelperText-root
-                               MuiFormHelperText-contained
-                               Mui-error
-                               MuiFormHelperText-filled
-                               MuiFormHelperText-marginDense">
+                            <ErrorSpan>
                               {errors.name}
-                            </p>
+                            </ErrorSpan>
                         }
+
 
                         <JustifyWrap sx={{ my: 3 }}>
                           <EmailInput
@@ -179,30 +180,32 @@ const TwoColContactUsWithIllustrationFullForm = ({
                               placeholder="Your Email Address"
                               value={values.email}
                               onChange={handleChange}
-                              helperText={touched.email && errors.email}
-                              error={Boolean(errors.email && touched.email)}
                           />
-                          {touched.email && errors.email &&
-                              <p style={{color:'red'}}
-                                 className="MuiFormHelperText-root
-                                 MuiFormHelperText-contained
-                                 Mui-error
-                                 MuiFormHelperText-filled
-                                  MuiFormHelperText-marginDense">
-                                {errors.email}
-                              </p>
-                          }
+
+
                           <OrderContactPhone
                               className='order-page-phone'
                               name="phone"
                               value={values.phone.number}
                               onChange={(phone) => {
-                                setFieldValue('phone', phone);
+                                if(phone)
+                                  setFieldValue('phone', phone);
                               }}
-                              touched={touched.phone}
-                              error={errors.phone}
                           />
+
                         </JustifyWrap>
+                        <Box sx={{ mb: 4}}>
+                          {touched.email && errors.email &&
+                              <ErrorSpan>
+                                {errors.email}
+                              </ErrorSpan>
+                          }
+                          {touched.phone && errors.phone &&
+                              <ErrorSpan>
+                                {errors.phone.number}
+                              </ErrorSpan>
+                          }
+                        </Box>
                       </Box>
                       <Box sx={{ mt: 0}}>
                         <Autocomplete
@@ -249,9 +252,13 @@ const TwoColContactUsWithIllustrationFullForm = ({
                           placeholder="Your Message Here"
                           value={values.about}
                           onChange={handleChange}
-                          helperText={touched.about && errors.about}
-                          error={Boolean(errors.about && touched.about)}
                       />
+
+                      {touched.about && errors.about &&
+                          <ErrorSpan>
+                            {errors.about}
+                          </ErrorSpan>
+                      }
 
                       <FileUploader
                           accept="*"

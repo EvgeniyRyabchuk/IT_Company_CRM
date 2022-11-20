@@ -8,14 +8,14 @@ const defJobApplicationSortOrderData : SortOrderOptionType[] = [
         name: 'Дата',
         value: 'created_at',
         order: 'asc',
-        selected: true
+        selected: false
     },
     {
         id: 2,
         name: 'Дата',
         value: 'created_at',
         order: 'desc',
-        selected: false
+        selected: true
     },
 
     {

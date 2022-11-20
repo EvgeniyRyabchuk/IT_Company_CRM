@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import {Autocomplete, Box, Stack, TextField} from "@mui/material";
 import {JobApplicationService} from "../../services/JobApplicationService";
 import {showAxiosErrorAlert} from "../../utils/alert";
+import {ErrorSpan} from "../../assets/components/Global/GlobalStyles";
 
 
 const Container = tw.div`relative`;
@@ -78,7 +79,8 @@ const validationSchema = Yup.object().shape({
 
   email: Yup.string().required('Email is required!'),
   message: Yup.string().optional(),
-  vacancy_id: Yup.number().required('Vacancy Type is required!'),
+  vacancy_id: Yup.string().required('Vacancy Type is required!'),
+
 });
 
 export default ({setStatus, vacancies}) => {
@@ -98,16 +100,16 @@ export default ({setStatus, vacancies}) => {
       },
       email: '',
       message: '',
-      vacancy_id: null,
+      vacancy_id: '',
     }
   }, []);
 
 
   const handleSubmit = async (values) => {
-    console.log(values);
     const file = files && files.length > 0 && files[0];
     if(!file) {
       showAxiosErrorAlert({ primary: 'Resume file required'}, null);
+      return;
     }
 
     const { data } = await JobApplicationService.createJobApplications(values, file);
@@ -142,36 +144,42 @@ export default ({setStatus, vacancies}) => {
                           <Input id="name-input"
                                  type="text"
                                  name="name"
-
                                  value={values.name}
                                  onChange={handleChange}
                                  helperText={touched.name && errors.name}
                                  error={Boolean(errors.name && touched.name)}
-
                                  placeholder="E.g. John Doe"
                           />
+                          {touched.name && errors.name &&
+                              <ErrorSpan>
+                                {errors.name}
+                              </ErrorSpan>
+                          }
                         </InputContainer>
                         <InputContainer tw='mt-20'>
                           <Label htmlFor="email-input">Your Email Address</Label>
                           <Input id="email-input"
                                  type="email"
                                  name="email"
-
                                  value={values.email}
                                  onChange={handleChange}
                                  helperText={touched.email && errors.email}
                                  error={Boolean(errors.email && touched.email)}
-
                                  placeholder="E.g. john@mail.com"
                           />
+                          {touched.email && errors.email &&
+                              <ErrorSpan>
+                                {errors.email}
+                              </ErrorSpan>
+                          }
                         </InputContainer>
                       </Column>
 
                       <Column>
                         <InputContainer tw="flex-1 justify-center mt-0 mb-5">
                           <Label htmlFor="name-input" tw='static'
-                                 className='text-center'
-                          >Your Phone Number
+                                 className='text-center'>
+                            Your Phone Number
                           </Label>
                           <PhoneInputField
                               className='vacancy-page-phone'
@@ -183,10 +191,12 @@ export default ({setStatus, vacancies}) => {
                               onChange={(phone) => {
                                 setFieldValue('phone', phone);
                               }}
-                              touched={touched.phone}
-                              error={errors.phone}
                           />
-
+                          {touched.phone && errors.phone &&
+                              <ErrorSpan>
+                                {errors.phone.number}
+                              </ErrorSpan>
+                          }
                         </InputContainer>
 
                         <InputContainer tw="flex-1">
@@ -196,9 +206,8 @@ export default ({setStatus, vacancies}) => {
                                     placeholder="E.g. Details about your event"
                                     value={values.message}
                                     onChange={handleChange}
-                                    helperText={touched.message && errors.message}
-                                    error={Boolean(errors.message && touched.message)}
                           />
+
                         </InputContainer>
                       </Column>
                     </TwoColumn>
@@ -255,8 +264,6 @@ export default ({setStatus, vacancies}) => {
                           }}
                       />
                     </Box>
-
-
 
                     <FileUploader
                         accept="*"
