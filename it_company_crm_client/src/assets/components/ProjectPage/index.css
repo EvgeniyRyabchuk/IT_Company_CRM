@@ -1,0 +1,27 @@
+
+
+
+
+
+.about-container {
+    /*-webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);*/
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    text-align: justify;
+    max-height: 400px;
+    overflow-y: hidden;
+}
+
+.members-list {
+    /*max-height: 300px;*/
+    overflow-y: hidden;
+}
+
+.hidden-bottom-60 {
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+.box-shadow-1 {
+    -webkit-box-shadow: 0px 0px 9px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 9px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 9px -1px rgba(0,0,0,0.75);
+}

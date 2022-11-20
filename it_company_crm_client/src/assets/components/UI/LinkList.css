@@ -1,0 +1,219 @@
+/*! CSS Used from: https://preview.cruip.com/mosaic/style.css */
+
+
+:-moz-focusring {
+    outline: auto;
+}
+
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+:disabled {
+    cursor: default;
+}
+
+
+.-m-1 {
+    margin: -.25rem;
+}
+
+.m-1 {
+    margin: .25rem;
+}
+
+.ng {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+
+.ru {
+    margin-bottom: .5rem;
+}
+
+.ra {
+    margin-right: 1rem;
+}
+
+.rb {
+    margin-top: .5rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.inline-flex {
+    display: inline-flex;
+}
+
+.sf {
+    height: 2rem;
+}
+
+.os {
+    width: 2rem;
+}
+
+.ub {
+    flex-shrink: 0;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.a_ {
+
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.fc>:not([hidden])~:not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.fw>:not([hidden])~:not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+
+.fj>:not([hidden])~:not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
+}
+
+.lm {
+    flex-wrap: wrap;
+}
+
+.rounded-sm {
+    border-radius: .125rem;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.border {
+    border-width: 1px;
+}
+
+.border-slate-200 {
+    --tw-border-opacity: 1;
+    border-color: rgb(226 232 240 / var(--tw-border-opacity));
+}
+
+.ho {
+    --tw-bg-opacity: 1;
+    background-color: rgb(99 102 241 / var(--tw-bg-opacity));
+}
+
+.bg-white {
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.hy {
+    --tw-bg-opacity: 1;
+
+}
+
+.du {
+    fill: currentColor;
+}
+
+.dw {
+    padding: 1rem;
+}
+
+.vp {
+    padding-left: .625rem;
+    padding-right: .625rem;
+}
+
+.vd {
+    padding-top: .125rem;
+    padding-bottom: .125rem;
+}
+
+.go {
+    font-size: .75rem;
+    line-height: 1.5;
+}
+
+.text-sm {
+    font-size: .875rem;
+    line-height: 1.5715;
+}
+
+.gh {
+    font-weight: 600;
+}
+
+.gp {
+    font-weight: 500;
+}
+
+.gw {
+    line-height: 1.25rem;
+}
+
+.text-slate-500 {
+    --tw-text-opacity: 1;
+    color: rgb(100 116 139 / var(--tw-text-opacity));
+}
+
+.gq {
+    --tw-text-opacity: 1;
+    color: rgb(148 163 184 / var(--tw-text-opacity));
+}
+
+.text-slate-800 {
+    --tw-text-opacity: 1;
+    color: rgb(30 41 59 / var(--tw-text-opacity));
+}
+
+.text-indigo-50 {
+    --tw-text-opacity: 1;
+    color: rgb(238 242 255 / var(--tw-text-opacity));
+}
+
+.yy {
+    --tw-text-opacity: 1;
+    color: rgb(255 251 235 / var(--tw-text-opacity));
+}
+
+.bv {
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.wi {
+    transition-duration: 150ms;
+}
+
+.wu {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover--border-slate-300:hover {
+    --tw-border-opacity: 1;
+
+}
+

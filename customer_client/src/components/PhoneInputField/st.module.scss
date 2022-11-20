@@ -1,0 +1,23 @@
+
+.label {
+  // padding: 10,
+  span {
+    color: red;
+  }
+}
+
+.BoxInline {
+  flex-direction: row;
+  display: flex;
+  justify-content: start;
+}
+
+.BoxText {
+  display: flex;
+  margin-top: 8px;
+
+  span {
+    color: red;
+    padding-left: 5px;
+  }
+}

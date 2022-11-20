@@ -1,0 +1,31 @@
+
+//  const defaultPlans = [
+//     {
+//         name: "Personal",
+//         price: ["$9", ".99/month"],
+//         oldPrice: "$11.99",
+//         description: "Perfect for when you want to host your personal blog or a hobby side project.",
+//         features: ["1"],
+//         url: "https://google.com"
+//     },
+//     {
+//         name: "Business",
+//         price: ["$15", ".99/month"],
+//         oldPrice: "$19.99",
+//         description: "Perfect for hosting blogs with lots of traffic or heavy development projects",
+//         features: ["1"],
+//         url: "https://google.com",
+//         featured: "Most Popular"
+//     },
+//     {
+//         name: "Enterprise",
+//         price: ["$25", ".99/month"],
+//         oldPrice: "$29.99",
+//         description: "Perfect for hosting production websites & API services with high traffic load",
+//         features: ["1"],
+//         url: "https://google.com"
+//     }
+// ];
+//
+// // ts-ignore
+// if (!plans) plans = defaultPlans;

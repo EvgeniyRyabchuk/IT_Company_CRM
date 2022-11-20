@@ -1,0 +1,132 @@
+.App {
+  text-align: center;
+  height: 100vh;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+body, html {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+.flex-table {
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  overflow-y: auto;
+}
+
+.flex-table ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+.flex-table > .flex-row {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid gray;
+  padding: 5px 10px;
+}
+
+.flex-table > .flex-row-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid gray;
+  padding: 10px;
+}
+
+.flex-row-column .flex-cell {
+  background-color: lightgray;
+}
+.flex-row .flex-cell-list {
+  width: 153px;
+}
+.flex-row-column .text-center {
+  padding: 20px 0;
+}
+
+.flex-table > .flex-row-column .flex-cell {
+  width: auto;
+  flex-grow: 1;
+  text-align: start;
+  padding: 10px;
+}
+
+.flex-cell {
+  width: 155px;
+  flex-grow: 1;
+  text-align: start;
+  padding: 0px 3px;
+  display: flex;
+  align-content: center;
+}
+.flex-cell-list {
+  flex-grow: 1;
+  text-align: start;
+  padding: 0px 3px;
+}
+
+.flex-cell span {
+  text-align: start;
+}
+
+.flex-row > .flex-cell:nth-of-type(2n + 1) {
+  background-color: white;
+}
+.flex-row > .flex-cell:nth-of-type(2n) {
+  background-color: #e0e0e0;
+}
+
+.flex-cell-list ul li {
+  background-color: lightgray;
+}
+
+.just-flex {
+  display: flex;
+}
+
+.just-flex-column {
+  display: flex;
+}
+
+
+
+
