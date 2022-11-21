@@ -21,6 +21,8 @@ check if user is employee when log in
 scrollup after send order, vacancy of pay the order 
 auth file download 
 phone number add form 
+empty link disable for project 
+alternative news view if grid case 
 
 select created_at date in user tables 
 cascade delete fix 
