@@ -24,6 +24,8 @@ phone number add form
 empty link disable for project 
 alternative news view if grid case 
 
+oauth2 clients 
+
 select created_at date in user tables 
 cascade delete fix 
 Customer full profile features 

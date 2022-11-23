@@ -63,7 +63,7 @@ Route::controller(AuthController::class)
 // Public Routes =================================================
 //
 
-Route::controller(VerifyEmailController::class)->group(function () {
+Route::controller(ResetPasswordController::class)->group(function () {
     Route::post('send-password-reset-email', 'sendEmailForResetPassword');
     Route::post('password-reset/{id}/{token}', 'resetPassword')
         ->name('password.reset');
