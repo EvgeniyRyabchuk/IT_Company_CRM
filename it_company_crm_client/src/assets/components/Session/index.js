@@ -3,6 +3,7 @@ import {FlexBox, JustifyBox} from "../Shared";
 
 const ForgotPasswordRoot = styled(JustifyBox)(() => ({
     background: '#1A2038',
+    height: '100%',
     // minHeight: '100vh !important',
     '& .card': {
         maxWidth: 800,

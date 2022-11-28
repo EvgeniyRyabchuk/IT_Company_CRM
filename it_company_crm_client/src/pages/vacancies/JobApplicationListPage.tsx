@@ -226,12 +226,10 @@ const VacanciesListPage = () => {
                                 }}>
                                 <Select
                                     size='small'
-                                    style={{
-                                        minWidth: '200px'
-                                    }}
+                                    style={{ minWidth: '200px' }}
                                     labelId="demo-select-small"
                                     id="demo-select-small"
-                                    defaultValue='1'
+                                    defaultValue='2'
                                     label="Sort"
                                     onChange={(e: any) => onSortJobApplicationsHandleChange(e)}>
                                     {

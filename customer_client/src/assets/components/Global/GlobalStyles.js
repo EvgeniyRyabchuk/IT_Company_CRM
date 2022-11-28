@@ -33,8 +33,13 @@ const JustifyWrap = styled(JustifyContent)(() => ({
 }))
 
 
+const ErrorSpan  = styled('p')(() => ({
+    color: 'red',
+}));
+
 export {
     JustifyContent,
     JustifyBox,
-    JustifyWrap
+    JustifyWrap,
+    ErrorSpan
 }

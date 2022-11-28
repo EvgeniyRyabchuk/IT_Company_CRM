@@ -38,11 +38,15 @@ class ViewController extends Controller
     }
 
     public static function getUnwatched ($model, $user) {
-        $countViewed = View::where('user_id', $user->id)
+        $viewed = View::where('user_id', $user->id)
             ->hasMorph('viewable', [$model])
-            ->count();
-        $totalCount = $model::count();
-        return $totalCount - $countViewed;
+            ->get();
+
+        $count = $model::whereBetween('created_at', [$user->created_at, Carbon::now()])
+                ->whereNotIn('id', $viewed->pluck('viewable_id'))
+                ->count();
+
+        return $count;
     }
 
     public static function setView($viewable, $user) {
@@ -58,7 +62,7 @@ class ViewController extends Controller
             ->delete();
     }
 
-
+    // old version
     public function getCounter(Request $request) {
         $user = Auth::user();
 

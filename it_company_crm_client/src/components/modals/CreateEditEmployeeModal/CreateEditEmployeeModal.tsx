@@ -49,6 +49,7 @@ const validationSchema = Yup.object().shape({
     email: Yup.string().email().required("Email is Required!"),
     position_id: Yup.number().required("Position is required"),
     level_id: Yup.number().required('Level is required'),
+    roles: Yup.string().required('Role is required')
 });
 
 interface InitialValueType {

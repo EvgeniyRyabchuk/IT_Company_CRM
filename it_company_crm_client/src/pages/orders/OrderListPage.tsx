@@ -249,9 +249,7 @@ const ProjectsListPage = () => {
                             >
                                 <Select
                                     size='small'
-                                    style={{
-                                        minWidth: '200px',
-                                    }}
+                                    style={{ minWidth: '200px' }}
                                     labelId="demo-select-small"
                                     id="demo-select-small"
                                     defaultValue='2'
@@ -269,10 +267,8 @@ const ProjectsListPage = () => {
                                                     color="primary"
                                                     className="text-primary"
                                                     title="View details"
-                                                    onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                                >
+                                                    onClick={() => setIsFilterOpen(!isFilterOpen)}>
                                                     <Sort/>
-
                                                 </IconButton>
                                                 { getSortOrderOptionValue(e) }
                                             </MenuItem>
@@ -516,16 +512,19 @@ const ProjectsListPage = () => {
                             </table>
                             {
                                 !isLoading && orders.length === 0 &&
-                                    <h3>No data</h3>
+                                <h3>No data</h3>
                             }
+                            { isLoading && <CircularProgress /> }
                             <div ref={lastElementRef}
-                                style={{
-                                    width: '100%',
-                                    background: 'red',
-                                }}>
+                                 style={{
+                                     width: '100%',
+                                     height: '20px',
+                                     background: 'transparent',
+                                 }}>
                             </div>
+
                         </div>
-                        { isLoading && <CircularProgress /> }
+
                     </CardContent>
                 </Card>
             </div>
